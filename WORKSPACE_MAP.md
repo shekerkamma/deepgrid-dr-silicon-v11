@@ -1,6 +1,6 @@
 # Workspace map
 
-- `app/routes.ts`, `app/shell.tsx`, `app/mega-nav.tsx`: 24-route map, navigation and shared page shell.
+- `app/routes.ts`, `app/shell.tsx`, `app/mega-nav.tsx`: 35-route map, navigation and shared page shell.
 - `app/home-refined.tsx`, `app/portfolio-v6.css`: portfolio-first homepage storyboard and presentation.
 - `app/portfolio-story-data.ts`, `app/portfolio-story.tsx`: source-backed portfolio, qualification, strategy and evaluation register.
 - `app/portfolio-workbench.tsx`, `app/portfolio-workbench.css`: persistent material illustration with Three.js functional and fault overlays; reduced-motion/static states.
@@ -16,3 +16,7 @@
 - `scripts/document-readers.mjs`, `scripts/verify-reading.mjs`: generated source-document reading editions, mobile reading checks and light-section foreground regression checks.
 
 Windows: run npm through `node 'C:/Program Files/nodejs/node_modules/npm/bin/npm-cli.js'`. Stop preview servers before rebuilding `dist`; Windows can lock the served export. Build with both `PAGES_BASE` and `NEXT_PUBLIC_PAGES_BASE` set to the endpoint path. Do not rebuild during route capture.
+
+- `app/modern-v11.css`, `app/deepgrid-visual.tsx`, `app/portfolio-finder.tsx`: v11 responsive design, sourced imagery, architecture selector and searchable portfolio.
+- `docs/v11-direction.md`, `docs/v11/image-provenance.json`: delegated direction and original DeepGrid source records.
+- `scripts/verify-v11.mjs`: responsive imagery, filtering and screenshot checks.

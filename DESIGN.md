@@ -1,6 +1,6 @@
 ---
 name: DeepGrid Silicon Portfolio
-description: Mature-node silicon portfolio and strategy, with DG32 as the detailed pre-silicon engineering proof point. v6 preserves ink, copper, bone and self-hosted Newsreader, Inter and JetBrains Mono.
+description: Mature-node silicon portfolio and strategy, with DG32 as the detailed pre-silicon engineering proof point. v11 adds a scoped precision instrument catalogue in navy, paper and Manrope; deeper engineering routes retain ink, copper, bone, Newsreader, Inter and JetBrains Mono.
 colors:
   ink: "#101212"
   surface: "#191d1b"
@@ -29,7 +29,33 @@ colors:
   evaluation-surface: "#1b221e"
   evaluation-muted: "#aab3a8"
   journey-rule: "#677166"
+  v11-navy: "#142c43"
+  v11-paper: "#f4f7f9"
+  v11-white: "#fff"
+  v11-muted: "#4b6072"
+  v11-rule: "#ccd5dd"
+  v11-accent: "#8d572e"
+  v11-dark-muted: "#c6d4df"
+  v11-stage-rule: "#57718a"
+  v11-image-ground: "#080b10"
 typography:
+  v11-display:
+    fontFamily: "'Manrope Variable', sans-serif"
+    fontSize: "clamp(3.2rem, 5.5vw, 5.8rem)"
+    fontWeight: 550
+    lineHeight: 1.04
+    letterSpacing: "-0.035em"
+  v11-headline:
+    fontFamily: "'Manrope Variable', sans-serif"
+    fontSize: "clamp(2rem, 3.2vw, 3.6rem)"
+    fontWeight: 550
+    lineHeight: 1.12
+    letterSpacing: "-0.035em"
+  v11-caption:
+    fontFamily: "'Inter Variable', system-ui, sans-serif"
+    fontSize: "0.72rem"
+    fontWeight: 400
+    lineHeight: 1.6
   portfolio-display:
     fontFamily: "'Newsreader Variable', Georgia, serif"
     fontSize: "clamp(3.5rem, 6vw, 6.5rem)"
@@ -85,6 +111,19 @@ rounded:
 spacing:
   measure: "64ch"
 components:
+  v11-button:
+    backgroundColor: "{colors.v11-navy}"
+    textColor: "{colors.v11-white}"
+    rounded: "{rounded.md}"
+    padding: "16px 21px"
+  v11-button-hover:
+    backgroundColor: "{colors.v11-accent}"
+    textColor: "{colors.v11-white}"
+  v11-filter-selected:
+    backgroundColor: "{colors.v11-navy}"
+    textColor: "{colors.v11-white}"
+    rounded: "{rounded.md}"
+    padding: "11px 13px"
   button-primary:
     backgroundColor: "{colors.copper}"
     textColor: "{colors.ink}"
@@ -108,40 +147,27 @@ components:
 
 # Design System: DeepGrid Silicon Portfolio
 
-<!-- Incumbent identity extracted 2026-09-24; v6 merged from implementation 2026-09-30. Sources: app/globals.css, app/dr.css, app/portfolio-v6.css, app/route-journey.css and app/portfolio-workbench.tsx. Owner delegated the direction and documentation merge; historical audit counts are not current verification. -->
+<!-- v11 implementation merge 2026-10-05: app/modern-v11.css, app/deepgrid-visual.tsx, app/portfolio-finder.tsx, app/shell.tsx and docs/v11/image-provenance.json. Runtime review is recorded separately. Incumbent identity extracted 2026-09-24; v6 merged from implementation 2026-09-30. Sources: app/globals.css, app/dr.css, app/portfolio-v6.css, app/route-journey.css and app/portfolio-workbench.tsx. Owner delegated the direction and documentation merge; historical audit counts are not current verification. -->
 
 ## Overview
 
-The v6 merge (2026-09-30) follows the approved system-workbench direction with named product labels
-and maturity discipline. The portfolio leads; DG32 is the inspectable engineering case. The incumbent
-ink/copper/bone palette, wordmark and three font families remain the identity. Bone now carries selected
-strategy and qualification sections; it is the existing paper material used as a surface, with dark text
-and deeper copper for legibility. It does not introduce another brand accent.
-
 **Creative North Star: "The Datasheet That Argues"**
 
-This is a semiconductor reference document that happens to be a website. It reads like a well set
-technical journal: serif headings that state a finding, sans-serif body text at a comfortable
-measure, and monospace for anything a machine produced. The page is dark because a datasheet full
-of oscilloscope traces, die renders and signal diagrams is easier to read on ink than on paper, and
-because the imagery it carries is photographic and dark.
+The v11 precision instrument catalogue leads with existing DeepGrid visuals, physical system jobs and searchable architectures. Navy typography, cool paper and white fields, restrained copper and self-hosted Manrope modernize the homepage and the Products and Technology entry surfaces. The incumbent ink, copper, bone, Newsreader, Inter and JetBrains Mono system remains on deeper engineering routes.
 
-The restraint is the argument. Every figure on the site carries the kind of evidence behind it, and
-claims that failed verification are printed with the reason they were withdrawn. A visual system
-that shouted would undercut that. So: one accent colour, used sparingly; rules and type rather than
-cards and shadows; no gradients on text, no glows, no stripes down the side of a panel. Where the
-site wants emphasis it uses size, weight and space.
-
-Motion is functional. The v6 workbench uses function selection and fault injection to expose causal states. Retained engineering routes carry their established interactions. Every explanation needs a complete readable resting state: content that exists only mid-animation is unavailable in screenshots and to readers with reduced motion. Runtime validation is required before motion behavior is marked passed.
+The Datasheet That Argues remains the evidence discipline: show the source, the mechanism and the maturity beside each decision. A pre-silicon layout capture is labelled as a design visualization, never a die photograph. Product breadth does not imply availability or transfer DG32 evidence to another part.
 
 **Key Characteristics:**
-- Dark ink ground, warm copper accent, one cool teal reserved for the safe state
-- Serif display over sans body over monospace labels: three voices, never four
-- Rules and type carry structure; shadows appear only on overlays and on hover
-- Evidence grade printed next to figures, not implied
-- Reduced motion is a first-class path, not a fallback
+- Navy and paper catalogue surfaces with dark engineering demonstrations
+- Manrope entry headings; retained Newsreader engineering headings, Inter prose and JetBrains Mono labels
+- Original DeepGrid source imagery with captions and onward inspection links
+- Searchable horizontal product rows retain process and individual maturity
+- Readable static, reduced-motion and WebGL-free explanations
 
 ## Colors
+
+### v11 catalogue scope
+The `v11-*` roles are scoped to the modernized entry surfaces. Navy is the primary text, button fill and dark system-section ground; Paper and White separate chapters and the finder. Muted carries secondary text, Rule separates rows, and Accent is the dark copper used on pale surfaces. Dark Muted and Stage Rule support navy demonstrations; Image Ground belongs to the existing layout capture frame. These do not replace the incumbent tokens below.
 
 A warm copper accent on a cool near-black ground, with a single teal admitted only where the
 hardware is in a safe state.
@@ -197,6 +223,9 @@ reaches every place copper is implied.
 
 ## Typography
 
+### v11 entry typography
+Manrope Variable is self-hosted in `app/layout.tsx`. It styles homepage h1/h2/h3 and Products/Technology h1 with weight 550 and -0.035em tracking. The scoped homepage hero uses the v11-display token, changing to `clamp(2.8rem, 10vw, 4.5rem)` at 760px. The stronger final hero selector retains the desktop clamp between 761px and 1100px. Homepage h2 uses v11-headline; finder section headings use line-height 1.15. Product row names use Manrope 650 at 1.08rem (1rem on mobile). Inter body and captions and JetBrains Mono part codes remain. The roles below describe the retained engineering system.
+
 **Display Font:** self-hosted Newsreader Variable, with Georgia, Times New Roman and serif fallbacks
 **Body Font:** self-hosted Inter Variable, with system-ui and sans-serif fallbacks
 **Label / Mono Font:** self-hosted JetBrains Mono Variable, with ui-monospace, SFMono-Regular, Menlo and monospace fallbacks
@@ -230,6 +259,13 @@ an evidence grade, a file name. Prose never sets itself in monospace for texture
 (`font-variant-numeric: tabular-nums`) are on every table, metric and counter.
 
 ## Layout
+
+### v11 entry and shared shell
+Above 1100px the sticky header combines the 165px wordmark, centered mega-navigation and contact link in one row; the topline is hidden. At 1100px and below, the labelled mobile-menu control replaces desktop navigation and contact. The dialog traps focus, restores focus on close and closes when switching back to desktop.
+
+The hero is a .9fr / 1.2fr grid, capped at 1680px, with 5% gutters, 76px top/56px bottom padding and 660px minimum height. At 1100px its minimum height clears and top padding becomes 45px. At 760px it becomes one column with 6% gutters and 40px/30px vertical padding. Finder sections use 90px/5% padding, reducing to 50px/6%; section headings and system demonstrations stack at 760px. Product rows change from code/name/process/arrow to code/name/arrow with process beneath the name. Family diagrams use four selector columns, becoming two at 760px; technology annotations change from three columns to one. Original diagrams remain contained and uncropped. Products and Technology first section headings explicitly use margin-top:0 so route navigation stays visible beneath the compact header.
+
+### Retained engineering layout
 
 A single centred column, `page-wrap`, capped at 1600px with an 8% side gutter that tightens to 5%
 below 650px, and body text capped at a 64ch measure regardless of viewport. Sections are separated by generous vertical space
@@ -299,6 +335,15 @@ document, and a document does not have pill-shaped edges.
 
 ## Components
 
+### v11 catalogue primitives and source visuals
+The primary entry action is navy on white, 4px radius, minimum 52px high and 16px 21px padding; hover uses dark copper. Focus is 2px dark copper at 4px offset on light surfaces, with incumbent copper on dark system/film surfaces. Buttons and product rows use 0.2s background transitions disabled under reduced motion. Filter buttons are at least 44px high; selected `aria-pressed` state is navy with white text. Search has an accessible label, a navy bottom rule and dark-copper caret. Search is case-insensitive over code, name, job and architecture and intersects with the selected family. The polite live result count includes the pre-silicon portfolio label; the empty state clears both search and family selection.
+
+Product rows link to individual part routes and show process and maturity. The four architecture selectors (Motor control/SKU-1, Power management/SKU-3, Radar sensing/SKU-7, Drone integration/D100) are grouped buttons with `aria-pressed`, not tab-role panels. Their active underline is copper; the image and caption change together and link to the selected part.
+
+Only existing DeepGrid imagery ships. `public/images/v11/dg32-layout.png` is the Silicon Engine layout capture from content-ideas, linked to the die route and captioned as pre-silicon, not a photograph. Product SVGs reuse `public/diagrams/*-architecture.svg`. Technology reuses the unchanged DG32-LITE architecture SVG from the Downloads architecture package, links to the full-size diagram and adds three mechanism annotations. Frames use 8px radii (inner architecture link frames use 5px); captions use v11-caption. `docs/v11/image-provenance.json` records exact origins, including the retained viewer capture. Rejected generated concepts are excluded from publication.
+
+### Retained engineering primitives
+
 ### Buttons
 - **Shape:** slightly softened corners (4px), or square where the control is structural.
 - **Primary:** copper fill, ink text, 10px 16px padding, minimum 44px tall.
@@ -330,9 +375,7 @@ document, and a document does not have pill-shaped edges.
   on submit.
 
 ### Navigation
-- Sticky top tab bar across all routes, mono labels, a page-progress hairline along its top edge, and
-  the active route marked by a copper top border on a square button. Below 800px the bar collapses
-  into a sheet behind a labelled menu button.
+- The shared v11 header uses the 1100px navigation breakpoint described in Layout. Retained route navigation and engineering controls keep their incumbent copper state markers.
 
 ### The Cross-Reference Block (signature)
 Every route ends with the same structure: a hairline-separated list of sibling sections, each with a

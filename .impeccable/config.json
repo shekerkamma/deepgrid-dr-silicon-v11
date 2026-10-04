@@ -13,5 +13,6 @@
         "reason": "dr.css:169 and :287 are the copper top border of the ACTIVE tab in the library and architecture tab bars: a state indicator, not decoration (v10 QA triage 2026-10-04)"
       }
     ]
-  }
+  },
+  "buildPath": "code"
 }

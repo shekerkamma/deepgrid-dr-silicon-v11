@@ -18,7 +18,10 @@ export const menus: Menu[] = [
   {
     id: 'products', label: 'Products', match: ['products'],
     items: [
-      { label: 'DG32-LITE and DG32-2DOM', href: a('/products'), note: 'One footprint, two chips' },
+      { label: 'Explore all ten architectures', href: a('/products'), note: 'Motion, power, sensing, interfaces and integration' },
+      { label: 'DG32 safety MCU', href: a('/products/sku-4'), note: 'Lockstep control and the hardware fault path' },
+      { label: 'BLDC motor controller', href: a('/products/sku-1'), note: 'Motor control and its power stage' },
+      { label: 'D100 Drone SoC', href: a('/products/d100'), note: 'Flight safety and perception compute' },
       { label: 'Pinout & package', href: a('/technology/package'), note: '44 signals in a 9 × 9 mm package' },
       { label: 'Where DG32 leads', href: a('/procurement'), note: 'And where it does not yet' },
     ],
@@ -76,7 +79,7 @@ export const menus: Menu[] = [
 
 const canHover = () => typeof matchMedia !== 'undefined' && matchMedia('(hover: hover)').matches;
 
-export function MegaNav({ route, onNavigate, label = 'Primary navigation' }: { route: RouteId; onNavigate?: () => void; label?: string }) {
+export function MegaNav({ route, onNavigate, label = 'Primary navigation', compact = false }: { route: RouteId; onNavigate?: () => void; label?: string; compact?: boolean }) {
   const [open, setOpen] = useState<string | null>(null);
   const menuId = 'menu-' + useId().replace(/[^a-zA-Z0-9_-]/g, '') + '-';
   const root = useRef<HTMLElement>(null);
@@ -125,10 +128,10 @@ export function MegaNav({ route, onNavigate, label = 'Primary navigation' }: { r
 
   return (
     <nav className="mega-nav" aria-label={label} ref={root}>
-      <a href={url('/')} className={'mega-home' + (route === 'home' ? ' active' : '')} aria-current={route === 'home' ? 'page' : undefined} onClick={onNavigate}>
+      {!compact && <a href={url('/')} className={'mega-home' + (route === 'home' ? ' active' : '')} aria-current={route === 'home' ? 'page' : undefined} onClick={onNavigate}>
         <img src={url('/brand/deepgrid-d-64.png')} alt="" aria-hidden="true" width={20} height={20} />
         Deepgrid Semi
-      </a>
+      </a>}
       {menus.map((m) => {
         const isOpen = open === m.id;
         const active = m.match.includes(route);

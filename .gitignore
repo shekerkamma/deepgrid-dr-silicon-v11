@@ -64,3 +64,5 @@ verify-shots/
 /.playwright-mcp/
 __pycache__/
 qa/
+
+/.impeccable/review/

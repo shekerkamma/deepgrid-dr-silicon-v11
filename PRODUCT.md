@@ -12,3 +12,6 @@ Nine core SKU architectures plus D100; DG SDV is a reference platform. Architect
 Indexed catalogue: app/data/deepgrid-knowledge.ts and deepgrid-chapters.json. Corrective register: app/claims.ts. Public downloads: engineering guides, datasheets, sensing/workload analysis, SKU compendium and strategy. GitHub source renders are concepts.
 ## Principles
 Start with system jobs; demonstrate DG32 without transferring its properties; put maturity beside decisions; reconcile index conflicts; preserve mobile/reduced-motion/WebGL-free comprehension.
+
+## v11 delegated scope
+Owner delegated decisions on 2026-10-04: engineering/OEM audience first, partner diligence supported; separate GitHub Pages v11; code-led modernization. Preserve source-backed product truth and pre-silicon boundaries.

@@ -1,0 +1,1 @@
+Origin: Existing DeepGrid source capture /home/sheke/content-ideas/runs/2026-09-12-dgse-tool-video/deck/assets/die-cover.png. Captured in DeepGrid Silicon Engine; visual-spec.json v-cover-die records exact-source-evidence and crop 400,250,1140,740. Reused unchanged. Pre-silicon layout, not a manufactured device.

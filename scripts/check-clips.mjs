@@ -29,7 +29,7 @@ const num = (body, name) => Number(body.match(new RegExp(`${name}: ([\\d.]+)`))?
 
 const clips = [];
 for (const {file, min} of SOURCES) {
-  const src = fs.readFileSync(path.join(root, file), 'utf8');
+  const src = fs.readFileSync(path.join(root, file), 'utf8').replace(/\r\n/g, '\n');
   const block = src.slice(src.indexOf('const clips'), src.indexOf('\n};', src.indexOf('const clips')));
   const found = [...block.matchAll(/^  '?([\w\s-]+?)'?: \{\n([\s\S]*?)\n  \},$/gm)].map(m => ({
     kind: `${file.split('/').slice(-2).join('/')} ${m[1]}`,

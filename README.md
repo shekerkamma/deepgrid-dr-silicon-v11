@@ -1,10 +1,18 @@
-# DeepGrid Semi v6
+# DeepGrid Semi v11
 
-Portfolio and strategy first, with DG32 as the inspectable engineering proof point. Endpoint: https://shekerkamma.github.io/deepgrid-dr-silicon-v6/
+Live: https://shekerkamma.github.io/deepgrid-dr-silicon-v11/
 
-The v6 review covers all 24 declared routes; home and company are replacement narratives, the products atlas and applications discovery are revised, and the deeper pages receive specific evaluation guides. See docs/v6/story-pack.md and WORKSPACE_MAP.md. Architecture, simulation, implementation and qualified production remain distinct.
+A modernized silicon portfolio with original DeepGrid imagery, a searchable ten-part catalogue, selectable architecture diagrams, and a compact responsive navigation. The overview uses a captured DG32 Silicon Engine layout; products uses original SKU diagrams; technology uses the DG32-LITE architecture package. See `docs/v11/image-provenance.json` for sources.
 
----
+The site remains pre-silicon: design targets, simulation, implementation and qualified production are distinguished. All 35 declared routes, source documents, films and safety interactions are retained. `WORKSPACE_MAP.md` identifies the implementation and verification entry points.
+
+GitHub Actions builds under the repository base path, runs route, navigation, source-reading, imagery and interaction checks, then deploys to Pages and repeats the checks against the live site.
+
+Local build (Node 24): `npm ci --ignore-scripts`, `npm run typecheck`, then `PAGES_BASE=/deepgrid-dr-silicon-v11/ NEXT_PUBLIC_PAGES_BASE=/deepgrid-dr-silicon-v11/ npm run build:pages`. On Windows use the PowerShell environment variable syntax described in `WORKSPACE_MAP.md`.
+
+## Historical implementation notes
+
+The notes below describe earlier releases and their original route inventory and endpoints. The current route map is `app/routes.ts`.
 
 # DG32 silicon site
 

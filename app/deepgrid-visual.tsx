@@ -1,0 +1,16 @@
+'use client';
+import {useState} from 'react';
+import {ArrowUpRight} from 'lucide-react';
+import {url} from './routes';
+const families=[
+ {name:'Motor control',code:'SKU-1',file:'sku-1',copy:'The control engine and the power stage, in one architecture.'},
+ {name:'Power management',code:'SKU-3',file:'sku-3',copy:'Convert the equipment power bus into sequenced board supplies.'},
+ {name:'Radar sensing',code:'SKU-7',file:'sku-7',copy:'A specialist RF front end, sampling and baseband processing.'},
+ {name:'Drone integration',code:'D100',file:'d100',copy:'Separate flight safety from higher-level perception compute.'},
+];
+export function DeepGridVisual({kind,priority=false}:{kind:'overview'|'products'|'technology';priority?:boolean}){
+ const [selected,setSelected]=useState(0);const p=families[selected];
+ if(kind==='products')return <figure className="v11-visual v11-visual-products"><div className="v11-family-tabs" role="group" aria-label="Explore product architecture diagrams">{families.map((x,i)=><button key={x.code} aria-pressed={selected===i} onClick={()=>setSelected(i)}>{x.name}<span>{x.code}</span></button>)}</div><a href={url('/products/'+p.file)} aria-label={'Explore '+p.code+' '+p.name}><img src={url('/diagrams/'+p.file+'-architecture.svg')} alt={p.code+' '+p.name+' original DeepGrid architecture diagram'} loading={priority?'eager':'lazy'} decoding="async"/></a><figcaption><strong>{p.code} · {p.copy}</strong><br/>Original DeepGrid architecture diagram · pre-silicon design. <a href={url('/products/'+p.file)}>Explore this part <ArrowUpRight size={14}/></a></figcaption></figure>;
+ if(kind==='overview')return <figure className="v11-visual v11-visual-overview"><a href={url('/technology/die')} aria-label="Inspect the DG32 die"><img src={url('/images/v11/dg32-layout.png')} alt="DG32-LITE layout rendered in DeepGrid Silicon Engine, showing the routed die and its internal regions" width={1140} height={740} fetchPriority="high" loading="eager" decoding="async"/></a><figcaption><strong>DG32-LITE · from layout to system</strong><br/>DeepGrid Silicon Engine design visualization · pre-silicon, not a die photograph. <a href={url('/technology/die')}>Inspect the design <ArrowUpRight size={14}/></a></figcaption></figure>;
+ return <figure className="v11-visual v11-visual-technology"><a href={url('/images/v11/dg32-lite-architecture.svg')} target="_blank" rel="noreferrer" aria-label="Open full-size DG32-LITE architecture diagram"><img src={url('/images/v11/dg32-lite-architecture.svg')} alt="Original DG32-LITE system architecture: paired MAIN and CHECKER cores, fault latch, memory, control datapath and external gate driver" loading={priority?'eager':'lazy'} decoding="async"/></a><dl className="v11-tech-labels"><div><dt>Execute. Check. Compare.</dt><dd>MAIN and CHECKER execute with a two-cycle skew. A comparator observes disagreement.</dd></div><div><dt>A hardware fault path.</dt><dd>A sticky latch records the mismatch. FAULT_N disables the external gate driver.</dd></div><div><dt>Control has its own datapath.</dt><dd>ADC acquisition, CORDIC and PWM use dedicated hardware. Firmware runs the d/q PI regulators.</dd></div></dl><figcaption>Original DG32-LITE architecture diagram from the DeepGrid architecture package. Pre-silicon design; open the image for the complete diagram.</figcaption></figure>;
+}

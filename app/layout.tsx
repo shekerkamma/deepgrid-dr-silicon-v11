@@ -12,6 +12,8 @@ import '@fontsource-variable/inter';
 import '@fontsource-variable/jetbrains-mono';
 import './company-pages.css';
 import './v3.css';
+import '@fontsource-variable/manrope';
+import './modern-v11.css';
 import {url} from './routes';
 export const metadata:Metadata={title:'DeepGrid Semi: Silicon for Physical Systems',description:'Motion, power, sensing, interfaces and safety: explore DeepGrid’s mature-node silicon portfolio, strategy and DG32 engineering evidence.',icons:{icon:url('/brand/deepgrid-d-64.png'),apple:url('/brand/deepgrid-d-192.png')}};
 export default function RootLayout({children}:Readonly<{children:React.ReactNode}>){

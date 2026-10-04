@@ -44,7 +44,7 @@ export function Shell({
     dialog.addEventListener('keydown', trapFocus);
     const previousOverflow = document.body.style.overflow;
     document.body.style.overflow = 'hidden';
-    const desktop = matchMedia('(min-width: 901px)');
+    const desktop = matchMedia('(min-width: 1101px)');
     const closeOnDesktop = () => { if (desktop.matches) setMenu(false); };
     desktop.addEventListener('change', closeOnDesktop);
     return () => {
@@ -74,7 +74,7 @@ export function Shell({
 
       <header className="topbar">
         <a className="brand" href={href('/')} aria-label="DeepGrid Semi home"><Brand/></a>
-        <div className="topline">
+        <div className="main-nav"><MegaNav route={route} compact/></div><div className="topline">
           <span>DG32 · LOCKSTEP RISC-V MOTOR-CONTROL SILICON</span>
           <span className="status-dot">FIRST SILICON · SEP 2026</span>
         </div>
@@ -84,7 +84,7 @@ export function Shell({
         </button>
       </header>
 
-      <div className="main-nav"><MegaNav route={route}/></div>
+
 
       {menu && (
         <dialog ref={menuDialog} id="mobile-navigation" className="navigation-sheet mobile-sheet" aria-label="Navigation" onCancel={() => setMenu(false)} onClose={() => setMenu(false)}>
@@ -211,4 +211,3 @@ export function useNav() {
   const navigate = (target: string) => { location.assign(href(target)); };
   return {href, navigate, go: navigate};
 }
-

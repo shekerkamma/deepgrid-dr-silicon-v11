@@ -12,6 +12,8 @@ import {ProductsScene} from '../three/blocks';
 import Related from '../related';
 import {url} from '../routes';
 import ProductTiles from '../product-tiles';
+import {DeepGridVisual} from '../deepgrid-visual';
+import {PortfolioFinder} from '../portfolio-finder';
 
 export default function Page() {
   const {navigate, go, href} = useNav();
@@ -19,6 +21,8 @@ export default function Page() {
     <Shell route="products"><PortfolioV6Style/>
       <section className="page-wrap">
   <SectionHead kicker="Products" title="Ten parts, each for one physical job." copy="Motion and safety, power and infrastructure, interfaces and perception, system integration: each part starts from the job it does on the board. Below the ten, DG32, the lockstep safety MCU, is shown in depth with its 2DOM variant. Pre-silicon; every figure is a design target."/>
+  <DeepGridVisual kind="products" priority/>
+  <PortfolioFinder/>
   <ProductTiles/>
   <ProductsScene/>
   <Stats items={[['2 cores','In lockstep: CHECKER runs two cycles behind MAIN'],['~300 cycles','Fixed hardware cost of one FOC loop'],['44 pins','One signal pinout for both chips']]}/>

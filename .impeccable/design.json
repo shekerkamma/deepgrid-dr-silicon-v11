@@ -1,6 +1,6 @@
 {
   "schemaVersion": 2,
-  "generatedAt": "2026-09-30T00:00:00Z",
+  "generatedAt": "2026-10-05T00:00:00Z",
   "title": "Design System: DeepGrid Silicon Portfolio",
   "extensions": {
     "colorMeta": {
@@ -268,6 +268,51 @@
         "purpose": "Observed v6 UI role; canonical value is owned by DESIGN.md frontmatter.",
         "displayName": "Evaluation Surface",
         "role": "neutral"
+      },
+      "v11-navy": {
+        "displayName": "Navy (v11)",
+        "role": "neutral",
+        "purpose": "Scoped v11 catalogue role; canonical value is owned by DESIGN.md frontmatter. Source: app/modern-v11.css."
+      },
+      "v11-paper": {
+        "displayName": "Paper (v11)",
+        "role": "neutral",
+        "purpose": "Scoped v11 catalogue role; canonical value is owned by DESIGN.md frontmatter. Source: app/modern-v11.css."
+      },
+      "v11-white": {
+        "displayName": "White (v11)",
+        "role": "neutral",
+        "purpose": "Scoped v11 catalogue role; canonical value is owned by DESIGN.md frontmatter. Source: app/modern-v11.css."
+      },
+      "v11-muted": {
+        "displayName": "Muted (v11)",
+        "role": "neutral",
+        "purpose": "Scoped v11 catalogue role; canonical value is owned by DESIGN.md frontmatter. Source: app/modern-v11.css."
+      },
+      "v11-rule": {
+        "displayName": "Rule (v11)",
+        "role": "neutral",
+        "purpose": "Scoped v11 catalogue role; canonical value is owned by DESIGN.md frontmatter. Source: app/modern-v11.css."
+      },
+      "v11-accent": {
+        "displayName": "Accent (v11)",
+        "role": "primary",
+        "purpose": "Scoped v11 catalogue role; canonical value is owned by DESIGN.md frontmatter. Source: app/modern-v11.css."
+      },
+      "v11-dark-muted": {
+        "displayName": "Dark Muted (v11)",
+        "role": "neutral",
+        "purpose": "Scoped v11 catalogue role; canonical value is owned by DESIGN.md frontmatter. Source: app/modern-v11.css."
+      },
+      "v11-stage-rule": {
+        "displayName": "Stage Rule (v11)",
+        "role": "neutral",
+        "purpose": "Scoped v11 catalogue role; canonical value is owned by DESIGN.md frontmatter. Source: app/modern-v11.css."
+      },
+      "v11-image-ground": {
+        "displayName": "Image Ground (v11)",
+        "role": "neutral",
+        "purpose": "Scoped v11 catalogue role; canonical value is owned by DESIGN.md frontmatter. Source: app/modern-v11.css."
       }
     },
     "typographyMeta": {
@@ -306,6 +351,18 @@
       "portfolio-label": {
         "purpose": "Function, section and evidence markers.",
         "displayName": "Portfolio label"
+      },
+      "v11-display": {
+        "displayName": "v11-display",
+        "purpose": "Scoped homepage hero; 760px mobile clamp documented in Layout."
+      },
+      "v11-headline": {
+        "displayName": "v11-headline",
+        "purpose": "Modernized homepage section headings; finder uses 1.15 line-height."
+      },
+      "v11-caption": {
+        "displayName": "v11-caption",
+        "purpose": "Original-source visual captions, Inter 400."
       }
     },
     "shadows": [
@@ -357,6 +414,14 @@
       {
         "value": "700px",
         "name": "evaluation-stack"
+      },
+      {
+        "name": "v11-navigation",
+        "value": "1100px"
+      },
+      {
+        "name": "v11-content-stack",
+        "value": "760px"
       }
     ],
     "portfolioRefinement": {
@@ -412,6 +477,22 @@
       ],
       "source": "app/portfolio-workbench.tsx",
       "detector": "The existing docs/v6/detector.json snapshot has 24 advisories: 8 color and 16 font-size, plus 2 warnings. Older positions and removed literals are historical; only actual source literals are recorded here."
+    },
+    "v11Modernization": {
+      "date": "2026-10-05",
+      "direction": "Precision instrument catalogue; owner-delegated scope",
+      "sources": [
+        "app/modern-v11.css",
+        "app/deepgrid-visual.tsx",
+        "app/portfolio-finder.tsx",
+        "app/shell.tsx",
+        "app/layout.tsx",
+        "docs/v11-direction.md",
+        "docs/v11/image-provenance.json"
+      ],
+      "preservedIdentity": "Incumbent dark engineering palette and Newsreader/Inter/JetBrains Mono remain on deeper routes.",
+      "imagery": "Existing DeepGrid source imagery only; content-ideas Silicon Engine captures, existing per-product SVGs and Downloads DG32-LITE architecture package. Captions retain pre-silicon boundaries.",
+      "validation": "Documentation checked against final source including margin-top:0 correction. Runtime review and final recapture are reported separately."
     }
   },
   "components": [
@@ -476,17 +557,33 @@
       "css": ".ds-guide{background:#101212;color:#eeeae2;border-top:1px solid #677166;padding:24px;max-width:430px}.ds-guide small{font:.7rem 'JetBrains Mono Variable',monospace;color:#d4a36e}.ds-guide h2{font:450 1.65rem/1.3 'Inter Variable',system-ui,sans-serif}.ds-guide p{font:.9rem/1.7 'Inter Variable',system-ui,sans-serif;color:#aab3a8}.ds-guide a{display:inline-flex;min-height:44px;align-items:center;color:#d4a36e;font:.85rem 'Inter Variable',system-ui,sans-serif}.ds-guide a:hover{text-decoration:underline}.ds-guide a:focus-visible{outline:2px solid #d9ac78;outline-offset:3px}",
       "html": "<aside class=\"ds-guide\"><small>YOUR EVALUATION</small><h2>Ask what each result proves.</h2><p>Read the claim, method, conditions and revision together.</p><a href=\"#\">Read the relevant architecture ↗</a></aside>",
       "kind": "custom"
+    },
+    {
+      "name": "v11 Catalogue Action",
+      "kind": "button",
+      "refersTo": "v11-button",
+      "description": "Navy entry action on light catalogue surfaces.",
+      "html": "<a class=\"ds-v11-action\" href=\"#\">Explore the portfolio</a>",
+      "css": ".ds-v11-action{display:inline-flex;align-items:center;min-height:52px;padding:16px 21px;background:var(--v11-navy,#142c43);color:var(--v11-white,#fff);border-radius:4px;text-decoration:none;font:600 1rem 'Inter Variable',system-ui,sans-serif;transition:background .2s}.ds-v11-action:hover{background:var(--v11-accent,#8d572e)}.ds-v11-action:focus-visible{outline:2px solid var(--v11-accent,#8d572e);outline-offset:4px}@media(prefers-reduced-motion:reduce){.ds-v11-action{transition:none}}"
+    },
+    {
+      "name": "v11 Family Filter",
+      "kind": "chip",
+      "refersTo": "v11-filter-selected",
+      "description": "Selected family filter; aria-pressed communicates selection.",
+      "html": "<button class=\"ds-v11-filter\" aria-pressed=\"true\">All architectures</button>",
+      "css": ".ds-v11-filter{min-height:44px;padding:11px 13px;border:1px solid var(--v11-rule,#ccd5dd);border-radius:4px;background:var(--v11-white,#fff);color:var(--v11-navy,#142c43);font:.78rem 'Inter Variable',system-ui,sans-serif;cursor:pointer}.ds-v11-filter[aria-pressed=true]{background:var(--v11-navy,#142c43);border-color:var(--v11-navy,#142c43);color:var(--v11-white,#fff)}.ds-v11-filter:focus-visible{outline:2px solid var(--v11-accent,#8d572e);outline-offset:4px}"
     }
   ],
   "narrative": {
     "northStar": "The Datasheet That Argues",
-    "overview": "A semiconductor portfolio and strategy told through physical equipment jobs, with DG32 as the detailed pre-silicon engineering case. The Datasheet That Argues keeps its ink, copper, bone and three typography voices. Source-led atlas rows, specialist boundaries and qualification gates make maturity visible beside the decision.",
+    "overview": "The v11 precision instrument catalogue leads with existing DeepGrid visuals, physical system jobs and searchable architectures. Navy typography, cool paper and white fields, restrained copper and self-hosted Manrope modernize the homepage and the Products and Technology entry surfaces. The incumbent ink, copper, bone, Newsreader, Inter and JetBrains Mono system remains on deeper engineering routes.\n\nThe Datasheet That Argues remains the evidence discipline: show the source, the mechanism and the maturity beside each decision. A pre-silicon layout capture is labelled as a design visualization, never a die photograph. Product breadth does not imply availability or transfer DG32 evidence to another part.",
     "keyCharacteristics": [
-      "Ink and bone chapter grounds; copper UI accent; industrial materials stay inside the object",
-      "Newsreader hero, Inter section verdicts and body, JetBrains Mono technical labels",
-      "Source-linked architecture and maturity beside each named part",
-      "Flat diagrams distinguish shared, specialist and proposed integration",
-      "Complete readable causal path independent of animation or WebGL"
+      "Navy and paper catalogue surfaces with dark engineering demonstrations",
+      "Manrope entry headings; retained Newsreader engineering headings, Inter prose and JetBrains Mono labels",
+      "Original DeepGrid source imagery with captions and onward inspection links",
+      "Searchable horizontal product rows retain process and individual maturity",
+      "Readable static, reduced-motion and WebGL-free explanations"
     ],
     "rules": [
       {
