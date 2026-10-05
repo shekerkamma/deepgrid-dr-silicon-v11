@@ -33,13 +33,13 @@ for(const width of [1440,1024,390]){
    }
   }
   if(route===''){
-   assert.equal(await page.locator('.v11-product-row').count(),10);
+   assert.equal(await page.locator('.v11-product-row').count(),12);
    await page.getByRole('button',{name:'Motion & safety',exact:true}).click();
    assert.equal(await page.locator('.v11-product-row').count(),2);
    await page.getByRole('searchbox',{name:'Search architectures'}).fill('no-matching-architecture');
    assert.equal(await page.locator('.v11-product-row').count(),0);
    await page.getByRole('button',{name:'Clear search and filters'}).click();
-   assert.equal(await page.locator('.v11-product-row').count(),10);
+   assert.equal(await page.locator('.v11-product-row').count(),12);
    await page.getByRole('searchbox',{name:'Search architectures'}).fill('radar');
    assert.equal(await page.locator('.v11-product-row').count(),1);
    assert.match(await page.locator('.v11-product-row').getAttribute('href'),/products\/sku-7$/);

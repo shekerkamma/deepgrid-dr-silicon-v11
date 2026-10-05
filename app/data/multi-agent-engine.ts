@@ -165,7 +165,7 @@ export function getGroundedAnswer(rawQuery: string): GroundedAnswer {
     citationPage = 'p. 42–49';
     referenceLinks = [
       { label: 'Where DG32 leads, and where it does not', hash: 'procurement', description: 'The comparison with the STM32G0, gaps included, and the roadmap that closes them.' },
-      { label: 'Sovereign 10-SKU Portfolio Horizon', hash: 'overview', description: 'Explore the 10-SKU roadmap addressing India’s $9B import deficit.' },
+      { label: 'Sovereign SKU Portfolio Horizon', hash: 'overview', description: 'Explore the SKU roadmap addressing India’s $9B import deficit.' },
       { label: 'Dual-Foundry Manufacturing Strategy', hash: 'roadmap', description: 'Examine SkyWater 130 nm CMOS and SCL Mohali 180 nm BCD qualification milestones.' }
     ];
     deepLink = {

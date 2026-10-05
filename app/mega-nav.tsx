@@ -18,7 +18,7 @@ export const menus: Menu[] = [
   {
     id: 'products', label: 'Products', match: ['products'],
     items: [
-      { label: 'Explore all ten architectures', href: a('/products'), note: 'Motion, power, sensing, interfaces and integration' },
+      { label: 'Explore all twelve architectures', href: a('/products'), note: 'Motion, power, sensing, interfaces and integration' },
       { label: 'DG32 safety MCU', href: a('/products/sku-4'), note: 'Lockstep control and the hardware fault path' },
       { label: 'BLDC motor controller', href: a('/products/sku-1'), note: 'Motor control and its power stage' },
       { label: 'D100 Drone SoC', href: a('/products/d100'), note: 'Flight safety and perception compute' },
@@ -44,7 +44,7 @@ export const menus: Menu[] = [
       { label: 'Defence, avionics and drones', href: a('/use-cases/defence'), note: 'Screened parts, and a failsafe that does not depend on software' },
       { label: 'Grid and metering', href: a('/use-cases/grid'), note: 'Measure the power and record tampering' },
       { label: 'On nearly every board', href: a('/use-cases/boards'), note: 'Supervisors and transceivers, where the volume is' },
-      { label: 'All chips by application', href: a('/applications'), note: 'Nine core SKU architectures plus D100' },
+      { label: 'All chips by application', href: a('/applications'), note: 'Eleven core SKU architectures plus D100' },
     ],
   },
   {

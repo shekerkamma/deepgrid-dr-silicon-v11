@@ -29,7 +29,7 @@ export const notClaimed = [
   'No functional-safety certification. Hardware lockstep is a mechanism, not a certificate.',
   'No sign-off result for the tape-in die: the four gates it must pass are listed, not reported as passed.',
   'No price or cost claims against any competitor.',
-  'No silicon result for the other nine chips: none is on a shuttle, and they rest on architecture sheets and logic validated on an FPGA. The one DeepGrid chip returned so far is a 130 nm test chip made on its own flow (whitepaper v3, §3).',
+  'No silicon result for the other eleven chips: they rest on architecture sheets, RTL and logic validated on an FPGA; nine prototypes are planned for the December 2026 shuttle (SKU Blueprint, October 2026). The one DeepGrid chip returned so far is a 130 nm test chip made on its own flow (whitepaper v3, §3).',
   'No market size or price for the wider portfolio: the annex market tiles are rough internal estimates and are not shown. The only revenue figures on this site are the plan targets on the company page, which are not results.',
 ];
 
@@ -438,6 +438,8 @@ export const sovereignSkuHorizon: SkuRoadmapItem[] = [
   { sku: 'SKU-7', name: 'DG-RADAR-77', phase: 'Phase 2 · IHP (Germany)', node: '0.13 µm SiGe BiCMOS', foundry: 'IHP Microelectronics', targetApp: '77 GHz 4D MIMO radar front end, fabricated outside US export control' },
   { sku: 'SKU-8', name: 'DG-DISP-17', phase: 'Phase 1 · SkyWater (USA)', node: '130 nm HV CMOS', foundry: 'SkyWater', targetApp: 'Rugged cockpit display driver, 0–12 V column amplifiers with compensated gamma' },
   { sku: 'SKU-9', name: 'DG-SDV-ZONE', phase: 'Phase 1 · SkyWater (USA)', node: '130 nm + 180 nm', foundry: 'SkyWater', targetApp: 'Zonal gateway: 16 smart e-fuses and four-port Gigabit TSN, replacing relay boxes' },
+  { sku: 'SKU-10', name: 'DG32-Max', phase: 'Phase 1 · SkyWater (USA)', node: '130 nm CMOS (SKY130)', foundry: 'SkyWater', targetApp: 'Secure lockstep MCU with signed boot from mask ROM, replacing an imported secure MCU plus secure element' },
+  { sku: 'SKU-11', name: 'DG-BMS-SOH', phase: 'Phase 1 · SkyWater (USA)', node: '130 nm CMOS (SKY130)', foundry: 'SkyWater', targetApp: 'Battery-management controller with on-chip state-of-health inference and hardwired protection' },
   { sku: 'Track B', name: 'DG-D100', phase: 'Separate track', node: '130 nm + 28 nm, multi-die SiP', foundry: 'TSMC (28 nm die)', targetApp: 'Tactical drone SoC with an independent hardware failsafe island wired to the ESCs' },
 ];
 

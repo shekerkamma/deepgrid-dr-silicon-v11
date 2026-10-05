@@ -20,7 +20,7 @@ export interface GroundedDoc {
   summary: string;
   highlights: string[];
   defaultQuery: string;
-  queryDocId: 'doc1' | 'doc2' | 'doc3' | 'doc4' | 'doc5' | 'doc6';
+  queryDocId: 'doc1' | 'doc2' | 'doc3' | 'doc4' | 'doc5' | 'doc6' | 'doc7';
 }
 
 export const groundedDocuments: GroundedDoc[] = [
@@ -85,6 +85,37 @@ export const groundedDocuments: GroundedDoc[] = [
     ],
     defaultQuery: 'Compare DG32 with the STM32G0: where does each lead?',
     queryDocId: 'doc2',
+  },
+  {
+    id: 'doc7',
+    badge: 'DOC #7 · SKU BLUEPRINT',
+    docNum: '07',
+    title: 'SKU Blueprint, October 2026 (11 SKUs + D100)',
+    subtitle: 'One handout per SKU: what it replaces, market, share needed, unit economics, buyers, policy driver, process choice and the FPGA-to-chip boundary',
+    group: 'core',
+    subsystem: 'Product Portfolio',
+    specFile: '/downloads/docs/deepgrid-sku-blueprint-oct2026.md',
+    specFileName: 'deepgrid-sku-blueprint-oct2026.md',
+    pdfFile: '/downloads/docs/deepgrid-sku-blueprint-oct2026.pdf',
+    pdfFileName: 'deepgrid-sku-blueprint-oct2026.pdf',
+    fileSizeMd: '66 KB',
+    fileSizePdf: '3.6 MB',
+    pdfPageCount: '46 pages',
+    stats: [
+      { label: 'Portfolio', value: '11 SKUs plus the Track B D100 drone SoC' },
+      { label: 'Process', value: 'SkyWater 130 nm and SCL 180 nm; SKU-7 on IHP SG13G2' },
+      { label: 'Format', value: 'Nine questions per SKU, answered in the same order' },
+      { label: 'Shuttle', value: 'Nine prototypes on the ChipFoundry December 2026 shuttle' },
+    ],
+    summary: 'The current product portfolio. Each SKU is a standalone handout answering the same nine questions: what the part is, what it replaces, how big the market is, what share is needed and whether that is realistic, what each unit earns, who buys it, the policy driver, why this process node, and where the FPGA prototype ends and the chip begins. Adds SKU-10 DG32-Max Secure MCU and SKU-11 SOH-Aware BMS Controller to the earlier nine. Volumes, prices and shares are the company\'s own estimates.',
+    highlights: [
+      'New in this edition: SKU-10 DG32-Max Secure MCU and SKU-11 SOH-Aware BMS Controller',
+      'Each SKU states what it replaces, who buys it, the policy driver and why its process node was chosen',
+      'Status per SKU: what is RTL-ready, simulated or FPGA-validated, and which parts take the December 2026 shuttle',
+      'The D100 drone SoC is Track B, funded by a separate round and taking nothing from the eleven chips’ budget',
+    ],
+    defaultQuery: 'Which SKUs are in the October 2026 SKU Blueprint and what are their plan lines?',
+    queryDocId: 'doc7',
   },
   {
     id: 'doc3',

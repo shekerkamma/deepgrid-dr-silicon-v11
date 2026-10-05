@@ -12,7 +12,7 @@
 //      and "Read the documentation" are not reasons; "the cycle budget those tasks are spending" is.
 import type {RouteId} from './routes';
 
-export type DocId = 'doc1' | 'doc2' | 'doc3' | 'doc4' | 'doc5' | 'doc6';
+export type DocId = 'doc1' | 'doc2' | 'doc3' | 'doc4' | 'doc5' | 'doc6' | 'doc7';
 export type SectionRef = {id: RouteId; why: string; query?: string};
 export type Related = {sections: SectionRef[]; docs: DocId[]};
 
@@ -99,6 +99,24 @@ export const related: Record<RouteId, Related> = {
     ],
     docs: ['doc2'],
   },
+  sku10: {
+    sections: [
+      {id: 'sku4', why: 'The lockstep safety pattern its two cores build on.'},
+      {id: 'sku11', why: 'The battery controller that reuses its whole platform.'},
+      {id: 'uc-boards', why: 'The industrial, drone and gateway boards that need signed boot.'},
+      {id: 'evidence', why: 'What feature-complete RTL does and does not establish before silicon.'},
+    ],
+    docs: ['doc7'],
+  },
+  sku11: {
+    sections: [
+      {id: 'sku10', why: 'The DG32-Max platform its processor and security come from.'},
+      {id: 'sku6', why: 'The supervisor whose protection comparators it reuses.'},
+      {id: 'uc-vehicles', why: 'The e-2W and e-3W packs it is first aimed at.'},
+      {id: 'evidence', why: 'What a block specification establishes, and what it leaves to silicon and field data.'},
+    ],
+    docs: ['doc7'],
+  },
   d100: {
     sections: [
       {id: 'uc-defence', why: 'The drone and avionics platforms D100 is scoped for.'},
@@ -120,7 +138,7 @@ export const related: Record<RouteId, Related> = {
       {id: 'technology', why: 'The architecture behind both parts, one tab each.'},
       {id: 'package', why: 'The 44-signal QFN-64 pinout both chips share, pin for pin.'},
       {id: 'procurement', why: 'How DG32 compares with the STM32G0, gaps included.'},
-      {id: 'applications', why: 'Where each of the ten chips goes, and what DG32 watches in a motor.'},
+      {id: 'applications', why: 'Where each of the twelve chips goes, and what DG32 watches in a motor.'},
     ],
     docs: ['doc6', 'doc2'],
   },
@@ -184,7 +202,7 @@ export const related: Record<RouteId, Related> = {
       {id: 'procurement', why: 'Where the design still loses to the incumbent, stated plainly.'},
       {id: 'control', why: 'The largest analytic claim on the site, with its derivation.'},
       {id: 'safety', why: 'The simulated fault path, and what simulation does and does not show.'},
-      {id: 'applications', why: 'The ten chips this page grades, by the systems they go into.'},
+      {id: 'applications', why: 'The twelve chips this page grades, by the systems they go into.'},
     ],
     docs: ['doc1', 'doc4', 'doc6'],
   },

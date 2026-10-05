@@ -164,7 +164,7 @@ export const claims: Record<string, Claim> = {
   },
   'sku-4': {
     figure: 'SKU-4',
-    measures: 'DG32-LITE’s place in the ten-chip portfolio: the lockstep safety MCU. Two sources agree chip for chip',
+    measures: 'DG32-LITE’s place in the portfolio: the lockstep safety MCU. Two sources agree chip for chip',
     source: 'deepgrid-sku-compendium-architecture.md',
     sourceTitle: 'SKU Architecture Compendium (Technical Annex v3)',
     probe: 'Safety MCU',

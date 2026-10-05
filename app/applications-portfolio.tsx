@@ -29,12 +29,12 @@ const scene: Record<string, {src: string; alt: string}> = {
 };
 const skuOf: Record<ProductId, string> = {
   sku1: 'SKU-1', sku2: 'SKU-2', sku3: 'SKU-3', sku4: 'SKU-4', sku5: 'SKU-5',
-  sku6: 'SKU-6', sku7: 'SKU-7', sku8: 'SKU-8', sku9: 'SKU-9', d100: 'Track B',
+  sku6: 'SKU-6', sku7: 'SKU-7', sku8: 'SKU-8', sku9: 'SKU-9', sku10: 'SKU-10', sku11: 'SKU-11', d100: 'Track B',
 };
 const ALL = 'All';
 
 type Row = {
-  id: ProductId; area: string; areaName: string; name: string; tag: string; sheet: number;
+  id: ProductId; area: string; areaName: string; name: string; tag: string; sheet?: number; blueprintPage?: number;
   what: string; usedFor: string[]; inAreas: string[]; replaces?: string; status?: string;
   node: string; made: string; onSilicon: boolean; evidence: string; stage: string;
 };
@@ -47,7 +47,7 @@ const rows: Row[] = (Object.keys(products) as ProductId[]).map(id => {
   const sku = sovereignSkuHorizon.find(s => s.sku === skuOf[id])!;
   const inAreas = areas.filter(a => a.items.some(i => i.product === id));
   return {
-    id, area: home.id, areaName: home.name, name: p.name, tag: p.tag, sheet: p.sheet,
+    id, area: home.id, areaName: home.name, name: p.name, tag: p.tag, sheet: p.sheet, blueprintPage: p.blueprintPage,
     what: sku.targetApp,
     usedFor: inAreas.map(a => a.items.find(i => i.product === id)!.role),
     inAreas: inAreas.map(a => a.id),
@@ -165,7 +165,7 @@ export default function ApplicationsPortfolio() {
                           </dl>
                           <span className="pf-open">
                             <span>
-                              {deep ? 'Open product' : `Annex sheet ${r.sheet}`}{' '}
+                              {deep ? 'Open product' : r.sheet ? `Annex sheet ${r.sheet}` : `Blueprint p.${r.blueprintPage}`}{' '}
                               {deep ? <ArrowRight size={16} aria-hidden="true"/> : <ArrowUpRight size={16} aria-hidden="true"/>}
                             </span>
                             <span className="pf-media num">{deep ? '5 films · 30 diagnostic tasks' : r.status ?? ''}</span>

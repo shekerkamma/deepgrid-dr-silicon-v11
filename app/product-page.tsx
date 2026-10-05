@@ -17,7 +17,8 @@ import {archStories} from './arch-stories';
 import {explainers} from './explainers';
 import {FilmPlayer} from './film-player';
 import {productDiagrams, nbspUnits} from './diagram-notes';
-import {productBySlug, productSlugById, type ProductPage} from './product-pages-data';
+import {productBySlug, productSlugById, productPages, type ProductPage} from './product-pages-data';
+const NUMW: Record<number, string> = {10: 'ten', 11: 'eleven', 12: 'twelve', 13: 'thirteen'};
 import {portfolioParts} from './portfolio-story-data';
 import {products, areas} from './applications-story-data';
 import {groundedDocuments} from './documents-data';
@@ -40,13 +41,17 @@ export default function ProductPageView({slug}: {slug: string}) {
   const record = products[p.id];
   const doc = groundedDocuments.find(d => d.id === record.evidenceDoc)!;
   const annex = groundedDocuments.find(d => d.id === 'doc2')!;
+  const blueprint = groundedDocuments.find(d => d.id === 'doc7')!;
+  // SKU-10 and SKU-11 postdate the annex: they cite a Blueprint page and have no annex deck or workflow yet.
+  const fromAnnex = record.sheet != null;
   const dg = productDiagrams[p.id];
   const story = archStories[p.id];
   const explainer = explainers.find(e => e.slug === p.slug);
   const S = story?.sections;
   const base = p.id === 'sku4' ? 'dg32-lite' : p.slug;
   const fits = areas.flatMap(a => a.items.filter(i => i.product === p.id).map(i => ({area: a, role: i.role})));
-  const sheet = `Sheet ${String(record.sheet).padStart(2, '0')}`;
+  const sheet = fromAnnex ? `Sheet ${String(record.sheet).padStart(2, '0')}` : `page ${record.blueprintPage}`;
+  const srcName = fromAnnex ? 'Technical Annex v3' : 'SKU Blueprint, October 2026';
   const contact = url('/contact') + '?part=' + encodeURIComponent(`${part.code} ${part.name}`);
   const deck = url(`/downloads/${base}-architecture.pptx`);
   const animated = `/diagrams/${p.slug}-architecture-animated.svg`;   // scripts/sku-diagrams/animate.py
@@ -92,7 +97,9 @@ export default function ProductPageView({slug}: {slug: string}) {
             <div><dt>Status</dt><dd>{record.status ?? part.maturity}</dd></div>
           </dl>
           <div className="pp-actions">
-            <a className="primary" href={deck}><Download size={15} aria-hidden="true"/> Architecture deck</a>
+            {fromAnnex
+              ? <a className="primary" href={deck}><Download size={15} aria-hidden="true"/> Architecture deck</a>
+              : <a className="primary" href={url(blueprint.pdfFile)}><Download size={15} aria-hidden="true"/> SKU Blueprint (PDF)</a>}
             <a className="text-link" href="#pp-specs">The architecture <ArrowRight size={15} aria-hidden="true"/></a>
           </div>
         </div>
@@ -122,7 +129,7 @@ export default function ProductPageView({slug}: {slug: string}) {
       {/* 4 · Architecture and technical specifications: the diagram in the middle, the targets around it,
           a row of facts beneath (DG-A100: schematic with spec cards either side, four chips below). */}
       <section id="pp-specs" className="pp-sec pp-reveal">
-        <Head title={S?.specs.title ?? 'Architecture targets, not datasheet values.'} copy={S?.specs.copy ?? `Every figure is a design target stated in the Technical Annex, ${sheet}. None is a measurement of manufactured silicon.`}/>
+        <Head title={S?.specs.title ?? 'Architecture targets, not datasheet values.'} copy={S?.specs.copy ?? `Every figure is a design target stated in the ${fromAnnex ? 'Technical Annex' : 'SKU Blueprint'}, ${sheet}. None is a measurement of manufactured silicon.`}/>
         <ul id="pp-highlights" className="pp-highlights" aria-label="The three figures that decide the fit">
           {p.highlights.map(([fig, label, row]) => { const value = p.specs.find(r => r[0] === row)![1]; return (
             <li key={label}><strong>{nbspUnits(fig)}</strong><span className="pp-hl-label">{label}</span>{tag(value)}</li>
@@ -136,7 +143,7 @@ export default function ProductPageView({slug}: {slug: string}) {
           <div><dt>Process</dt><dd>{nbspUnits(part.process)}</dd></div>
           <div><dt>Maturity</dt><dd>{part.maturity}</dd></div>
           <div><dt>Designed toward</dt><dd>{p.designedToward.join(' · ')}</dd></div>
-          <div><dt>Source</dt><dd>Technical Annex v3, {sheet.toLowerCase()}</dd></div>
+          <div><dt>Source</dt><dd>{srcName}, {sheet.toLowerCase()}</dd></div>
         </dl>
         <p className="pp-note">Standards the architecture is designed toward. No DeepGrid part holds a certification or qualification today.</p>
         {p.reconcile && <aside className="pp-reconcile"><p className="dr-kicker">WHERE THE SOURCES DIFFER</p><p>{p.reconcile}</p></aside>}
@@ -156,7 +163,7 @@ export default function ProductPageView({slug}: {slug: string}) {
       <section id="pp-readiness" className="pp-sec pp-readiness pp-reveal">
         <header className="pp-readiness-head">
           <h2 className="dr-h2">{nbspUnits(S?.questions.title ?? 'What an evaluator should ask first.')}</h2>
-          <p>{S?.questions.copy ?? `The annex asks these of its own design. Each is a question silicon, test or layout has to answer before ${part.code} can be relied on.`}</p>
+          <p>{S?.questions.copy ?? `${fromAnnex ? 'The annex asks these of its own design.' : 'The Blueprint’s design and status notes raise these.'} Each is a question silicon, test or layout has to answer before ${part.code} can be relied on.`}</p>
         </header>
         <div className="pp-readiness-cards">
           {p.physics.map((x, i) => (
@@ -200,26 +207,33 @@ export default function ProductPageView({slug}: {slug: string}) {
       <section id="pp-sources" className="pp-sec">
         <Head title={S?.sources.title ?? 'Read the source behind every figure.'} copy={(S?.sources.copy ?? 'Each document opens inside the site at the cited section; the PDF is the edition of record.') + (dg?.annexDiffers ? ' Where the annex sheet differs from this page, the difference is stated beside it.' : '')}/>
         <ul className="pp-sources">
+          {fromAnnex && (
           <li>
             <a href={readHref(annex.specFile, part.source.section.includes('§3') ? undefined : '2. Complete 14-Sheet Portfolio Matrix')}><FileText size={15} aria-hidden="true"/><span>{annex.title}</span><span className="pp-cite">{sheet}{part.source.section ? ' · ' + part.source.section : ''}</span></a>
             <a className="pp-pdf" href={url(annex.pdfFile)}>PDF · {annex.pdfPageCount}{dg?.annexDiffers ? ' · values differ from this page' : ''}</a>
             {dg?.annexDiffers && <p className="pp-differs">Some values on {sheet.toLowerCase()} differ from this page, which follows the product specification: {nbspUnits(dg.annexDiffers)}.</p>}
           </li>
-          {doc.id !== annex.id && (
+          )}
+          <li>
+            <a href={readHref(blueprint.specFile)}><FileText size={15} aria-hidden="true"/><span>{blueprint.title}</span><span className="pp-cite">{fromAnnex ? 'Market, buyers, process and status' : `${part.code}, ${sheet}`}</span></a>
+            <a className="pp-pdf" href={url(blueprint.pdfFile)}>PDF · {blueprint.pdfPageCount}</a>
+          </li>
+          {doc.id !== annex.id && doc.id !== blueprint.id && (
             <li>
               <a href={readHref(doc.specFile)}><FileText size={15} aria-hidden="true"/><span>{doc.title}</span><span className="pp-cite">Evidence for this part</span></a>
               <a className="pp-pdf" href={url(doc.pdfFile)}>PDF · {doc.pdfPageCount}</a>
             </li>
           )}
-          {part.source.path !== annex.specFile && (
+          {part.source.path !== annex.specFile && part.source.path !== blueprint.specFile && (
             <li><a href={readHref(part.source.path, part.source.section)}><FileText size={15} aria-hidden="true"/><span>{part.source.title}</span><span className="pp-cite">{part.source.section}</span></a></li>
           )}
         </ul>
         <p className="pp-group-label">Design files</p>
         <ul className="pp-files">
-          <li><a href={deck}><Download size={15} aria-hidden="true"/> Architecture deck (.pptx)</a></li>
+          {fromAnnex && <li><a href={deck}><Download size={15} aria-hidden="true"/> Architecture deck (.pptx)</a></li>}
           {dg && <li><a href={url(dg.drawio)}><Download size={15} aria-hidden="true"/> Editable diagram (.drawio)</a></li>}
-          <li><a href={url(`/downloads/${base}-workflow.html`)}><ArrowUpRight size={15} aria-hidden="true"/> Interactive workflow (.html)</a></li>
+          {fromAnnex && <li><a href={url(`/downloads/${base}-workflow.html`)}><ArrowUpRight size={15} aria-hidden="true"/> Interactive workflow (.html)</a></li>}
+          {!fromAnnex && <li><a href={url(blueprint.pdfFile) + `#page=${(record.blueprintPage ?? 1) - 1}`}><Download size={15} aria-hidden="true"/> Architecture diagram, SKU Blueprint page {(record.blueprintPage ?? 1) - 1} (.pdf)</a></li>}
           {dg && <li><a href={readHref(dg.guide)}><FileText size={15} aria-hidden="true"/> Architecture guide</a></li>}
         </ul>
       </section>
@@ -229,8 +243,8 @@ export default function ProductPageView({slug}: {slug: string}) {
         <p>{nbspUnits(S?.close.copy ?? 'Send the platform, voltage and power environment, interfaces and qualification needs. The reply names what is architecture, what is evidence and what would have to be tested.')}</p>
         <div className="pp-actions">
           <a className="primary" href={contact}>Discuss {part.code} <ArrowUpRight size={16} aria-hidden="true"/></a>
-          <a className="pp-ghost" href={deck}><Download size={15} aria-hidden="true"/> Download the architecture deck</a>
-          <a className="text-link" href={url('/products')}>Compare all ten parts <ArrowUpRight size={15} aria-hidden="true"/></a>
+          {fromAnnex && <a className="pp-ghost" href={deck}><Download size={15} aria-hidden="true"/> Download the architecture deck</a>}
+          <a className="text-link" href={url('/products')}>Compare all {NUMW[productPages.length] ?? productPages.length} parts <ArrowUpRight size={15} aria-hidden="true"/></a>
         </div>
       </section>
 

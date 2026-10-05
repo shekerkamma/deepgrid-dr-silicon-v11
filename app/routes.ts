@@ -33,7 +33,7 @@ export type RouteId =
   | 'package' | 'applications' | 'evidence' | 'resources' | 'procurement' | 'ask'
   | 'company' | 'contact' | 'videos' | 'docs' | 'read' | 'about' | 'team' | 'recognition'
   | 'uc-motors' | 'uc-vehicles' | 'uc-defence' | 'uc-grid' | 'uc-boards'
-  | 'sku1' | 'sku2' | 'sku3' | 'sku4' | 'sku5' | 'sku6' | 'sku7' | 'sku8' | 'sku9' | 'd100';
+  | 'sku1' | 'sku2' | 'sku3' | 'sku4' | 'sku5' | 'sku6' | 'sku7' | 'sku8' | 'sku9' | 'sku10' | 'sku11' | 'd100';
 
 export type Route = {id: RouteId; href: string; label: string; nav?: boolean; parent?: RouteId};
 
@@ -49,6 +49,8 @@ export const routes: Route[] = [
   {id: 'sku7', href: '/products/sku-7', label: 'SKU-7 radar', parent: 'products'},
   {id: 'sku8', href: '/products/sku-8', label: 'SKU-8 display driver', parent: 'products'},
   {id: 'sku9', href: '/products/sku-9', label: 'SKU-9 zonal gateway', parent: 'products'},
+  {id: 'sku10', href: '/products/sku-10', label: 'SKU-10 secure MCU', parent: 'products'},
+  {id: 'sku11', href: '/products/sku-11', label: 'SKU-11 BMS controller', parent: 'products'},
   {id: 'd100', href: '/products/d100', label: 'D100 drone SoC', parent: 'products'},
   {id: 'technology',   href: '/technology',              label: 'Technology',   nav: true},
   {id: 'safety',       href: '/technology/safety',       label: 'Safety',       parent: 'technology'},

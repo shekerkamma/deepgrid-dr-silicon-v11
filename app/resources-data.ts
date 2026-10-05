@@ -88,6 +88,7 @@ export const docGroups: DocGroup[] = [
       { title: 'DG32-LITE preliminary datasheet', note: 'Lockstep RISC-V motor-control SoC on SkyWater sky130A, 64-pin QFN.', href: D + 'deepgrid-dg32-lite-preliminary-datasheet.pdf', meta: 'PDF · 12 pages' },
       { title: 'DG32-2DOM preliminary datasheet', note: 'DG32-LITE plus an INT8 attention accelerator on a second clock.', href: D + 'deepgrid-dg32-2dom-preliminary-datasheet.pdf', meta: 'PDF · 12 pages' },
       { title: 'DG32 QFN-64 datasheets, both parts', note: 'DG32-LITE and DG32-2DOM in one document.', href: D + 'deepgrid-datasheets-qfn64.pdf', meta: 'PDF · 24 pages' },
+      { title: 'Product portfolio: SKU Blueprint, October 2026', note: 'Eleven SKUs and the D100 drone SoC, one handout per part: replacement, market, share, unit economics, buyers and process.', href: D + 'deepgrid-sku-blueprint-oct2026.pdf', meta: 'PDF · 46 pages · 3.6 MB' },
       { title: 'SKU architecture compendium, technical annex v3', note: 'Nine SKU architecture sheets plus the D100 drone SoC and the SDV platform.', href: D + 'deepgrid-sku-compendium-technical-annex-v3.pdf', meta: 'PDF · 14 pages · 4.8 MB' },
       { title: 'DG-A100 ADAS SoC' }, { title: 'DG-R100 Radar SoC' }, { title: 'DG-S100 SDV Controller' }, { title: 'DG-T100 Transformer NPU' },
     ] },
