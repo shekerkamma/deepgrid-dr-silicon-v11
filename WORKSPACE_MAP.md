@@ -20,3 +20,5 @@ Windows: run npm through `node 'C:/Program Files/nodejs/node_modules/npm/bin/npm
 - `app/modern-v11.css`, `app/deepgrid-visual.tsx`, `app/portfolio-finder.tsx`: v11 responsive design, sourced imagery, architecture selector and searchable portfolio.
 - `docs/v11-direction.md`, `docs/v11/image-provenance.json`: delegated direction and original DeepGrid source records.
 - `scripts/verify-v11.mjs`: responsive imagery, filtering and screenshot checks.
+
+- `scripts/verify-layout.mjs`: v12 four-width route geometry, visible navigation, header-height and sticky-control regression checks.

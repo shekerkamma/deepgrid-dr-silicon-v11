@@ -150,6 +150,8 @@ components:
 
 **Creative North Star: "The Datasheet That Argues"**
 
+V12 preserves the latest GitHub v11 visual baseline (`acf337a`): the unified dark theme and existing semiconductor concept hero. The v12 publication is a separate repository and Pages endpoint, with parent-category navigation states and four-width layout regression checks. It does not establish new product evidence. Runtime results are recorded separately.
+
 The v11 catalogue leads with DeepGrid visuals, physical system jobs and searchable architectures, on the same ink, copper, Newsreader, Inter and JetBrains Mono system as every other route. The 2026-10-05 unification retired the separate navy, cool paper, white and Manrope layer: it made the homepage and the Products and Technology entry surfaces read as a different site.
 
 The Datasheet That Argues remains the evidence discipline: show the source, the mechanism and the maturity beside each decision. A pre-silicon layout capture is labelled as a design visualization, never a die photograph. Product breadth does not imply availability or transfer DG32 evidence to another part.
@@ -191,8 +193,7 @@ hardware is in a safe state.
 - **Ink 2** (`#a7b09f`) and **Muted Foreground** (`#a0a59b`): secondary text, captions and labels.
 
 ### Portfolio surface roles (v6)
-- **Bone:** Paper is the ground of reuse and qualification chapters and the company route-to-market
-  section. Bone Ink, Bone Muted and Bone Copper provide dark text and a deeper copper link on this ground.
+- **Bone (historical role):** the homepage and Company bands now use Surface with light foregrounds. The old Bone Ink, Bone Muted and Bone Copper values remain historical tokens; do not use them to restore light page chapters.
 - **Diagnostics / Evaluation Surface:** subdued dark grounds separate workload constraints and the close.
 - **Portfolio / Strategy / Journey Rules:** hairlines and frames organise atlas rows and flat diagrams.
 - **Industrial materials:** the workbench renderer uses literal copper, package, pad, seam and light colours.
@@ -260,7 +261,7 @@ an evidence grade, a file name. Prose never sets itself in monospace for texture
 ### v11 entry and shared shell
 Above 1100px the sticky header combines the 165px wordmark, centered mega-navigation and contact link in one row; the topline is hidden. At 1100px and below, the labelled mobile-menu control replaces desktop navigation and contact. The dialog traps focus, restores focus on close and closes when switching back to desktop.
 
-The hero is a .9fr / 1.2fr grid, capped at 1680px, with 5% gutters, 76px top/56px bottom padding and 660px minimum height. At 1100px its minimum height clears and top padding becomes 45px. At 760px it becomes one column with 6% gutters and 40px/30px vertical padding. Finder sections use 90px/5% padding, reducing to 50px/6%; section headings and system demonstrations stack at 760px. Product rows change from code/name/process/arrow to code/name/arrow with process beneath the name. Family diagrams use four selector columns, becoming two at 760px; technology annotations change from three columns to one. Original diagrams remain contained and uncropped. Products and Technology first section headings explicitly use margin-top:0 so route navigation stays visible beneath the compact header.
+The hero is a .9fr / 1.2fr grid, capped at 1680px, with 5% gutters, 76px top/56px bottom padding and 660px minimum height. At 1100px its minimum height clears and top padding becomes 45px. At 760px it becomes one column with 6% gutters and 40px/30px vertical padding. Finder sections use 90px/5% padding, reducing to 50px/6%; section headings and system demonstrations stack at 760px. Product rows change from code/name/process/arrow to code/name/arrow with process beneath the name. Family diagrams use four selector columns, becoming two at 760px; technology annotations change from three columns to one. Original diagrams remain contained and uncropped. The shared first section heading and company band explicitly use margin-top:0 in `app/modern-v11.css`, so route navigation stays visible beneath the compact header. `app/motion.tsx` measures the full `.topbar` for `--nav-h`; sticky readers, tabs and anchor offsets use that height. Parent categories remain active on their detail routes, and exact destination links expose `aria-current="page"`.
 
 ### Retained engineering layout
 
@@ -272,15 +273,15 @@ The inherited editorial type scale remains fluid. V6 uses Newsreader hero displa
 column at 720–800px depending on the component. Tap targets are at least 24px in every state, and
 controls that take a press are 44px.
 
-The declared map contains 24 routes. The shared sticky navigation carries a page-progress hairline, and every route
+The declared map contains 35 routes. The shared sticky navigation carries a page-progress hairline, and every route
 ends with the same cross-reference block: sibling sections with a reason each, then the source
 documents behind that page.
 
 The v6 hero is a .8fr / 1.2fr copy-and-workbench grid. Portfolio sections use 5% gutters and 5rem
 vertical padding, shifting to 6% and 3rem below 800px. Atlas rows are .5fr / 2fr / 1.1fr and become
 single-column below 800px. The four-column cycle budget becomes two columns; qualification gates
-shift from three to two. Evaluation rows and route guides stack below 700px. A bone section is a full
-chapter ground, not a collection of pale cards. Diagram links and limits remain textual and source-linked.
+shift from three to two. Evaluation rows and route guides stack below 700px. The historical bone section now uses a full
+Surface chapter ground. Diagram links and limits remain textual and source-linked.
 
 ## Elevation & Depth
 

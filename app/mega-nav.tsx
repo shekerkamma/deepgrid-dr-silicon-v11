@@ -7,7 +7,7 @@
 // Notes under each link are the target page's own heading, so the menu never says what the page does not.
 import { useEffect, useId, useLayoutEffect, useRef, useState } from 'react';
 import { ChevronDown } from 'lucide-react';
-import { url, type RouteId } from './routes';
+import { url, byId, type RouteId } from './routes';
 
 type Item = { label: string; href: string; note?: string };
 type Menu = { id: string; label: string; match: RouteId[]; items: Item[] };
@@ -134,7 +134,8 @@ export function MegaNav({ route, onNavigate, label = 'Primary navigation', compa
       </a>}
       {menus.map((m) => {
         const isOpen = open === m.id;
-        const active = m.match.includes(route);
+        const parent = byId[route].parent;
+        const active = m.match.includes(route) || (!!parent && m.match.includes(parent));
         return (
           <div key={m.id} className="mega-item" onMouseEnter={() => enter(m.id)} onMouseLeave={leave}>
             <button type="button" className={'mega-trigger' + (active ? ' active' : '')} aria-expanded={isOpen} aria-controls={menuId + m.id} onClick={() => setOpen(isOpen ? null : m.id)}>
@@ -145,7 +146,7 @@ export function MegaNav({ route, onNavigate, label = 'Primary navigation', compa
               <ul>
                 {m.items.map((it) => (
                   <li key={it.href + it.label}>
-                    <a href={it.href} onClick={() => { setOpen(null); onNavigate?.(); }}>
+                    <a href={it.href} aria-current={it.href === url(byId[route].href) ? 'page' : undefined} onClick={() => { setOpen(null); onNavigate?.(); }}>
                       <span>{it.label}</span>
                       {it.note && <small>{it.note}</small>}
                     </a>

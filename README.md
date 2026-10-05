@@ -1,14 +1,16 @@
-# DeepGrid Semi v11
+# DeepGrid Semi v12
 
-Live: https://shekerkamma.github.io/deepgrid-dr-silicon-v11/
+Live: https://shekerkamma.github.io/deepgrid-dr-silicon-v12/
 
-A modernized silicon portfolio with original DeepGrid imagery, a searchable ten-part catalogue, selectable architecture diagrams, and a compact responsive navigation. The overview uses a captured DG32 Silicon Engine layout; products uses original SKU diagrams; technology uses the DG32-LITE architecture package. See `docs/v11/image-provenance.json` for sources.
+A modernized silicon portfolio with original DeepGrid imagery, a searchable ten-part catalogue, selectable architecture diagrams, and a compact responsive navigation. The overview uses the existing DeepGrid semiconductor concept render; products uses original SKU diagrams; technology uses the DG32-LITE architecture package. See `docs/v11/image-provenance.json` for sources.
 
 The site remains pre-silicon: design targets, simulation, implementation and qualified production are distinguished. All 35 declared routes, source documents, films and safety interactions are retained. `WORKSPACE_MAP.md` identifies the implementation and verification entry points.
 
 GitHub Actions builds under the repository base path, runs route, navigation, source-reading, imagery and interaction checks, then deploys to Pages and repeats the checks against the live site.
 
-Local build (Node 24): `npm ci --ignore-scripts`, `npm run typecheck`, then `PAGES_BASE=/deepgrid-dr-silicon-v11/ NEXT_PUBLIC_PAGES_BASE=/deepgrid-dr-silicon-v11/ npm run build:pages`. On Windows use the PowerShell environment variable syntax described in `WORKSPACE_MAP.md`.
+Local build (Node 24): `npm ci --ignore-scripts`, `npm run typecheck`, then `PAGES_BASE=/deepgrid-dr-silicon-v12/ NEXT_PUBLIC_PAGES_BASE=/deepgrid-dr-silicon-v12/ npm run build:pages`. On Windows use the PowerShell environment variable syntax described in `WORKSPACE_MAP.md`.
+
+Built from v11 main at `acf337a9d668d892aa915d0475d5994129b1c104`, preserving its unified dark design and shared navigation fixes. v12 adds parent-menu state on product details and a four-width layout regression gate.
 
 ## Historical implementation notes
 
