@@ -45,6 +45,16 @@ for(const width of [1440,1024,390]){
    assert.match(await page.locator('.v11-product-row').getAttribute('href'),/products\/sku-7$/);
   }
  }
- assert.deepEqual(errors,[]);await page.close();console.log(`PASS v11 ${width}: imagery, captions, layout, search and filters`);
+ // Every route hero stays below its breadcrumbs and section tabs, and sticky offsets use the real header height.
+ for(const route of ['technology/safety','technology/control-loop','technology/package','evidence','applications','contact','resources','about','use-cases/motors']){
+  await page.goto(base+route,{waitUntil:'networkidle'});
+  const r=await page.evaluate(()=>{const hero=document.querySelector('.page-wrap > .section-head, .cp-band');if(!hero)return null;
+   const navBottom=Math.max(0,...[...document.querySelectorAll('.breadcrumbs, .technology-nav')].map(e=>e.getBoundingClientRect().bottom));
+   return {hero:hero.getBoundingClientRect().top,navBottom,navH:parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--nav-h')),header:document.querySelector('.topbar').offsetHeight};});
+  assert.ok(r,`${route} has no page hero`);
+  assert.ok(r.hero>=r.navBottom-1,`${route} hero overlaps navigation at ${width}`);
+  assert.equal(r.navH,r.header,`${route} --nav-h ${r.navH} does not match the ${r.header}px header at ${width}`);
+ }
+ assert.deepEqual(errors,[]);await page.close();console.log(`PASS v11 ${width}: imagery, captions, layout, search, filters and route heroes`);
 }
 await browser.close();
