@@ -16,12 +16,14 @@ const REVEAL = ['.section-head', '.thesis-heading', '.dr-sec-head', '.dr-arch-in
 export function useScrollVars() {
   useEffect(() => {
     const root = document.documentElement, nav = document.querySelector<HTMLElement>('.main-nav');
+    // The sticky element is the v11 .topbar that wraps .main-nav (hidden on phones), so measure the header itself.
+    const header = document.querySelector<HTMLElement>('.topbar') ?? nav;
     let raf = 0;
     const progress = () => { raf = 0; const max = root.scrollHeight - innerHeight; nav?.style.setProperty('--page-p', String(max > 0 ? Math.min(1, scrollY / max) : 0)); };
-    const measure = () => { if (nav) root.style.setProperty('--nav-h', nav.offsetHeight + 'px'); progress(); };
+    const measure = () => { if (header) root.style.setProperty('--nav-h', header.offsetHeight + 'px'); progress(); };
     const onScroll = () => { if (!raf) raf = requestAnimationFrame(progress); };
     measure();
-    const ro = new ResizeObserver(measure); if (nav) ro.observe(nav); ro.observe(document.body);
+    const ro = new ResizeObserver(measure); if (header) ro.observe(header); ro.observe(document.body);
     addEventListener('scroll', onScroll, {passive: true});
     return () => { removeEventListener('scroll', onScroll); ro.disconnect(); cancelAnimationFrame(raf); };
   }, []);

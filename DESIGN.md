@@ -1,6 +1,6 @@
 ---
 name: DeepGrid Silicon Portfolio
-description: Mature-node silicon portfolio and strategy, with DG32 as the detailed pre-silicon engineering proof point. v11 adds a scoped precision instrument catalogue in navy, paper and Manrope; deeper engineering routes retain ink, copper, bone, Newsreader, Inter and JetBrains Mono.
+description: Mature-node silicon portfolio and strategy, with DG32 as the detailed pre-silicon engineering proof point. One dark system across every route, homepage included - ink grounds, copper accents, Newsreader display, Inter text and JetBrains Mono labels. The v11 catalogue roles are aliases of those tokens.
 colors:
   ink: "#101212"
   surface: "#191d1b"
@@ -29,28 +29,25 @@ colors:
   evaluation-surface: "#1b221e"
   evaluation-muted: "#aab3a8"
   journey-rule: "#677166"
-  v11-navy: "#142c43"
-  v11-paper: "#f4f7f9"
-  v11-white: "#fff"
-  v11-muted: "#4b6072"
-  v11-rule: "#ccd5dd"
-  v11-accent: "#8d572e"
-  v11-dark-muted: "#c6d4df"
-  v11-stage-rule: "#57718a"
-  v11-image-ground: "#080b10"
+  v11-navy: "#eeeae2"
+  v11-paper: "#101212"
+  v11-white: "#191d1b"
+  v11-muted: "#a0a59b"
+  v11-rule: "#3d453b"
+  v11-accent: "#d4a36e"
 typography:
   v11-display:
-    fontFamily: "'Manrope Variable', sans-serif"
+    fontFamily: "'Newsreader Variable', Georgia, 'Times New Roman', serif"
     fontSize: "clamp(3.2rem, 5.5vw, 5.8rem)"
-    fontWeight: 550
+    fontWeight: 400
     lineHeight: 1.04
-    letterSpacing: "-0.035em"
+    letterSpacing: "-0.032em"
   v11-headline:
-    fontFamily: "'Manrope Variable', sans-serif"
+    fontFamily: "'Newsreader Variable', Georgia, 'Times New Roman', serif"
     fontSize: "clamp(2rem, 3.2vw, 3.6rem)"
-    fontWeight: 550
+    fontWeight: 400
     lineHeight: 1.12
-    letterSpacing: "-0.035em"
+    letterSpacing: "-0.032em"
   v11-caption:
     fontFamily: "'Inter Variable', system-ui, sans-serif"
     fontSize: "0.72rem"
@@ -112,16 +109,16 @@ spacing:
   measure: "64ch"
 components:
   v11-button:
-    backgroundColor: "{colors.v11-navy}"
-    textColor: "{colors.v11-white}"
+    backgroundColor: "{colors.copper}"
+    textColor: "{colors.ink}"
     rounded: "{rounded.md}"
     padding: "16px 21px"
   v11-button-hover:
-    backgroundColor: "{colors.v11-accent}"
-    textColor: "{colors.v11-white}"
+    backgroundColor: "{colors.copper-ring}"
+    textColor: "{colors.ink}"
   v11-filter-selected:
-    backgroundColor: "{colors.v11-navy}"
-    textColor: "{colors.v11-white}"
+    backgroundColor: "{colors.copper}"
+    textColor: "{colors.ink}"
     rounded: "{rounded.md}"
     padding: "11px 13px"
   button-primary:
@@ -153,13 +150,13 @@ components:
 
 **Creative North Star: "The Datasheet That Argues"**
 
-The v11 precision instrument catalogue leads with existing DeepGrid visuals, physical system jobs and searchable architectures. Navy typography, cool paper and white fields, restrained copper and self-hosted Manrope modernize the homepage and the Products and Technology entry surfaces. The incumbent ink, copper, bone, Newsreader, Inter and JetBrains Mono system remains on deeper engineering routes.
+The v11 catalogue leads with DeepGrid visuals, physical system jobs and searchable architectures, on the same ink, copper, Newsreader, Inter and JetBrains Mono system as every other route. The 2026-10-05 unification retired the separate navy, cool paper, white and Manrope layer: it made the homepage and the Products and Technology entry surfaces read as a different site.
 
 The Datasheet That Argues remains the evidence discipline: show the source, the mechanism and the maturity beside each decision. A pre-silicon layout capture is labelled as a design visualization, never a die photograph. Product breadth does not imply availability or transfer DG32 evidence to another part.
 
 **Key Characteristics:**
-- Navy and paper catalogue surfaces with dark engineering demonstrations
-- Manrope entry headings; retained Newsreader engineering headings, Inter prose and JetBrains Mono labels
+- One dark ground site-wide; chapters alternate only between Background and Surface, separated by hairline rules
+- Newsreader headings, Inter prose and JetBrains Mono labels on every route, homepage included
 - Original DeepGrid source imagery with captions and onward inspection links
 - Searchable horizontal product rows retain process and individual maturity
 - Readable static, reduced-motion and WebGL-free explanations
@@ -167,7 +164,7 @@ The Datasheet That Argues remains the evidence discipline: show the source, the 
 ## Colors
 
 ### v11 catalogue scope
-The `v11-*` roles are scoped to the modernized entry surfaces. Navy is the primary text, button fill and dark system-section ground; Paper and White separate chapters and the finder. Muted carries secondary text, Rule separates rows, and Accent is the dark copper used on pale surfaces. Dark Muted and Stage Rule support navy demonstrations; Image Ground belongs to the existing layout capture frame. These do not replace the incumbent tokens below.
+The `v11-*` roles in `app/modern-v11.css` are aliases of the incumbent tokens, kept so the v11 components need no renaming: Navy is Foreground (text), Paper is Background, White is Surface (raised chapters such as the system section), Muted is Muted Foreground, Rule is Line and Accent is Copper. Former light bands, including `.v6-bone` on the homepage and Company, use Surface. Never reintroduce a light page band: draw.io diagrams render their own dark variant through `color-scheme: dark`.
 
 A warm copper accent on a cool near-black ground, with a single teal admitted only where the
 hardware is in a safe state.
@@ -224,7 +221,7 @@ reaches every place copper is implied.
 ## Typography
 
 ### v11 entry typography
-Manrope Variable is self-hosted in `app/layout.tsx`. It styles homepage h1/h2/h3 and Products/Technology h1 with weight 550 and -0.035em tracking. The scoped homepage hero uses the v11-display token, changing to `clamp(2.8rem, 10vw, 4.5rem)` at 760px. The stronger final hero selector retains the desktop clamp between 761px and 1100px. Homepage h2 uses v11-headline; finder section headings use line-height 1.15. Product row names use Manrope 650 at 1.08rem (1rem on mobile). Inter body and captions and JetBrains Mono part codes remain. The roles below describe the retained engineering system.
+v11 entry headings use the incumbent display role: Newsreader Variable at weight 400 with -0.032em tracking. The homepage hero keeps the v11-display size clamp, changing to `clamp(2.8rem, 10vw, 4.5rem)` at 760px; homepage h2 uses the v11-headline size. h3 and product row names use Inter 500. Manrope is no longer applied to any heading.
 
 **Display Font:** self-hosted Newsreader Variable, with Georgia, Times New Roman and serif fallbacks
 **Body Font:** self-hosted Inter Variable, with system-ui and sans-serif fallbacks
@@ -336,11 +333,11 @@ document, and a document does not have pill-shaped edges.
 ## Components
 
 ### v11 catalogue primitives and source visuals
-The primary entry action is navy on white, 4px radius, minimum 52px high and 16px 21px padding; hover uses dark copper. Focus is 2px dark copper at 4px offset on light surfaces, with incumbent copper on dark system/film surfaces. Buttons and product rows use 0.2s background transitions disabled under reduced motion. Filter buttons are at least 44px high; selected `aria-pressed` state is navy with white text. Search has an accessible label, a navy bottom rule and dark-copper caret. Search is case-insensitive over code, name, job and architecture and intersects with the selected family. The polite live result count includes the pre-silicon portfolio label; the empty state clears both search and family selection.
+The primary entry action is copper with ink text, 4px radius, minimum 52px high and 16px 21px padding; hover uses Copper Ring. Focus is 2px copper at 4px offset. Buttons and product rows use 0.2s background transitions disabled under reduced motion. Filter buttons are at least 44px high with a Border outline; selected `aria-pressed` state is copper with ink text. Search has an accessible label, a Border bottom rule and copper caret. Search is case-insensitive over code, name, job and architecture and intersects with the selected family. The polite live result count includes the pre-silicon portfolio label; the empty state clears both search and family selection.
 
 Product rows link to individual part routes and show process and maturity. The four architecture selectors (Motor control/SKU-1, Power management/SKU-3, Radar sensing/SKU-7, Drone integration/D100) are grouped buttons with `aria-pressed`, not tab-role panels. Their active underline is copper; the image and caption change together and link to the selected part.
 
-Only existing DeepGrid imagery ships. `public/images/v11/dg32-layout.png` is the Silicon Engine layout capture from content-ideas, linked to the die route and captioned as pre-silicon, not a photograph. Product SVGs reuse `public/diagrams/*-architecture.svg`. Technology reuses the unchanged DG32-LITE architecture SVG from the Downloads architecture package, links to the full-size diagram and adds three mechanism annotations. Frames use 8px radii (inner architecture link frames use 5px); captions use v11-caption. `docs/v11/image-provenance.json` records exact origins, including the retained viewer capture. Rejected generated concepts are excluded from publication.
+Only existing DeepGrid imagery ships. The homepage hero is the semiconductor concept render from shekerkamma/deepgrid-platform-showcase (`public/images/v5/semiconductor-hero-*.webp`), linked to Products and captioned as an illustrative concept render, not a product photograph. Product SVGs reuse `public/diagrams/*-architecture.svg`. Technology reuses the unchanged DG32-LITE architecture SVG from the Downloads architecture package, links to the full-size diagram and adds three mechanism annotations. Diagram frames are Background with a Line hairline and 6px radius inside 8px Surface plates; captions use v11-caption. `docs/v11/image-provenance.json` records exact origins. Rejected generated concepts are excluded from publication.
 
 ### Retained engineering primitives
 
