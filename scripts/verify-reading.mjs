@@ -31,8 +31,15 @@ for(const width of [1440,390]){
  }
  for(const route of ['', 'company.html']){
   await page.goto(site+route,{waitUntil:'networkidle'});
-  const bad=await page.locator('.v6-bone h2,.v6-bone h3,.v6-bone strong,.v6-foundation h3,.v6-foundation p,.v6-proposed h3,.v6-proposed p').evaluateAll(nodes=>nodes.filter(el=>{const c=getComputedStyle(el).color.match(/\d+/g);return c&&Number(c[0])>150&&Number(c[1])>150&&Number(c[2])>150}).map(el=>el.textContent));
-  if(bad.length)failures.push(`${width} ${route}: pale text on light surface: ${bad.join(', ')}`);
+  // Text in the reuse and gate bands must contrast with the surface it actually sits on (WCAG AA: 4.5, or 3 for large
+  // text). Measured against the nearest painted ancestor, so it holds whether the band is light or dark.
+  const bad=await page.locator('.v6-bone h2,.v6-bone h3,.v6-bone strong,.v6-foundation h3,.v6-foundation p,.v6-proposed h3,.v6-proposed p').evaluateAll(nodes=>{
+   const rgb=c=>(c.match(/[\d.]+/g)||[]).map(Number);
+   const lum=([r,g,b])=>[r,g,b].map(v=>{v/=255;return v<=.03928?v/12.92:((v+.055)/1.055)**2.4}).reduce((a,v,i)=>a+v*[.2126,.7152,.0722][i],0);
+   const ground=el=>{for(let e=el;e;e=e.parentElement){const c=rgb(getComputedStyle(e).backgroundColor);if(c.length>=3&&(c[3]===undefined||c[3]>0))return c;}return [255,255,255];};
+   return nodes.filter(el=>{const cs=getComputedStyle(el),a=lum(rgb(cs.color)),b=lum(ground(el));const ratio=(Math.max(a,b)+.05)/(Math.min(a,b)+.05);
+    const large=parseFloat(cs.fontSize)>=24||(parseFloat(cs.fontSize)>=18.66&&Number(cs.fontWeight)>=700);return ratio<(large?3:4.5);}).map(el=>el.textContent);});
+  if(bad.length)failures.push(`${width} ${route}: low-contrast text in reuse and gate bands: ${bad.join(', ')}`);
   const rawLinks=await page.locator('a[href*=".md"]:not([download])').count();
   if(rawLinks)failures.push(`${width} ${route}: ${rawLinks} raw-source reading links`);
   const oldReaders=await page.locator('a[href*="/downloads/"][href$=".html"], a[href*="/downloads/"][href*=".html#"]').count();
@@ -51,4 +58,4 @@ if(process.argv[3]){
 }
 await browser.close();
 if(failures.length)throw Error(failures.join('\n'));
-console.log(`Reading gate PASS: ${files.length} documents read in-site at desktop/phone widths, old paths redirect; home/company light-surface foregrounds and source-reading links.`);
+console.log(`Reading gate PASS: ${files.length} documents read in-site at desktop/phone widths, old paths redirect; home/company band text contrast and source-reading links.`);
