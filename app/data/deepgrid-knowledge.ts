@@ -6,7 +6,7 @@ export interface DeepGridItem {
   name: string;
   category: 'sku' | 'ai' | 'strategy' | 'architecture' | 'defense' | 'loop' | 'finance';
   tagline: string;
-  docId?: 'doc1' | 'doc2' | 'doc3' | 'doc4' | 'doc5' | 'doc6' | 'doc-d100' | 'doc-sdv';
+  docId?: 'doc1' | 'doc2' | 'doc3' | 'doc4' | 'doc5' | 'doc6' | 'doc7' | 'doc-d100' | 'doc-sdv';
   nodeFoundry?: string;
   voltageRail?: string;
   standards?: string;
@@ -42,7 +42,7 @@ export interface GraphEdge {
 }
 
 export interface DocumentSource {
-  id: 'all' | 'doc1' | 'doc2' | 'doc3' | 'doc4' | 'doc5' | 'doc6';
+  id: 'all' | 'doc1' | 'doc2' | 'doc3' | 'doc4' | 'doc5' | 'doc6' | 'doc7';
   badge: string;
   title: string;
   subtitle: string;
@@ -70,6 +70,13 @@ export const documentSources: DocumentSource[] = [
     title: 'Technical Annex v3 (10 SKUs & SDV)',
     subtitle: '10-chip SKU compendium, D100 tactical drone SoC, DG SDV reference architecture, 3-phase roadmap',
     fileReference: 'deepgrid-sku-compendium · Technical-Annex-v3.pdf'
+  },
+  {
+    id: 'doc7',
+    badge: 'Doc #7',
+    title: 'SKU Blueprint, October 2026 (11 SKUs + D100)',
+    subtitle: 'One handout per SKU: replacement, market, buyers, policy driver, process choice, status and the FPGA-to-chip boundary',
+    fileReference: 'deepgrid-sku-blueprint-oct2026.pdf'
   },
   {
     id: 'doc3',
@@ -493,6 +500,63 @@ export const deepGridCatalog: DeepGridItem[] = [
     ],
     citation: 'DeepGrid Semi SKU Compendium — Chapter 10: SKU-9 Zonal Gateway',
     connectedNodeIds: ['dg-sdv-platform', 'sku-5', 'arch-sip']
+  },
+  {
+    id: 'sku-10',
+    name: 'SKU-10: DG32-Max Secure MCU',
+    category: 'sku',
+    docId: 'doc7',
+    tagline: 'Secure lockstep microcontroller that verifies its own firmware before running it',
+    nodeFoundry: '130 nm CMOS (SKY130) at 100 MHz, ChipFoundry OpenFrame shuttle',
+    voltageRail: '44 signal pins in a 64-pin package',
+    standards: 'Verified boot · country-of-origin procurement rules',
+    summary: 'A secure general-purpose microcontroller: two DGridRiscV processors in lockstep with encryption instructions, a 4 KB instruction cache, 128 KB of error-corrected memory and a boot ROM that checks the firmware signature before running it, 309 ms from reset. One die replaces an imported MAX32655-class secure MCU plus the separate secure element.',
+    keyFacts: [
+      'Root key in mask ROM; device secrets and rollback counter in a 1 kbit ReRAM macro, because SKY130 has no OTP or eFuse.',
+      '128 KB of SRAM is built from 32 ChipFoundry compiled macros (3.76 mm²).',
+      'CAN-FD, UART, SPI, a 9-bit ADC, on-chip clocks, temperature and supply monitors, and debug access.',
+      'RTL feature-complete on 1 October 2026 with every bench and firmware test passing, including secure boot; next is the Arty A7-100T FPGA proof and the December 2026 OpenFrame shuttle.',
+      'Host platform inside SKU-1 and SKU-11.'
+    ],
+    citation: 'DeepGrid Semi SKU Blueprint, October 2026: SKU-10 DG32-Max Secure MCU (pdf pp. 36-38)',
+    connectedNodeIds: ['sku-4', 'sku-11', 'sku-1', 'fab-skywater']
+  },
+  {
+    id: 'sku-11',
+    name: 'SKU-11: SOH-Aware BMS Controller',
+    category: 'sku',
+    docId: 'doc7',
+    tagline: 'Battery-management controller with on-chip state-of-health inference and hardwired protection',
+    nodeFoundry: '130 nm CMOS (SKY130), on the DG32-Max platform die',
+    voltageRail: 'Bought cell front end (BQ76952 class) and isolation chip',
+    standards: 'AIS-156 · EU Battery Passport',
+    summary: 'A battery-management controller combining the DG32-Max processor and security, an AI accelerator that estimates charge, health and remaining life, optional cell-impedance (EIS) measurement, and hardwired over-voltage, under-voltage, over-current and over-temperature protection that works even if the processor stops. Three parts become one: the MCU beside the front end, the separate neural accelerator, and the authentication chip.',
+    keyFacts: [
+      'Protection comparators are ported from SKU-6 and power circuits from SKU-3; the new design is the feature DSP, EIS engine, contactor interface and front-end bridge.',
+      'A 4-100 kB state-of-health model runs in its own memory, away from the safety path.',
+      'A ReRAM hash chain makes the Battery-Passport log in external flash tamper-evident.',
+      'Lead tier: centralised e-2W and e-3W packs on a single front end; second tier: master controller for cars, buses and grid BESS over isoSPI.',
+      'Block specification issued September 2026 (twenty blocks in six groups); no wafer-run slot assigned yet.'
+    ],
+    citation: 'DeepGrid Semi SKU Blueprint, October 2026: SKU-11 SOH-Aware BMS Controller (pdf pp. 39-41)',
+    connectedNodeIds: ['sku-10', 'sku-6', 'sku-3', 'fab-skywater']
+  },
+  {
+    id: 'sku-blueprint-2026',
+    name: 'SKU Blueprint, October 2026',
+    category: 'sku',
+    docId: 'doc7',
+    tagline: 'The current portfolio: eleven SKUs on SkyWater 130 nm and SCL 180 nm, plus the Track B drone SoC',
+    nodeFoundry: 'SkyWater 130 nm and SCL 180 nm; SKU-7 on IHP SG13G2 SiGe; D100 on 28 nm',
+    summary: 'Each SKU is a standalone handout answering nine questions in the same order: what the part is, what it replaces, how big the market is, what share is needed and whether that is realistic, what each unit earns, who buys it, the policy driver, why this process node, and where the FPGA prototype ends and the chip begins. Nine prototypes go on the ChipFoundry December 2026 shuttle.',
+    keyFacts: [
+      'Adds SKU-10 DG32-Max Secure MCU and SKU-11 SOH-Aware BMS Controller to the earlier nine SKUs.',
+      'SKU-3 and SKU-6 prototype on sky130 and move to SCL 180 nm for production; SKU-7 needs IHP SiGe because 130 nm CMOS cannot reach 77 GHz.',
+      'SKU-4 and SKU-9 prototype on the December 2026 shuttle as 130 nm chips at 100 MHz.',
+      'D100 is Track B, funded by a separate round, and shares its lockstep safety core with SKU-4.'
+    ],
+    citation: 'DeepGrid Semi SKU Blueprint, October 2026 (46 pages)',
+    connectedNodeIds: ['sku-10', 'sku-11', 'sku-1', 'sku-4', 'track-b-d100']
   },
   {
     id: 'track-b-d100',
@@ -980,6 +1044,8 @@ export const graphNodes: GraphNode[] = [
   { id: 'sku-7', name: 'SKU-7 Radar', shortName: 'SKU-7', category: 'sku', x: 52, y: 22, description: '77 GHz 4D MIMO Radar in 350GHz SiGe BiCMOS.' },
   { id: 'sku-8', name: 'SKU-8 Display', shortName: 'SKU-8', category: 'sku', x: 14, y: 55, description: 'Rugged avionics display driver for BEL 17" SXGA displays.' },
   { id: 'sku-9', name: 'SKU-9 Zonal', shortName: 'SKU-9', category: 'sku', x: 32, y: 20, description: 'SDV zonal gateway with 16x e-fuses & Gigabit Ethernet TSN.' },
+  { id: 'sku-10', name: 'SKU-10 Secure MCU', shortName: 'SKU-10', category: 'sku', x: 44, y: 32, description: 'DG32-Max: lockstep DGridRiscV secure MCU with signed boot from mask ROM, 130 nm SKY130 at 100 MHz.' },
+  { id: 'sku-11', name: 'SKU-11 BMS', shortName: 'SKU-11', category: 'sku', x: 44, y: 58, description: 'SOH-aware battery-management controller on the DG32-Max platform with hardwired protection.' },
   { id: 'track-b-d100', name: 'D100 Drone', shortName: 'D100', category: 'sku', x: 16, y: 15, description: 'Heterogeneous tactical drone SoC on organic multi-die SiP.' },
   { id: 'dg-sdv-platform', name: 'DG SDV', shortName: 'SDV', category: 'sku', x: 38, y: 12, description: 'End-to-end SDV reference architecture with AXI-REALM QoS.' },
   { id: 'sku-node-roadmap', name: '3-Phase Roadmap', shortName: 'Roadmap', category: 'sku', x: 26, y: 16, description: '130nm -> 90/55nm -> 28nm scaling roadmap with ~50-SKU arithmetic check.' },
@@ -1030,6 +1096,8 @@ export const graphNodes: GraphNode[] = [
 ];
 
 export const nodeToCatalogMap: Record<string, string> = {
+  'sku-10': 'sku-10',
+  'sku-11': 'sku-11',
   'dg32-lite': 'dg32-lite',
   'dg32-2dom': 'dg32-2dom-system',
   'dg32-2dom-system': 'dg32-2dom-system',
@@ -1091,6 +1159,8 @@ export const nodeToCatalogMap: Record<string, string> = {
 };
 
 export const catalogToNodeMap: Record<string, string> = {
+  'sku-10': 'sku-10',
+  'sku-11': 'sku-11',
   'dg32-lite': 'dg32-lite',
   'dg32-2dom-system': 'dg32-2dom-system',
   'sku-1': 'sku-1',
@@ -1177,6 +1247,11 @@ export const graphEdges: GraphEdge[] = [
   { from: 'sku-8', to: 'moat-pil5', label: 'PIL-5 #5' },
 
   { from: 'sku-9', to: 'dg-sdv-platform', label: 'Zonal Edge' },
+  { from: 'sku-10', to: 'sku-4', label: 'Lockstep Pattern' },
+  { from: 'sku-10', to: 'fab-skywater', label: 'SKY130 Shuttle' },
+  { from: 'sku-11', to: 'sku-10', label: 'DG32-Max Platform' },
+  { from: 'sku-11', to: 'sku-6', label: 'Protection Comparators' },
+  { from: 'sku-1', to: 'sku-10', label: 'Host Platform' },
   { from: 'sku-9', to: 'arch-sip', label: 'Organic SiP' },
 
   { from: 'track-b-d100', to: 'arch-sip', label: 'Multi-Die Packaging' },

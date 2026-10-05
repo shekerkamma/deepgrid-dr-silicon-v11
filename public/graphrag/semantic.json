@@ -5,8 +5,8 @@
  "scale": 127,
  "queryPrefix": "Represent this sentence for searching relevant passages: ",
  "counts": {
-  "nodes": 1075,
-  "chunks": 273,
+  "nodes": 1354,
+  "chunks": 354,
   "themes": 14,
   "examples": 70
  },
@@ -87,11 +87,10 @@
  "eval": {
   "positives": 15,
   "negatives": 10,
-  "right": 12,
+  "right": 13,
   "wrong": 0,
   "forced": 0,
   "missed": [
-   "Why is a single peakedness statistic a poor alarm for worn bearings?",
    "What diagnostic jobs can the entry chip handle in a factory?",
    "Can supply be guaranteed if foreign fabs are cut off?"
   ]
@@ -112,7 +111,7 @@
   "Three Factories, Three Countries: How the Supply Chain Is Sequenced",
   "Hardware Lockstep: How DG32 Catches a Faulty Computation"
  ],
- "indexSha256": "411428f8b2707762a50900ff24a237b4e02732aeaf0a6d610f8373303fed1d9b",
- "rowKeySha256": "ddc6c4a37a0372fa77f09747bee509dbe679950bacf8d95cbf392e73c23f52a6",
+ "indexSha256": "04a3e6164dad39e4203835822e41a27968489edaf9a514862b0a572c22cd955f",
+ "rowKeySha256": "f87d0ad3919f9dbea560ce6545336d3d2532a50faeee3a869f554757f00b1f92",
  "modelSha256": "6c9c6101a956d62dfb5e7190c538226c0c5bb9cb27b651234b6df063ee7dbfe4"
 }

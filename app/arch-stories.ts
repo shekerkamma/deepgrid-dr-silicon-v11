@@ -999,7 +999,7 @@ export const archStories: Record<string, ArchStory> = {
    },
    "evidence": {
     "title": "D100’s pose engine runs on an FPGA; its failsafe has no silicon yet.",
-    "copy": "The drone position engine runs as circuit code on an Artix-7 at 81.25 MHz. No D100 die has been fabricated. Track B is scoped and funded separately from the nine SKUs. The architecture establishes neither jamming immunity nor certified flight safety."
+    "copy": "The drone position engine runs as circuit code on an Artix-7 at 81.25 MHz. No D100 die has been fabricated. Track B is scoped and funded separately from the eleven SKUs. The architecture establishes neither jamming immunity nor certified flight safety."
    },
    "sources": {
     "title": "Compendium §3.4 sets D100’s die split; the whitepaper, its FPGA proof.",
