@@ -805,9 +805,13 @@ export function executeGraphRAG(rawQuery: string, sem?: SemanticScores | null): 
     .join('  ·  ');
 
   // 4. Grounded Document Chunk Retrieval
+  // Source priority: the October 2026 SKU Blueprint (DOC #7) supersedes Technical Annex v3 (DOC #2) for SKU
+  // specifications and status, so when both carry a matching passage the Blueprint's is the one quoted.
+  const SOURCE_WEIGHT: Record<string, number> = {'07': 1.15, '02': 0.85};
   const scoredChunks: { chunk: UnifiedChunk; score: number }[] = [];
   graphIndex.chunks.forEach((chunk, i) => {
-    const score = useSem ? Math.max(0, sem!.chunks[i]) : dotProduct(qVec, chunk.vector);
+    const raw = useSem ? Math.max(0, sem!.chunks[i]) : dotProduct(qVec, chunk.vector);
+    const score = raw * (SOURCE_WEIGHT[chunk.docNum] ?? 1);
     if (score > 0) {
       scoredChunks.push({ chunk, score });
     }

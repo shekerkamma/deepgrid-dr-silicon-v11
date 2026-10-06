@@ -6,7 +6,9 @@
  *  the annex), maturity and boundary from portfolio-story-data.ts, status and evidence from
  *  applications-story-data.ts, beats from the story-architect storyboards, so every surface states the
  *  same thing. Motion: fade-in-up on entry, a pulsing ring and a separating 3D die in the hero, a
- *  carousel; all of it stands still under a reduced-motion preference. */
+ *  carousel; all of it stands still under a reduced-motion preference.
+ *  Source of record: the October 2026 SKU Blueprint for every part (figures, replaces, status, fit); the
+ *  Technical Annex v3 sheet, where one exists, is cited as the earlier edition. */
 import {useEffect, useRef, useState} from 'react';
 import {
   Activity, ArrowRight, ArrowUpRight, Car, ChevronLeft, ChevronRight, CircuitBoard, Clock, Cog, Cpu, Download,
@@ -28,6 +30,7 @@ import './product-page.css';
 
 const SECTIONS = [
   ['pp-inside', 'Overview'],
+  ['pp-why', 'Why it exists'],
   ['pp-features', 'Key features'],
   ['pp-specs', 'Architecture'],
   ['pp-readiness', 'Readiness'],
@@ -42,16 +45,20 @@ export default function ProductPageView({slug}: {slug: string}) {
   const doc = groundedDocuments.find(d => d.id === record.evidenceDoc)!;
   const annex = groundedDocuments.find(d => d.id === 'doc2')!;
   const blueprint = groundedDocuments.find(d => d.id === 'doc7')!;
-  // SKU-10 and SKU-11 postdate the annex: they cite a Blueprint page and have no annex deck or workflow yet.
+  // Every part cites its Blueprint page; SKU-10 and SKU-11 postdate the annex and have no annex sheet, deck or workflow.
   const fromAnnex = record.sheet != null;
+  const bpPage = record.blueprintPage!;
+  const bpPdf = url(blueprint.pdfFile) + `#page=${bpPage}`;
+  const bpDiagram = url(blueprint.pdfFile) + `#page=${bpPage - 1}`;
   const dg = productDiagrams[p.id];
   const story = archStories[p.id];
   const explainer = explainers.find(e => e.slug === p.slug);
   const S = story?.sections;
   const base = p.id === 'sku4' ? 'dg32-lite' : p.slug;
   const fits = areas.flatMap(a => a.items.filter(i => i.product === p.id).map(i => ({area: a, role: i.role})));
-  const sheet = fromAnnex ? `Sheet ${String(record.sheet).padStart(2, '0')}` : `page ${record.blueprintPage}`;
-  const srcName = fromAnnex ? 'Technical Annex v3' : 'SKU Blueprint, October 2026';
+  const sheet = `page ${bpPage}`;
+  const annexSheet = fromAnnex ? `Sheet ${String(record.sheet).padStart(2, '0')}` : '';
+  const srcName = 'SKU Blueprint, October 2026';
   const contact = url('/contact') + '?part=' + encodeURIComponent(`${part.code} ${part.name}`);
   const deck = url(`/downloads/${base}-architecture.pptx`);
   const animated = `/diagrams/${p.slug}-architecture-animated.svg`;   // scripts/sku-diagrams/animate.py
@@ -97,9 +104,8 @@ export default function ProductPageView({slug}: {slug: string}) {
             <div><dt>Status</dt><dd>{record.status ?? part.maturity}</dd></div>
           </dl>
           <div className="pp-actions">
-            {fromAnnex
-              ? <a className="primary" href={deck}><Download size={15} aria-hidden="true"/> Architecture deck</a>
-              : <a className="primary" href={url(blueprint.pdfFile)}><Download size={15} aria-hidden="true"/> SKU Blueprint (PDF)</a>}
+            <a className="primary" href={bpPdf}><Download size={15} aria-hidden="true"/> SKU Blueprint, {sheet} (PDF)</a>
+            {fromAnnex && <a className="text-link" href={deck}><Download size={15} aria-hidden="true"/> Architecture deck</a>}
             <a className="text-link" href="#pp-specs">The architecture <ArrowRight size={15} aria-hidden="true"/></a>
           </div>
         </div>
@@ -107,6 +113,18 @@ export default function ProductPageView({slug}: {slug: string}) {
           ...(explainer ? [{key: 'film', title: `How it works · ${explainer.length}`, node: <FilmPlayer film={explainer}/>}] : []),
           ...(dg ? [{key: 'diagram', title: 'Architecture, animated', node: <a className="pp-slide-img" href="#pp-diagram"><img src={url(animated)} alt={dg.alt} width={dg.width} height={dg.height} loading="lazy"/></a>}] : []),
         ]}/>
+      </section>
+
+      {/* 2b · Why it exists: the Blueprint's own answers to what the part replaces, who uses it, the policy
+          behind the demand and why its process node. */}
+      <section id="pp-why" className="pp-sec pp-reveal">
+        <Head title={`Why ${part.code} exists, and why on this node.`} copy={`From the SKU Blueprint, October 2026, ${sheet}.`}/>
+        <div className="pp-readiness-cards pp-why-cards">
+          {([['What it replaces', record.replaces ?? ''], ['Who uses it', p.fit.buyers], ['Policy and demand', p.fit.policy], ['Why this node', p.fit.node]] as const).map(([k, v]) => (
+            <article key={k}><p className="pp-card-kicker">{k}</p><p>{nbspUnits(v)}</p></article>
+          ))}
+        </div>
+        <a className="text-link" href={readHref(blueprint.specFile)}>Read {part.code} in the SKU Blueprint <ArrowUpRight size={15} aria-hidden="true"/></a>
       </section>
 
       {/* 3 · Key features: one card per storyboard beat (DG-A100: a grid of six feature cards). */}
@@ -129,7 +147,7 @@ export default function ProductPageView({slug}: {slug: string}) {
       {/* 4 · Architecture and technical specifications: the diagram in the middle, the targets around it,
           a row of facts beneath (DG-A100: schematic with spec cards either side, four chips below). */}
       <section id="pp-specs" className="pp-sec pp-reveal">
-        <Head title={S?.specs.title ?? 'Architecture targets, not datasheet values.'} copy={S?.specs.copy ?? `Every figure is a design target stated in the ${fromAnnex ? 'Technical Annex' : 'SKU Blueprint'}, ${sheet}. None is a measurement of manufactured silicon.`}/>
+        <Head title={S?.specs.title ?? 'Architecture targets, not datasheet values.'} copy={S?.specs.copy ?? `Every figure is a design target stated in the SKU Blueprint, ${sheet}. None is a measurement of manufactured silicon.`}/>
         <ul id="pp-highlights" className="pp-highlights" aria-label="The three figures that decide the fit">
           {p.highlights.map(([fig, label, row]) => { const value = p.specs.find(r => r[0] === row)![1]; return (
             <li key={label}><strong>{nbspUnits(fig)}</strong><span className="pp-hl-label">{label}</span>{tag(value)}</li>
@@ -153,7 +171,7 @@ export default function ProductPageView({slug}: {slug: string}) {
             <Diagram src={dg.src} title={dg.title} alt={dg.alt} width={dg.width} height={dg.height} drawio={dg.drawio} guide={dg.guide} html={`/downloads/${base}-workflow.html`} deck={`/downloads/${base}-architecture.pptx`}/>
             <Storyboard story={story} questionsHref="#pp-readiness"/>
             <DiagramNotes notes={dg.notes}/>
-            <p className="pp-note">Architecture from the annex, {sheet}. A functional view, not a floorplan.</p>
+            <p className="pp-note">{fromAnnex ? `Diagram drawn from Technical Annex v3, ${annexSheet.toLowerCase()}; where the SKU Blueprint (${sheet}) differs, the specification above follows the Blueprint.` : `Architecture from the SKU Blueprint, ${sheet}.`} A functional view, not a floorplan.</p>
           </details>
         )}
       </section>
@@ -163,7 +181,7 @@ export default function ProductPageView({slug}: {slug: string}) {
       <section id="pp-readiness" className="pp-sec pp-readiness pp-reveal">
         <header className="pp-readiness-head">
           <h2 className="dr-h2">{nbspUnits(S?.questions.title ?? 'What an evaluator should ask first.')}</h2>
-          <p>{S?.questions.copy ?? `${fromAnnex ? 'The annex asks these of its own design.' : 'The Blueprint’s design and status notes raise these.'} Each is a question silicon, test or layout has to answer before ${part.code} can be relied on.`}</p>
+          <p>{S?.questions.copy ?? `The Blueprint’s design and status notes raise these. Each is a question silicon, test or layout has to answer before ${part.code} can be relied on.`}</p>
         </header>
         <div className="pp-readiness-cards">
           {p.physics.map((x, i) => (
@@ -205,19 +223,19 @@ export default function ProductPageView({slug}: {slug: string}) {
       </section>
 
       <section id="pp-sources" className="pp-sec">
-        <Head title={S?.sources.title ?? 'Read the source behind every figure.'} copy={(S?.sources.copy ?? 'Each document opens inside the site at the cited section; the PDF is the edition of record.') + (dg?.annexDiffers ? ' Where the annex sheet differs from this page, the difference is stated beside it.' : '')}/>
+        <Head title={S?.sources.title ?? 'Read the source behind every figure.'} copy={(S?.sources.copy ?? 'Each document opens inside the site at the cited section; the PDF is the edition of record.') + ' The SKU Blueprint, October 2026, is the source of record; an earlier annex sheet, where listed, is kept for its diagrams and design files.'}/>
         <ul className="pp-sources">
+          <li>
+            <a href={readHref(blueprint.specFile)}><FileText size={15} aria-hidden="true"/><span>{blueprint.title}</span><span className="pp-cite">{part.code}, {sheet} · source of record</span></a>
+            <a className="pp-pdf" href={bpPdf}>PDF · {blueprint.pdfPageCount}</a>
+          </li>
           {fromAnnex && (
           <li>
-            <a href={readHref(annex.specFile, part.source.section.includes('§3') ? undefined : '2. Complete 14-Sheet Portfolio Matrix')}><FileText size={15} aria-hidden="true"/><span>{annex.title}</span><span className="pp-cite">{sheet}{part.source.section ? ' · ' + part.source.section : ''}</span></a>
-            <a className="pp-pdf" href={url(annex.pdfFile)}>PDF · {annex.pdfPageCount}{dg?.annexDiffers ? ' · values differ from this page' : ''}</a>
-            {dg?.annexDiffers && <p className="pp-differs">Some values on {sheet.toLowerCase()} differ from this page, which follows the product specification: {nbspUnits(dg.annexDiffers)}.</p>}
+            <a href={readHref(annex.specFile, '2. Complete 14-Sheet Portfolio Matrix')}><FileText size={15} aria-hidden="true"/><span>{annex.title}</span><span className="pp-cite">Earlier edition · {annexSheet}</span></a>
+            <a className="pp-pdf" href={url(annex.pdfFile)}>PDF · {annex.pdfPageCount}</a>
+            {p.reconcile && <p className="pp-differs">Where this earlier sheet differs, the page follows the Blueprint; the difference is stated under “Where the sources differ”.</p>}
           </li>
           )}
-          <li>
-            <a href={readHref(blueprint.specFile)}><FileText size={15} aria-hidden="true"/><span>{blueprint.title}</span><span className="pp-cite">{fromAnnex ? 'Market, buyers, process and status' : `${part.code}, ${sheet}`}</span></a>
-            <a className="pp-pdf" href={url(blueprint.pdfFile)}>PDF · {blueprint.pdfPageCount}</a>
-          </li>
           {doc.id !== annex.id && doc.id !== blueprint.id && (
             <li>
               <a href={readHref(doc.specFile)}><FileText size={15} aria-hidden="true"/><span>{doc.title}</span><span className="pp-cite">Evidence for this part</span></a>
@@ -233,7 +251,7 @@ export default function ProductPageView({slug}: {slug: string}) {
           {fromAnnex && <li><a href={deck}><Download size={15} aria-hidden="true"/> Architecture deck (.pptx)</a></li>}
           {dg && <li><a href={url(dg.drawio)}><Download size={15} aria-hidden="true"/> Editable diagram (.drawio)</a></li>}
           {fromAnnex && <li><a href={url(`/downloads/${base}-workflow.html`)}><ArrowUpRight size={15} aria-hidden="true"/> Interactive workflow (.html)</a></li>}
-          {!fromAnnex && <li><a href={url(blueprint.pdfFile) + `#page=${(record.blueprintPage ?? 1) - 1}`}><Download size={15} aria-hidden="true"/> Architecture diagram, SKU Blueprint page {(record.blueprintPage ?? 1) - 1} (.pdf)</a></li>}
+          <li><a href={bpDiagram}><Download size={15} aria-hidden="true"/> Architecture diagram, SKU Blueprint page {bpPage - 1} (.pdf)</a></li>
           {dg && <li><a href={readHref(dg.guide)}><FileText size={15} aria-hidden="true"/> Architecture guide</a></li>}
         </ul>
       </section>
