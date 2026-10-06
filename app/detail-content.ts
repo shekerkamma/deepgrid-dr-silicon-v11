@@ -413,8 +413,8 @@ export interface SkuRoadmapItem {
  *  - DG32-2DOM was numbered SKU-2, which is the Smart-Meter SoC. 2DOM is not one of the nine:
  *    it is the DG32-LITE die plus the INT8 engine, so it is recorded as a SKU-4 variant.
  *  - DG-D100 was numbered SKU-3, which is the Hi-Rel PMIC. D100 is **Track B**, funded and
- *    scoped separately. Its node is the Annex matrix's "130nm + 28nm SiP": a 130 nm die and a TSMC
- *    28 nm die in one package (2026-09-24; it was listed as 65 nm, then as TSMC 28 nm alone).
+ *    scoped separately. The October 2026 SKU Blueprint makes it a 28 nm chip whose failsafe island
+ *    can be built at 130 nm (it was listed as 65 nm, then TSMC 28 nm alone, then the Annex's "130nm + 28nm SiP").
  *  - Nodes for SKU-8 and SKU-9 were wrong: 130 nm HV CMOS and 130 nm + 180 nm respectively.
  *
  *  "Phase" now means what the source means by it. The mature-silicon architecture defines three
@@ -428,19 +428,19 @@ export interface SkuRoadmapItem {
  *  customer or revenue claim is carried onto the site from this table.
  */
 export const sovereignSkuHorizon: SkuRoadmapItem[] = [
-  { sku: 'SKU-1', name: 'BLDC Motor Controller', phase: 'Phase 1 · SkyWater (USA)', node: '130 nm BCD', foundry: 'SkyWater', targetApp: 'Native 5–120 V motor drive with hardware PID and CORDIC field-oriented control' },
+  { sku: 'SKU-1', name: 'BLDC Motor Controller', phase: 'Phase 1 · SkyWater (USA)', node: '130 nm BCD', foundry: 'SkyWater', targetApp: 'Motor drive with hardware PID and CORDIC field-oriented control, controlling a 5–120 V supply (external switches above 20 V); a cost-down cut for fans and appliances' },
   { sku: 'SKU-2', name: 'Smart-Meter SoC', phase: 'Phase 1 · SkyWater (USA)', node: '130 nm CMOS', foundry: 'SkyWater', targetApp: 'Six-channel 24-bit metrology front end with an always-on sub-2 µW RTC domain' },
-  { sku: 'SKU-3', name: 'High-Reliability PMIC', phase: 'Phase 3 · SCL Mohali (India)', node: '180 nm BCD', foundry: 'SCL Mohali', targetApp: 'Sequenced avionics rails on a 28 V bus, DO-160G and NSG-5962' },
+  { sku: 'SKU-3', name: 'High-Reliability PMIC', phase: 'Phase 3 · SCL Mohali (India)', node: '180 nm BCD', foundry: 'SCL Mohali', targetApp: 'Sequenced rails on a 28 V bus in military, railway (EN 50155) and space grades; sky130 prototype for the control logic' },
   { sku: 'SKU-4', name: 'DG32-LITE', phase: 'Phase 1 · SkyWater (USA)', node: '130 nm CMOS', foundry: 'SkyWater', targetApp: 'Lockstep safety MCU: dual DGridRiscV at 2-cycle skew, fault latch under 2 cycles', isDg32: true },
   { sku: 'SKU-4 variant', name: 'DG32-2DOM', phase: 'Phase 1 · SkyWater (USA)', node: '130 nm CMOS', foundry: 'SkyWater', targetApp: 'The DG32-LITE die plus an INT8 attention engine on its own clock, same pinout', isDg32: true },
   { sku: 'SKU-5', name: 'Robust Transceiver', phase: 'Phase 1 · SkyWater (USA)', node: '130 nm HV', foundry: 'SkyWater', targetApp: 'RS-485 and CAN-FD with ±15 kV HBM ESD, replacing discontinued parts' },
   { sku: 'SKU-6', name: 'Voltage Supervisor', phase: 'Phase 3 · SCL Mohali (India)', node: '180 nm CMOS', foundry: 'SkyWater then SCL Mohali', targetApp: 'Four-rail supervisor with an 8 µs deglitch filter; the simplest chip through qualification first' },
   { sku: 'SKU-7', name: 'DG-RADAR-77', phase: 'Phase 2 · IHP (Germany)', node: '0.13 µm SiGe BiCMOS', foundry: 'IHP Microelectronics', targetApp: '77 GHz 4D MIMO radar front end, fabricated outside US export control' },
-  { sku: 'SKU-8', name: 'DG-DISP-17', phase: 'Phase 1 · SkyWater (USA)', node: '130 nm HV CMOS', foundry: 'SkyWater', targetApp: 'Rugged cockpit display driver, 0–12 V column amplifiers with compensated gamma' },
-  { sku: 'SKU-9', name: 'DG-SDV-ZONE', phase: 'Phase 1 · SkyWater (USA)', node: '130 nm + 180 nm', foundry: 'SkyWater', targetApp: 'Zonal gateway: 16 smart e-fuses and four-port Gigabit TSN, replacing relay boxes' },
+  { sku: 'SKU-8', name: 'DG-DISP-17', phase: 'Phase 1 · SkyWater (USA)', node: '130 nm HV CMOS', foundry: 'SkyWater', targetApp: 'Rugged and industrial display chipset, 0–12 V column amplifiers with compensated gamma; a wider-temperature cockpit version' },
+  { sku: 'SKU-9', name: 'DG-SDV-ZONE', phase: 'Phase 1 · SkyWater (USA)', node: '130 nm CMOS and BCD', foundry: 'SkyWater', targetApp: 'Zonal gateway at 100 MHz: 16 smart e-fuses and four-port Gigabit TSN, replacing relay boxes' },
   { sku: 'SKU-10', name: 'DG32-Max', phase: 'Phase 1 · SkyWater (USA)', node: '130 nm CMOS (SKY130)', foundry: 'SkyWater', targetApp: 'Secure lockstep MCU with signed boot from mask ROM, replacing an imported secure MCU plus secure element' },
   { sku: 'SKU-11', name: 'DG-BMS-SOH', phase: 'Phase 1 · SkyWater (USA)', node: '130 nm CMOS (SKY130)', foundry: 'SkyWater', targetApp: 'Battery-management controller with on-chip state-of-health inference and hardwired protection' },
-  { sku: 'Track B', name: 'DG-D100', phase: 'Separate track', node: '130 nm + 28 nm, multi-die SiP', foundry: 'TSMC (28 nm die)', targetApp: 'Tactical drone SoC with an independent hardware failsafe island wired to the ESCs' },
+  { sku: 'Track B', name: 'DG-D100', phase: 'Separate track · ₹50 Cr round', node: '28 nm; failsafe island buildable at 130 nm', foundry: 'TSMC (28 nm)', targetApp: 'Drone SoC: flight control, visual navigation and optional AI on one chip, with an independent hardware failsafe island wired to the ESCs' },
 ];
 
 

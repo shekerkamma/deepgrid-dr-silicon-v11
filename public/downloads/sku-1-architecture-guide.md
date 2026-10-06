@@ -6,7 +6,7 @@ Deepgrid Semi · BLDC motor controller · reading guide to the SKU-1 system arch
 
 ## What is SKU-1?
 
-SKU-1 is a brushless-motor controller that keeps the current loop in hardware. A DGridRiscV core configures and supervises; the field-oriented-control datapath, the 16-bit sensing and the PWM and pre-drivers run the loop without it, on a 5 V to 120 V rail.
+SKU-1 is a brushless-motor controller that keeps the current loop in hardware. A DGridRiscV core configures and supervises; the field-oriented-control datapath, the 16-bit sensing and the PWM and pre-drivers run the loop without it, controlling a 5 V to 120 V motor supply (external power switches above 20 V).
 
 ---
 
@@ -24,7 +24,7 @@ What it does: A DGridRiscV core with timers and watchdog, SRAM and ReRAM, and th
 
 Why it exists: The processor configures and supervises; it does not sit in the loop.
 
-- **DGridRiscV**: custom 32-bit RISC-V · 200 MHz
+- **DGridRiscV**: custom 32-bit RISC-V · 100 MHz
 - **Timers · WDT · CCU**
 - **SRAM**: 32 KB, up to 256 KB
 - **ReRAM**: 256 KB, up to 1 MB
@@ -43,7 +43,7 @@ What it does: A 16-bit ADC for phase, bus and temperature, four reference DACs, 
 
 What it does: A buck-boost converter, seven PWM channels, three half-bridge pre-drivers, latched protection and runtime star or delta winding selection.
 
-Why it exists: Gate drive at up to 120 V needs high-voltage BCD devices beside the logic.
+Why it exists: Up to about 20 V the gate drive sits on the BCD die beside the logic; above it, up to 120 V, the chip drives external power switches.
 
 - **B-B converter**: buck-boost, PWM-pin driven
 - **PWM × 7**: up to 200 kHz · 6 bridge + 1 aux
