@@ -3,12 +3,11 @@
  *  section: hero with the part in the middle and three figures beside it, an overview with a media
  *  carousel, a key-features grid, the architecture with its specification around it, readiness, what
  *  it is designed for, and the call to action. Content comes from product-pages-data.ts (authored from
- *  the annex), maturity and boundary from portfolio-story-data.ts, status and evidence from
+ *  the SKU Blueprint), maturity and boundary from portfolio-story-data.ts, status and evidence from
  *  applications-story-data.ts, beats from the story-architect storyboards, so every surface states the
  *  same thing. Motion: fade-in-up on entry, a pulsing ring and a separating 3D die in the hero, a
  *  carousel; all of it stands still under a reduced-motion preference.
- *  Source of record: the October 2026 SKU Blueprint for every part (figures, replaces, status, fit); the
- *  Technical Annex v3 sheet, where one exists, is cited as the earlier edition. */
+ *  Source of record: the October 2026 SKU Blueprint for every part (figures, replaces, status, fit). */
 import {useEffect, useRef, useState} from 'react';
 import {
   Activity, ArrowRight, ArrowUpRight, Car, ChevronLeft, ChevronRight, CircuitBoard, Clock, Cog, Cpu, Download,
@@ -43,10 +42,9 @@ export default function ProductPageView({slug}: {slug: string}) {
   const part = portfolioParts.find(x => x.id === p.portfolioId)!;
   const record = products[p.id];
   const doc = groundedDocuments.find(d => d.id === record.evidenceDoc)!;
-  const annex = groundedDocuments.find(d => d.id === 'doc2')!;
   const blueprint = groundedDocuments.find(d => d.id === 'doc7')!;
-  // Every part cites its Blueprint page; SKU-10 and SKU-11 postdate the annex and have no annex sheet, deck or workflow.
-  const fromAnnex = record.sheet != null;
+  // Every part cites its Blueprint page. SKU-10 and SKU-11 have no architecture deck or interactive workflow yet.
+  const hasDesignFiles = p.id !== 'sku10' && p.id !== 'sku11';
   const bpPage = record.blueprintPage!;
   const bpPdf = url(blueprint.pdfFile) + `#page=${bpPage}`;
   const bpDiagram = url(blueprint.pdfFile) + `#page=${bpPage - 1}`;
@@ -57,7 +55,6 @@ export default function ProductPageView({slug}: {slug: string}) {
   const base = p.id === 'sku4' ? 'dg32-lite' : p.slug;
   const fits = areas.flatMap(a => a.items.filter(i => i.product === p.id).map(i => ({area: a, role: i.role})));
   const sheet = `page ${bpPage}`;
-  const annexSheet = fromAnnex ? `Sheet ${String(record.sheet).padStart(2, '0')}` : '';
   const srcName = 'SKU Blueprint, October 2026';
   const contact = url('/contact') + '?part=' + encodeURIComponent(`${part.code} ${part.name}`);
   const deck = url(`/downloads/${base}-architecture.pptx`);
@@ -105,7 +102,7 @@ export default function ProductPageView({slug}: {slug: string}) {
           </dl>
           <div className="pp-actions">
             <a className="primary" href={bpPdf}><Download size={15} aria-hidden="true"/> SKU Blueprint, {sheet} (PDF)</a>
-            {fromAnnex && <a className="text-link" href={deck}><Download size={15} aria-hidden="true"/> Architecture deck</a>}
+            {hasDesignFiles && <a className="text-link" href={deck}><Download size={15} aria-hidden="true"/> Architecture deck</a>}
             <a className="text-link" href="#pp-specs">The architecture <ArrowRight size={15} aria-hidden="true"/></a>
           </div>
         </div>
@@ -164,14 +161,13 @@ export default function ProductPageView({slug}: {slug: string}) {
           <div><dt>Source</dt><dd>{srcName}, {sheet.toLowerCase()}</dd></div>
         </dl>
         <p className="pp-note">Standards the architecture is designed toward. No DeepGrid part holds a certification or qualification today.</p>
-        {p.reconcile && <aside className="pp-reconcile"><p className="dr-kicker">WHERE THE SOURCES DIFFER</p><p>{p.reconcile}</p></aside>}
         {dg && story && (
           <details id="pp-diagram" className="pp-diagram-full"><summary className="pp-ghost">Open the full diagram, its storyboard and sources</summary>
             {dg.note && <p className="pp-note">{nbspUnits(dg.note)}</p>}
             <Diagram src={dg.src} title={dg.title} alt={dg.alt} width={dg.width} height={dg.height} drawio={dg.drawio} guide={dg.guide} html={`/downloads/${base}-workflow.html`} deck={`/downloads/${base}-architecture.pptx`}/>
             <Storyboard story={story} questionsHref="#pp-readiness"/>
             <DiagramNotes notes={dg.notes}/>
-            <p className="pp-note">{fromAnnex ? `Diagram drawn from Technical Annex v3, ${annexSheet.toLowerCase()}; where the SKU Blueprint (${sheet}) differs, the specification above follows the Blueprint.` : `Architecture from the SKU Blueprint, ${sheet}.`} A functional view, not a floorplan.</p>
+            <p className="pp-note">Architecture from the SKU Blueprint, {sheet}. A functional view, not a floorplan.</p>
           </details>
         )}
       </section>
@@ -223,34 +219,27 @@ export default function ProductPageView({slug}: {slug: string}) {
       </section>
 
       <section id="pp-sources" className="pp-sec">
-        <Head title={S?.sources.title ?? 'Read the source behind every figure.'} copy={(S?.sources.copy ?? 'Each document opens inside the site at the cited section; the PDF is the edition of record.') + ' The SKU Blueprint, October 2026, is the source of record; an earlier annex sheet, where listed, is kept for its diagrams and design files.'}/>
+        <Head title={S?.sources.title ?? 'Read the source behind every figure.'} copy={(S?.sources.copy ?? 'Each document opens inside the site at the cited section; the PDF is the edition of record.')}/>
         <ul className="pp-sources">
           <li>
             <a href={readHref(blueprint.specFile)}><FileText size={15} aria-hidden="true"/><span>{blueprint.title}</span><span className="pp-cite">{part.code}, {sheet} · source of record</span></a>
             <a className="pp-pdf" href={bpPdf}>PDF · {blueprint.pdfPageCount}</a>
           </li>
-          {fromAnnex && (
-          <li>
-            <a href={readHref(annex.specFile, '2. Complete 14-Sheet Portfolio Matrix')}><FileText size={15} aria-hidden="true"/><span>{annex.title}</span><span className="pp-cite">Earlier edition · {annexSheet}</span></a>
-            <a className="pp-pdf" href={url(annex.pdfFile)}>PDF · {annex.pdfPageCount}</a>
-            {p.reconcile && <p className="pp-differs">Where this earlier sheet differs, the page follows the Blueprint; the difference is stated under “Where the sources differ”.</p>}
-          </li>
-          )}
-          {doc.id !== annex.id && doc.id !== blueprint.id && (
+          {doc.id !== blueprint.id && (
             <li>
               <a href={readHref(doc.specFile)}><FileText size={15} aria-hidden="true"/><span>{doc.title}</span><span className="pp-cite">Evidence for this part</span></a>
               <a className="pp-pdf" href={url(doc.pdfFile)}>PDF · {doc.pdfPageCount}</a>
             </li>
           )}
-          {part.source.path !== annex.specFile && part.source.path !== blueprint.specFile && (
+          {part.source.path !== blueprint.specFile && (
             <li><a href={readHref(part.source.path, part.source.section)}><FileText size={15} aria-hidden="true"/><span>{part.source.title}</span><span className="pp-cite">{part.source.section}</span></a></li>
           )}
         </ul>
         <p className="pp-group-label">Design files</p>
         <ul className="pp-files">
-          {fromAnnex && <li><a href={deck}><Download size={15} aria-hidden="true"/> Architecture deck (.pptx)</a></li>}
+          {hasDesignFiles && <li><a href={deck}><Download size={15} aria-hidden="true"/> Architecture deck (.pptx)</a></li>}
           {dg && <li><a href={url(dg.drawio)}><Download size={15} aria-hidden="true"/> Editable diagram (.drawio)</a></li>}
-          {fromAnnex && <li><a href={url(`/downloads/${base}-workflow.html`)}><ArrowUpRight size={15} aria-hidden="true"/> Interactive workflow (.html)</a></li>}
+          {hasDesignFiles && <li><a href={url(`/downloads/${base}-workflow.html`)}><ArrowUpRight size={15} aria-hidden="true"/> Interactive workflow (.html)</a></li>}
           <li><a href={bpDiagram}><Download size={15} aria-hidden="true"/> Architecture diagram, SKU Blueprint page {bpPage - 1} (.pdf)</a></li>
           {dg && <li><a href={readHref(dg.guide)}><FileText size={15} aria-hidden="true"/> Architecture guide</a></li>}
         </ul>
@@ -261,7 +250,7 @@ export default function ProductPageView({slug}: {slug: string}) {
         <p>{nbspUnits(S?.close.copy ?? 'Send the platform, voltage and power environment, interfaces and qualification needs. The reply names what is architecture, what is evidence and what would have to be tested.')}</p>
         <div className="pp-actions">
           <a className="primary" href={contact}>Discuss {part.code} <ArrowUpRight size={16} aria-hidden="true"/></a>
-          {fromAnnex && <a className="pp-ghost" href={deck}><Download size={15} aria-hidden="true"/> Download the architecture deck</a>}
+          {hasDesignFiles && <a className="pp-ghost" href={deck}><Download size={15} aria-hidden="true"/> Download the architecture deck</a>}
           <a className="text-link" href={url('/products')}>Compare all {NUMW[productPages.length] ?? productPages.length} parts <ArrowUpRight size={15} aria-hidden="true"/></a>
         </div>
       </section>
@@ -276,7 +265,7 @@ function Head({title, copy}: {title: string; copy?: React.ReactNode}) {
   return <header className="dr-sec-head"><div><h2 className="dr-h2">{nbspUnits(title)}</h2></div>{copy && <div className="dr-sec-copy">{typeof copy === 'string' ? <p>{nbspUnits(copy)}</p> : copy}</div>}</header>;
 }
 
-/** A figure's standing, stated on its card: the annex gives targets; a few rows are simulated results. */
+/** A figure's standing, stated on its card: the Blueprint gives targets; a few rows are simulated results. */
 function status(value: string) { return /simulated/i.test(value) ? 'Simulated' : 'Target'; }
 /** The tag a card shows: only an exception to the section's stated default ("every figure is a target"). */
 function tag(value: string) { const s = status(value); return s === 'Target' ? null : <span className="pp-status">{s}</span>; }

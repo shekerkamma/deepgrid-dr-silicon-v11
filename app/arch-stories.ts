@@ -87,7 +87,7 @@ export const archStories: Record<string, ArchStory> = {
    },
    "sources": {
     "title": "The SKU Blueprint sizes SKU-1; the whitepaper shows its FPGA run",
-    "copy": "The SKU Blueprint, October 2026, page 10, holds the architecture targets, status and what the part replaces. The whitepaper names the FPGA-validated motor control datapath. Technical Annex v3, sheet 2, the earlier edition, carries the original block diagram."
+    "copy": "The SKU Blueprint, October 2026, page 10, holds the architecture targets, status and what the part replaces. The whitepaper names the FPGA-validated motor control datapath."
    },
    "close": {
     "title": "Bring your motor and bus voltage, and we will scope SKU-1 against them",
@@ -187,7 +187,7 @@ export const archStories: Record<string, ArchStory> = {
    },
    "sources": {
     "title": "The SKU Blueprint sets SKU-2’s targets; the whitepaper shows FPGA",
-    "copy": "The SKU Blueprint, October 2026, page 13, holds the architecture targets, status and what the part replaces. The whitepaper names the FPGA-validated meter measurement chain. Technical Annex v3, sheet 3, the earlier edition, carries the original block diagram."
+    "copy": "The SKU Blueprint, October 2026, page 13, holds the architecture targets, status and what the part replaces. The whitepaper names the FPGA-validated meter measurement chain."
    },
    "close": {
     "title": "Bring your meter class and tamper list, and we will scope SKU-2 against them",
@@ -272,7 +272,7 @@ export const archStories: Record<string, ArchStory> = {
    },
    "specs": {
     "title": "Bus range, rail currents and the reference decide SKU-3’s fit",
-    "copy": "Read the 4.5 to 40 V input range, the four rail currents and the 12 ppm/°C reference first: they decide whether SKU-3 matches your bus and board, in its military, railway or space grade. Every row is a target from the SKU Blueprint, October 2026, page 16, and the earlier annex sheet, not a measurement."
+    "copy": "Read the 4.5 to 40 V input range, the four rail currents and the 12 ppm/°C reference first: they decide whether SKU-3 matches your bus and board, in its military, railway or space grade. Every row is a target from the SKU Blueprint, October 2026, page 16, not a measurement."
    },
    "questions": {
     "title": "Surge, stability and upset answers decide if SKU-3 holds a 28 V bus",
@@ -288,7 +288,7 @@ export const archStories: Record<string, ArchStory> = {
    },
    "sources": {
     "title": "The SKU Blueprint, page 16, sets SKU-3’s grades and status",
-    "copy": "The SKU Blueprint, October 2026, page 16, sets the three grades, the status and what the part replaces. Technical Annex v3, sheet 4, the earlier edition, carries the input range, rails, reference and the four evaluation questions."
+    "copy": "The SKU Blueprint, October 2026, page 16, sets the three grades, the status and what the part replaces. The input range, rails, reference and evaluation questions on this page are its architecture targets."
    },
    "close": {
     "title": "Bring your bus transients and rail list, and we will scope SKU-3 against them",
@@ -500,8 +500,8 @@ export const archStories: Record<string, ArchStory> = {
     "copy": "RTL is ready for the digital logic and the analog line drivers are designed and simulated (schematic and SPICE); layout and silicon proof follow on the prototype. No ESD, slew or unit-load figure has been measured, and ±15 kV needs a dedicated test chip."
    },
    "sources": {
-    "title": "The SKU Blueprint sets SKU-5’s scope; this page corrects three annex figures",
-    "copy": "The SKU Blueprint, October 2026, page 22, sets the scope, status and what the part replaces. Where Technical Annex v3, sheet 6, pairs 20 Mbps with 1.2 km, merges IEC 61000-4-2 with HBM, or quotes ±7 V common mode, this page gives the corrected form."
+    "title": "The SKU Blueprint sets SKU-5’s scope and status",
+    "copy": "The SKU Blueprint, October 2026, page 22, sets the scope, status and what the part replaces. Rate and reach are two operating points, ESD is stated per test standard, and common mode follows TIA/EIA-485."
    },
    "close": {
     "title": "Bring your bus, its wiring and its ESD test, and we will scope SKU-5 for it",
@@ -580,7 +580,7 @@ export const archStories: Record<string, ArchStory> = {
    },
    "specs": {
     "title": "SKU-6 stands on a 500 µV offset, a 0.1% ladder and an 8 µs window.",
-    "copy": "Comparator offset and ladder match decide whether a threshold is accurate; the deglitch window decides whether ripple is ignored. Rails, watchdog and reset timing follow from them. Every figure is a design target from the SKU Blueprint, October 2026, page 25, and the earlier annex sheet; none is measured."
+    "copy": "Comparator offset and ladder match decide whether a threshold is accurate; the deglitch window decides whether ripple is ignored. Rails, watchdog and reset timing follow from them. Every figure is a design target from the SKU Blueprint, October 2026, page 25; none is measured."
    },
    "questions": {
     "title": "Four answers decide whether SKU-6’s 8 µs window is the right one.",
@@ -596,7 +596,7 @@ export const archStories: Record<string, ArchStory> = {
    },
    "sources": {
     "title": "Three documents carry SKU-6’s targets, its FPGA proof and its job.",
-    "copy": "The SKU Blueprint, October 2026, page 25, sets the job, status and screening plan. The Mature-Node Silicon whitepaper names the FPGA-validated sensing chain. Technical Annex v3, sheet 7, the earlier edition, states the original targets."
+    "copy": "The SKU Blueprint, October 2026, page 25, sets the job, status and screening plan. The Mature-Node Silicon whitepaper names the FPGA-validated sensing chain."
    },
    "close": {
     "title": "Bring your rails and converter noise; we will test SKU-6 against them.",
@@ -683,7 +683,7 @@ export const archStories: Record<string, ArchStory> = {
    },
    "specs": {
     "title": "The 4 GHz sweep and the 2 × 4 array set what SKU-7 can resolve.",
-    "copy": "The sweep sets range resolution, two transmit and four receive channels set angle, and four 12-bit 40 MSPS converters set what reaches the FFTs. fT is transistor capability, not radar frequency. Every figure is a design target from the SKU Blueprint, October 2026, page 28, and the earlier annex sheet."
+    "copy": "The sweep sets range resolution, two transmit and four receive channels set angle, and four 12-bit 40 MSPS converters set what reaches the FFTs. fT is transistor capability, not radar frequency. Every figure is a design target from the SKU Blueprint, October 2026, page 28."
    },
    "questions": {
     "title": "SKU-7’s open risks sit at the die boundary and in the chirp ramp.",
@@ -699,7 +699,7 @@ export const archStories: Record<string, ArchStory> = {
    },
    "sources": {
     "title": "Compendium §3.3 explains why SKU-7’s RF and baseband split dies.",
-    "copy": "The SKU Blueprint, October 2026, page 28, sets the bands, status and what the part replaces. Technical Annex v3, sheet 8, the earlier edition, gives the RF targets, and the SKU Architecture Compendium, §3.3, explains the two-die split and what fT does and does not mean."
+    "copy": "The SKU Blueprint, October 2026, page 28, sets the bands, status and what the part replaces. The SKU Architecture Compendium, §3.3, explains the two-die split and what fT does and does not mean."
    },
    "close": {
     "title": "Bring your platform and its range needs; we will scope SKU-7 against them.",
@@ -785,7 +785,7 @@ export const archStories: Record<string, ArchStory> = {
    },
    "specs": {
     "title": "SKU-8 is judged on its 0 to 12 V swing, 14-bit gamma and freeze alert.",
-    "copy": "The column swing, the temperature-fed 14-bit gamma and the two-frame freeze alert are what a rugged-display evaluation turns on; resolution and inputs follow the panel. Every figure is a design target from the SKU Blueprint, October 2026, page 31, and the earlier annex sheet; none is measured."
+    "copy": "The column swing, the temperature-fed 14-bit gamma and the two-frame freeze alert are what a rugged-display evaluation turns on; resolution and inputs follow the panel. Every figure is a design target from the SKU Blueprint, October 2026, page 31; none is measured."
    },
    "questions": {
     "title": "SKU-8’s answers decide whether a crew can trust what it sees.",
@@ -801,7 +801,7 @@ export const archStories: Record<string, ArchStory> = {
    },
    "sources": {
     "title": "The SKU Blueprint, page 31, scopes SKU-8 to rugged panels.",
-    "copy": "The SKU Blueprint, October 2026, page 31, sets the scope, status and what the part replaces. Technical Annex v3, sheet 9, the earlier edition, gives the drive targets, and the SKU Architecture Compendium sets the limit on rugged-display claims."
+    "copy": "The SKU Blueprint, October 2026, page 31, sets the scope, status and what the part replaces. The SKU Architecture Compendium sets the limit on rugged-display claims."
    },
    "close": {
     "title": "Bring your panel and its sunlight; we will say what SKU-8 must prove.",
@@ -884,7 +884,7 @@ export const archStories: Record<string, ArchStory> = {
    },
    "specs": {
     "title": "Sixteen smart fuses and a TSN switch carry SKU-9’s case.",
-    "copy": "The TSN switch, the port mix, the sixteen I²t smart fuses and the two-cycle lockstep island decide whether one chip can replace a relay box; central compute is out of scope. Every figure is a design target from the SKU Blueprint, October 2026, page 34, and the earlier annex sheet."
+    "copy": "The TSN switch, the port mix, the sixteen I²t smart fuses and the two-cycle lockstep island decide whether one chip can replace a relay box; central compute is out of scope. Every figure is a design target from the SKU Blueprint, October 2026, page 34."
    },
    "questions": {
     "title": "SKU-9’s answers decide whether brake and comfort traffic can share it.",
@@ -896,11 +896,11 @@ export const archStories: Record<string, ArchStory> = {
    },
    "evidence": {
     "title": "SKU-9 is RTL-ready, with its prototype on the December 2026 shuttle.",
-    "copy": "RTL is ready and the prototype is on the December 2026 shuttle, a 130 nm chip at 100 MHz for the zonal layer. No die, harness-weight reduction or qualified vehicle implementation is claimed. The annex labelled the safety island ASIL-D, but no certificate exists for any DeepGrid part, so ASIL-D is a design target."
+    "copy": "RTL is ready and the prototype is on the December 2026 shuttle, a 130 nm chip at 100 MHz for the zonal layer. No die, harness-weight reduction or qualified vehicle implementation is claimed. No certificate exists for any DeepGrid part, so ASIL-D is a design target."
    },
    "sources": {
     "title": "The SKU Blueprint, page 34, sets SKU-9’s clock and scope.",
-    "copy": "The SKU Blueprint, October 2026, page 34, sets the 100 MHz clock, status and scope. Technical Annex v3, sheet 10, the earlier edition, gives the ports and fuses, including the ASIL-D wording this page corrects."
+    "copy": "The SKU Blueprint, October 2026, page 34, sets the 100 MHz clock, status and scope. ASIL-D appears on this page as a design target, not a certificate."
    },
    "close": {
     "title": "Bring your zone’s loads and buses; we will test SKU-9’s latency against them.",
@@ -987,7 +987,7 @@ export const archStories: Record<string, ArchStory> = {
    },
    "specs": {
     "title": "D100 stands on its isolated failsafe and its 30 Hz pose engine.",
-    "copy": "The failsafe’s isolated power, clock and ESC link, and the six-DoF pose at 30 Hz, decide whether the airframe recovers and navigates without GPS. The 10 TOPS accelerator is phase 2. Every figure is a design target from the SKU Blueprint, October 2026, page 43, and the earlier annex sheet."
+    "copy": "The failsafe’s isolated power, clock and ESC link, and the six-DoF pose at 30 Hz, decide whether the airframe recovers and navigates without GPS. The 10 TOPS accelerator is phase 2. Every figure is a design target from the SKU Blueprint, October 2026, page 43."
    },
    "questions": {
     "title": "D100’s answers decide when the island acts and how far it drifts.",
@@ -1003,7 +1003,7 @@ export const archStories: Record<string, ArchStory> = {
    },
    "sources": {
     "title": "Compendium §3.4 sets D100’s die split; the whitepaper, its FPGA proof.",
-    "copy": "The SKU Blueprint, October 2026, page 43, sets D100 as a 28 nm Track B chip with a 130 nm failsafe island, funded by a separate round. Technical Annex v3, sheet 11, the earlier edition, gives the flight-control targets. The Mature-Node Silicon whitepaper names the FPGA-validated position engine."
+    "copy": "The SKU Blueprint, October 2026, page 43, sets D100 as a 28 nm Track B chip with a 130 nm failsafe island, funded by a separate round. The Mature-Node Silicon whitepaper names the FPGA-validated position engine."
    },
    "close": {
     "title": "Bring your airframe and its failure cases; we will scope D100’s failsafe for it.",

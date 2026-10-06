@@ -79,7 +79,7 @@ export function getGroundedAnswer(rawQuery: string): GroundedAnswer {
 
   let domainTag = 'DEEPGRID SILICON INTELLIGENCE';
   let contextualTitle = `Grounded Specification: ${bestItem.name}`;
-  let matchedDoc = groundedDocuments[4]; // Default: Master Whitepaper (Doc 5)
+  let matchedDoc = groundedDocuments.find(d => d.id === 'doc5')!; // Default: Master Whitepaper (Doc 5)
   let answer = '';
   let explanation: string[] = [];
   let keyBusinessFacts: string[] = [];
@@ -95,7 +95,7 @@ export function getGroundedAnswer(rawQuery: string): GroundedAnswer {
   if (isClock50) {
     domainTag = 'PHYSICAL SILICON & TIMING CLOSURE';
     contextualTitle = '50 MHz Operating Frequency: Lockstep Margin & Physical Timing Closure';
-    matchedDoc = groundedDocuments[3]; // Doc 4: DG32-2DOM System Architecture
+    matchedDoc = groundedDocuments.find(d => d.id === 'doc4')!; // Doc 4: DG32-2DOM System Architecture
     answer = 'DG32 locks its primary control clock at exactly 50 MHz (20.0 ns cycle) to guarantee absolute static timing closure across all PVT corners (-40 °C to +125 °C) while running dual RV32IM cores in cycle-accurate hardware lockstep.';
     explanation = [
       'In a motor drive switching hundreds of volts thousands of times per second, clock jitter or metastability can lead to corrupted PWM transitions and power bridge short-circuits. Standard-cell libraries on SkyWater 130 nm CMOS allow single-core unconstrained synthesis up to ~75 MHz, but inserting a trailing shadow core, comparator logic, bus multiplexers, and physical fault latches establishes a practical physical Fmax of 55–62 MHz under worst-case thermal and voltage conditions.',
@@ -122,7 +122,7 @@ export function getGroundedAnswer(rawQuery: string): GroundedAnswer {
   } else if (isSafety) {
     domainTag = 'FIELD RELIABILITY & FUNCTIONAL SAFETY';
     contextualTitle = 'Autonomous 39-Cycle Hardware Fault Trip & Field Recall Protection';
-    matchedDoc = groundedDocuments[1]; // Doc 2: Technical Annex v3
+    matchedDoc = groundedDocuments.find(d => d.id === 'doc7')!; // Doc 7: SKU Blueprint, October 2026
     answer = 'DeepGrid silicon eliminates field recall liabilities by implementing an autonomous hardware-level fault latch that drives power inverter bridges into a high-impedance safe state within 39 clock cycles (780 nanoseconds), completely bypassing firmware.';
     explanation = [
       'In high-power drive inverters, a single firmware hang, corrupted branch predictor, or shoot-through condition can short a bridge leg and destroy power MOSFETs or IGBTs in less than 2 microseconds. Legacy microcontrollers rely on software watchdogs and interrupt service routines (ISRs) that take 15 to 50 microseconds to respond—frequently acting long after catastrophic hardware destruction has already occurred.',
@@ -149,7 +149,7 @@ export function getGroundedAnswer(rawQuery: string): GroundedAnswer {
   } else if (isSupplyCost) {
     domainTag = 'MATURE-NODE UNIT ECONOMICS & SOVEREIGN SUPPLY';
     contextualTitle = '60% Lower Inverter BOM & Sovereign Dual-Foundry Supply Continuity';
-    matchedDoc = groundedDocuments[4]; // Doc 5: Master Whitepaper v3
+    matchedDoc = groundedDocuments.find(d => d.id === 'doc5')!; // Doc 5: Master Whitepaper v3
     answer = 'DeepGrid protects OEMs against foreign allocation shortages and price volatility through a dual-foundry mature-node strategy (SkyWater 130 nm + SCL Mohali 180 nm BCD), targeting a sub-$3.10 unit BOM that delivers up to 60% savings over imported microcontrollers.';
     explanation = [
       'India currently imports over $9B annually in mature-node automotive and industrial chips. When global supply chains experience allocation rationing or geopolitical tensions flare, domestic OEMs face lead times stretching up to 52 weeks and steep spot-market markups for imported Western MCUs (STM32G0, TI Hercules, Infineon AURIX) selling for $6.80 to $11.40.',
@@ -176,7 +176,7 @@ export function getGroundedAnswer(rawQuery: string): GroundedAnswer {
   } else if (isLoop) {
     domainTag = 'DETERMINISTIC MOTION & HIGH-SPEED CONTROL';
     contextualTitle = 'Deterministic 100 kHz Control Loop & Hardwired Execution Headroom';
-    matchedDoc = groundedDocuments[2]; // Doc 3: dgrid_dshot_rx Specification
+    matchedDoc = groundedDocuments.find(d => d.id === 'doc3')!; // Doc 3: dgrid_dshot_rx Specification
     answer = 'DeepGrid hardwires current sampling, Clarke/Park vector transforms, and PWM edge generation directly into silicon RTL, completing the entire FOC inner loop in a constant 300 cycles (6.0 µs) with zero jitter at switching rates up to 100 kHz.';
     explanation = [
       'Next-generation high-speed actuators—such as low-inductance drone ESCs, high-RPM EV traction motors, and micro-robotic joints—require PWM switching frequencies from 20 kHz to 100 kHz. On conventional microcontrollers, running complex trigonometric math in software consumes nearly 100% of the CPU, introducing loop latency jitter whenever telemetry, communications, or safety checks execute.',
@@ -203,7 +203,7 @@ export function getGroundedAnswer(rawQuery: string): GroundedAnswer {
   } else if (isDualDomain) {
     domainTag = 'DUAL-DOMAIN ARCHITECTURE & EDGE AI';
     contextualTitle = 'DG32-2DOM Dual-Domain Architecture: Frozen Safety & 114 MHz Neural Co-Processor';
-    matchedDoc = groundedDocuments[3]; // Doc 4: DG32-2DOM System Architecture
+    matchedDoc = groundedDocuments.find(d => d.id === 'doc4')!; // Doc 4: DG32-2DOM System Architecture
     answer = 'DG32-2DOM pairs the frozen DG32-LITE lockstep motor-control core with an asynchronous 114 MHz INT8 neural attention engine across an isolated CDC bridge, enabling real-time bearing condition monitoring with zero risk to motor safety.';
     explanation = [
       'Conventional AI motor-control architectures attempt to execute neural network inference on the same CPU that handles safety-critical PWM generation. A single neural inference spike or memory bus conflict can cause missed PWM deadlines, triggering inverter bridge failure.',
@@ -230,7 +230,7 @@ export function getGroundedAnswer(rawQuery: string): GroundedAnswer {
   } else if (isDshot) {
     domainTag = 'HARDWARE PROTOCOLS & MOTOR TELEMETRY';
     contextualTitle = 'Hardware DShot Receive (dgrid_dshot_rx) & Zero-Jitter Motor Telemetry';
-    matchedDoc = groundedDocuments[2]; // Doc 3: dgrid_dshot_rx Specification
+    matchedDoc = groundedDocuments.find(d => d.id === 'doc3')!; // Doc 3: dgrid_dshot_rx Specification
     answer = 'The hardwired dgrid_dshot_rx block decodes DShot commands and generates bidirectional telemetry replies entirely in silicon, eliminating all CPU bit-banging and guaranteeing sub-microsecond response latency.';
     explanation = [
       'In high-performance tactical UAVs and quadcopters, flight controllers communicate with electronic speed controllers (ESCs) via bidirectional DShot digital protocols. Decoding high-speed DShot bitstreams in software consumes substantial processor cycles and introduces command latency jitter.',

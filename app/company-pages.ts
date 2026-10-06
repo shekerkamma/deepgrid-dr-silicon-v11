@@ -195,7 +195,7 @@ export const companyPages: CompanyPage[] = [
     lede: 'Watch DeepGrid Semi’s silicon, autonomous driving, and mobility platforms in action.',
     sections: [
       { kind: 'videos', title: 'By platform', groups: videoGroups, shorts: shortGroups, channel: true, from: 'deepgridsemi.com/resources/videos + youtube.com DeepGrid Semi channel' },
-      { kind: 'films', kicker: 'The ten annex parts, one film each', title: 'How each part works, animated', lede: 'One short animated film per part: the problem it solves, the mechanism moving on the words that describe it, and what is still unproven. Animations illustrate; they are not simulations. Pre-silicon; every figure is a design target.', ids: EXPLAINER_IDS, from: 'part explainer films' },
+      { kind: 'films', kicker: 'Ten parts, one film each', title: 'How each part works, animated', lede: 'One short animated film per part: the problem it solves, the mechanism moving on the words that describe it, and what is still unproven. Animations illustrate; they are not simulations. Pre-silicon; every figure is a design target.', ids: EXPLAINER_IDS, from: 'part explainer films' },
       { kind: 'cta', title: 'Simulations and the narrated walkthrough', lede: 'The product lines in their simulators, the silicon films, and the 104-slide portfolio narrated end to end.', from: 'showcase films',
         actions: [ { label: 'Narrated decks & films', href: 'resources', primary: true }, { label: 'Documentation', href: 'resources/docs' } ] },
     ],
@@ -212,7 +212,7 @@ export const companyPages: CompanyPage[] = [
 
 
 // ------------------------------------------------------------------ Use cases (DG32 site)
-// One page per application area, generated from applications-story-data.ts (the Annex's socket sheets): the
+// One page per application area, generated from applications-story-data.ts (the SKU Blueprint's buyers and sockets): the
 // same areas, chips, roles and evidence the Applications page shows, laid out on the use-case template. Only
 // DG32’s own films appear, on the area they explain; no third-party or other-product footage is attached.
 const SCENE: Record<string, { src: string; alt: string }> = {
@@ -224,7 +224,7 @@ const SCENE: Record<string, { src: string; alt: string }> = {
 };
 const FILMS: Record<string, string[]> = { motors: ['dg32-fault-path-explained', 'dg32-lite-architecture'] };
 // Depth for each use-case page (docs/v6/story-pack-depth.md §12): the system, its signal path with the
-// chips placed in it, and where it fails. Fair synthesis from the annex sheets and the applications data;
+// chips placed in it, and where it fails. Fair synthesis from the SKU Blueprint and the applications data;
 // every chip named here links to its product page, where the figures and their sources live.
 const USECASE_DEPTH: Record<string, { paras: string[]; flowLabel: string; flow: FlowStep[]; failures: Card[] }> = {
   motors: {
@@ -343,11 +343,11 @@ const stageOf = (e: string) => (e.startsWith('First silicon') ? 'First silicon' 
 export const useCasePages: CompanyPage[] = areas.map((a) => {
   const items = a.items.map((i) => ({ ...i, p: products[i.product] }));
   const sections: Section[] = [
-    { kind: 'split', title: a.fit, paras: USECASE_DEPTH[a.id]?.paras?.length ? USECASE_DEPTH[a.id]!.paras : [a.lede]   /* the hero already carries the lede; repeating it here read as a copy error */, flow: USECASE_DEPTH[a.id]?.flow, flowLabel: USECASE_DEPTH[a.id]?.flowLabel, from: 'applications-story-data.ts (Technical Annex v3)' },
+    { kind: 'split', title: a.fit, paras: USECASE_DEPTH[a.id]?.paras?.length ? USECASE_DEPTH[a.id]!.paras : [a.lede]   /* the hero already carries the lede; repeating it here read as a copy error */, flow: USECASE_DEPTH[a.id]?.flow, flowLabel: USECASE_DEPTH[a.id]?.flowLabel, from: 'applications-story-data.ts (SKU Blueprint, October 2026)' },
     { kind: 'cards', title: items.length === 1 ? 'One chip does the whole job here.' : `${NUM[items.length] ?? items.length} chips, each with one job here.`, lede: 'What each part does in this system, and where it stands today.', cols: items.length > 2 ? 3 : 2,
       items: items.map((i) => ({ title: i.p.name, meta: `${i.p.tag} · ${stageOf(i.p.evidence)}`, text: i.role + (i.p.replaces ? ' Replaces: ' + i.p.replaces : ''), href: '/products/' + SLUG[i.product], go: `Open the ${i.p.tag} page` })),
       from: 'applications-story-data.ts' },
-    ...(USECASE_DEPTH[a.id] ? [{ kind: 'steps' as const, title: `${NUM[USECASE_DEPTH[a.id].failures.length] ?? USECASE_DEPTH[a.id].failures.length} ways this system fails, and the block that catches each.`, lede: 'The failure modes this system has to survive, and the part of the design that answers each one.', items: USECASE_DEPTH[a.id].failures, from: 'Technical Annex v3 engineering questions' }] : []),
+    ...(USECASE_DEPTH[a.id] ? [{ kind: 'steps' as const, title: `${NUM[USECASE_DEPTH[a.id].failures.length] ?? USECASE_DEPTH[a.id].failures.length} ways this system fails, and the block that catches each.`, lede: 'The failure modes this system has to survive, and the part of the design that answers each one.', items: USECASE_DEPTH[a.id].failures, from: 'SKU Blueprint engineering questions' }] : []),
     { kind: 'bullets', title: evidenceTitle(items.map((i) => stageOf(i.p.evidence))), items: items.map((i) => `${i.p.tag}, ${i.p.name}: ${i.p.evidence}`), from: 'applications-story-data.ts' },
   ];
   const SCENE3D: Record<string, { scene: 'motor' | 'truck' | 'defence'; title: string; lede: string }> = {

@@ -29,8 +29,8 @@ export const notClaimed = [
   'No functional-safety certification. Hardware lockstep is a mechanism, not a certificate.',
   'No sign-off result for the tape-in die: the four gates it must pass are listed, not reported as passed.',
   'No price or cost claims against any competitor.',
-  'No silicon result for the other eleven chips: they rest on architecture sheets, RTL and logic validated on an FPGA; nine prototypes are planned for the December 2026 shuttle (SKU Blueprint, October 2026). The one DeepGrid chip returned so far is a 130 nm test chip made on its own flow (whitepaper v3, §3).',
-  'No market size or price for the wider portfolio: the annex market tiles are rough internal estimates and are not shown. The only revenue figures on this site are the plan targets on the company page, which are not results.',
+  'No silicon result for the other eleven chips: they rest on architecture designs, RTL and logic validated on an FPGA; nine prototypes are planned for the December 2026 shuttle (SKU Blueprint, October 2026). The one DeepGrid chip returned so far is a 130 nm test chip made on its own flow (whitepaper v3, §3).',
+  'No market size or price for the wider portfolio: the Blueprint’s market estimates are internal planning figures and are not shown. The only revenue figures on this site are the plan targets on the company page, which are not results.',
 ];
 
 // ---------- Product family ----------
@@ -386,7 +386,7 @@ export const diagnosticDomains: UseCaseDomain[] = [
 
 // productEssence removed 2026-09-24: unused, and it repeated the removed pillars' unsourced claims.
 
-// ---------- Sovereign 10-SKU Portfolio Horizon & Primary Whitepapers ----------
+// ---------- Sovereign Portfolio Horizon (11 SKUs + D100) & Primary Whitepapers ----------
 
 export interface SkuRoadmapItem {
   sku: string;
@@ -401,21 +401,9 @@ export interface SkuRoadmapItem {
   isDg32?: boolean;
 }
 
-/** The ten-chip portfolio, reconciled against its two primary sources on 2026-09-23:
- *  `deepgrid-sku-compendium-architecture.md` (Technical Annex v3, the 14-sheet matrix) and
- *  `deepgrid-mature-silicon-architecture.md` section 7 (Ten-Chip Portfolio). The two agree
- *  exactly, Chip N = SKU N, which is what makes the corrections below safe.
- *
- *  Four things were wrong in the previous version of this list, all of them silent:
- *  - DG32-LITE was numbered SKU-1. SKU-1 is the BLDC Motor Controller. DG32-LITE is **SKU-4**,
- *    the Lockstep Safety MCU: 130 nm CMOS, 1.8V/3.3V, dual DGridRiscV at 2-cycle skew,
- *    ISO 26262 ASIL-D. Both sources say so independently.
- *  - DG32-2DOM was numbered SKU-2, which is the Smart-Meter SoC. 2DOM is not one of the nine:
- *    it is the DG32-LITE die plus the INT8 engine, so it is recorded as a SKU-4 variant.
- *  - DG-D100 was numbered SKU-3, which is the Hi-Rel PMIC. D100 is **Track B**, funded and
- *    scoped separately. The October 2026 SKU Blueprint makes it a 28 nm chip whose failsafe island
- *    can be built at 130 nm (it was listed as 65 nm, then TSMC 28 nm alone, then the Annex's "130nm + 28nm SiP").
- *  - Nodes for SKU-8 and SKU-9 were wrong: 130 nm HV CMOS and 130 nm + 180 nm respectively.
+/** The portfolio as the SKU Blueprint, October 2026, lists it: eleven core SKUs plus D100 (Track B,
+ *  funded separately; a 28 nm chip whose failsafe island can be built at 130 nm). DG32-LITE is SKU-4,
+ *  the lockstep MCU; DG32-2DOM is the DG32-LITE die plus the INT8 engine, recorded as a SKU-4 variant.
  *
  *  "Phase" now means what the source means by it. The mature-silicon architecture defines three
  *  *factories*, not three dates: Phase 1 SkyWater (USA), Phase 2 IHP (Germany), Phase 3 SCL
@@ -455,7 +443,6 @@ export interface WhitepaperDownload {
 
 export const whitepaperDownloads: WhitepaperDownload[] = [
   { id: 'doc1', docNum: 'DOC #1', title: 'Thirty Use Cases (No Accelerator)', fileName: 'deepgrid-dg32-ai-30-use-cases.pdf', pages: '14 Pages', desc: '50 MHz scalar edge AI compute envelope, 19 lightweight algorithms & CWRU audit' },
-  { id: 'doc2', docNum: 'DOC #2', title: 'Technical Annex v3 (10 SKUs & Multi-Spin)', fileName: 'deepgrid-sku-compendium-technical-annex-v3.pdf', pages: '14 Pages', desc: '10-chip SKU compendium, D100 drone SoC, and 198-day MPW shuttle execution loop' },
   { id: 'doc3', docNum: 'DOC #3', title: 'dgrid_dshot_rx RTL Specification', fileName: 'deepgrid-dshot-rx-block-spec.pdf', pages: '18 Pages', desc: 'Hardware DShot RX, bidirectional GCR telemetry reply & 100 kHz deterministic loop' },
   { id: 'doc4', docNum: 'DOC #4', title: 'DG32-2DOM Dual-Domain Architecture', fileName: 'deepgrid-dg32-2dom-system-architecture.pdf', pages: '22 Pages', desc: 'Dual 50/114 MHz clocks, 4-phase CDC bridges & INT8 attention engine diagnostics' },
   { id: 'doc5', docNum: 'DOC #5', title: 'Master Whitepaper v3 (Defence Silicon)', fileName: 'deepgrid-mature-node-silicon-master-whitepaper-v3.pdf', pages: '71 Pages', desc: 'Sovereign case: $9B import substitution, 10x NRE dismantling & DAP-2020 Make-II' },

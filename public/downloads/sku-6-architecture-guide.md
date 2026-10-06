@@ -2,7 +2,7 @@
 
 Deepgrid Semi · quad-rail voltage supervisor · reading guide to the SKU-6 system architecture diagram · October 2026
 
-> Architecture scope, pre-silicon. The diagram is redrawn from the SKU Architecture Compendium, Technical Annex v3, sheet 7. Every value is a design target, not a measurement. Standards appear only as targets the design is developed toward; no certificate exists for any DeepGrid part.
+> Architecture scope, pre-silicon. Every value is a design target from the SKU Blueprint, October 2026, not a measurement. Standards appear only as targets the design is developed toward; no certificate exists for any DeepGrid part.
 
 ## What is SKU-6?
 
@@ -82,10 +82,6 @@ What it does: A windowed watchdog adjustable from 100 ms to 1.6 s: an open and c
 - ③ The matrix latches it and drives FAULT_N, then RESET_N.
 - ④ The trimmed bandgap sets every comparator threshold.
 - ⑤ A missed or early watchdog kick times out to RESET_N.
-
-## Where this differs from the annex sheet
-
-Structure follows the annex figure on sheet 7. Some values on that sheet differ from the product page; where they do, the diagram follows the product page, and anyone opening the sheet will see the other value. The differences: the watchdog window (1 ms / 10 ms on the sheet, adjustable 100 ms to 1.6 s here), the oscillator (RC 8 MHz on the sheet, 1 MHz here) and the fourth rail (1V2 on the sheet, 1.2 / 0.9 V adjustable here).
 
 ## Designed toward
 

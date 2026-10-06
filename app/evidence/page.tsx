@@ -139,7 +139,7 @@ export default function Page() {
               <a href="#ev-portfolio">
                 <span className="st-fam-n num">{portfolio.length}</span>
                 <strong>The other chips</strong>
-                <span className="st-fam-line">Architecture sheets and FPGA prototypes, no silicon yet</span>
+                <span className="st-fam-line">Architecture designs and FPGA prototypes, no silicon yet</span>
               </a>
             </nav>
           </section>
@@ -195,16 +195,16 @@ export default function Page() {
 
           {/* The portfolio. /applications now places twelve chips; only one is on silicon. Each row's
               evidence and next step come from the same product record /applications reads, which
-              restates that chip's Annex "Status & node path" panel. */}
+              restates that chip's SKU Blueprint "Status" section. */}
           <section className="st-beat" id="ev-portfolio" aria-labelledby="ev-portfolio-h">
             <div className="st-beat-text">
               <p className="st-fam-kicker">The rest of the portfolio</p>
               <h2 id="ev-portfolio-h">The other eleven chips rest on design documents, RTL and FPGA prototypes, not silicon.</h2>
               <p>
-                Where they go and what they replace are on the applications page, from the portfolio
-                annex. None has been fabricated. Four have named logic running as circuit code on an FPGA,
+                Where they go and what they replace are on the applications page, from the SKU
+                Blueprint. None has been fabricated. Four have named logic running as circuit code on an FPGA,
                 which the whitepaper counts as designed rather than done: 81.25&nbsp;MHz is, in its words,
-                &ldquo;a limit of the FPGA, not of our design&rdquo;. The rest are architecture sheets.
+                &ldquo;a limit of the FPGA, not of our design&rdquo;. The rest are architecture designs.
               </p>
             </div>
             <div className="st-beat-wide">
@@ -222,7 +222,7 @@ export default function Page() {
                         <td>{p.status ?? 'Not stated on the sheet.'}</td>
                         <td className="st-cite">
                           <a className="st-link" href={url(citeDoc(p.evidenceDoc).pdf)} target="_blank" rel="noreferrer">
-                            {p.evidenceDoc === 'doc5' ? 'Whitepaper v3, §3' : `Annex v3, sheet ${p.sheet}`}
+                            {p.evidenceDoc === 'doc5' ? 'Whitepaper v3, §3' : `SKU Blueprint, p. ${p.blueprintPage}`}
                           </a>
                         </td>
                       </tr>

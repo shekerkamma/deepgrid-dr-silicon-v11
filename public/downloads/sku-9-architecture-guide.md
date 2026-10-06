@@ -2,7 +2,7 @@
 
 Deepgrid Semi · zonal controller and gateway · reading guide to the SKU-9 system architecture diagram · October 2026
 
-> Architecture scope, pre-silicon. The diagram is redrawn from the SKU Architecture Compendium, Technical Annex v3, sheet 10. Every value is a design target, not a measurement. Standards appear only as targets the design is developed toward; no certificate exists for any DeepGrid part.
+> Architecture scope, pre-silicon. Every value is a design target from the SKU Blueprint, October 2026, not a measurement. Standards appear only as targets the design is developed toward; no certificate exists for any DeepGrid part.
 
 ## What is SKU-9?
 
@@ -76,10 +76,6 @@ Why it exists: Switching 12 V and 48 V loads in the harness needs BCD power devi
 - ③ The service router forwards them across the crossbar.
 - ④ They become switched power at the smart fuses.
 - ⑤ A lockstep mismatch drives the safe state.
-
-## Where this differs from the annex sheet
-
-Structure follows the annex figure on sheet 10. Some values on that sheet differ from the product page; where they do, the diagram follows the product page, and anyone opening the sheet will see the other value. The differences: the network ports (the sheet draws CAN-XL × 2, FlexRay × 2 and a 1000BASE-T1 port; this page states one CAN-XL, one FlexRay and no 1000BASE-T1).
 
 ## Designed toward
 

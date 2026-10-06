@@ -20,7 +20,7 @@ export interface GroundedDoc {
   summary: string;
   highlights: string[];
   defaultQuery: string;
-  queryDocId: 'doc1' | 'doc2' | 'doc3' | 'doc4' | 'doc5' | 'doc6' | 'doc7';
+  queryDocId: 'doc1' | 'doc3' | 'doc4' | 'doc5' | 'doc6' | 'doc7';
 }
 
 export const groundedDocuments: GroundedDoc[] = [
@@ -54,37 +54,6 @@ export const groundedDocuments: GroundedDoc[] = [
     ],
     defaultQuery: 'How does DG32-LITE run AI without a hardware accelerator?',
     queryDocId: 'doc1',
-  },
-  {
-    id: 'doc2',
-    badge: 'DOC #2 · 10-SKU COMPENDIUM',
-    docNum: '02',
-    title: 'Technical Annex v3 (10 SKUs, D100 & SDV)',
-    subtitle: 'Earlier edition: 10-chip silicon compendium, D100 tactical drone SoC, DG SDV zonal E/E platform & 3-phase roadmap. For SKU specifications and status, DOC #7, the SKU Blueprint (October 2026), supersedes it',
-    group: 'core',
-    subsystem: 'Portfolio & System Platforms',
-    specFile: '/downloads/docs/deepgrid-sku-compendium-architecture.md',
-    specFileName: 'deepgrid-sku-compendium-architecture.md',
-    pdfFile: '/downloads/docs/deepgrid-sku-compendium-technical-annex-v3.pdf',
-    pdfFileName: 'deepgrid-sku-compendium-technical-annex-v3.pdf',
-    fileSizeMd: '7.5 KB',
-    fileSizePdf: '4.95 MB',
-    pdfPageCount: '14 pages',
-    stats: [
-      { label: 'Silicon Portfolio', value: '10 SKUs (180nm BCD to 130nm SiGe)' },
-      { label: 'Tactical Drone', value: 'D100 Drone SoC with failsafe island' },
-      { label: 'Vehicle Architecture', value: 'DG SDV Zonal E/E Reference' },
-      { label: 'Fab Execution', value: 'SkyWater → SCL Mohali → Dholera 28nm' },
-    ],
-    summary: 'The comprehensive 10-SKU silicon catalog systematically targeting $9B of foreign merchant silicon. Covers mature-node fabrication across 180nm BCD, 130nm CMOS, and IHP 130nm SiGe (350 GHz fT). Details the D100 dual-quad tactical drone SoC with hardware failsafe island, the DG SDV zonal software-defined vehicle platform, and multi-die organic substrate SiP packaging.',
-    highlights: [
-      '10 SKUs replacing TI, ST, and ADI chips across Indian defence and industrial sectors',
-      'D100 drone platform combines quad RV64 application cores with isolated RV32 real-time failsafe core',
-      'DG SDV zonal architecture replaces point-to-point harnesses with zonal controllers and 16 smart e-fuses',
-      'Organic substrate multi-die packaging achieves 25 µm line/space without silicon interposer costs',
-    ],
-    defaultQuery: 'Compare DG32 with the STM32G0: where does each lead?',
-    queryDocId: 'doc2',
   },
   {
     id: 'doc7',
@@ -246,21 +215,21 @@ export const groundedDocuments: GroundedDoc[] = [
     badge: 'PLATFORM · D100 DRONE SOC',
     docNum: 'S1',
     title: 'D100 Tactical Drone Platform Architecture',
-    subtitle: 'Dual-quad heterogeneous compute with isolated hardware flight failsafe island',
+    subtitle: 'Flight control, visual navigation and optional AI on one 28 nm chip, with an isolated hardware failsafe island',
     group: 'platform',
     subsystem: 'Tactical Drone Flight Systems',
     specFile: '/downloads/docs/deepgrid-d100-architecture.md',
     specFileName: 'deepgrid-d100-architecture.md',
-    pdfFile: '/downloads/docs/deepgrid-sku-compendium-technical-annex-v3.pdf',
-    pdfFileName: 'deepgrid-sku-compendium-technical-annex-v3.pdf',
+    pdfFile: '/downloads/docs/deepgrid-sku-blueprint-oct2026.pdf',
+    pdfFileName: 'deepgrid-sku-blueprint-oct2026.pdf',
     fileSizeMd: '12.1 KB',
-    fileSizePdf: '4.95 MB',
-    pdfPageCount: 'Sheet 09',
+    fileSizePdf: '3.6 MB',
+    pdfPageCount: 'pp. 42–44',
     stats: [
-      { label: 'Core Topology', value: 'Quad RV64 (App) + Quad RV32 (Real-Time)' },
-      { label: 'Failsafe Domain', value: 'Isolated Hardware Failsafe Island' },
-      { label: 'Motor Channels', value: '8 × Dedicated DShot Outputs' },
-      { label: 'Avionics Bus', value: 'Dual CAN-FD & High-Speed SPI' },
+      { label: 'Process', value: '28 nm; failsafe island buildable at 130 nm' },
+      { label: 'Failsafe Domain', value: 'Isolated hardware failsafe island' },
+      { label: 'Flight control', value: 'Lockstep RISC-V pair on a DO-254 path' },
+      { label: 'Funding', value: 'Track B: separate round after mature-node revenue' },
     ],
     summary: 'Heterogeneous multi-core SoC for tactical unmanned aerial systems. Partitions flight compute into high-performance vision/navigation (Quad RV64) and hard real-time flight control (Quad RV32), backed by a physically isolated hardware failsafe island that takes over motor control upon main OS hang or communication loss.',
     highlights: [
@@ -270,7 +239,7 @@ export const groundedDocuments: GroundedDoc[] = [
       'Sub-watt low-power standby modes for extended loiter missions',
     ],
     defaultQuery: 'How does the D100 drone hardware failsafe island work?',
-    queryDocId: 'doc2',
+    queryDocId: 'doc7',
   },
   {
     id: 'doc-sdv',
@@ -282,11 +251,11 @@ export const groundedDocuments: GroundedDoc[] = [
     subsystem: 'Automotive Zonal Controllers',
     specFile: '/downloads/docs/deepgrid-sdv-architecture.md',
     specFileName: 'deepgrid-sdv-architecture.md',
-    pdfFile: '/downloads/docs/deepgrid-sku-compendium-technical-annex-v3.pdf',
-    pdfFileName: 'deepgrid-sku-compendium-technical-annex-v3.pdf',
+    pdfFile: '/downloads/docs/deepgrid-sdv-architecture.md',
+    pdfFileName: 'deepgrid-sdv-architecture.md',
     fileSizeMd: '8.0 KB',
-    fileSizePdf: '4.95 MB',
-    pdfPageCount: 'Sheet 10',
+    fileSizePdf: '8.0 KB',
+    pdfPageCount: 'in-site document',
     stats: [
       { label: 'Power switching', value: '16 × smart e-fuses (48 V / 12 V)' },
       { label: 'Vehicle bus', value: '4 × CAN-XL, up to 20 Mbps' },
@@ -301,7 +270,7 @@ export const groundedDocuments: GroundedDoc[] = [
       'Hardware fault confinement designed to the ISO 26262 ASIL-D target',
     ],
     defaultQuery: 'How does the DG SDV architecture eliminate wire harnesses via zonal controllers?',
-    queryDocId: 'doc2',
+    queryDocId: 'doc7',
   },
   {
     id: 'doc-three-factory',

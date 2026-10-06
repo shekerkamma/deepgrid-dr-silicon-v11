@@ -5,7 +5,6 @@ import {byId, url, type RouteId} from './routes';
 import {readHref} from './doc-links';
 import {related} from './cross-references';
 import {groundedDocuments} from './documents-data';
-import {productDiagrams} from './diagram-notes';
 import './related.css';
 import {RouteJourney, hasBrief} from './route-journey';
 
@@ -14,8 +13,6 @@ import {RouteJourney, hasBrief} from './route-journey';
  *  page count stated so nobody opens a 71-page file expecting a summary. */
 export default function Related({route}: {route: RouteId}) {
   const r = related[route];
-  // On a product page, the annex sheet can carry values the page overrides; say so where the PDF is offered.
-  const annexDiffers = productDiagrams[route]?.annexDiffers;
   const docs = r.docs
     .map(id => groundedDocuments.find(d => d.id === id))
     .filter((d): d is NonNullable<typeof d> => Boolean(d));
@@ -48,9 +45,8 @@ export default function Related({route}: {route: RouteId}) {
                 <a href={url(d.pdfFile)}>
                   <FileText size={15} aria-hidden="true"/>
                   <span className="dr-related-doc-title">{d.title}</span>
-                  <span className="dr-related-doc-meta">PDF · {d.pdfPageCount}{annexDiffers && d.id === 'doc2' ? ' · values differ from this page' : ''}</span>
+                  <span className="dr-related-doc-meta">PDF · {d.pdfPageCount}</span>
                 </a>
-                {annexDiffers && d.id === 'doc2' && <p className="dr-related-doc-differs">Some sheet values differ from this page; <a href="#pp-sources">Sources</a> lists each one.</p>}
                 <a className="dr-related-doc-spec" href={readHref(d.specFile)}>Read in the library</a>
               </li>
             ))}

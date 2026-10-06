@@ -32,6 +32,12 @@ const modelFile = path.join(ROOT, 'public/models', meta.model, 'onnx/model_quant
 if (!fs.existsSync(modelFile)) fail(`model file missing: ${path.relative(ROOT, modelFile)}. Run: npm run build:semantic`);
 if (sha(fs.readFileSync(modelFile)) !== meta.modelSha256) fail(`${meta.model} differs from the model the index was built with. Run: npm run build:semantic`);
 
+const ge = meta.graphEval;
+if (!ge) fail('the index carries no graph-guided retrieval eval. Run: npm run build:semantic');
+const {retrievalCodeSha} = await import(pathToFileURL(path.join(ROOT, 'scripts/eval-graphrag.mjs')).href);
+if (ge.codeSha256 !== retrievalCodeSha()) fail('the retrieval code or its eval cases changed since the eval was recorded.\n  Run: npm run build:semantic');
+if (ge.passed !== ge.cases) fail(`the graph-guided retrieval eval recorded ${ge.passed}/${ge.cases} passing cases.`);
+
 const ev = meta.eval;
 if (!ev) fail('the index carries no routing eval. Run: npm run build:semantic');
 const floor = JSON.parse(fs.readFileSync(path.join(ROOT, 'scripts/ask-routing-eval.json'), 'utf8')).minRecall;

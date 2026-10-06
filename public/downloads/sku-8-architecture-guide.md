@@ -2,7 +2,7 @@
 
 Deepgrid Semi · rugged display driver and TCON · reading guide to the SKU-8 system architecture diagram · October 2026
 
-> Architecture scope, pre-silicon. The diagram is redrawn from the SKU Architecture Compendium, Technical Annex v3, sheet 9. Every value is a design target, not a measurement. Standards appear only as targets the design is developed toward; no certificate exists for any DeepGrid part.
+> Architecture scope, pre-silicon. Every value is a design target from the SKU Blueprint, October 2026, not a measurement. Standards appear only as targets the design is developed toward; no certificate exists for any DeepGrid part.
 
 ## What is SKU-8?
 
@@ -74,10 +74,6 @@ What it does: A gate-driver interface with a 24 V level shift, the VCOM electrod
 - ③ Dithered pixels drive the column DACs.
 - ④ High-voltage amplifiers drive the 3,840 column outputs.
 - ⑤ The timing controller scans the rows through the gate driver.
-
-## Where this differs from the annex sheet
-
-Structure follows the annex figure on sheet 9. Some values on that sheet differ from the product page; where they do, the diagram follows the product page, and anyone opening the sheet will see the other value. The differences: the gamma table (10-bit per channel on the sheet, a 14-bit table here), the LVDS input (4 lanes + clock on the sheet, dual link at 655 Mbps per lane here), the MIPI DSI input (2 lanes at 1.5 Gbps on the sheet, four lanes here) and the PLL (108 MHz on the sheet, 100 MHz here).
 
 ## Designed toward
 
