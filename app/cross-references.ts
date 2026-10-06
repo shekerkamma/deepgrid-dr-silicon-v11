@@ -12,7 +12,7 @@
 //      and "Read the documentation" are not reasons; "the cycle budget those tasks are spending" is.
 import type {RouteId} from './routes';
 
-export type DocId = 'doc1' | 'doc2' | 'doc3' | 'doc4' | 'doc5' | 'doc6';
+export type DocId = 'doc1' | 'doc2' | 'doc3' | 'doc4' | 'doc5' | 'doc6' | 'doc7';
 export type SectionRef = {id: RouteId; why: string; query?: string};
 export type Related = {sections: SectionRef[]; docs: DocId[]};
 
@@ -24,7 +24,7 @@ export const related: Record<RouteId, Related> = {
       {id: 'evidence', why: 'Where every figure on this site comes from, and which claims were withdrawn.'},
       {id: 'procurement', why: 'Compare design requirements with the incumbent, including its practical advantages.'},
     ],
-    docs: ['doc5', 'doc2'],
+    docs: ['doc7', 'doc5', 'doc2'],
   },
   sku1: {
     sections: [
@@ -32,7 +32,7 @@ export const related: Record<RouteId, Related> = {
       {id: 'uc-motors', why: 'Where the motor controller sits in a drive, beside its safety supervisor.'},
       {id: 'control', why: 'How DG32 budgets a hardware control loop, cycle by cycle.'},
     ],
-    docs: ['doc2', 'doc5'],
+    docs: ['doc7', 'doc2', 'doc5'],
   },
   sku2: {
     sections: [
@@ -40,7 +40,7 @@ export const related: Record<RouteId, Related> = {
       {id: 'sku5', why: 'The RS-485 transceiver on the wired meter bus.'},
       {id: 'sku6', why: 'The supervisor that catches a brownout before the record is lost.'},
     ],
-    docs: ['doc2', 'doc5'],
+    docs: ['doc7', 'doc2', 'doc5'],
   },
   sku3: {
     sections: [
@@ -48,7 +48,7 @@ export const related: Record<RouteId, Related> = {
       {id: 'uc-defence', why: 'The avionics and vehicle platforms its 28 V bus comes from.'},
       {id: 'evidence', why: 'What an architecture sheet establishes, and what only silicon can.'},
     ],
-    docs: ['doc2'],
+    docs: ['doc7', 'doc2'],
   },
   sku4: {
     sections: [
@@ -57,7 +57,7 @@ export const related: Record<RouteId, Related> = {
       {id: 'die', why: 'The six block groups on the die, and the one that is frozen.'},
       {id: 'package', why: 'The QFN-64 pinout a board designer works from.'},
     ],
-    docs: ['doc2', 'doc6'],
+    docs: ['doc7', 'doc2', 'doc6'],
   },
   sku5: {
     sections: [
@@ -65,7 +65,7 @@ export const related: Record<RouteId, Related> = {
       {id: 'uc-boards', why: 'The boards where an interface part sits at every node.'},
       {id: 'uc-vehicles', why: 'The vehicle buses that need CAN-FD at every node.'},
     ],
-    docs: ['doc2'],
+    docs: ['doc7', 'doc2'],
   },
   sku6: {
     sections: [
@@ -73,7 +73,7 @@ export const related: Record<RouteId, Related> = {
       {id: 'sku4', why: 'The safety MCU it holds in reset until the supplies are good.'},
       {id: 'uc-boards', why: 'The boards that need a predictable start below firmware.'},
     ],
-    docs: ['doc2', 'doc5'],
+    docs: ['doc7', 'doc2', 'doc5'],
   },
   sku7: {
     sections: [
@@ -81,7 +81,7 @@ export const related: Record<RouteId, Related> = {
       {id: 'd100', why: 'The drone platform that uses radar for collision avoidance.'},
       {id: 'evidence', why: 'Why an RF front end is proven on silicon or not at all.'},
     ],
-    docs: ['doc2'],
+    docs: ['doc7', 'doc2'],
   },
   sku8: {
     sections: [
@@ -89,7 +89,7 @@ export const related: Record<RouteId, Related> = {
       {id: 'sku3', why: 'The power IC that supplies its display bias rails.'},
       {id: 'evidence', why: 'What a rugged-display target does and does not establish.'},
     ],
-    docs: ['doc2'],
+    docs: ['doc7', 'doc2'],
   },
   sku9: {
     sections: [
@@ -97,7 +97,25 @@ export const related: Record<RouteId, Related> = {
       {id: 'sku5', why: 'The transceivers on its physical vehicle buses.'},
       {id: 'sku4', why: 'The lockstep pattern its safety island reuses.'},
     ],
-    docs: ['doc2'],
+    docs: ['doc7', 'doc2'],
+  },
+  sku10: {
+    sections: [
+      {id: 'sku4', why: 'The lockstep safety pattern its two cores build on.'},
+      {id: 'sku11', why: 'The battery controller that reuses its whole platform.'},
+      {id: 'uc-boards', why: 'The industrial, drone and gateway boards that need signed boot.'},
+      {id: 'evidence', why: 'What feature-complete RTL does and does not establish before silicon.'},
+    ],
+    docs: ['doc7'],
+  },
+  sku11: {
+    sections: [
+      {id: 'sku10', why: 'The DG32-Max platform its processor and security come from.'},
+      {id: 'sku6', why: 'The supervisor whose protection comparators it reuses.'},
+      {id: 'uc-vehicles', why: 'The e-2W and e-3W packs it is first aimed at.'},
+      {id: 'evidence', why: 'What a block specification establishes, and what it leaves to silicon and field data.'},
+    ],
+    docs: ['doc7'],
   },
   d100: {
     sections: [
@@ -105,7 +123,7 @@ export const related: Record<RouteId, Related> = {
       {id: 'sku1', why: 'The motor controller on its flight motors.'},
       {id: 'sku7', why: 'The radar that feeds its collision avoidance.'},
     ],
-    docs: ['doc2', 'doc5'],
+    docs: ['doc7', 'doc2', 'doc5'],
   },
   read: {
     sections: [
@@ -120,9 +138,9 @@ export const related: Record<RouteId, Related> = {
       {id: 'technology', why: 'The architecture behind both parts, one tab each.'},
       {id: 'package', why: 'The 44-signal QFN-64 pinout both chips share, pin for pin.'},
       {id: 'procurement', why: 'How DG32 compares with the STM32G0, gaps included.'},
-      {id: 'applications', why: 'Where each of the ten chips goes, and what DG32 watches in a motor.'},
+      {id: 'applications', why: 'Where each of the twelve chips goes, and what DG32 watches in a motor.'},
     ],
-    docs: ['doc6', 'doc2'],
+    docs: ['doc7', 'doc6', 'doc2'],
   },
   technology: {
     sections: [
@@ -177,14 +195,14 @@ export const related: Record<RouteId, Related> = {
       {id: 'company', why: 'What each chip line is planned to earn, labelled as plan targets, not results.'},
       {id: 'ask', why: 'Put a specific task to the knowledge graph and get a cited answer.'},
     ],
-    docs: ['doc1', 'doc2'],
+    docs: ['doc7', 'doc1', 'doc2'],
   },
   evidence: {
     sections: [
       {id: 'procurement', why: 'Where the design still loses to the incumbent, stated plainly.'},
       {id: 'control', why: 'The largest analytic claim on the site, with its derivation.'},
       {id: 'safety', why: 'The simulated fault path, and what simulation does and does not show.'},
-      {id: 'applications', why: 'The ten chips this page grades, by the systems they go into.'},
+      {id: 'applications', why: 'The twelve chips this page grades, by the systems they go into.'},
     ],
     docs: ['doc1', 'doc4', 'doc6'],
   },
@@ -195,7 +213,7 @@ export const related: Record<RouteId, Related> = {
       {id: 'package', why: 'Footprint, pinout and supply sequencing for a board team.'},
       {id: 'company', why: 'The roadmap, the funding behind it and the stop rules.'},
     ],
-    docs: ['doc2', 'doc5'],
+    docs: ['doc7', 'doc2', 'doc5'],
   },
   'uc-motors': {
     sections: [
@@ -203,7 +221,7 @@ export const related: Record<RouteId, Related> = {
       {id: 'evidence', why: 'How each chip here is evidenced today, graded the same way across the portfolio.'},
       {id: 'contact', why: 'What to tell us about your application so we can answer.'},
     ],
-    docs: ['doc2', 'doc5'],
+    docs: ['doc7', 'doc2', 'doc5'],
   },
   'uc-vehicles': {
     sections: [
@@ -211,7 +229,7 @@ export const related: Record<RouteId, Related> = {
       {id: 'evidence', why: 'How each chip here is evidenced today, graded the same way across the portfolio.'},
       {id: 'contact', why: 'What to tell us about your application so we can answer.'},
     ],
-    docs: ['doc2', 'doc5'],
+    docs: ['doc7', 'doc2', 'doc5'],
   },
   'uc-defence': {
     sections: [
@@ -219,7 +237,7 @@ export const related: Record<RouteId, Related> = {
       {id: 'evidence', why: 'How each chip here is evidenced today, graded the same way across the portfolio.'},
       {id: 'contact', why: 'What to tell us about your application so we can answer.'},
     ],
-    docs: ['doc2', 'doc5'],
+    docs: ['doc7', 'doc2', 'doc5'],
   },
   'uc-grid': {
     sections: [
@@ -227,7 +245,7 @@ export const related: Record<RouteId, Related> = {
       {id: 'evidence', why: 'How each chip here is evidenced today, graded the same way across the portfolio.'},
       {id: 'contact', why: 'What to tell us about your application so we can answer.'},
     ],
-    docs: ['doc2', 'doc5'],
+    docs: ['doc7', 'doc2', 'doc5'],
   },
   'uc-boards': {
     sections: [
@@ -235,7 +253,7 @@ export const related: Record<RouteId, Related> = {
       {id: 'evidence', why: 'How each chip here is evidenced today, graded the same way across the portfolio.'},
       {id: 'contact', why: 'What to tell us about your application so we can answer.'},
     ],
-    docs: ['doc2', 'doc5'],
+    docs: ['doc7', 'doc2', 'doc5'],
   },
   docs: {
     sections: [
@@ -282,7 +300,7 @@ export const related: Record<RouteId, Related> = {
       {id: 'evidence', why: 'How the figures in these documents are graded.'},
       {id: 'products', why: 'Which document belongs to which chip.'},
     ],
-    docs: ['doc5', 'doc2', 'doc1'],
+    docs: ['doc7', 'doc5', 'doc2', 'doc1'],
   },
   ask: {
     sections: [
@@ -291,7 +309,7 @@ export const related: Record<RouteId, Related> = {
       {id: 'technology', why: 'The architecture most questions are about.'},
       {id: 'applications', why: 'The portfolio and the DG32 diagnostic tasks, to ask about by name.'},
     ],
-    docs: ['doc1', 'doc2', 'doc4'],
+    docs: ['doc7', 'doc1', 'doc2', 'doc4'],
   },
   company: {
     sections: [
@@ -301,7 +319,7 @@ export const related: Record<RouteId, Related> = {
       {id: 'resources', why: 'The whitepaper the plan and the stress test come from.'},
       {id: 'contact', why: 'Start an evaluation, or ask for the data room.'},
     ],
-    docs: ['doc5', 'doc2'],
+    docs: ['doc7', 'doc5', 'doc2'],
   },
   contact: {
     sections: [

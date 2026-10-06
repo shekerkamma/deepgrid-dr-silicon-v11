@@ -53,7 +53,7 @@ NATIVE = [
   ]},
 
  {'id': 'd100', 'code': 'D100',
-  'frame': 'D100 package  ·  130 nm ASIC at 200 MHz',
+  'frame': 'D100  ·  28 nm SoC  ·  failsafe island buildable at 130 nm',
   'input': 'Cameras · IMU, magnetometer, barometer · RC receiver and telemetry radio  (external)',
   'output': 'ESCs and motors  (external)',
   'marks': {'IMU': ['①'], 'MIPI': ['②'], 'POSE': ['③'], 'ESC': ['④'], 'LM': ['⑤'], 'IND': ['F']},
@@ -65,7 +65,7 @@ NATIVE = [
       'blocks': [('CPU', 'DGridRiscV × 2', 'RV32IM_Zicsr · FC core + NAV core · PX4 / ArduPilot loop', 2), ('IMU', 'IMU / MAG / BARO', 'SPI × 3 · 8 kHz'), ('ESC', 'ESC OUT', 'DShot600 · 8 channels'), ('RC', 'RC + telemetry', 'SBUS · CRSF · MAVLink over UART', 2)]},
      {'key': 'VIO', 'name': 'Visual-inertial odometry', 'cols': 3, 'w': 1.1,
       'blocks': [('MIPI', 'MIPI CSI-2', '2 lanes · up to 1080p60'), ('ISP', 'ISP', 'rectify + LSC'), ('FEAT', 'Feature', 'FAST + BRIEF · 2k points per frame'), ('POSE', 'Pose engine', 'EKF · IMU pre-integration · sliding-window BA · 30 Hz pose, 6-DoF', 3)]},
-     {'key': 'AI', 'name': 'AI · variant 2 only · 28 nm die', 'tone': 'optional', 'cols': 1, 'w': 0.8,
+     {'key': 'AI', 'name': 'AI · phase 2 · on the 28 nm chip', 'tone': 'optional', 'cols': 1, 'w': 0.8,
       'blocks': [('NPU', 'NPU', 'INT8 / INT4 · ~10 TOPS class · MAC array · SRAM 2 MB · DMA'), ('YOLO', 'YOLO-family', 'object detection'), ('SEG', 'SEG', 'obstacle avoidance')]},
    ]},
    {'bus': 'AXI4 crossbar  ·  128-bit  ·  200 MHz'},
@@ -77,5 +77,5 @@ NATIVE = [
       'blocks': [('DDR', 'LPDDR4', '2 GB · 32-bit'), ('EMMC', 'eMMC / NAND', 'logging'), ('PMU', 'PMU', '5 domains'), ('SEC', 'SEC', 'secure boot'), ('ETH', 'ETH / USB3', 'payload + ground link', 2), ('CAN', 'CAN-FD × 2 · SPI · I²C', 'gimbal, payload'), ('JTAG', 'JTAG', 'debug')]},
    ]},
   ],
-  'strip': ('Artix-7 FPGA · 81.25 MHz · validation only', '130 nm ASIC · SkyWater SKY130 / IHP SG13G2 open PDK · 200 MHz fixed')},
+  'strip': ('Artix-7 FPGA · 81.25 MHz · validation only', '28 nm SoC · failsafe island buildable at 130 nm')},
 ]

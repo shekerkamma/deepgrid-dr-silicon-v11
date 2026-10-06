@@ -123,6 +123,7 @@ def main():
     pdfs = sorted(list(pdf_dir.glob('*.pdf')))
     pdf_meta = {
         'deepgrid-mature-node-silicon-master-whitepaper-v3.pdf': {'title': 'Master Whitepaper v3 (Mature-Node Silicon)', 'docNum': '05', 'size': '5.4 MB', 'spec': './downloads/docs/deepgrid-mature-silicon-architecture.md'},
+        'deepgrid-sku-blueprint-oct2026.pdf': {'title': 'SKU Blueprint, October 2026 (11 SKUs + D100)', 'docNum': '07', 'size': '3.6 MB', 'spec': './downloads/docs/deepgrid-sku-blueprint-oct2026.md'},
         'deepgrid-sku-compendium-technical-annex-v3.pdf': {'title': 'Technical Annex v3 (10 SKUs, D100 & SDV)', 'docNum': '02', 'size': '4.8 MB', 'spec': './downloads/docs/deepgrid-sku-compendium-architecture.md'},
         'deepgrid-dg32-ai-30-use-cases.pdf': {'title': 'Thirty Use Cases, No Accelerator', 'docNum': '01', 'size': '414 KB', 'spec': './downloads/docs/deepgrid-dg32-ai-architecture.md'},
         'deepgrid-dshot-rx-block-spec.pdf': {'title': 'Hardware DShot RX Specification', 'docNum': '03', 'size': '345 KB', 'spec': './downloads/docs/deepgrid-dshot-rx-architecture.md'},

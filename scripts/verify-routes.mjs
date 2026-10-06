@@ -22,6 +22,9 @@ if (declared.length < 8) { console.error(`Only ${declared.length} routes parsed 
 
 const basePath = new URL(site).pathname;
 const fails = [];
+// A page without its own layout.tsx inherits its parent's <title>, so two routes sharing a
+// title means one of them is missing its metadata (SKU-10/11 once shipped as "Products").
+const titles = new Map();
 const browser = await chromium.launch();
 
 // Third pass at phone width with reduced motion forced. A scroll-driven page that only
@@ -116,6 +119,10 @@ for (const [width, reduced] of [[1440, false], [390, false], [390, true]]) {
     if (!d.nav) problems.push('no primary nav');
     if (width === 390 && d.smallTargets.length) problems.push('tap targets under 24px: ' + d.smallTargets.join(', '));
     if (errors.length > before) problems.push(errors.slice(before, before + 2).join(' | '));
+    if (width === 1440) {
+      if (titles.has(d.title)) problems.push(`same title as ${titles.get(d.title)}: "${d.title}"`);
+      else titles.set(d.title, route);
+    }
 
     const tag = `${width === 390 ? (reduced ? 'reduced' : 'phone  ') : 'desktop'} ${route}`;
     if (problems.length) { fails.push(`${tag}: ${problems.join('; ')}`); console.log(`FAIL ${tag}: ${problems.join('; ')}`); }

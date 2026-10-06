@@ -203,6 +203,9 @@
 .pp-card-kicker { margin: 0 0 .4rem; font: var(--sc-t-meta) var(--font-mono); letter-spacing: var(--sc-track-meta); text-transform: uppercase; color: var(--copper); }
 .pp-readiness-cards h3 { margin: 0 0 .45rem; font-size: var(--sc-t-block); line-height: 1.35; color: var(--ink); font-weight: 600; }
 .pp-readiness-cards article > p:not(.pp-card-kicker) { margin: 0; color: var(--ink-2); font-size: var(--sc-t-control); line-height: 1.55; }
+/* Why it exists: the Blueprint's four answers side by side, two columns down to phone width. */
+.pp-why-cards { grid-template-columns: repeat(2, minmax(0, 1fr)); margin-bottom: 1.25rem; }
+@media (max-width: 720px) { .pp-why-cards { grid-template-columns: minmax(0, 1fr); } }
 .pp-evidence-panel { border-color: color-mix(in srgb, var(--copper) 45%, var(--line)) !important; }
 .pp-evidence-panel .pp-evidence { grid-template-columns: repeat(2, minmax(0, 1fr)); margin: .75rem 0; }
 

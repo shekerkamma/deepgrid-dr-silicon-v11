@@ -3,7 +3,7 @@ import {groundedDocuments} from './documents-data';
 
 /** A citation, through the document registry (the site’s convention: app/documents-data.ts is the one
  *  place a document's title and file live, and every link reads it rather than a hard-coded path). */
-export const citeDoc = (id: 'doc2' | 'doc5') => {
+export const citeDoc = (id: 'doc2' | 'doc5' | 'doc7') => {
   const d = groundedDocuments.find(x => x.id === id)!;
   return {title: d.title, pdf: d.pdfFile};
 };
@@ -183,7 +183,7 @@ export const sockets: {id: string; name: string; short: string; what: string; li
  *  failed), market sizes and prices (the Annex flags them as internal estimates), and specifications
  *  for any part without silicon. D100's node is the Annex matrix's own "130nm + 28nm SiP": sheet 11
  *  names the 130 nm die and app/detail-content.ts the TSMC 28 nm one, and both are in the package. */
-export type ProductId = 'sku1' | 'sku2' | 'sku3' | 'sku4' | 'sku5' | 'sku6' | 'sku7' | 'sku8' | 'sku9' | 'd100';
+export type ProductId = 'sku1' | 'sku2' | 'sku3' | 'sku4' | 'sku5' | 'sku6' | 'sku7' | 'sku8' | 'sku9' | 'sku10' | 'sku11' | 'd100';
 /** `evidence` is the strongest evidence each chip has today and `evidenceDoc` the registered document
  *  that states it (app/documents-data.ts). /evidence grades the portfolio from these fields, so
  *  /applications and /evidence cannot disagree about any chip.
@@ -194,45 +194,57 @@ export type ProductId = 'sku1' | 'sku2' | 'sku3' | 'sku4' | 'sku5' | 'sku6' | 's
  *  81.25 MHz. The Annex's "Artix-7 · 81.25 MHz · validation only" strip is NOT used: it is template text
  *  stamped identically on every sheet, including the analog parts and the radar, whose own panels
  *  contradict it. An earlier revision quoted it for SKU-1 and graded SKU-6 as a sheet only; both wrong. */
-export const products: Record<ProductId, {name: string; tag: string; sheet: number; replaces?: string; status?: string; evidence: string; evidenceDoc: 'doc2' | 'doc5'}> = {
-  sku1: {name: 'BLDC motor controller', tag: 'SKU-1', sheet: 2,
-    replaces: 'A motor-driver chip plus a separate microcontroller, collapsed into one die.',
-    status: 'First multi-project wafer run, cycle 1.',
+/** `blueprintPage` is the part's page in the October 2026 SKU Blueprint, the primary source for every part;
+ *  `sheet` is its earlier Technical Annex v3 sheet (SKU-10 and SKU-11 postdate the annex and have none).
+ *  `replaces` and `status` follow the Blueprint's "What it replaces" and "Status" sections. */
+export const products: Record<ProductId, {name: string; tag: string; sheet?: number; blueprintPage?: number; replaces?: string; status?: string; evidence: string; evidenceDoc: 'doc2' | 'doc5' | 'doc7'}> = {
+  sku1: {name: 'BLDC motor controller', tag: 'SKU-1', sheet: 2, blueprintPage: 10,
+    replaces: 'A DRV83xx-class gate driver plus an external MCU, collapsed onto one die with runtime star or delta selection; in fans and appliances, the imported motor-control MCU on every BLDC board.',
+    status: 'RTL ready; analog gate-drive and sensing circuits designed and simulated. First multi-project wafer run, cycle 1; a cost-down cut for fans and appliances is a second tape-out on the same RTL.',
     evidence: 'FPGA-validated: the motor control datapath runs as circuit code on an Artix-7 at 81.25 MHz.', evidenceDoc: 'doc5'},
-  sku2: {name: 'Smart-meter SoC', tag: 'SKU-2', sheet: 3,
-    replaces: 'A metrology front end plus a separate meter microcontroller.',
-    status: 'Cycle-1 wafer run, alongside SKU-1.',
+  sku2: {name: 'Smart-meter SoC', tag: 'SKU-2', sheet: 3, blueprintPage: 13,
+    replaces: 'An ADE9153 or V9203-class metering front end plus a separate meter MCU: one chip instead of two.',
+    status: 'RTL ready and FPGA-validated; the six-channel analog front end is designed and simulated. Cycle-1 wafer run, alongside SKU-1.',
     evidence: 'FPGA-validated: the meter measurement chain runs as circuit code on the same Artix-7.', evidenceDoc: 'doc5'},
-  sku3: {name: 'High-reliability power IC', tag: 'SKU-3', sheet: 4,
-    replaces: 'Imported qualified power parts in avionics and military-vehicle electronics.',
-    status: 'Prototype on 130 nm, then production at SCL 180 nm in India.',
+  sku3: {name: 'High-reliability power IC', tag: 'SKU-3', sheet: 4, blueprintPage: 16,
+    replaces: 'TI and ADI QML power parts in avionics and vetronics units; imported EN 50155-grade power parts in Indian rolling stock and signalling; imported radiation-tolerant PMICs on Indian satellites and launchers.',
+    status: 'RTL ready for the digital sequencer and telemetry; analog power circuits designed and simulated. The sky130 prototype tests the control logic and low-voltage rails; the 28 V front end and power stage arrive on SCL 180 nm.',
     evidence: 'Architecture sheet; prototyping planned on sky130 20 V devices, production at SCL 180 nm.', evidenceDoc: 'doc2'},
-  sku4: {name: 'DG32-LITE safety microcontroller', tag: 'SKU-4', sheet: 5,
-    replaces: 'Imported functional-safety microcontrollers of the Microchip and Renesas class.',
-    status: 'Pre-silicon; a dated September 2026 shuttle plan is recorded.',
+  sku4: {name: 'DG32-LITE safety microcontroller', tag: 'SKU-4', sheet: 5, blueprintPage: 19,
+    replaces: 'Functional-safety microcontrollers of the Microchip and Renesas class.',
+    status: 'RTL ready; prototype on the December 2026 shuttle. Validated on FPGA at 81.25 MHz; the product is a 130 nm chip at 100 MHz.',
     evidence: 'Simulation and implementation records; no measured silicon result published.', evidenceDoc: 'doc2'},
-  sku5: {name: 'RS-485 and CAN-FD transceiver', tag: 'SKU-5', sheet: 6,
-    replaces: 'TI, ADI and Renesas interface parts facing obsolescence.',
-    status: 'Cycle-2 wafer run.',
+  sku5: {name: 'RS-485 and CAN-FD transceiver', tag: 'SKU-5', sheet: 6, blueprintPage: 22,
+    replaces: 'CAN and RS-485 interface chips from TI, ADI and Renesas, many of which defence platforms can no longer buy.',
+    status: 'RTL ready for the digital logic; analog line drivers designed and simulated. Prototype on the December 2026 shuttle; layout and silicon proof follow.',
     evidence: 'Architecture sheet.', evidenceDoc: 'doc2'},
-  sku6: {name: 'Voltage supervisor', tag: 'SKU-6', sheet: 7,
-    replaces: 'TI and Maxim supervisor chips.',
-    status: 'Cycle-1 or cycle-2 wafer run; the first chip planned through MIL-883 qualification.',
+  sku6: {name: 'Voltage supervisor', tag: 'SKU-6', sheet: 7, blueprintPage: 25,
+    replaces: 'Supervisor chips from TI and Maxim, which sit on almost every circuit board.',
+    status: 'RTL ready for the digital logic; comparators and reference designed and simulated. Prototype on sky130, production on SCL 180 nm.',
     evidence: 'FPGA-validated: the supervisor sensing chain runs as circuit code on the same Artix-7.', evidenceDoc: 'doc5'},
-  sku7: {name: '77 GHz 4D radar', tag: 'SKU-7', sheet: 8,
-    replaces: 'Radar front ends under US export control: this one is fabricated at IHP in Germany.',
-    status: 'IHP wafer run, FY28.',
+  sku7: {name: '77 GHz 4D radar', tag: 'SKU-7', sheet: 8, blueprintPage: 28,
+    replaces: 'Imported 77 GHz radar front ends and the processing chips that go with them.',
+    status: 'RTL ready for the CMOS signal-processing chip, validated on FPGA. The SiGe front end can only be proven on silicon, on IHP SG13G2.',
     evidence: 'Architecture sheet. The SiGe front end has no FPGA equivalent, so it is proven on silicon or not at all.', evidenceDoc: 'doc2'},
-  sku8: {name: 'Rugged display driver', tag: 'SKU-8', sheet: 9,
-    replaces: 'Imported display timing controllers and source drivers.',
-    status: 'Cycle-3 wafer run.',
+  sku8: {name: 'Rugged display driver', tag: 'SKU-8', sheet: 9, blueprintPage: 31,
+    replaces: 'Imported timing-controller and column-driver chipsets in rugged and industrial displays.',
+    status: 'RTL ready for the digital logic; high-voltage column amplifiers designed and simulated. Layout and silicon proof follow on the first prototype.',
     evidence: 'Architecture sheet.', evidenceDoc: 'doc2'},
-  sku9: {name: 'Zonal gateway', tag: 'SKU-9', sheet: 10,
-    replaces: 'Relay boxes and point-to-point wiring harnesses.',
+  sku9: {name: 'Zonal gateway', tag: 'SKU-9', sheet: 10, blueprintPage: 34,
+    replaces: 'Imported zonal controllers and CAN, LIN and FlexRay to Ethernet gateways.',
+    status: 'RTL ready; prototype on the December 2026 shuttle, a 130 nm chip at 100 MHz.',
     evidence: 'Architecture sheet.', evidenceDoc: 'doc2'},
-  d100: {name: 'D100 drone SoC', tag: 'D100', sheet: 11,
-    replaces: 'Nothing made in India: no indigenous flight-control and navigation SoC exists, and the sheet states that gap with references.',
-    status: 'Track B: scoped and funded separately from the nine SKUs.',
+  sku10: {name: 'DG32-Max secure microcontroller', tag: 'SKU-10', blueprintPage: 37,
+    replaces: 'MAX32655-class imported secure MCUs, and the separate secure element a board adds to boot only signed firmware: one die replaces the pair.',
+    status: 'RTL feature-complete on 1 October 2026; FPGA proof and place-and-route for the December 2026 OpenFrame shuttle follow.',
+    evidence: 'RTL feature-complete; every bench and firmware test passes, including secure boot on all three test images. No silicon result yet.', evidenceDoc: 'doc7'},
+  sku11: {name: 'SOH-aware battery-management controller', tag: 'SKU-11', blueprintPage: 40,
+    replaces: 'The MCU beside a TI BQ769xx or ADI ADBMS front end, the separate neural accelerator for state-of-health inference, and the authentication chip: three parts become one.',
+    status: 'Block specification issued September 2026; no wafer-run slot assigned yet.',
+    evidence: 'Block specification: twenty blocks in six groups, reusing the feature-complete DG32-Max platform RTL.', evidenceDoc: 'doc7'},
+  d100: {name: 'D100 drone SoC', tag: 'D100', sheet: 11, blueprintPage: 43,
+    replaces: 'Qualcomm’s QRB5165, the closest comparable chip, which is imported. Most chips in this class do AI or flight control, not both.',
+    status: 'Track B: funded by a separate round once the eleven mature-node chips earn revenue; its lockstep safety core is shared with SKU-4.',
     evidence: 'FPGA-validated: the drone position engine runs as circuit code on the same Artix-7.', evidenceDoc: 'doc5'},
 };
 
@@ -264,6 +276,7 @@ export const areas: {
       {product: 'sku4', role: 'EV battery management, and braking and steering controllers. Braking and steering need CAN-FD, which is on the DG32 roadmap and not on DG32-LITE.'},
       {product: 'sku7', primary: true, role: 'DeepGrid’s own truck mirror-tower radar, and automotive emergency braking.'},
       {product: 'sku5', primary: true, role: 'The CAN-FD and RS-485 link at every node on the vehicle bus.'},
+      {product: 'sku11', primary: true, role: 'The battery-management controller for e-2W and e-3W packs, with on-chip state-of-health inference and hardwired protection.'},
     ],
   },
   {
@@ -275,7 +288,7 @@ export const areas: {
     items: [
       {product: 'd100', primary: true, role: 'Flight control and visual-inertial navigation for drones, with a hardware failsafe to the speed controllers. Navigation is geometric, so it does not depend on GPS; jamming immunity is not yet established.'},
       {product: 'sku3', primary: true, role: 'The sequenced 28 V power rails of avionics and military-vehicle electronics.'},
-      {product: 'sku8', primary: true, role: 'Rugged cockpit displays.'},
+      {product: 'sku8', primary: true, role: 'Rugged and industrial displays; a wider-temperature version for cockpits.'},
       {product: 'sku7', role: 'Defence perimeter and counter-drone radar.'},
       {product: 'sku4', role: 'Flight-critical redundancy feeding the D100 roadmap.'},
     ],
@@ -298,6 +311,7 @@ export const areas: {
     lede: 'A supervisor watches a board’s power rails and a transceiver connects it to its bus. Neither is glamorous, and both ship with almost everything.',
     items: [
       {product: 'sku6', primary: true, role: 'Watches up to four power rails and latches a fault, on nearly every circuit board.'},
+      {product: 'sku10', primary: true, role: 'A secure microcontroller that boots only signed firmware, for industrial controllers, drone flight controllers, EV chargers and IoT gateways.'},
       {product: 'sku5', role: 'Ships with every node on every industrial bus, including harsh wiring harnesses.'},
       {product: 'sku8', role: 'Industrial control panels, rail passenger displays and automotive instrument clusters.'},
     ],

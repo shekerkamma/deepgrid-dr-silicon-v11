@@ -20,7 +20,7 @@ export default function Page() {
   return (
     <Shell route="products"><PortfolioV6Style/>
       <section className="page-wrap">
-  <SectionHead kicker="Products" title="Ten parts, each for one physical job." copy="Motion and safety, power and infrastructure, interfaces and perception, system integration: each part starts from the job it does on the board. Below the ten, DG32, the lockstep safety MCU, is shown in depth with its 2DOM variant. Pre-silicon; every figure is a design target."/>
+  <SectionHead kicker="Products" title="Twelve parts, each for one physical job." copy="Motion and safety, power and infrastructure, interfaces and perception, system integration: each part starts from the job it does on the board. Below the ten, DG32, the lockstep safety MCU, is shown in depth with its 2DOM variant. Pre-silicon; every figure is a design target."/>
   <DeepGridVisual kind="products" priority/>
   <PortfolioFinder/>
   <ProductTiles/>
@@ -76,7 +76,7 @@ export default function Page() {
     <table className="dr-table dr-table-wide">
      {/* Per-chip facts live on /applications (one home per fact); this table keeps only what the
          mature-node argument needs, and each part opens its card there. */}
-     <caption>The ten-chip portfolio and where DG32 sits in it. Each part opens its card on the applications page, with where it goes, what it replaces and what it rests on.</caption>
+     <caption>The twelve-chip portfolio and where DG32 sits in it. Each part opens its card on the applications page, with where it goes, what it replaces and what it rests on.</caption>
      <thead>
       <tr>
        <th scope="col">SKU</th><th scope="col">Part</th><th scope="col">Node</th>

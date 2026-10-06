@@ -107,8 +107,12 @@ jobs:
       - run: npx playwright install --with-deps chromium
       - name: Wait for Pages to serve this commit
         run: |
+          # build-info.json is fetched cache-busted, but pages are served from the
+          # Pages CDN with max-age=600, so wait that out before checking them.
           for i in $(seq 60); do
-            curl -sf "${SITE}build-info.json?$i" | grep -q "$GITHUB_SHA" && exit 0
+            if curl -sf "${SITE}build-info.json?$i" | grep -q "$GITHUB_SHA"; then
+              sleep 610; exit 0
+            fi
             sleep 10
           done
           echo "Pages did not serve $GITHUB_SHA within 10 minutes"; exit 1

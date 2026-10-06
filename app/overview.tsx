@@ -244,7 +244,7 @@ export function Overview({
           <span>WHERE DOES IT GO?</span>
         </div>
         <div className="thesis-heading" data-rv data-rv-delay="200">
-          <h2>Ten chips,<br/><em>five kinds of system.</em></h2>
+          <h2>Twelve chips,<br/><em>five kinds of system.</em></h2>
           <div>
             <p>
               DG32-LITE is one of ten DeepGrid chips, each built to take a socket an imported part holds

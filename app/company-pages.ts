@@ -195,7 +195,7 @@ export const companyPages: CompanyPage[] = [
     lede: 'Watch DeepGrid Semi’s silicon, autonomous driving, and mobility platforms in action.',
     sections: [
       { kind: 'videos', title: 'By platform', groups: videoGroups, shorts: shortGroups, channel: true, from: 'deepgridsemi.com/resources/videos + youtube.com DeepGrid Semi channel' },
-      { kind: 'films', kicker: 'Ten parts, one film each', title: 'How each part works, animated', lede: 'One short animated film per part: the problem it solves, the mechanism moving on the words that describe it, and what is still unproven. Animations illustrate; they are not simulations. Pre-silicon; every figure is a design target.', ids: EXPLAINER_IDS, from: 'part explainer films' },
+      { kind: 'films', kicker: 'The ten annex parts, one film each', title: 'How each part works, animated', lede: 'One short animated film per part: the problem it solves, the mechanism moving on the words that describe it, and what is still unproven. Animations illustrate; they are not simulations. Pre-silicon; every figure is a design target.', ids: EXPLAINER_IDS, from: 'part explainer films' },
       { kind: 'cta', title: 'Simulations and the narrated walkthrough', lede: 'The product lines in their simulators, the silicon films, and the 104-slide portfolio narrated end to end.', from: 'showcase films',
         actions: [ { label: 'Narrated decks & films', href: 'resources', primary: true }, { label: 'Documentation', href: 'resources/docs' } ] },
     ],
@@ -328,7 +328,7 @@ const USECASE_DEPTH: Record<string, { paras: string[]; flowLabel: string; flow: 
     ],
   },
 };
-const SLUG: Record<string, string> = { sku1: 'sku-1', sku2: 'sku-2', sku3: 'sku-3', sku4: 'sku-4', sku5: 'sku-5', sku6: 'sku-6', sku7: 'sku-7', sku8: 'sku-8', sku9: 'sku-9', d100: 'd100' };
+const SLUG: Record<string, string> = { sku1: 'sku-1', sku2: 'sku-2', sku3: 'sku-3', sku4: 'sku-4', sku5: 'sku-5', sku6: 'sku-6', sku7: 'sku-7', sku8: 'sku-8', sku9: 'sku-9', sku10: 'sku-10', sku11: 'sku-11', d100: 'd100' };
 
 const NUM: Record<number, string> = {2: 'Two', 3: 'Three', 4: 'Four', 5: 'Five', 6: 'Six'};
 /** The evidence section states where the chips stand, e.g. "Evidence today: one chip is FPGA-validated, one is at design stage." */

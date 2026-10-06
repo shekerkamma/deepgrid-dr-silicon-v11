@@ -394,7 +394,7 @@ is recorded by the implementation verification, not inferred from this documenta
 ### Source-led product atlas
 Horizontal editorial rows replace a uniform card grid. Function filters use native buttons with
 `aria-pressed`; each row joins a named architecture, purpose, boundary, maturity, evaluation needs
-and a named source. Nine core SKUs plus D100 retain individual maturity; DG SDV remains a separate
+and a named source. Eleven core SKUs plus D100 retain individual maturity; DG SDV remains a separate
 reference platform. DG32 simulation evidence is not transferred to the other parts.
 
 ### Strategy diagrams and integration labels

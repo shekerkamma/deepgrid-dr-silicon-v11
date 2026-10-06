@@ -6,7 +6,7 @@ export interface DeepGridItem {
   name: string;
   category: 'sku' | 'ai' | 'strategy' | 'architecture' | 'defense' | 'loop' | 'finance';
   tagline: string;
-  docId?: 'doc1' | 'doc2' | 'doc3' | 'doc4' | 'doc5' | 'doc6' | 'doc-d100' | 'doc-sdv';
+  docId?: 'doc1' | 'doc2' | 'doc3' | 'doc4' | 'doc5' | 'doc6' | 'doc7' | 'doc-d100' | 'doc-sdv';
   nodeFoundry?: string;
   voltageRail?: string;
   standards?: string;
@@ -42,7 +42,7 @@ export interface GraphEdge {
 }
 
 export interface DocumentSource {
-  id: 'all' | 'doc1' | 'doc2' | 'doc3' | 'doc4' | 'doc5' | 'doc6';
+  id: 'all' | 'doc1' | 'doc2' | 'doc3' | 'doc4' | 'doc5' | 'doc6' | 'doc7';
   badge: string;
   title: string;
   subtitle: string;
@@ -70,6 +70,13 @@ export const documentSources: DocumentSource[] = [
     title: 'Technical Annex v3 (10 SKUs & SDV)',
     subtitle: '10-chip SKU compendium, D100 tactical drone SoC, DG SDV reference architecture, 3-phase roadmap',
     fileReference: 'deepgrid-sku-compendium · Technical-Annex-v3.pdf'
+  },
+  {
+    id: 'doc7',
+    badge: 'Doc #7',
+    title: 'SKU Blueprint, October 2026 (11 SKUs + D100)',
+    subtitle: 'One handout per SKU: replacement, market, buyers, policy driver, process choice, status and the FPGA-to-chip boundary',
+    fileReference: 'deepgrid-sku-blueprint-oct2026.pdf'
   },
   {
     id: 'doc3',
@@ -335,181 +342,241 @@ export const deepGridCatalog: DeepGridItem[] = [
     id: 'sku-1',
     name: 'SKU-1: BLDC Motor Controller',
     category: 'sku',
-    tagline: 'High-voltage mixed-signal motor drive with FOC CORDIC hardware accelerator',
-    nodeFoundry: '130 nm BCD · SkyWater / SCL Mohali',
-    voltageRail: '5V – 120V High-Voltage Rail',
-    standards: 'BEE 5-Star Fans · EV 2-Wheelers · AEC-Q100 Grade 1',
-    summary: 'High-voltage BCD motor controller integrating gate pre-drivers directly onto the chip, achieving <1 µs closed current loop latency with integrated bootstrap diodes.',
+    docId: 'doc7',
+    tagline: 'Single-chip brushless motor controller with a hardware field-oriented-control loop',
+    nodeFoundry: '130 nm BCD at 100 MHz · SkyWater; FPGA prototype on Artix-7 at 81.25 MHz',
+    voltageRail: 'Controls a 5–120 V motor supply; on-die gate drive to about 20 V, external power switches above',
+    standards: 'PIL-5 (ATGM BLDC motor) · BEE star rating · AEC-Q100 Grade 0 (designed toward)',
+    summary: 'A single chip that runs a brushless motor: a DGridRiscV processor at 100 MHz, a hardware speed and torque loop that reacts in under a microsecond, seven PWM outputs, and control of the motor supply from 5 V to 120 V with external power switches above 20 V. It collapses a DRV83xx-class gate driver plus an external MCU onto one die, with runtime star/delta selection.',
     keyFacts: [
-      '120V BCD process integrates high-side and low-side gate drivers directly on-die, eliminating external level-shifter ICs.',
-      'Dedicated hardware CORDIC pipeline computes sin/cos transformations in under 20 clock cycles.',
-      'Integrated active dead-time insertion logic prevents shoot-through fault in half-bridge configurations.',
-      'Target sockets: BLDC ceiling fans (BEE 5-star mandate), light electric vehicles (2-wheelers/3-wheelers), and industrial pumps.',
-      'Replaces TI DRV83xx + external MCU combos.'
+      'Secrets in on-chip ReRAM; firmware in external flash.',
+      'A full version serves traction, drives, drones and robots; a cost-down cut for fans and appliances is a second tape-out on the same RTL, dropping the buck-boost and most of the memory.',
+      'RTL ready; analog gate-drive and sensing circuits designed and simulated (schematic and SPICE); prototype on the December 2026 shuttle.',
+      'Buyers: EV and industrial drives, BLDC ceiling fans, inverter appliances, drones and robot actuators; captive in every ASWA joint and D100 module.'
     ],
-    citation: 'DeepGrid Semi SKU Compendium — Chapter 2: SKU-1 BLDC Motor',
+    citation: 'DeepGrid Semi SKU Blueprint, October 2026: SKU-1 (pdf pp. 9-12)',
     connectedNodeIds: ['fab-skywater', 'moat-pil5', 'dg32-lite']
   },
   {
     id: 'sku-2',
     name: 'SKU-2: Smart-Meter SoC',
     category: 'sku',
-    tagline: 'Tamper-proof metrology SoC for the 250M National Smart Meter rollout',
-    nodeFoundry: '130 nm CMOS · SCL Mohali / SkyWater',
-    voltageRail: '3.3V Logic · <2 µW Battery-Backed RTC Domain',
-    standards: 'IS 16444 / IS 15884 · Class 0.2S / 0.5S Accuracy',
-    summary: 'Dedicated 3-phase and single-phase energy measurement SoC featuring high-dynamic-range 24-bit Sigma-Delta ADCs and hardware tamper detection active even when unpowered.',
+    docId: 'doc7',
+    tagline: 'One-chip smart-meter SoC: metrology, security and an always-on clock',
+    nodeFoundry: '130 nm CMOS at 100 MHz · SkyWater; SCL eNVM variant for sealed meters',
+    voltageRail: 'Always-on domain under 2 µW on a 2.2–3.6 V backup cell',
+    standards: 'IEC Class 0.5S (designed toward) · BIS IS 16444 certification path · RDSS',
+    summary: 'A single chip for an electricity meter: a six-channel 24-bit sigma-delta converter, logic that computes energy and power quality, encryption for billing data, and a clock domain under 2 µW during power cuts. It replaces an ADE9153 or V9203-class metering front end plus a separate meter MCU.',
     keyFacts: [
-      '24-bit Sigma-Delta ADC with dynamic range >85 dB across 1000:1 current range.',
-      'Sub-2 µW real-time clock domain powered by coin cell or supercapacitor during power outages.',
-      'Hall-effect and DC magnetic tamper sensors embedded on-chip with cryptographic timestamp logging.',
-      'Direct import substitution for Cirrus Logic and Analog Devices metrology front-ends under India Smart Meter National Programme.'
+      'Firmware in ROM, error-corrected SRAM and encrypted external flash.',
+      'Tamper detection is a tender requirement, which makes it a silicon differentiator.',
+      'RTL ready and FPGA-validated; the six-channel analog front end is designed and simulated; prototype on the December 2026 shuttle.',
+      'Covers household, transformer and commercial meters, rooftop-solar net meters, EV chargers and building submeters.'
     ],
-    citation: 'DeepGrid Semi SKU Compendium — Chapter 3: SKU-2 Smart Meter',
+    citation: 'DeepGrid Semi SKU Blueprint, October 2026: SKU-2 (pdf pp. 12-15)',
     connectedNodeIds: ['fab-scl', 'moat-dap2020']
   },
   {
     id: 'sku-3',
     name: 'SKU-3: Hi-Rel PMIC',
     category: 'sku',
-    tagline: 'Radiation-tolerant power management IC for defense and aerospace avionics',
-    nodeFoundry: '180 nm BCD · SkyWater / SCL Mohali',
-    voltageRail: '5V – 120V Wide-Input Rail (28V Aircraft Bus Standard)',
-    standards: 'DO-160G · MIL-STD-461G · MIL-STD-810H · SRIJAN Portal',
-    summary: 'High-reliability power management IC capable of surviving 100V transients on 28V military avionics buses, featuring Brokaw bandgap references and DICE flip-flop state machines.',
+    docId: 'doc7',
+    tagline: 'Hi-rel PMIC in military, railway and space grades',
+    nodeFoundry: 'SCL 180 nm BCD production; sky130 prototype for the control logic and low-voltage rails',
+    voltageRail: '28 V bus; 4.5–40 V continuous, 100 V spike; four sequenced rails',
+    standards: 'MIL-STD-883 screening · EN 50155 / RDSO · TID/SEE testing (designed toward)',
+    summary: 'A power-management chip for harsh environments: it takes a 28 V supply that meets aircraft and military noise standards, steps it down and produces four sequenced rails with current limits, with control logic hardened against radiation upsets. One chip in three screened grades: military, railway and space.',
     keyFacts: [
-      'Brokaw bandgap reference achieves <12 ppm/°C drift across -55 °C to +125 °C operating range.',
-      'Dual Interlocked Cell (DICE) registers prevent Single Event Upset (SEU) latch-up in radiation-exposed environments.',
-      'Integrated quad buck regulators with independent soft-start, UVLO, and thermal shutdown.',
-      'Qualified for line-replaceable units (LRUs) on military aircraft, UAVs, and combat vehicles.'
+      'Replaces TI and ADI QML power parts in avionics, imported EN 50155 parts in rolling stock, and imported radiation-tolerant PMICs on satellites.',
+      'SEU hardening by design: DICE latches and TMR on the sequencer; the space grade is radiation-tolerant for LEO and launch, not rad-hard.',
+      'RTL ready for the sequencer and telemetry; analog power circuits designed and simulated.',
+      'PIL-5 lists two tank DC-DC converters (16–40 V in, 4 A); Kavach drives the railway grade.'
     ],
-    citation: 'DeepGrid Semi SKU Compendium — Chapter 4: SKU-3 Hi-Rel PMIC',
+    citation: 'DeepGrid Semi SKU Blueprint, October 2026: SKU-3 (pdf pp. 15-18)',
     connectedNodeIds: ['moat-srijan', 'fab-scl', 'fab-skywater']
   },
   {
     id: 'sku-4',
     name: 'SKU-4: Lockstep Safety MCU',
     category: 'sku',
-    tagline: 'ASIL-D / SIL-3 functional safety MCU with dual temporally skewed cores',
-    nodeFoundry: '130 nm CMOS · SkyWater / SCL Mohali',
-    voltageRail: '1.8V Core / 3.3V I/O',
-    standards: 'ISO 26262 ASIL-D · IEC 61508 SIL-3 · AEC-Q100 Grade 0',
-    summary: 'Dual DGridRiscV core microcontroller with 2-clock-cycle temporal skew and spatial separation to eliminate common-cause transient faults and guarantee fail-safe behavior.',
+    docId: 'doc7',
+    tagline: 'Lockstep safety MCU: two cores two cycles apart, checked in hardware',
+    nodeFoundry: '130 nm CMOS at 100 MHz · SkyWater; FPGA-validated at 81.25 MHz; embedded flash later on SCL 180 nm',
+    voltageRail: 'ROM, SRAM and encrypted external flash; ECC on memory and bus',
+    standards: 'ISO 26262 ASIL-D (design target) · IEC 61508 SIL 3',
+    summary: 'Two DGridRiscV processors run the same code two cycles apart and a checker compares them; any mismatch raises a fault signal within two cycles. Memory and bus carry error-correcting codes end to end. It replaces functional-safety MCUs of the Microchip and Renesas class.',
     keyFacts: [
-      'Dual RV32IM cores where checker core receives mirrored inputs delayed by 2 clock cycles.',
-      'Hardware comparator checks every committed register write and bus store in real time.',
-      'Physical layout separation (>100 µm spacing) prevents single-particle radiation strikes from flipping identical bits.',
-      'Trips FAULTn pin and enters hardware safe-state in under 2 clock cycles upon mismatch.'
+      'The lockstep checker has been fault-injection tested in RTL simulation; DG32-LITE, the earlier implemented part, latches FAULT_N 39 cycles after an injected fault (simulated).',
+      'RTL ready; prototype on the December 2026 shuttle.',
+      'Serves EV battery management, motor-safety supervision, braking and steering, robot joints, and the safety processor beside SKU-1 and inside D100.'
     ],
-    citation: 'DeepGrid Semi SKU Compendium — Chapter 5: SKU-4 Lockstep MCU',
+    citation: 'DeepGrid Semi SKU Blueprint, October 2026: SKU-4 (pdf pp. 18-21)',
     connectedNodeIds: ['arch-lockstep', 'sku-5', 'dg32-lite']
   },
   {
     id: 'sku-5',
     name: 'SKU-5: Robust Interface Transceiver',
     category: 'sku',
-    tagline: 'Galvanically isolated CAN-FD & RS-485 transceiver for harsh industrial buses',
-    nodeFoundry: '130 nm Thick-Oxide HV CMOS',
-    voltageRail: '5V Operating · -40V to +40V Bus Fault Protection',
-    standards: 'ISO 11898-2 (CAN-FD 5 Mbps) · TIA/EIA-485-A · ±15 kV HBM ESD',
-    summary: 'Rugged bus interface transceiver engineered to survive continuous electrical overstress, ground potential differences, and electromagnetic discharge on vehicular harnesses.',
+    docId: 'doc7',
+    tagline: 'CAN and RS-485 class transceiver for industrial and vehicle buses',
+    nodeFoundry: '130 nm with 5 V thick-oxide output stages',
+    voltageRail: '5 V thick-oxide drivers; ±15 kV ESD target',
+    standards: 'ISO 11898-2 · TIA/EIA-485',
+    summary: 'Line drivers and receivers for industrial and vehicle buses (CAN and RS-485 class): 5 V thick-oxide output stages, noise-tolerant receivers, a safe idle state if a wire breaks, and ±15 kV ESD protection. It replaces interface chips from TI, ADI and Renesas, many of which defence platforms can no longer buy.',
     keyFacts: [
-      '5V thick-oxide LDMOS transistors with ±15 kV Human Body Model (HBM) contact discharge ESD.',
-      'Handles CAN-FD data rates up to 5 Mbps with symmetrical driver delay minimizing loop distortion.',
-      'Integrated thermal shutdown and dominant timeout protection preventing bus lockup.',
-      'Essential companion chip to SKU-4 safety MCU and SKU-9 zonal gateways.'
+      'Fine nodes are worse for this part: a 5 V-tolerant thick-oxide output stage is what a line driver needs.',
+      'RTL ready for the digital logic; analog line drivers designed and simulated; layout and silicon proof follow on the prototype.',
+      'A high-voltage bus-fault version can follow on SCL or IHP.'
     ],
-    citation: 'DeepGrid Semi SKU Compendium — Chapter 6: SKU-5 Transceiver',
+    citation: 'DeepGrid Semi SKU Blueprint, October 2026: SKU-5 (pdf pp. 21-24)',
     connectedNodeIds: ['sku-4', 'sku-9', 'fab-skywater']
   },
   {
     id: 'sku-6',
     name: 'SKU-6: Quad-Rail Voltage Supervisor',
     category: 'sku',
-    tagline: 'Ultra-low-jitter precision supply monitor and brownout watchtower',
-    nodeFoundry: '180 nm CMOS · SCL Mohali',
-    voltageRail: '1.0V to 5.0V Quad Threshold Monitoring',
-    standards: 'MIL-STD-883K · AEC-Q100 Grade 0 · IEC 61508',
-    summary: 'Autonomous analog watchdog that monitors four independent power rails simultaneously, executing clean deglitched reset generation during power brownouts.',
+    docId: 'doc7',
+    tagline: 'Quad-rail voltage supervisor and the first part into military screening',
+    nodeFoundry: 'SCL 180 nm CMOS production; sky130 prototype',
+    voltageRail: 'Monitors 5.0, 3.3, 1.8 and 1.2/0.9 V rails; 8 µs deglitch',
+    standards: 'MIL screening pathfinder · −40 to +125 °C thresholds',
+    summary: 'Watches a board’s supply voltages and resets the system if any drifts out of range: precise comparators, matched resistor ladders, an 8 µs filter against switching noise, a temperature-stable reference and a windowed watchdog. It replaces TI and Maxim supervisor chips found on almost every board.',
     keyFacts: [
-      'Chopper-stabilized precision comparators eliminate 1/f noise and offset drift over 20-year lifespans.',
-      'Fixed 8 µs deglitch filtering eliminates false resets from inductive switching spikes.',
-      'Master RESETn output with programmable power-on timeout from 50 ms to 400 ms.',
-      'Acts as low-cost pathfinder for SCL Mohali MIL-STD-883 qualification line.'
+      'The simplest chip in the range, so it enters military screening first and sets up the flow for every defence part.',
+      'RTL ready for the watchdog, filters and fault latch; comparators and reference designed and simulated.',
+      'Defence grade for every defence electronics unit and D100 module; commercial grade for nearly every circuit board.'
     ],
-    citation: 'DeepGrid Semi SKU Compendium — Chapter 7: SKU-6 Supervisor',
+    citation: 'DeepGrid Semi SKU Blueprint, October 2026: SKU-6 (pdf pp. 24-27)',
     connectedNodeIds: ['fab-scl', 'moat-srijan']
   },
   {
     id: 'sku-7',
     name: 'SKU-7: 77 GHz 4D MIMO Radar',
     category: 'sku',
-    tagline: 'High-resolution imaging radar front-end in Silicon-Germanium BiCMOS',
-    nodeFoundry: 'IHP Microelectronics SG13G2 (0.13 µm SiGe BiCMOS, 350 GHz fT/fmax)',
-    voltageRail: '3.3V Analog RF / 1.2V Baseband',
-    standards: 'DO-160G Airborne Radar · Automotive ADAS Radar Band (76–81 GHz)',
-    summary: 'Sovereign 4D imaging radar RF front-end combining 3 transmitter and 4 receiver channels with integrated fractional-N PLL synthesizer, resolving azimuth and elevation at 3.75 cm range accuracy.',
+    docId: 'doc7',
+    tagline: '77 GHz 4D radar chipset (24 GHz variant): SiGe front end plus CMOS processing',
+    nodeFoundry: 'IHP SG13G2 SiGe front end + 130 nm CMOS signal processing',
+    voltageRail: '2 transmit, 4 receive channels; 4 GHz sweep, 3.75 cm range resolution',
+    standards: 'ISO 26262 ASIL-B (designed toward) · automotive approval 2029–2030',
+    summary: 'A 77 GHz radar chipset, with a 24 GHz variant, with 2 transmit and 4 receive channels: a silicon-germanium radio front end and a CMOS signal-processing chip. The one part where the process is a hard limit: 130 nm CMOS cannot reach 77 GHz, so the front end uses IHP SiGe.',
     keyFacts: [
-      'IHP SG13G2 Silicon-Germanium process provides 350 GHz cutoff frequency, unencumbered by US ITAR regulations.',
-      'MIMO array configuration enables 12 virtual channels for 3D point-cloud reconstruction.',
-      'Low phase-noise VCO (-95 dBc/Hz at 1 MHz offset) provides superior clutter rejection in rain/fog.',
-      'Replaces ITAR-controlled millimeter-wave MMICs from Infineon and Texas Instruments in defense radar pods.'
+      'RTL for the CMOS signal-processing chip is ready and FPGA-validated; the SiGe front end is still to be designed and is proven only on an IHP run in 2027.',
+      'Replaces imported 77 GHz radar front ends and their processing chips.',
+      'Defence lists name radar warning receivers for the Su-30 MKI and Mi-17, weapon-locating and battlefield surveillance radar.'
     ],
-    citation: 'DeepGrid Semi SKU Compendium — Chapter 8: SKU-7 77GHz Radar',
+    citation: 'DeepGrid Semi SKU Blueprint, October 2026: SKU-7 (pdf pp. 27-30)',
     connectedNodeIds: ['fab-ihp', 'moat-dap2020', 'dg-sdv-platform']
   },
   {
     id: 'sku-8',
     name: 'SKU-8: Rugged Display Driver & TCON',
     category: 'sku',
-    tagline: 'High-voltage column driver and timing controller for ruggedized avionics panels',
-    nodeFoundry: '130 nm High-Voltage CMOS',
-    voltageRail: '0V – 12V Column Amps · 1.8V Core Logic',
-    standards: 'MIL-STD-810H · BEL 17" Rugged SXGA Line-Item · PIL-5 Notification #5',
-    summary: 'Purpose-built column driver and timing controller designed specifically to replace obsolete foreign display silicon in Bharat Electronics Limited (BEL) 17" cockpit tactical displays.',
+    docId: 'doc7',
+    tagline: 'Rugged and industrial LCD display chipset with frame-freeze detection',
+    nodeFoundry: '130 nm high-voltage CMOS',
+    voltageRail: '0–12 V column swing; 24 V gate level shift',
+    standards: 'MIL-STD-810G · DEF-STAN 00-35 (designed toward)',
+    summary: 'Drives rugged and industrial LCD panels: takes LVDS or MIPI video, corrects colour and drives the panel columns through high-voltage amplifiers, counted as one chipset per panel (a timing chip plus its column drivers). A cockpit-display version is the same chip with a wider temperature range.',
     keyFacts: [
-      '1280-channel 10-bit digital-to-analog column drivers providing wide dynamic contrast in direct sunlight.',
-      'Wide temperature liquid-crystal drive waveforms prevent slow refresh degradation at -40 °C cold soak.',
-      'Directly answers the Indian Ministry of Defence PIL-5 import substitution mandate #5.',
-      'Integrated LVDS receiver and gamma correction lookup tables on a single monolithic substrate.'
+      'Replaces imported timing-controller and column-driver chipsets in rugged and industrial displays.',
+      'RTL ready for video input, colour and timing control; high-voltage column amplifiers designed and simulated.',
+      'The defence procurement list names a 17-inch rugged SXGA display from BEL, due December 2027.'
     ],
-    citation: 'DeepGrid Semi SKU Compendium — Chapter 9: SKU-8 Display Driver',
+    citation: 'DeepGrid Semi SKU Blueprint, October 2026: SKU-8 (pdf pp. 30-33)',
     connectedNodeIds: ['moat-pil5', 'fab-skywater']
   },
   {
     id: 'sku-9',
     name: 'SKU-9: SDV Zonal Gateway',
     category: 'sku',
-    tagline: 'Software-Defined Vehicle zonal controller with e-fuses and Ethernet TSN',
-    nodeFoundry: '130 nm CMOS + 180 nm BCD SiP',
-    voltageRail: '12V / 48V Automotive Battery Rails',
-    standards: 'IEEE 802.1Qbv TSN · ISO 26262 ASIL-D · AUTOSAR Adaptive',
-    summary: 'Next-generation zonal automotive gateway combining a Gigabit Time-Sensitive Networking (TSN) switch with 16 intelligent solid-state e-fuses to replace mechanical relay boxes.',
+    docId: 'doc7',
+    tagline: 'Zonal gateway for a software-defined vehicle zone, not its central computer',
+    nodeFoundry: '130 nm CMOS and BCD at 100 MHz',
+    voltageRail: '16 smart electronic fuses with I²t trip',
+    standards: 'ISO 26262 ASIL-D (design target) · EVITA Full · AEC-Q100 Grade 1',
+    summary: 'The network hub for a software-defined vehicle zone: a lockstep safety processor, a full hardware security module, secure boot with two firmware slots, over-the-air updates, a time-sensitive Ethernet switch, six vehicle network types and 16 electronic fuses. It replaces imported zonal controllers and CAN/LIN/FlexRay-to-Ethernet gateways.',
     keyFacts: [
-      '16x smart high-side power switches with programmable I2t overcurrent trip curves and telemetry.',
-      '4-port Gigabit Ethernet TSN switch with deterministic IEEE 802.1Qbv time-aware traffic shaping.',
-      'Hardware ASIL-D safety island monitors wiring harness health and handles safe power cutoffs.',
-      'Cuts wiring harness weight in electric vehicles by over 40% through localized zonal actuation.'
+      'A gateway needs many channels and predictable timing, not a fast clock: the Ethernet switch bounds the delay, not the processor.',
+      'RTL ready; prototype on the December 2026 shuttle.',
+      'Central vehicle computers need sub-10 nm chips and are not part of this plan.'
     ],
-    citation: 'DeepGrid Semi SKU Compendium — Chapter 10: SKU-9 Zonal Gateway',
+    citation: 'DeepGrid Semi SKU Blueprint, October 2026: SKU-9 (pdf pp. 33-36)',
     connectedNodeIds: ['dg-sdv-platform', 'sku-5', 'arch-sip']
+  },
+  {
+    id: 'sku-10',
+    name: 'SKU-10: DG32-Max Secure MCU',
+    category: 'sku',
+    docId: 'doc7',
+    tagline: 'Secure lockstep microcontroller that verifies its own firmware before running it',
+    nodeFoundry: '130 nm CMOS (SKY130) at 100 MHz, ChipFoundry OpenFrame shuttle',
+    voltageRail: '44 signal pins in a 64-pin package',
+    standards: 'Verified boot · country-of-origin procurement rules',
+    summary: 'A secure general-purpose microcontroller: two DGridRiscV processors in lockstep with encryption instructions, a 4 KB instruction cache, 128 KB of error-corrected memory and a boot ROM that checks the firmware signature before running it, 309 ms from reset. One die replaces an imported MAX32655-class secure MCU plus the separate secure element.',
+    keyFacts: [
+      'Root key in mask ROM; device secrets and rollback counter in a 1 kbit ReRAM macro, because SKY130 has no OTP or eFuse.',
+      '128 KB of SRAM is built from 32 ChipFoundry compiled macros (3.76 mm²).',
+      'CAN-FD, UART, SPI, a 9-bit ADC, on-chip clocks, temperature and supply monitors, and debug access.',
+      'RTL feature-complete on 1 October 2026 with every bench and firmware test passing, including secure boot; next is the Arty A7-100T FPGA proof and the December 2026 OpenFrame shuttle.',
+      'Host platform inside SKU-1 and SKU-11.'
+    ],
+    citation: 'DeepGrid Semi SKU Blueprint, October 2026: SKU-10 DG32-Max Secure MCU (pdf pp. 36-38)',
+    connectedNodeIds: ['sku-4', 'sku-11', 'sku-1', 'fab-skywater']
+  },
+  {
+    id: 'sku-11',
+    name: 'SKU-11: SOH-Aware BMS Controller',
+    category: 'sku',
+    docId: 'doc7',
+    tagline: 'Battery-management controller with on-chip state-of-health inference and hardwired protection',
+    nodeFoundry: '130 nm CMOS (SKY130), on the DG32-Max platform die',
+    voltageRail: 'Bought cell front end (BQ76952 class) and isolation chip',
+    standards: 'AIS-156 · EU Battery Passport',
+    summary: 'A battery-management controller combining the DG32-Max processor and security, an AI accelerator that estimates charge, health and remaining life, optional cell-impedance (EIS) measurement, and hardwired over-voltage, under-voltage, over-current and over-temperature protection that works even if the processor stops. Three parts become one: the MCU beside the front end, the separate neural accelerator, and the authentication chip.',
+    keyFacts: [
+      'Protection comparators are ported from SKU-6 and power circuits from SKU-3; the new design is the feature DSP, EIS engine, contactor interface and front-end bridge.',
+      'A 4-100 kB state-of-health model runs in its own memory, away from the safety path.',
+      'A ReRAM hash chain makes the Battery-Passport log in external flash tamper-evident.',
+      'Lead tier: centralised e-2W and e-3W packs on a single front end; second tier: master controller for cars, buses and grid BESS over isoSPI.',
+      'Block specification issued September 2026 (twenty blocks in six groups); no wafer-run slot assigned yet.'
+    ],
+    citation: 'DeepGrid Semi SKU Blueprint, October 2026: SKU-11 SOH-Aware BMS Controller (pdf pp. 39-41)',
+    connectedNodeIds: ['sku-10', 'sku-6', 'sku-3', 'fab-skywater']
+  },
+  {
+    id: 'sku-blueprint-2026',
+    name: 'SKU Blueprint, October 2026',
+    category: 'sku',
+    docId: 'doc7',
+    tagline: 'The current portfolio: eleven SKUs on SkyWater 130 nm and SCL 180 nm, plus the Track B drone SoC',
+    nodeFoundry: 'SkyWater 130 nm and SCL 180 nm; SKU-7 on IHP SG13G2 SiGe; D100 on 28 nm',
+    summary: 'Each SKU is a standalone handout answering nine questions in the same order: what the part is, what it replaces, how big the market is, what share is needed and whether that is realistic, what each unit earns, who buys it, the policy driver, why this process node, and where the FPGA prototype ends and the chip begins. Nine prototypes go on the ChipFoundry December 2026 shuttle.',
+    keyFacts: [
+      'Adds SKU-10 DG32-Max Secure MCU and SKU-11 SOH-Aware BMS Controller to the earlier nine SKUs.',
+      'SKU-3 and SKU-6 prototype on sky130 and move to SCL 180 nm for production; SKU-7 needs IHP SiGe because 130 nm CMOS cannot reach 77 GHz.',
+      'SKU-4 and SKU-9 prototype on the December 2026 shuttle as 130 nm chips at 100 MHz.',
+      'D100 is Track B, funded by a separate round, and shares its lockstep safety core with SKU-4.'
+    ],
+    citation: 'DeepGrid Semi SKU Blueprint, October 2026 (46 pages)',
+    connectedNodeIds: ['sku-10', 'sku-11', 'sku-1', 'sku-4', 'track-b-d100']
   },
   {
     id: 'track-b-d100',
     name: 'Track B: D100 Tactical Drone SoC',
     category: 'sku',
-    tagline: 'Heterogeneous autonomous flight computer on an organic multi-die SiP',
-    nodeFoundry: '130 nm Safety/IO + 28 nm Compute SiP',
-    voltageRail: 'Dual 5V/12V Regulated Battery Bus',
-    standards: 'DGCA Type Certification · Indian Army High-Altitude Drone Standards',
-    summary: 'Heterogeneous flight navigation processor combining an ASIL-D flight controller with a 28nm Linux compute tile, running 30 Hz Visual-Inertial Odometry (VIO) in GNSS-denied battlefields.',
+    docId: 'doc7',
+    tagline: 'Drone SoC: flight control, visual navigation and optional AI on one 28 nm chip',
+    nodeFoundry: '28 nm (TSMC); failsafe island buildable at 130 nm',
+    voltageRail: 'Lockstep RISC-V flight pair; failsafe island with its own power, clock and ESC path',
+    standards: 'DO-254 certification path · DGCA type certification path',
+    summary: 'Flight control, visual navigation and optional AI on one 28 nm chip. Attention and softmax run in hardware at about 70% less power than a general AI accelerator, and a lockstep RISC-V pair runs flight control on a DO-254 path. An independent failsafe island, buildable at 130 nm, brings the drone home if the main computer fails.',
     keyFacts: [
-      'Organic substrate Multi-Die System-in-Package (SiP) combining 130nm safety die and 28nm AI accelerator.',
-      'Independent hardware failsafe island: if the Linux tile crashes or jams, the 130nm lockstep core keeps drone airborne.',
-      'Direct hardware interfaces for MIPI-CSI thermal cameras, dual IMUs, and PWM motor esc rails.',
-      'Designed for sovereign defense procurement under DAP-2020 Make-II scheme.'
+      'Track B: funded by a separate ₹50 Cr round, raised once the eleven mature-node chips earn revenue; it takes nothing from their budget.',
+      'The lockstep safety core is shared with SKU-4.',
+      'Replaces Qualcomm’s QRB5165, the closest comparable chip; most chips in this class do AI or flight control, not both.',
+      'No Indian chip combines flight control and visual navigation today; country-of-origin rules bar land-border-nation components.'
     ],
-    citation: 'DeepGrid Semi SKU Compendium — Chapter 11: D100 Tactical Drone SoC',
+    citation: 'DeepGrid Semi SKU Blueprint, October 2026: D100 (pdf pp. 42-44)',
     connectedNodeIds: ['arch-sip', 'moat-make2', 'dg32-lite']
   },
   {
@@ -971,16 +1038,18 @@ export const graphNodes: GraphNode[] = [
   // SKUs (Cluster Center-Left)
   { id: 'dg32-lite', name: 'DG32-LITE', shortName: 'LITE', category: 'sku', x: 28, y: 35, description: 'Dual-core hardware lockstep motor-control SoC for entry-level brushless drives.' },
   { id: 'dg32-2dom', name: 'DG32-2DOM', shortName: '2DOM', category: 'sku', x: 18, y: 30, description: 'Motor-control SoC + isolated 114 MHz INT8 condition-monitoring engine.' },
-  { id: 'sku-1', name: 'SKU-1 Motor', shortName: 'SKU-1', category: 'sku', x: 25, y: 52, description: '130nm BCD 120V FOC CORDIC BLDC motor controller.' },
+  { id: 'sku-1', name: 'SKU-1 Motor', shortName: 'SKU-1', category: 'sku', x: 25, y: 52, description: '130nm BCD FOC CORDIC BLDC motor controller at 100 MHz; 5–120 V supply via external switches above 20 V.' },
   { id: 'sku-2', name: 'SKU-2 Meter', shortName: 'SKU-2', category: 'sku', x: 38, y: 65, description: '24-bit Sigma-Delta Class 0.5S smart-meter SoC with <2µW RTC.' },
-  { id: 'sku-3', name: 'SKU-3 PMIC', shortName: 'SKU-3', category: 'sku', x: 50, y: 72, description: '180nm BCD 28V military avionics PMIC with Brokaw bandgap.' },
+  { id: 'sku-3', name: 'SKU-3 PMIC', shortName: 'SKU-3', category: 'sku', x: 50, y: 72, description: 'Hi-rel PMIC on a 28 V bus in military, railway and space grades; SCL 180 nm.' },
   { id: 'sku-4', name: 'SKU-4 Safety', shortName: 'SKU-4', category: 'sku', x: 36, y: 45, description: 'Dual DGridRiscV lockstep MCU with 2-cycle temporal skew.' },
   { id: 'sku-5', name: 'SKU-5 XCVR', shortName: 'SKU-5', category: 'sku', x: 22, y: 65, description: 'CAN-FD & RS-485 transceiver with ±15kV HBM ESD.' },
   { id: 'sku-6', name: 'SKU-6 Supv', shortName: 'SKU-6', category: 'sku', x: 62, y: 78, description: 'Quad-rail precision voltage supervisor with 8µs deglitch.' },
-  { id: 'sku-7', name: 'SKU-7 Radar', shortName: 'SKU-7', category: 'sku', x: 52, y: 22, description: '77 GHz 4D MIMO Radar in 350GHz SiGe BiCMOS.' },
-  { id: 'sku-8', name: 'SKU-8 Display', shortName: 'SKU-8', category: 'sku', x: 14, y: 55, description: 'Rugged avionics display driver for BEL 17" SXGA displays.' },
-  { id: 'sku-9', name: 'SKU-9 Zonal', shortName: 'SKU-9', category: 'sku', x: 32, y: 20, description: 'SDV zonal gateway with 16x e-fuses & Gigabit Ethernet TSN.' },
-  { id: 'track-b-d100', name: 'D100 Drone', shortName: 'D100', category: 'sku', x: 16, y: 15, description: 'Heterogeneous tactical drone SoC on organic multi-die SiP.' },
+  { id: 'sku-7', name: 'SKU-7 Radar', shortName: 'SKU-7', category: 'sku', x: 52, y: 22, description: '77 GHz (24 GHz variant) 4D radar: SiGe front end plus CMOS processing.' },
+  { id: 'sku-8', name: 'SKU-8 Display', shortName: 'SKU-8', category: 'sku', x: 14, y: 55, description: 'Rugged and industrial display chipset; cockpit version over a wider temperature range.' },
+  { id: 'sku-9', name: 'SKU-9 Zonal', shortName: 'SKU-9', category: 'sku', x: 32, y: 20, description: 'SDV zonal gateway at 100 MHz with 16 e-fuses and TSN Ethernet.' },
+  { id: 'sku-10', name: 'SKU-10 Secure MCU', shortName: 'SKU-10', category: 'sku', x: 44, y: 32, description: 'DG32-Max: lockstep DGridRiscV secure MCU with signed boot from mask ROM, 130 nm SKY130 at 100 MHz.' },
+  { id: 'sku-11', name: 'SKU-11 BMS', shortName: 'SKU-11', category: 'sku', x: 44, y: 58, description: 'SOH-aware battery-management controller on the DG32-Max platform with hardwired protection.' },
+  { id: 'track-b-d100', name: 'D100 Drone', shortName: 'D100', category: 'sku', x: 16, y: 15, description: 'Drone SoC on 28 nm with a failsafe island buildable at 130 nm.' },
   { id: 'dg-sdv-platform', name: 'DG SDV', shortName: 'SDV', category: 'sku', x: 38, y: 12, description: 'End-to-end SDV reference architecture with AXI-REALM QoS.' },
   { id: 'sku-node-roadmap', name: '3-Phase Roadmap', shortName: 'Roadmap', category: 'sku', x: 26, y: 16, description: '130nm -> 90/55nm -> 28nm scaling roadmap with ~50-SKU arithmetic check.' },
 
@@ -1030,6 +1099,8 @@ export const graphNodes: GraphNode[] = [
 ];
 
 export const nodeToCatalogMap: Record<string, string> = {
+  'sku-10': 'sku-10',
+  'sku-11': 'sku-11',
   'dg32-lite': 'dg32-lite',
   'dg32-2dom': 'dg32-2dom-system',
   'dg32-2dom-system': 'dg32-2dom-system',
@@ -1091,6 +1162,8 @@ export const nodeToCatalogMap: Record<string, string> = {
 };
 
 export const catalogToNodeMap: Record<string, string> = {
+  'sku-10': 'sku-10',
+  'sku-11': 'sku-11',
   'dg32-lite': 'dg32-lite',
   'dg32-2dom-system': 'dg32-2dom-system',
   'sku-1': 'sku-1',
@@ -1177,6 +1250,11 @@ export const graphEdges: GraphEdge[] = [
   { from: 'sku-8', to: 'moat-pil5', label: 'PIL-5 #5' },
 
   { from: 'sku-9', to: 'dg-sdv-platform', label: 'Zonal Edge' },
+  { from: 'sku-10', to: 'sku-4', label: 'Lockstep Pattern' },
+  { from: 'sku-10', to: 'fab-skywater', label: 'SKY130 Shuttle' },
+  { from: 'sku-11', to: 'sku-10', label: 'DG32-Max Platform' },
+  { from: 'sku-11', to: 'sku-6', label: 'Protection Comparators' },
+  { from: 'sku-1', to: 'sku-10', label: 'Host Platform' },
   { from: 'sku-9', to: 'arch-sip', label: 'Organic SiP' },
 
   { from: 'track-b-d100', to: 'arch-sip', label: 'Multi-Die Packaging' },
