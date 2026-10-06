@@ -97,9 +97,7 @@ export default function Page() {
     </table>
    </div></details>
    <p className="disclaimer">
-    Portfolio, numbering and nodes reconciled on 23 September 2026 against the SKU Architecture
-    Compendium (Technical Annex v3) and the Mature-Node Silicon System Architecture, which agree
-    chip for chip. Phase names the sovereignty foundry, not a date: Phase 1 SkyWater, Phase 2 IHP,
+    Portfolio, numbering and nodes follow the SKU Blueprint, October 2026. Phase names the sovereignty foundry, not a date: Phase 1 SkyWater, Phase 2 IHP,
     Phase 3 SCL Mohali. Anchor customers and contract values are held off this table pending
     verification.
    </p>

@@ -2,7 +2,7 @@
 
 Deepgrid Semi · BLDC motor controller · reading guide to the SKU-1 system architecture diagram · October 2026
 
-> Architecture scope, pre-silicon. The diagram is redrawn from the SKU Architecture Compendium, Technical Annex v3, sheet 2. Every value is a design target, not a measurement. Standards appear only as targets the design is developed toward; no certificate exists for any DeepGrid part.
+> Architecture scope, pre-silicon. Every value is a design target from the SKU Blueprint, October 2026, not a measurement. Standards appear only as targets the design is developed toward; no certificate exists for any DeepGrid part.
 
 ## What is SKU-1?
 

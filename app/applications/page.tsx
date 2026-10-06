@@ -12,7 +12,7 @@ export default function Page() {
       <section className="page-wrap">
         <SectionHead
           title="Twelve chips, five kinds of system"
-          copy="DeepGrid’s portfolio by the systems it goes into. Open a chip for what it replaces and its annex sheet; DG32-LITE, the pre-silicon proof point, opens into its diagnostic story and films."
+          copy="DeepGrid’s portfolio by the systems it goes into. Open a chip for what it replaces and its SKU Blueprint page; DG32-LITE, the pre-silicon proof point, opens into its diagnostic story and films."
         />
         <ApplicationsStory/>
         <p className="disclaimer">{PRE_SILICON}</p>

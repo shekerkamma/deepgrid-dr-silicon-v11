@@ -15,7 +15,7 @@ import {productSlugById} from './product-pages-data';
  *  (meta, name, one line, "Used for", three figures, "Open product").
  *
  *  What differs, and why: the reference's figures are price, FY2032 revenue and margin. These
- *  chips have no price or revenue the site can carry (the Annex flags its market figures as internal
+ *  chips have no price or revenue the site can carry (the Blueprint marks its market figures as internal
  *  estimates), so each card's three figures are node, where it is made, and status. A product sits
  *  under one line, as in the reference; the other places it goes are part of its "Used for".
  *  The SoC2 die render is not used anywhere here: it is printed "39.3 TOPS", a withdrawn claim. */
@@ -34,20 +34,20 @@ const skuOf: Record<ProductId, string> = {
 const ALL = 'All';
 
 type Row = {
-  id: ProductId; area: string; areaName: string; name: string; tag: string; sheet?: number; blueprintPage?: number;
+  id: ProductId; area: string; areaName: string; name: string; tag: string; blueprintPage: number;
   what: string; usedFor: string[]; inAreas: string[]; replaces?: string; status?: string;
   node: string; made: string; onSilicon: boolean; evidence: string; stage: string;
 };
 
 // One row per product. Its line is the first area where it is marked primary; every area it
-// appears in contributes a "Used for" entry, so nothing the Annex says about it is lost.
+// appears in contributes a "Used for" entry, so nothing the sources say about it is lost.
 const rows: Row[] = (Object.keys(products) as ProductId[]).map(id => {
   const p = products[id];
   const home = areas.find(a => a.items.some(i => i.product === id && i.primary))!;
   const sku = sovereignSkuHorizon.find(s => s.sku === skuOf[id])!;
   const inAreas = areas.filter(a => a.items.some(i => i.product === id));
   return {
-    id, area: home.id, areaName: home.name, name: p.name, tag: p.tag, sheet: p.sheet, blueprintPage: p.blueprintPage,
+    id, area: home.id, areaName: home.name, name: p.name, tag: p.tag, blueprintPage: p.blueprintPage,
     what: sku.targetApp,
     usedFor: inAreas.map(a => a.items.find(i => i.product === id)!.role),
     inAreas: inAreas.map(a => a.id),
@@ -165,7 +165,7 @@ export default function ApplicationsPortfolio() {
                           </dl>
                           <span className="pf-open">
                             <span>
-                              {deep ? 'Open product' : r.sheet ? `Annex sheet ${r.sheet}` : `Blueprint p.${r.blueprintPage}`}{' '}
+                              {deep ? 'Open product' : `Blueprint p.${r.blueprintPage}`}{' '}
                               {deep ? <ArrowRight size={16} aria-hidden="true"/> : <ArrowUpRight size={16} aria-hidden="true"/>}
                             </span>
                             <span className="pf-media num">{deep ? '5 films · 30 diagnostic tasks' : r.status ?? ''}</span>
@@ -187,7 +187,7 @@ export default function ApplicationsPortfolio() {
         </div>
       )}
       <p className="disclaimer">
-        Where each chip goes is from the SKU Architecture Compendium (Technical Annex v3). DG32-LITE
+        Where each chip goes and what it replaces is from the SKU Blueprint, October 2026. DG32-LITE
         is the detailed pre-silicon case; the wider parts retain their individual architecture and development scope. Concept
         renders show where a product is used, not the product.
       </p>

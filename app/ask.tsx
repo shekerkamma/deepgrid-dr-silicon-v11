@@ -19,9 +19,11 @@ import {
 import {groundedDocuments, GroundedDoc} from './documents-data';
 import {readHref} from './doc-links';
 
+const byId = (id: string): GroundedDoc => groundedDocuments.find(d => d.id === id)!;
+
 // Helper to resolve the authoritative grounded document for any DeepGrid catalog item
 export function resolveItemDocument(item?: DeepGridItem | null): GroundedDoc {
-  if (!item) return groundedDocuments[4]; // Default to Doc 5 (Mature Silicon Whitepaper)
+  if (!item) return byId('doc5'); // Default: the Mature Silicon Whitepaper
 
   const c = (item.citation || '').toLowerCase();
   const id = item.id.toLowerCase();
@@ -34,7 +36,7 @@ export function resolveItemDocument(item?: DeepGridItem | null): GroundedDoc {
     id.startsWith('dg32-power') || 
     id.startsWith('dg32-boot')
   ) {
-    return groundedDocuments.find(d => d.id === 'doc6') || groundedDocuments[5];
+    return byId('doc6');
   }
 
   // 2. Doc 1: Thirty Use Cases, No Accelerator (Edge AI & Diagnostics)
@@ -47,7 +49,7 @@ export function resolveItemDocument(item?: DeepGridItem | null): GroundedDoc {
     id.startsWith('dg32-afe') || 
     id.startsWith('dg32-benchmark')
   ) {
-    return groundedDocuments.find(d => d.id === 'doc1') || groundedDocuments[0];
+    return byId('doc1');
   }
 
   // 3. Doc 3: dgrid_dshot_rx RTL Specification (Motor Telemetry & Floorplan)
@@ -57,7 +59,7 @@ export function resolveItemDocument(item?: DeepGridItem | null): GroundedDoc {
     id.includes('dshot') || 
     id.includes('floorplan')
   ) {
-    return groundedDocuments.find(d => d.id === 'doc3') || groundedDocuments[2];
+    return byId('doc3');
   }
 
   // 4. Doc 4: DG32-2DOM Dual-Domain Architecture (Clocks, Bridges, Attention, AVIP)
@@ -68,10 +70,10 @@ export function resolveItemDocument(item?: DeepGridItem | null): GroundedDoc {
     id.includes('avip') || 
     id.includes('foc-loop')
   ) {
-    return groundedDocuments.find(d => d.id === 'doc4') || groundedDocuments[3];
+    return byId('doc4');
   }
 
-  // 5. Doc 2: Technical Annex v3 (10 SKUs, D100, SDV Platform, Roadmap)
+  // 5. Doc 7: SKU Blueprint, October 2026 (11 SKUs, D100)
   if (
     c.includes('sku compendium') || 
     id.startsWith('sku-') || 
@@ -79,11 +81,11 @@ export function resolveItemDocument(item?: DeepGridItem | null): GroundedDoc {
     id.includes('d100') ||
     item.category === 'sku'
   ) {
-    return groundedDocuments.find(d => d.id === 'doc2') || groundedDocuments[1];
+    return byId('doc7');
   }
 
   // 6. Doc 5: Mature-Node Silicon Master Whitepaper (198-Day Loop, Strategy, Moats, Three-Factory, Finance, Capital)
-  return groundedDocuments.find(d => d.id === 'doc5') || groundedDocuments[4];
+  return byId('doc5');
 }
 
 export default function AskDeepGrid({go}: {go: (hash: string) => void}) {
@@ -186,8 +188,8 @@ export default function AskDeepGrid({go}: {go: (hash: string) => void}) {
   // Document filter for quick queries: 2 from each of the 6 PDF documents by default
   const filteredPrompts = useMemo(() => {
     if (selectedDocId === 'all') {
-      const docIds: ('doc1' | 'doc2' | 'doc3' | 'doc4' | 'doc5' | 'doc6')[] = [
-        'doc1', 'doc2', 'doc3', 'doc4', 'doc5', 'doc6'
+      const docIds: ('doc1' | 'doc3' | 'doc4' | 'doc5' | 'doc6' | 'doc7')[] = [
+        'doc7', 'doc1', 'doc3', 'doc4', 'doc5', 'doc6'
       ];
       const selected: typeof quickPrompts = [];
       docIds.forEach(dId => {

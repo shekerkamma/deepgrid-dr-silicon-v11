@@ -4863,3 +4863,21 @@ input[type=search]::-webkit-search-cancel-button,input[type=search]::-webkit-sea
 .st-3d > summary{list-style:none;cursor:pointer;width:fit-content}
 .st-3d > summary::-webkit-details-marker{display:none}
 .st-3d[open] > summary{margin-bottom:1rem}
+
+/* Ask DeepGrid: graph-guided evidence. Direct answer, numbered evidence, limits, retrieval trace. */
+.dr-ev-ref{margin-left:4px;font-size:.7em;color:var(--copper)}
+.dr-evidence,.dr-limits{display:flex;flex-direction:column;gap:10px;background:#0d100f;border:1px solid var(--rule);border-radius:var(--sc-radius-sm,4px);padding:16px 20px;max-width:72ch}
+.dr-evidence-list{margin:0;padding:0;list-style:none;display:flex;flex-direction:column;gap:14px}
+.dr-evidence-item{display:grid;grid-template-columns:auto minmax(0,1fr);gap:10px;align-items:start}
+.dr-evidence-item[data-kind="related"]{opacity:.82}
+.dr-evidence-n{font-size:.78rem;color:var(--copper);padding-top:2px}
+.dr-evidence-quote{margin:0;padding:0 0 0 12px;border-left:2px solid var(--copper);color:#e6e1d6;font-size:.92rem;line-height:1.55}
+.dr-evidence-cite{margin:6px 0 0;font-size:.78rem;color:#9aa69c;line-height:1.5}
+.dr-evidence-cite a{color:var(--copper)}
+.dr-evidence-via{margin:4px 0 0;font-size:.74rem;color:#7f8b82}
+.dr-trace{max-width:72ch;border:1px solid var(--rule);border-radius:var(--sc-radius-sm,4px);padding:10px 16px;background:#0b0e0d}
+.dr-trace summary{cursor:pointer;font-size:.86rem;color:#c8d1c8;min-height:24px}
+.dr-trace-body{display:flex;flex-direction:column;gap:8px;padding-top:10px;font-size:.82rem;color:#aab4ab;line-height:1.55}
+.dr-trace-body p{margin:0}
+.dr-trace-hops{margin:0;padding-left:18px;display:flex;flex-direction:column;gap:4px}
+.dr-trace-conf{color:#7f8b82;font-size:.74rem}

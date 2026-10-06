@@ -2,7 +2,7 @@
 
 Deepgrid Semi · hi-rel power-management IC · reading guide to the SKU-3 system architecture diagram · October 2026
 
-> Architecture scope, pre-silicon. The diagram is redrawn from the SKU Architecture Compendium, Technical Annex v3, sheet 4. Every value is a design target, not a measurement. Standards appear only as targets the design is developed toward; no certificate exists for any DeepGrid part.
+> Architecture scope, pre-silicon. Every value is a design target from the SKU Blueprint, October 2026, not a measurement. Standards appear only as targets the design is developed toward; no certificate exists for any DeepGrid part.
 
 ## What is SKU-3?
 
@@ -87,10 +87,6 @@ Why it exists: A single-event upset must not reorder or drop a rail, so the sequ
 - ③ The pre-regulator output feeds the four rail regulators.
 - ④ Each rail reports power-good to the sequencer through its window monitor and current limit.
 - ⑤ Current sense closes the peak-current-mode inner loop.
-
-## Where this differs from the annex sheet
-
-Structure follows the annex figure on sheet 4. Some values on that sheet differ from the product page; where they do, the diagram follows the product page, and anyone opening the sheet will see the other value. The differences: the rails (the sheet draws 3V3 and 1V8 LDOs at 2 A and 3 A and 1V2 and 0V9 bucks at 5 A and 6 A; this page states 5 V and 3.3 V bucks at 2 A and 3 A and 1.8 V and 1.2 or 0.9 V LDOs at 500 mA and 300 mA), the telemetry ADC (12-bit on the sheet, 10-bit at 500 kSPS here) and the sequencer (8 slots on the sheet, 4 steps here).
 
 ## Designed toward
 
