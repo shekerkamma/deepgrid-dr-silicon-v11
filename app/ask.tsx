@@ -266,7 +266,7 @@ export default function AskDeepGrid({go}: {go: (hash: string) => void}) {
   const categories = [
     { id: 'all', label: 'All Domains' },
     { id: 'ai', label: 'Edge AI & Diagnostics' },
-    { id: 'sku', label: '10-Chip SKU Compendium' },
+    { id: 'sku', label: 'SKU Portfolio' },
     { id: 'strategy', label: 'Three-Factory Sovereignty' },
     { id: 'loop', label: '198-Day Fast Loop & EDA' },
     { id: 'defense', label: 'Defense Moats & DAP-2020' },

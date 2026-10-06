@@ -103,7 +103,7 @@ export default function Page() {
       <section className="page-wrap">
         <SectionHead
           title="Every figure says how it was obtained"
-          copy="DG32 is pre-silicon as of September 2026, and it is the furthest along of DeepGrid’s ten chips. This page takes each kind of evidence behind the site’s numbers in turn, with the moment in the narrated films where it is explained, then says what the other nine chips rest on."
+          copy="DG32 is pre-silicon as of September 2026, and it is the furthest along of DeepGrid’s twelve chips. This page takes each kind of evidence behind the site’s numbers in turn, with the moment in the narrated films where it is explained, then says what the other eleven chips rest on."
         />
         <SceneFigure name="evidence-fpga" eager
           alt="Illustration of a validation bench: an FPGA development board wired to a small motor-drive board, with an oscilloscope out of focus behind"
@@ -119,7 +119,7 @@ export default function Page() {
                 steps on a ladder, and each one below lists the figures that rest on it.
               </p>
               <p>
-                The applications page places DG32 among ten chips. The other nine have no silicon at all
+                The applications page places DG32 among twelve chips. The other eleven have no silicon at all
                 yet, so the last section says what each of them rests on instead.
               </p>
             </div>
@@ -193,13 +193,13 @@ export default function Page() {
             </div>
           </section>
 
-          {/* The portfolio. /applications now places ten chips; only one is on silicon. Each row's
+          {/* The portfolio. /applications now places twelve chips; only one is on silicon. Each row's
               evidence and next step come from the same product record /applications reads, which
               restates that chip's Annex "Status & node path" panel. */}
           <section className="st-beat" id="ev-portfolio" aria-labelledby="ev-portfolio-h">
             <div className="st-beat-text">
               <p className="st-fam-kicker">The rest of the portfolio</p>
-              <h2 id="ev-portfolio-h">The other nine chips rest on design documents and FPGA prototypes, not silicon.</h2>
+              <h2 id="ev-portfolio-h">The other eleven chips rest on design documents, RTL and FPGA prototypes, not silicon.</h2>
               <p>
                 Where they go and what they replace are on the applications page, from the portfolio
                 annex. None has been fabricated. Four have named logic running as circuit code on an FPGA,

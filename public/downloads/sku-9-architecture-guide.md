@@ -24,7 +24,7 @@ What it does: Two DGridRiscV cores in lockstep with a two-cycle skew, memory pro
 
 Why it exists: Safety-critical and comfort functions share one chip, so the island is isolated by an MPU and a bus firewall.
 
-- **DGridRiscV × 2**: RV32IM_Zicsr · lockstep · 200 MHz · +2 cycle skew · PMP · ECC
+- **DGridRiscV × 2**: RV32IM_Zicsr · lockstep · 100 MHz · +2 cycle skew · PMP · ECC
 - **Comparator**: bus + retire · mismatch → safe state
 - **Freedom from interference**: MPU + bus firewall
 

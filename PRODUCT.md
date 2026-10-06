@@ -7,7 +7,7 @@ User confirmed portfolio/strategy-first homepage with DG32 as detailed proof poi
 ## Users
 Equipment-maker engineering and technical diligence are supported by sources/workflows; priority between those roles remains open. Visitors locate a silicon job, inspect architecture/evidence and begin scoped evaluation.
 ## Capabilities and constraints
-Nine core SKU architectures plus D100; DG SDV is a reference platform. Architecture breadth is not ten shipping products. DG32-LITE implements SKU-4 safety MCU; 2DOM adds separate attention domain. Product families have distinct physical requirements and maturity. Published DG32 evidence remains pre-silicon. Simulation, implementation, planning, estimates, measured silicon and qualification remain distinct. Illustrations establish no certification, traction or production status.
+Eleven core SKU architectures plus D100 (SKU Blueprint, October 2026); DG SDV is a reference platform. Architecture breadth is not twelve shipping products. DG32-LITE implements SKU-4 safety MCU; 2DOM adds separate attention domain. Product families have distinct physical requirements and maturity. Published DG32 evidence remains pre-silicon. Simulation, implementation, planning, estimates, measured silicon and qualification remain distinct. Illustrations establish no certification, traction or production status.
 ## Evidence
 Indexed catalogue: app/data/deepgrid-knowledge.ts and deepgrid-chapters.json. Corrective register: app/claims.ts. Public downloads: engineering guides, datasheets, sensing/workload analysis, SKU compendium and strategy. GitHub source renders are concepts.
 ## Principles

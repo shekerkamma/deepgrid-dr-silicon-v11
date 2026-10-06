@@ -19,7 +19,7 @@ import './product-tiles.css';
 
 const STACK = '(max-width: 860px)';
 
-export default function ProductTiles({title = 'Our products', lede = 'Ten parts, each built for one physical job. Pre-silicon; every figure is a design target.'}: {title?: string; lede?: string}) {
+export default function ProductTiles({title = 'Our products', lede = 'Twelve parts, each built for one physical job. Pre-silicon; every figure is a design target.'}: {title?: string; lede?: string}) {
   const [open, setOpen] = useState(0);
   const [stacked, setStacked] = useState(false);
   const hover = useRef<number | undefined>(undefined);
