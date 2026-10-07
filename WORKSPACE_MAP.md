@@ -1,6 +1,6 @@
 # Workspace map
 
-- `app/routes.ts`, `app/shell.tsx`, `app/mega-nav.tsx`: 35-route map, navigation and shared page shell.
+- `app/routes.ts`, `app/shell.tsx`, `app/mega-nav.tsx`: 37-route map, navigation and shared page shell.
 - `app/home-refined.tsx`, `app/portfolio-v6.css`: portfolio-first homepage storyboard and presentation.
 - `app/portfolio-story-data.ts`, `app/portfolio-story.tsx`: source-backed portfolio, qualification, strategy and evaluation register.
 - `app/portfolio-workbench.tsx`, `app/portfolio-workbench.css`: persistent material illustration with Three.js functional and fault overlays; reduced-motion/static states.
@@ -22,3 +22,5 @@ Windows: run npm through `node 'C:/Program Files/nodejs/node_modules/npm/bin/npm
 - `scripts/verify-v11.mjs`: responsive imagery, filtering and screenshot checks.
 
 - `scripts/verify-layout.mjs`: v12 four-width route geometry, visible navigation, header-height and sticky-control regression checks.
+
+- `app/data/graph-retrieval.ts`, `scripts/eval-graphrag.mjs`: provenance-weighted graph retrieval and lexical/semantic answer evaluation.

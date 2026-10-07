@@ -6,7 +6,7 @@ export interface DeepGridItem {
   name: string;
   category: 'sku' | 'ai' | 'strategy' | 'architecture' | 'defense' | 'loop' | 'finance';
   tagline: string;
-  docId?: 'doc1' | 'doc2' | 'doc3' | 'doc4' | 'doc5' | 'doc6' | 'doc7' | 'doc-d100' | 'doc-sdv';
+  docId?: 'doc1' | 'doc3' | 'doc4' | 'doc5' | 'doc6' | 'doc7' | 'doc-d100' | 'doc-sdv';
   nodeFoundry?: string;
   voltageRail?: string;
   standards?: string;
@@ -42,7 +42,7 @@ export interface GraphEdge {
 }
 
 export interface DocumentSource {
-  id: 'all' | 'doc1' | 'doc2' | 'doc3' | 'doc4' | 'doc5' | 'doc6' | 'doc7';
+  id: 'all' | 'doc1' | 'doc3' | 'doc4' | 'doc5' | 'doc6' | 'doc7';
   badge: string;
   title: string;
   subtitle: string;
@@ -64,13 +64,7 @@ export const documentSources: DocumentSource[] = [
     subtitle: '50 MHz RV32IM edge AI compute envelope, 19 model types, DSP pipelines, and CWRU data audit',
     fileReference: 'deepgrid-dg32-lite-ai · 30-Use-Cases-No-Accelerator.pdf'
   },
-  {
-    id: 'doc2',
-    badge: 'Doc #2',
-    title: 'Technical Annex v3 (10 SKUs & SDV)',
-    subtitle: '10-chip SKU compendium, D100 tactical drone SoC, DG SDV reference architecture, 3-phase roadmap',
-    fileReference: 'deepgrid-sku-compendium · Technical-Annex-v3.pdf'
-  },
+
   {
     id: 'doc7',
     badge: 'Doc #7',
@@ -113,7 +107,7 @@ export interface QuickPrompt {
   label: string;
   query: string;
   category: 'sku' | 'ai' | 'defense' | 'loop' | 'safety' | 'strategy' | 'architecture';
-  docId: 'doc1' | 'doc2' | 'doc3' | 'doc4' | 'doc5' | 'doc6';
+  docId: 'doc1' | 'doc3' | 'doc4' | 'doc5' | 'doc6' | 'doc7';
   docBadge: string;
   docName: string;
 }
@@ -127,14 +121,14 @@ export const quickPrompts: QuickPrompt[] = [
   { id: 'cwru-leakage', label: 'CWRU Benchmark Audit', query: 'What did the audit reveal about CWRU bearing dataset leakage?', category: 'ai', docId: 'doc1', docBadge: 'Doc #1', docName: 'Thirty Use Cases' },
   { id: 'dsp-pipeline', label: 'DSP Feature Pipeline', query: 'How does the fixed-point DSP pipeline extract Kurtosis and FFT features in <100 µs?', category: 'ai', docId: 'doc1', docBadge: 'Doc #1', docName: 'Thirty Use Cases' },
 
-  // --- Document #2: Technical Annex v3 (10 SKUs & Roadmap) ---
-  { id: 'sku-compare', label: 'DG32 vs STM32G0', query: 'Compare DG32 with the STM32G0: where does each lead?', category: 'sku', docId: 'doc6', docBadge: 'Guide', docName: 'Technical Annex v3' },
-  { id: 'sku-roadmap', label: '3-Phase SKU Roadmap', query: 'What is the 3-phase node roadmap and arithmetic check?', category: 'strategy', docId: 'doc2', docBadge: 'Doc #2', docName: 'Technical Annex v3' },
-  { id: 'd100-failsafe', label: 'D100 Failsafe Island', query: 'How does the D100 drone hardware failsafe island work?', category: 'sku', docId: 'doc2', docBadge: 'Doc #2', docName: 'Technical Annex v3' },
-  { id: 'bel-display', label: 'SKU-8 BEL 17" Display', query: 'What is the PIL-5 mandate for the SKU-8 BEL display driver?', category: 'sku', docId: 'doc2', docBadge: 'Doc #2', docName: 'Technical Annex v3' },
-  { id: 'radar-sige', label: 'SKU-7 SiGe 350GHz Radar', query: 'Why does SKU-7 use IHP SiGe 350GHz instead of pure CMOS?', category: 'sku', docId: 'doc2', docBadge: 'Doc #2', docName: 'Technical Annex v3' },
-  { id: 'sip-packaging', label: 'Organic SiP Packaging', query: 'Why organic substrate instead of silicon interposers?', category: 'safety', docId: 'doc2', docBadge: 'Doc #2', docName: 'Technical Annex v3' },
-  { id: 'sdv-zonal', label: 'DG SDV Reference Zonal', query: 'How does the DG SDV architecture eliminate wire harnesses via zonal controllers?', category: 'architecture', docId: 'doc2', docBadge: 'Doc #2', docName: 'Technical Annex v3' },
+  // --- Document #7: SKU Blueprint, October 2026 (11 SKUs + D100) ---
+  { id: 'sku-compare', label: 'DG32 vs STM32G0', query: 'Compare DG32 with the STM32G0: where does each lead?', category: 'sku', docId: 'doc6', docBadge: 'Guide', docName: 'DG32 vs STM32G0' },
+  { id: 'sku-roadmap', label: 'Path to Revenue', query: 'Which chips go on the December 2026 shuttle, and when does each start earning?', category: 'strategy', docId: 'doc7', docBadge: 'Doc #7', docName: 'SKU Blueprint' },
+  { id: 'd100-failsafe', label: 'D100 Failsafe Island', query: 'How does the D100 failsafe island work, and why can it be built at 130 nm?', category: 'sku', docId: 'doc7', docBadge: 'Doc #7', docName: 'SKU Blueprint' },
+  { id: 'bel-display', label: 'SKU-8 Rugged Display', query: 'Which defence programme names the rugged display SKU-8 drives?', category: 'sku', docId: 'doc7', docBadge: 'Doc #7', docName: 'SKU Blueprint' },
+  { id: 'radar-sige', label: 'SKU-7 SiGe Radar', query: 'Why does SKU-7 use IHP SiGe instead of 130 nm CMOS?', category: 'sku', docId: 'doc7', docBadge: 'Doc #7', docName: 'SKU Blueprint' },
+  { id: 'secure-mcu', label: 'SKU-10 Secure Boot', query: 'What does SKU-10 DG32-Max replace, and how does it boot only signed firmware?', category: 'safety', docId: 'doc7', docBadge: 'Doc #7', docName: 'SKU Blueprint' },
+  { id: 'bms-soh', label: 'SKU-11 BMS Controller', query: 'What does SKU-11 replace, and which policy makes it necessary?', category: 'sku', docId: 'doc7', docBadge: 'Doc #7', docName: 'SKU Blueprint' },
 
   // --- Document #3: dgrid_dshot_rx RTL Specification ---
   { id: 'dshot-bidir', label: 'Hardware DShot RX RTL', query: 'Why is DShot receive and bidirectional telemetry implemented in hardware rather than firmware?', category: 'architecture', docId: 'doc3', docBadge: 'Doc #3', docName: 'dgrid_dshot_rx' },

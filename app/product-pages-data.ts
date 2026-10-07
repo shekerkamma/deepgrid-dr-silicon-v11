@@ -1,13 +1,11 @@
-/** Product pages (/products/<slug>), one record per portfolio part. Authored from the SKU Architecture
- *  Compendium (Technical Annex v3) chapters under docs/v6/story-pack-depth.md §8:
- *  - published: the job, the physical requirement, block architecture, architecture-target figures and
- *    the engineering questions each sheet asks of itself;
+/** Product pages (/products/<slug>), one record per portfolio part, authored from the October 2026 SKU
+ *  Blueprint:
+ *  - published: the job, the physical requirement, block architecture, architecture-target figures,
+ *    what the part replaces, who uses it, the policy driver, why its node, and open engineering questions;
  *  - softened: standards appear only as "designed toward", never as held or met;
  *  - left out: margins, prices, market sizes, "moat" language and anything in claims.ts `withheld`.
- *  Every figure here is an architecture target from the named sheet, not a datasheet value. Where a
- *  sheet disagrees with an implemented part (SKU-4 vs DG32-LITE) or with its own standard (SKU-5), the
- *  `reconcile` note says so on the page. Status and evidence come from applications-story-data.ts, so
- *  /applications, /evidence and these pages cannot disagree about a chip. */
+ *  Every figure here is an architecture target, not a datasheet value. Status and evidence come from
+ *  applications-story-data.ts, so /applications, /evidence and these pages cannot disagree about a chip. */
 import type {ProductId} from './applications-story-data';
 
 export type ProductBlock = {name: string; items: string[]};
@@ -30,7 +28,6 @@ export type ProductPage = {
    *  node. Engineering and buyer context only: no prices, market sizes or named target companies. */
   fit: {buyers: string; policy: string; node: string};
   questions: {title: string; question: string}[];
-  reconcile?: string;
   related: {slug: string; why: string}[];
   deeper?: {label: string; href: string}[];
 };
@@ -73,7 +70,6 @@ export const productPages: ProductPage[] = [
       {title: 'ReRAM at temperature', question: 'Retention falls quickly above 125 °C junction. What ECC and scrubbing keep stored parameters intact in continuous operation?'},
       {title: 'Shoot-through', question: 'How fine is dead-time insertion, and does it hold as gate thresholds drift with temperature?'},
     ],
-    reconcile: 'Technical Annex v3 put a 5–120 V buck-boost pre-driver rail and a 200 MHz core on one BCD die, with 256 KB of ReRAM. The October 2026 SKU Blueprint supersedes it: on-die gate drive to about 20 V with external power switches above, a 100 MHz product, secrets in ReRAM and firmware in external flash. This page follows the Blueprint.',
     related: [{slug: 'sku-4', why: 'Supervises the drive and can shut it down'}, {slug: 'd100', why: 'Drives the flight motors through the ESC path'}],
     deeper: [{label: 'How DG32 budgets a control loop', href: '/technology/control-loop'}],
   },
@@ -151,7 +147,6 @@ export const productPages: ProductPage[] = [
       {title: 'Cross-rail noise', question: 'How much 3.3 V switching ripple reaches the 1.2 V converter supply through the shared reference?'},
       {title: 'Upset spacing', question: 'What layout spacing keeps one heavy-ion strike from flipping two of the three voting bits?'},
     ],
-    reconcile: 'Technical Annex v3 describes one avionics and military-vehicle part. The October 2026 SKU Blueprint makes it one chip in three screened grades, adding railway (EN 50155, RDSO approval) and space (radiation-tolerant, no rad-hard claim). The sky130 prototype tests the control logic and low-voltage rails; the 28 V front end and power stage arrive on SCL 180 nm.',
     related: [{slug: 'sku-6', why: 'Independently supervises the rails it produces'}, {slug: 'sku-4', why: 'Powers the safety MCU and its memory'}, {slug: 'sku-8', why: 'Supplies the display bias rails'}],
   },
   {
@@ -182,7 +177,6 @@ export const productPages: ProductPage[] = [
       ['Package (DG32-LITE)', 'QFN-64, 9 × 9 mm'],
     ],
     designedToward: ['ISO 26262 ASIL-D (a path, not a certificate)', 'IEC 61508 SIL 3'],
-    reconcile: 'Technical Annex v3 describes a family target of 200 MHz cores, 1 MB of flash and two CAN-FD ports. The October 2026 SKU Blueprint supersedes it: a 130 nm product at 100 MHz, validated on FPGA at 81.25 MHz, booting from ROM with encrypted external flash, prototyped on the December 2026 shuttle, with embedded flash following on SCL 180 nm. The Blueprint states that a mismatch raises the fault signal within two cycles; the 39-cycle figure is DG32-LITE’s simulated path from an injected fault to the latched FAULT_N pin.',
     questions: [
       {title: 'Skewed reads', question: 'How does the delay buffer make both cores see identical read data from asynchronous peripherals without stalling?'},
       {title: 'Diagnostic coverage', question: 'Which built-in self-tests run at power-on and in periodic windows to reach the single-point fault metric a safety case needs?'},
@@ -227,7 +221,6 @@ export const productPages: ProductPage[] = [
       ['Standby', 'Under 8 µA'],
     ],
     designedToward: ['TIA/EIA-485', 'ISO 11898-2', 'IEC 61000-4-2 (system level) and HBM (component level), each rated separately'],
-    reconcile: 'The annex sheet pairs a 20 Mbps rate with a 1.2 km reach and quotes “IEC 61000-4-2 ±15 kV HBM” and “±7 V” common mode. Rate and reach are two operating points, not one; IEC 61000-4-2 and HBM are different tests; and TIA/EIA-485 specifies −7 to +12 V. This page states the corrected forms.',
     questions: [
       {title: 'ESD on an open process', question: 'Which ESD structures have silicon data at ±15 kV? This needs a dedicated test chip; it cannot be inferred from shared tiles.'},
       {title: 'Unit load', question: 'Are 256 nodes reached with eighth-unit-load receivers, and at what input impedance?'},
@@ -310,7 +303,6 @@ export const productPages: ProductPage[] = [
       {title: 'Silicon risk', question: 'With no FPGA stand-in for the front end, how is risk reduced across IHP wafer runs?'},
       {title: 'Co-existence', question: 'On a mast beside UHF and VHF radios, what shielding keeps local-oscillator harmonics out of them?'},
     ],
-    reconcile: 'The October 2026 SKU Blueprint adds a 24 GHz variant to the 77 GHz part and does not restate Technical Annex v3’s 200 MHz baseband clock. The CMOS signal-processing RTL is validated on FPGA; the SiGe front end is still to be designed and is proven only on an IHP SG13G2 run, planned for 2027.',
     related: [{slug: 'sku-9', why: 'Sends target data to the zonal gateway'}, {slug: 'd100', why: 'Obstacle detection for autonomous flight'}],
   },
   {
@@ -349,7 +341,6 @@ export const productPages: ProductPage[] = [
       {title: 'Freeze detection', question: 'How do successive frame CRCs alert the operator within two frames if the image stops updating?'},
       {title: 'Heat and contrast', question: 'How does the gamma table track temperature to hold contrast at +85 °C?'},
     ],
-    reconcile: 'Technical Annex v3 frames SKU-8 as a cockpit display driver on one die. The October 2026 SKU Blueprint scopes it to rugged and industrial panels, counted as a chipset (a timing chip plus its column drivers), with the cockpit display as a wider-temperature version of the same chip.',
     related: [{slug: 'sku-3', why: 'Generates the display bias rails'}, {slug: 'sku-9', why: 'Receives the graphics stream in a vehicle'}],
   },
   {
@@ -358,7 +349,7 @@ export const productPages: ProductPage[] = [
     heroSpecs: ['Networking', 'Power', 'Safety island'],
     highlights: [['16', 'Smart electronic fuses', 'Power'], ['8 × CAN-FD', 'Beside TSN, LIN and FlexRay', 'Networking'], ['2-cycle', 'Lockstep safety island', 'Safety island']],
     headline: 'The zonal edge of a software-defined vehicle, not its central computer.',
-    lede: 'SKU-9 bridges in-vehicle networks to local loads in one zone: sixteen smart electronic fuses, a time-sensitive Ethernet switch, a lockstep safety island and a hardware security module. Its sheet draws the line itself: the central multi-gigahertz computer is a sub-10 nm part and is not claimed.',
+    lede: 'SKU-9 bridges in-vehicle networks to local loads in one zone: sixteen smart electronic fuses, a time-sensitive Ethernet switch, a lockstep safety island and a hardware security module. The Blueprint draws the line itself: the central multi-gigahertz computer is a sub-10 nm part and is not claimed.',
     physics: [
       {requirement: 'Switch and protect 12 V and 48 V loads in a harness.', consequence: 'BCD power devices for the smart fuses alongside the logic.'},
       {requirement: 'Brake-by-wire messages need bounded latency on a shared link.', consequence: 'A time-aware shaper (802.1Qbv) and precision time sync (802.1AS) in hardware.'},
@@ -381,7 +372,6 @@ export const productPages: ProductPage[] = [
       ['Scope', 'Zonal edge only; central compute is out of scope'],
     ],
     designedToward: ['ISO 26262 ASIL-D', 'EVITA Full', 'AUTOSAR Classic 4.4', 'AEC-Q100 Grade 1'],
-    reconcile: 'Technical Annex v3 lists a 200 MHz part and calls the safety island “ASIL-D certified”. The October 2026 SKU Blueprint supersedes the clock: a 130 nm chip at 100 MHz, because the Ethernet switch, not the processor, bounds the delay. No certificate exists for any DeepGrid part; this page states ASIL-D as a design target.',
     questions: [
       {title: 'Where the node line falls', question: 'Why does the zonal layer belong on 130 nm while central compute needs a sub-10 nm process?'},
       {title: 'Bounded latency', question: 'Can the shaper guarantee under 10 µs for brake-by-wire traffic while bulk data shares the port?'},
@@ -419,7 +409,6 @@ export const productPages: ProductPage[] = [
       ['Package', '44 signal pins in a 64-pin package'],
     ],
     designedToward: ['Verified boot', 'Country-of-origin procurement rules'],
-    reconcile: 'SKU-10 postdates Technical Annex v3; this page is written from the October 2026 SKU Blueprint. RTL is feature-complete and every bench and firmware test passes; no silicon or FPGA proof is published yet.',
     questions: [
       {title: 'Keys without OTP', question: 'How are the root key and rollback counter protected on a process that has no OTP or eFuse?'},
       {title: 'Boot time', question: 'What sets the 309 ms from reset to verified firmware, and what would shorten it?'},
@@ -457,7 +446,6 @@ export const productPages: ProductPage[] = [
       ['Records', 'Battery log hash chain anchored in ReRAM'],
     ],
     designedToward: ['AIS-156', 'EU Battery Passport'],
-    reconcile: 'SKU-11 postdates Technical Annex v3; this page is written from the October 2026 SKU Blueprint. It is at block-specification stage with no wafer-run slot assigned, and no state-of-health accuracy on Indian field data is claimed.',
     questions: [
       {title: 'Protection without software', question: 'Which trips stay hardwired, and how fast do they open the contactors with the processor halted?'},
       {title: 'Model accuracy', question: 'How accurate is state-of-health inference on Indian duty cycles: 45 °C ambients, stop-start use and monsoon humidity?'},
@@ -497,7 +485,6 @@ export const productPages: ProductPage[] = [
       ['Memory', 'LPDDR4 32-bit, eMMC or NAND'],
     ],
     designedToward: ['DO-254', 'DGCA type certification path', 'STANAG 4586', 'MIL-STD-810H'],
-    reconcile: 'Technical Annex v3 describes a 130 nm flight-control die at 200 MHz with an optional 28 nm accelerator die. The October 2026 SKU Blueprint supersedes it: D100 is a 28 nm chip (Track B, funded by a separate round once the mature-node chips earn revenue), and the failsafe island is the part that can be built at 130 nm. The failsafe architecture does not establish jamming immunity or certified flight safety.',
     questions: [
       {title: 'Hardware failsafe', question: 'Why is the safe-state logic separate hardware rather than a task in the flight stack, and what does it need to see to act?'},
       {title: 'GPS-denied drift', question: 'Can the 30 Hz pose engine hold under 1% drift per kilometre under jamming, without learned weights?'},

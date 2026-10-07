@@ -325,7 +325,7 @@ export function Overview({
             <p>
               Describe the drive, the requirement that decides the design, and the timing you are
               working to. Ask DeepGrid answers specification questions directly from the
-              whitepaper and technical annex, with the source cited on every answer.
+              whitepaper and SKU Blueprint, with the source cited on every answer.
             </p>
             <button className="primary" onClick={() => navigate('ask')} aria-label="Discuss your application">
               Discuss your application <ArrowUpRight size={18} aria-hidden="true"/>

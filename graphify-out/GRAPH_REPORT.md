@@ -284,7 +284,7 @@ Nodes (7): Pagination(), PaginationContent(), PaginationEllipsis(), PaginationLi
 
 ### Community 42 - "Sovereign Supply & Defence Moats"
 Cohesion: 0.22
-Nodes (9): DeepGrid 10-SKU Sovereign Silicon Portfolio, Chinese Price Crash Stress Test & Stop Rules S1–S4, DAP-2020 Buy (Indian-IDDM) & Make-II Statutory Moat, ₹10 Cr Capital Waterfall & 24-Month Seed Runway, Organic Substrate Multi-Die SiP vs Silicon Interposer, PIL-5 Positive Indigenisation Lists (346 Items), Software-Defined Vehicle (SDV) Reference Zonal Platform, SKU-7 77 GHz 4D MIMO Radar in IHP 130 nm SiGe BiCMOS (+1 more)
+Nodes (9): DeepGrid Sovereign Silicon Portfolio (11 SKUs + D100), Chinese Price Crash Stress Test & Stop Rules S1–S4, DAP-2020 Buy (Indian-IDDM) & Make-II Statutory Moat, ₹10 Cr Capital Waterfall & 24-Month Seed Runway, Organic Substrate Multi-Die SiP vs Silicon Interposer, PIL-5 Positive Indigenisation Lists (346 Items), Software-Defined Vehicle (SDV) Reference Zonal Platform, SKU-7 77 GHz 4D MIMO Radar in IHP 130 nm SiGe BiCMOS (+1 more)
 
 ### Community 43 - "Empty.tsx Empty()"
 Cohesion: 0.29

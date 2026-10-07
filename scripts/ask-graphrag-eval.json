@@ -1,0 +1,25 @@
+{
+  "note": "Graph-guided retrieval eval for Ask DeepGrid. Run by scripts/eval-graphrag.mjs (and npm run build:semantic). Each case states what the evidence must contain; unsupported questions must come back as not established.",
+  "cases": [
+    {"q": "What does SKU-1 replace?", "answerable": true, "section": "SKU-1 ·"},
+    {"q": "Why is the smart-meter SoC SKU-2 built on 130 nm?", "answerable": true, "section": "SKU-2 ·"},
+    {"q": "Which grades does the SKU-3 PMIC come in?", "answerable": true, "section": "SKU-3 ·"},
+    {"q": "How does the SKU-4 lockstep MCU detect a fault?", "answerable": true, "section": "SKU-4 ·"},
+    {"q": "Who buys the SKU-5 interface transceiver?", "answerable": true, "section": "SKU-5 ·"},
+    {"q": "Why is SKU-6 the first chip into military screening?", "answerable": true, "section": "SKU-6 ·"},
+    {"q": "Why does SKU-7 need silicon-germanium for 77 GHz?", "answerable": true, "section": "SKU-7 ·"},
+    {"q": "Which defence programme names the SKU-8 display?", "answerable": true, "section": "SKU-8 ·"},
+    {"q": "What is the status of the SKU-9 zonal gateway?", "answerable": true, "section": "SKU-9 ·"},
+    {"q": "How does SKU-10 DG32-Max boot only signed firmware?", "answerable": true, "section": "SKU-10 ·"},
+    {"q": "Which policy makes the SKU-11 BMS controller necessary?", "answerable": true, "section": "SKU-11 ·"},
+    {"q": "How is the D100 drone chip funded?", "answerable": true, "section": "Track B ·", "quote": "50 Cr"},
+    {"q": "Why can the D100 failsafe island be built at 130 nm?", "answerable": true, "section": "Track B ·"},
+    {"q": "Compare SKU-1 and SKU-4: what does each do?", "answerable": true, "compare": ["SKU-1", "SKU-4"]},
+    {"q": "What is the difference between SKU-10 and SKU-11?", "answerable": true, "compare": ["SKU-10", "SKU-11"]},
+    {"q": "Which chips go on the December 2026 shuttle?", "answerable": true, "quote": "December"},
+    {"q": "Is SKU-9 certified to ISO 26262 ASIL-D?", "limit": "certification"},
+    {"q": "Which football club does DeepGrid sponsor?", "answerable": false},
+    {"q": "What is the weather in Hyderabad today?", "answerable": false},
+    {"q": "How many employees does DeepGrid have in its Tokyo office?", "answerable": false}
+  ]
+}

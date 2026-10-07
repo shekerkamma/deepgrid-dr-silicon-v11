@@ -8970,7 +8970,7 @@
     },
     {
       "id": "deepgrid_10_sku_sovereign_portfolio",
-      "label": "DeepGrid 10-SKU Sovereign Silicon Portfolio",
+      "label": "DeepGrid Sovereign Silicon Portfolio (11 SKUs + D100)",
       "file_type": "concept",
       "source_file": "/home/sheke/deepgrid-dr-site/public/downloads/docs/deepgrid-mature-node-silicon-master-whitepaper-v3.pdf",
       "source_location": "Master Whitepaper v3 · Section 9, p. 30–48",

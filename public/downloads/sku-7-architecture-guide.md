@@ -2,7 +2,7 @@
 
 Deepgrid Semi · 77 GHz MIMO radar · reading guide to the SKU-7 system architecture diagram · October 2026
 
-> Architecture scope, pre-silicon. The diagram is redrawn from the SKU Architecture Compendium, Technical Annex v3, sheet 8. Every value is a design target, not a measurement. Standards appear only as targets the design is developed toward; no certificate exists for any DeepGrid part.
+> Architecture scope, pre-silicon. Every value is a design target from the SKU Blueprint, October 2026, not a measurement. Standards appear only as targets the design is developed toward; no certificate exists for any DeepGrid part.
 
 ## What is SKU-7?
 
@@ -70,10 +70,6 @@ What it does: Cell-averaging CFAR detection, digital-beamforming angle estimatio
 - ④ The IF signals cross the die boundary and four 12-bit converters digitise them for the range FFT.
 - ⑤ The range-Doppler map feeds CFAR detection and angle estimation.
 - ⑥ The target list goes to the ECU over CAN-FD, 100BASE-T1 or MIPI CSI-2.
-
-## Where this differs from the annex sheet
-
-Structure follows the annex figure on sheet 8. Some values on that sheet differ from the product page; where they do, the diagram follows the product page, and anyone opening the sheet will see the other value. The differences: the ECU interfaces (the sheet names CAN-FD and Ethernet; this page states CAN-FD, 100BASE-T1 and MIPI CSI-2) and the converters (drawn with the SiGe receive chain on the sheet; on the CMOS die here).
 
 ## Designed toward
 

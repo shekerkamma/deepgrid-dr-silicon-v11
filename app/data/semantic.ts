@@ -7,6 +7,7 @@
 // Every failure resolves to null rather than throwing (no WebAssembly, a stale index, a network error),
 // and the engine then ranks by TF-IDF exactly as before, so Ask always answers.
 import {semanticRowKey, type SemanticScores} from './graphrag-engine';
+import {asset} from '../routes';
 
 type Meta = {model: string; dtype: string; dims: number; scale: number;
   counts: {nodes: number; chunks: number; themes: number; examples?: number}; rowKeySha256: string; modelSha256: string;
@@ -16,7 +17,9 @@ export type Semantic = {scores: (question: string) => Promise<SemanticScores>};
 
 let loading: Promise<Semantic | null> | null = null;
 
-const siteUrl = (rel: string) => new URL(rel, document.baseURI).href;
+// Resolved against the site base, not the page: from /ask/ a page-relative ./graphrag/ became
+// /ask/graphrag/semantic.json, a 404, and Ask silently stayed on word matching.
+const siteUrl = (rel: string) => new URL(asset(rel.replace(/^\./, '')), location.origin).href;
 
 async function sha256(text: string): Promise<string> {
   const buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(text));

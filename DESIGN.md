@@ -150,7 +150,7 @@ components:
 
 **Creative North Star: "The Datasheet That Argues"**
 
-V12 preserves the latest GitHub v11 visual baseline (`acf337a`): the unified dark theme and existing semiconductor concept hero. The v12 publication is a separate repository and Pages endpoint, with parent-category navigation states and four-width layout regression checks. It does not establish new product evidence. Runtime results are recorded separately.
+V12 preserves the latest GitHub v11 visual baseline (`1e5c338`): the unified dark theme and existing semiconductor concept hero. The v12 publication is a separate repository and Pages endpoint, with parent-category navigation states and four-width layout regression checks. It does not establish new product evidence. Runtime results are recorded separately.
 
 The v11 catalogue leads with DeepGrid visuals, physical system jobs and searchable architectures, on the same ink, copper, Newsreader, Inter and JetBrains Mono system as every other route. The 2026-10-05 unification retired the separate navy, cool paper, white and Manrope layer: it made the homepage and the Products and Technology entry surfaces read as a different site.
 

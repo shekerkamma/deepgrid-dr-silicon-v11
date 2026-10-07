@@ -10,7 +10,7 @@ GitHub Actions builds under the repository base path, runs route, navigation, so
 
 Local build (Node 24): `npm ci --ignore-scripts`, `npm run typecheck`, then `PAGES_BASE=/deepgrid-dr-silicon-v12/ NEXT_PUBLIC_PAGES_BASE=/deepgrid-dr-silicon-v12/ npm run build:pages`. On Windows use the PowerShell environment variable syntax described in `WORKSPACE_MAP.md`.
 
-Built from v11 main at `acf337a9d668d892aa915d0475d5994129b1c104`, preserving its unified dark design and shared navigation fixes. v12 adds parent-menu state on product details and a four-width layout regression gate.
+Built from v11 main at `1e5c338803a9739168a81311daa068e11d3dfa23`, preserving its unified dark design and shared navigation fixes. v12 adds parent-menu state on product details and a four-width layout regression gate.
 
 ## Historical implementation notes
 

@@ -157,7 +157,15 @@ const meta = {
   modelSha256: crypto.createHash('sha256').update(fs.readFileSync(path.join(MODELS_DIR, MODEL, 'onnx/model_quantized.onnx'))).digest('hex'),
 };
 fs.writeFileSync(path.join(OUT_DIR, 'semantic.json'), JSON.stringify(meta, null, 1) + '\n');
+
+// 6. Graph-guided retrieval eval (scripts/ask-graphrag-eval.json) against the index just written.
+const {runGraphEval} = await import('./eval-graphrag.mjs');
+const g = await runGraphEval({extract, quiet: true});
+if (g.failures.length) throw new Error(`graphrag eval: ${g.passed}/${g.cases} cases pass. Failed:\n  ${g.failures.join('\n  ')}`);
+meta.graphEval = {cases: g.cases, passed: g.passed, graphMoved: g.graphMoved, codeSha256: g.codeSha256};
+fs.writeFileSync(path.join(OUT_DIR, 'semantic.json'), JSON.stringify(meta, null, 1) + '\n');
 console.log(`semantic index: ${vectors.length} rows x ${dims} dims (${meta.counts.nodes} nodes, ${meta.counts.chunks} chunks, ` +
   `${meta.counts.themes} themes, ${X} example questions), ${(bin.length / 1024).toFixed(0)} KB, int8 error <= ${worst.toFixed(4)}, ${((Date.now() - t0) / 1000).toFixed(1)} s`);
 console.log(`routing eval: ${pick.r.right}/${positives} reach their curated answer, 0 wrong, 0/${negatives} forced, at min ${meta.themeMin} / gap ${meta.themeGap}` +
   (pick.r.missed.length ? `\n  missed: ${pick.r.missed.join('\n  missed: ')}` : ''));
+console.log(`graphrag eval: ${g.passed}/${g.cases} cases pass with embeddings and with word matching; graph spreading changes the evidence in ${g.graphMoved}/${g.cases}`);

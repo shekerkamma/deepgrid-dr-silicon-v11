@@ -1,16 +1,16 @@
-// True GraphRAG Engine for DeepGrid Silicon Intelligence
-// Designed for CTOs, VPs of Engineering, Automotive & Defence Procurement Executives.
-// Combines:
-// 1. Graph Topology: 318 nodes and 430 typed edges from Graphify AST + Domain Knowledge Graph
-// 2. Semantic Entry Point: In-browser sparse-dense vector cosine similarity over 4,418 vocabulary terms
-// 3. Relational Traversal: Dynamic K-hop BFS walking across typed links (contains, imports, depends_on, implements, accelerates)
-// 4. Grounded Synthesis: Grounded in 177 primary PDF pages with exact page citations and downloadable assets
-// 100% Deterministic, $0 Runtime Cost, Fully Static Compatible.
+// Ask DeepGrid's GraphRAG engine.
+// Retrieval is graph-guided (./graph-retrieval.ts): the question seeds entities in a knowledge graph built
+// from the source documents and the curated catalog, personalised PageRank spreads over confidence-weighted
+// edges, and passages are ranked by their semantic match plus the graph score of the entities they mention.
+// Every answer is a quoted sentence from a cited passage, numbered evidence, and what the sources do not
+// establish. Curated themes answer the questions they were written for, with the same evidence attached.
+// Deterministic and static: no server, no model call at answer time beyond embedding the question.
 
 import unifiedIndexRaw from './graphrag-unified-index.json';
 import {THEME_EXAMPLES} from './theme-examples';
 import { deepGridCatalog, DeepGridItem, GraphNode } from './deepgrid-knowledge';
 import { groundedDocuments, GroundedDoc } from '../documents-data';
+import { retrieve, type Retrieval } from './graph-retrieval';
 
 export interface TraversedEdge {
   fromNode: GraphNode;
@@ -76,6 +76,8 @@ export interface GraphRAGResult {
     label: string;
     query: string;
   }[];
+  /** Graph-guided evidence: the direct answer, numbered passages, limits and the retrieval trace. */
+  retrieval: Retrieval;
 }
 
 interface UnifiedNode {
@@ -87,6 +89,7 @@ interface UnifiedNode {
   communityName: string;
   description: string;
   origin: string;
+  aliases?: string[];
   vector: Record<string, number>;
 }
 
@@ -95,6 +98,7 @@ interface UnifiedEdge {
   to: string;
   label: string;
   weight: number;
+  confidence?: string;
 }
 
 interface UnifiedChunk {
@@ -107,6 +111,7 @@ interface UnifiedChunk {
   pageLabel: string;
   section: string;
   text: string;
+  entities?: number[];
   vector: Record<string, number>;
 }
 
@@ -216,7 +221,7 @@ export const executiveThemes: ExecutiveTheme[] = [
     explanation: [
       'The Physical & Memory Challenge: Broken rotor bar faults produce current signature sidebands at fb = f1(1 ± 2s), where s is motor slip (typically 1% to 5%). Separating these narrow peaks (0.5–3 Hz from the 50 Hz fundamental) requires long continuous sampling windows of 30 to 100 seconds at 0.01 to 0.05 Hz bin resolution. Performing an unconstrained full-spectrum 2^20-point FFT on this window would require 8 MB of RAM—demanding a costly external DRAM chip and power-hungry memory controller.',
       'The Goertzel Solution on a 50 MHz Core: Rather than computing thousands of unneeded spectral bins across the full bandwidth, DG32-LITE implements second-order IIR Goertzel recurrence filters targeted exclusively at the exact 8 predicted sideband harmonic frequencies. The entire 8-bin calculation consumes only 6,144 clock cycles (0.12 ms on the 50 MHz core) and executes entirely inside internal SRAM, preserving 82% CPU execution headroom for standard motor control.',
-      'Dynamic Range & AFE Realities: ISO 20958 establishes that broken rotor bar sidebands sit 40 to 60 dBc below the 50 Hz fundamental. Because standard 8-bit ADCs provide only 42 dB of usable dynamic range under ISO 13373-2 (D = 6(N-1) dB), these sidebands would disappear beneath the quantization noise floor. DeepGrid pairs the Goertzel algorithm with 12-to-16-bit analog front ends or analog fundamental notch filtering, guaranteeing reliable detection before bar breakage destroys the stator.'
+      'Dynamic Range & AFE Realities: ISO 20958 establishes that broken rotor bar sidebands sit 40 to 60 dBc below the 50 Hz fundamental. Because standard 8-bit ADCs provide only 42 dB of usable dynamic range under ISO 13373-2 (D = 6(N-1) dB), these sidebands would disappear beneath the quantization noise floor. DeepGrid pairs the Goertzel algorithm with 12-to-16-bit analog front ends or analog fundamental notch filtering, so a cracked bar can be flagged before it progresses to stator damage.'
     ],
     facts: [
       'Execution Latency: 6,144 clock cycles (0.12 ms) across all 8 physical sideband bins.',
@@ -396,7 +401,7 @@ export const executiveThemes: ExecutiveTheme[] = [
     keywords: ['dshot', 'dgrid_dshot_rx', 'gcr', 'erpm', 'telemetry reply', 'bidirectional telemetry', 'esc'],
     title: 'Hardware DShot Receive (dgrid_dshot_rx) & Zero-Jitter Motor Telemetry',
     tag: 'HARDWARE PROTOCOLS & MOTOR TELEMETRY (DGRID_DSHOT_RX)',
-    lead: 'The hardwired dgrid_dshot_rx block decodes DShot commands and generates bidirectional telemetry replies entirely in silicon, eliminating all CPU bit-banging and guaranteeing sub-microsecond response latency.',
+    lead: 'The hardwired dgrid_dshot_rx block decodes DShot commands and generates bidirectional telemetry replies entirely in silicon, removing CPU bit-banging and keeping response latency under a microsecond by design.',
     explanation: [
       'The Firmware Overhead Problem: In high-performance tactical UAVs and quadcopters, flight controllers communicate with electronic speed controllers (ESCs) via bidirectional DShot digital protocols (DShot300/600/1200). Decoding high-speed DShot bitstreams in firmware consumes 40%+ of CPU cycles and introduces jitter whenever interrupt handlers collide with motor PWM timing.',
       'Pure Hardware GCR Decoding: DeepGrid integrates a dedicated hardware peripheral block (dgrid_dshot_rx) that autonomously samples incoming frames, decodes GCR 4b/5b transition encoding, performs hardware 16-bit CRC validation, and formats bidirectional telemetry packets (eRPM, voltage, current, temperature) without CPU intervention.',
@@ -426,10 +431,10 @@ export const executiveThemes: ExecutiveTheme[] = [
     keywords: ['50 mhz', 'frequency', 'clock', 'fmax', 'timing closure', 'why 50 mhz'],
     title: '50 MHz Operating Frequency: Lockstep Margin & Physical Timing Closure',
     tag: 'PHYSICAL SILICON & TIMING CLOSURE · 50 MHZ CLOCK',
-    lead: 'DG32 locks its primary control clock at exactly 50 MHz (20.0 ns cycle) to guarantee absolute static timing closure across all PVT corners (-40 °C to +125 °C) while running dual RV32IM cores in cycle-accurate hardware lockstep.',
+    lead: 'DG32 locks its primary control clock at exactly 50 MHz (20.0 ns cycle) to close static timing with margin across PVT corners (-40 °C to +125 °C) while running dual RV32IM cores in cycle-accurate hardware lockstep.',
     explanation: [
       'The Physical Fmax Ceiling: While standard-cell digital libraries on SkyWater 130 nm CMOS allow single-core unconstrained synthesis up to ~75 MHz, running a cycle-accurate lockstep shadow core with bus comparators and fault latches establishes a practical physical Fmax of 55–62 MHz under worst-case industrial thermal and voltage conditions.',
-      'Guaranteed 15–20% Static Timing Margin: Rather than running silicon at a marginal 60 MHz that risks clock skew and compromises noise margins under extreme motor EMI, DeepGrid fixes the system clock at 50 MHz. This guarantees a deterministic 15–20% static timing margin, ensuring that comparator checks and register commits never violate setup or hold times.',
+      'Guaranteed 15–20% Static Timing Margin: Rather than running silicon at a marginal 60 MHz that risks clock skew and compromises noise margins under extreme motor EMI, DeepGrid fixes the system clock at 50 MHz. That leaves a 15–20% static timing margin in post-route analysis, so comparator checks and register commits meet setup and hold with room to spare.',
       'Hardwired Loop Headroom: Because all inner-loop motor trigonometry (Park/Clarke transforms, CORDIC rotation, and space-vector PWM) is hardwired into silicon logic gates, the full control loop executes in just 300 cycles (6.0 µs). At standard 20 kHz PWM (50 µs period), the processor consumes only 12% of available cycles, leaving 88% free execution headroom without requiring a higher, power-hungry core clock.'
     ],
     facts: [
@@ -456,7 +461,7 @@ export const executiveThemes: ExecutiveTheme[] = [
     keywords: ['compare dg32', 'stm32g0', 'stm32', 'dg32 vs stm32', 'procurement benchmark', 'scorecard'],
     // Rewritten 2026-09-24 (docs/brainstorm-visual-audit.md, V2b). The previous answer priced DG32 at
     // "$3.10" against "$6.50-$9.00" drive BOMs, claimed "<40 ns" fault shutoff and "guaranteed sovereign
-    // supply", and cited an Annex "Section 4: Competitive Benchmarks" that does not exist. None of those
+    // supply", and cited a "Section 4: Competitive Benchmarks" that does not exist. None of those
     // figures is in a source, and the site claims no price against any competitor. Every line below is
     // from the DG32-LITE Architecture Guide, "Position against the incumbent" and "Component: Safety core".
     title: 'DG32 vs. STM32G0: Where Each Leads, and Why',
@@ -512,7 +517,7 @@ export const executiveThemes: ExecutiveTheme[] = [
     specPath: '/downloads/docs/deepgrid-mature-silicon-architecture.md',
     refLinks: [
       { label: 'Review Financial Model in Detail', hash: 'overview', description: 'Inspect the 5-year financial projections and unit economics breakdown.' },
-      { label: 'Sovereign 10-SKU Portfolio Horizon', hash: 'overview', description: 'Explore the 10-SKU roadmap addressing India’s $9B import deficit.' }
+      { label: 'SKU Portfolio: eleven SKUs and D100', hash: 'overview', description: 'Explore the eleven-SKU portfolio and the D100 drone SoC addressing India’s $9B import deficit.' }
     ]
   },
 
@@ -523,7 +528,7 @@ export const executiveThemes: ExecutiveTheme[] = [
     tag: 'CAPITAL GOVERNANCE & CHARLIE MUNGER RISK AUDIT',
     lead: 'DeepGrid applies Charlie Munger\'s inversion framework to model a 30%–40% Chinese silicon price dumping scenario. Even under severe commercial margin compression, shielded defence revenue preserves FY31 sales at ₹750 Cr, governed by 4 strict operational stop rules.',
     explanation: [
-      'The Inversion Stress Test: In a catastrophic scenario where Chinese foundries aggressively dump motor-control silicon below cost, DeepGrid models severe commercial price drops: smart meters drop -30% (₹480 Cr → ₹340 Cr) and commercial motor drives drop -40% (₹220 Cr → ₹130 Cr). However, screened defence silicon (₹200 Cr) remains 100% immune due to statutory PIL-5 import prohibitions, preserving total FY31 revenue at ₹750 Cr and sustaining healthy 60%+ gross margins.',
+      'The Inversion Stress Test: In a catastrophic scenario where Chinese foundries aggressively dump motor-control silicon below cost, DeepGrid models severe commercial price drops: smart meters drop -30% (₹480 Cr → ₹340 Cr) and commercial motor drives drop -40% (₹220 Cr → ₹130 Cr). However, screened defence silicon (₹200 Cr) is unaffected because PIL-5 bans the imports it competes with, which holds total FY31 revenue at ₹750 Cr in the whitepaper’s own stress case.',
       'Binding Operational Stop Rules S1–S4: To prevent capital destruction, management operates under 4 pre-committed stop rules: (S1) If Ripple has not signed by the Chip 2 factory cutoff, Chip 2 waits one cycle and funds reallocate to Chips 1 and 3; (S2) If Chip 6 fails military screening twice, forward defence revenue is pushed out 12 months within 30 days; (S3) In FY29, if delivered Chinese prices fall below manufacturing cost, exit ceiling fan drivers while keeping EV motors and proprietary modules; (S4) If SCL Mohali slips >2 cycles, execute production exclusively at SkyWater and IHP.',
       'Sovereign Insulation: By designing silicon for sockets where foreign components are legally banned (military LRUs, tactical UAVs, critical infrastructure), DeepGrid decouples company survival from global semiconductor price wars.'
     ],
@@ -686,7 +691,7 @@ export function semanticRowKey(): string {
     executiveThemes.map(t => (THEME_EXAMPLES[t.title] || []).join('\n')).join('\n~\n')].join('\n--\n');
 }
 
-export function executeGraphRAG(rawQuery: string, sem?: SemanticScores | null): GraphRAGResult {
+export function executeGraphRAG(rawQuery: string, sem?: SemanticScores | null, opts: {graph?: boolean} = {}): GraphRAGResult {
   const q = rawQuery.trim().toLowerCase();
   const qVec = vectorizeQuery(q);
   const useSem = !!sem && sem.nodes.length === graphIndex.nodes.length && sem.chunks.length === graphIndex.chunks.length
@@ -720,116 +725,53 @@ export function executeGraphRAG(rawQuery: string, sem?: SemanticScores | null): 
     }
   }
 
-  // 2. Semantic Entry Point Resolution over all 318 Graph Nodes
-  const scoredNodes: { node: UnifiedNode; score: number }[] = [];
-  graphIndex.nodes.forEach((node, i) => {
-    const score = useSem ? Math.max(0, sem!.nodes[i]) : dotProduct(qVec, node.vector);
-    if (score > 0) {
-      // Prioritize semantic specification & architecture nodes over low-level AST code tokens
-      const isCodeAst = node.category === 'code' || node.name.endsWith('()') || node.id.startsWith('source_');
-      const adjustedScore = isCodeAst ? score * 0.25 : score * 1.5;
-      scoredNodes.push({ node, score: adjustedScore });
-    }
+  // 2. Graph-guided retrieval: seeds, confidence-weighted spread, passages chosen through the graph.
+  const retrieval = retrieve(rawQuery, graphIndex, {
+    nodeScore: i => useSem ? sem!.nodes[i] : dotProduct(qVec, graphIndex.nodes[i].vector),
+    chunkScore: i => useSem ? sem!.chunks[i] : dotProduct(qVec, graphIndex.chunks[i].vector),
+    semantic: useSem,
+    useGraph: opts.graph !== false,
   });
+  const nodeByName = new Map(graphIndex.nodes.map(n => [n.name, n]));
+  const primarySeed = (retrieval.seeds[0] && nodeByName.get(retrieval.seeds[0].name)) || graphIndex.nodes[0];
+  const asGraphNode = (n: UnifiedNode): GraphNode => ({id: n.id, name: n.name, shortName: n.shortName || n.name.slice(0, 24),
+    category: (n.category as GraphNode['category']) || 'architecture', x: 50, y: 50, description: n.description});
+  const seedEntities: GraphNode[] = retrieval.seeds.slice(0, 3).map(sd => nodeByName.get(sd.name)).filter(Boolean).map(n => asGraphNode(n!));
 
-  scoredNodes.sort((a, b) => b.score - a.score);
-  const primarySeed = scoredNodes.length > 0 ? scoredNodes[0].node : graphIndex.nodes[0];
-  const seedEntities: GraphNode[] = scoredNodes.slice(0, 3).map(s => ({
-    id: s.node.id,
-    name: s.node.name,
-    shortName: s.node.shortName || s.node.name.slice(0, 24),
-    category: (s.node.category as any) || 'architecture',
-    x: 50,
-    y: 50,
-    description: s.node.description
-  }));
-
-  // 3. Relational Graph Traversal from Seed Node
-  const traversedEdges: TraversedEdge[] = [];
-  const traversedSteps: { source: string; relation: string; target: string }[] = [];
-  const visitedEdgePairs = new Set<string>();
-  const seedId = primarySeed.id;
-
-  graphIndex.edges.forEach(edge => {
-    if (edge.from === seedId || edge.to === seedId) {
-      const neighborId = edge.from === seedId ? edge.to : edge.from;
-      const neighbor = nodeById.get(neighborId);
-      const pairKey = `${edge.from}->${edge.to}`;
-
-      if (neighbor && !visitedEdgePairs.has(pairKey)) {
-        visitedEdgePairs.add(pairKey);
-        const sourceName = edge.from === seedId ? primarySeed.name : neighbor.name;
-        const targetName = edge.to === seedId ? primarySeed.name : neighbor.name;
-
-        traversedSteps.push({
-          source: sourceName,
-          relation: edge.label,
-          target: targetName
-        });
-
-        traversedEdges.push({
-          fromNode: {
-            id: edge.from,
-            name: sourceName,
-            shortName: sourceName.slice(0, 20),
-            category: 'architecture',
-            x: 40,
-            y: 40,
-            description: ''
-          },
-          toNode: {
-            id: edge.to,
-            name: targetName,
-            shortName: targetName.slice(0, 20),
-            category: 'architecture',
-            x: 60,
-            y: 60,
-            description: ''
-          },
-          relationLabel: edge.label
-        });
-      }
-    }
+  // 3. The relations that carried the evidence, for the trace.
+  const traversedSteps = retrieval.hops.map(h => ({source: h.from, relation: h.relation, target: h.to}));
+  const traversedEdges: TraversedEdge[] = retrieval.hops.map(h => {
+    const a = nodeByName.get(h.from), b = nodeByName.get(h.to);
+    return {fromNode: asGraphNode(a || primarySeed), toNode: asGraphNode(b || primarySeed), relationLabel: h.relation};
   });
+  const graphPathSummary = traversedSteps.slice(0, 3).map(st => `[${st.source}] ──(${st.relation})──> [${st.target}]`).join('  ·  ');
 
-  if (traversedSteps.length === 0) {
-    traversedSteps.push({
-      source: primarySeed.name,
-      relation: 'belongs_to',
-      target: primarySeed.communityName
-    });
-  }
+  // 4. The passage the answer is quoted from.
+  const lead = retrieval.evidence[0]?.chunk ?? graphIndex.chunks[0];
+  const leadPage = lead.pageLabel;
 
-  const graphPathSummary = traversedSteps.slice(0, 3)
-    .map(s => `[${s.source}] ──(${s.relation})──> [${s.target}]`)
-    .join('  ·  ');
+  // 5. Catalog item, only when the question is about it.
+  const namedIds = new Set(retrieval.seeds.filter(sd => sd.why === 'named in the question').map(sd => nodeByName.get(sd.name)?.id));
+  const matchedItem = deepGridCatalog.find(c => namedIds.has(c.id)) || deepGridCatalog.find(c => c.id === primarySeed.id) || deepGridCatalog[0];
+  const itemIsAsked = namedIds.has(matchedItem.id) || matchedItem.id === primarySeed.id;
+  const specPoints = itemIsAsked ? [
+    matchedItem.nodeFoundry && `Process: ${matchedItem.nodeFoundry}`,
+    matchedItem.voltageRail && `Electrical: ${matchedItem.voltageRail}`,
+    matchedItem.standards && `Designed toward (targets, not certificates): ${matchedItem.standards}`,
+    `Source: ${matchedItem.citation}`,
+  ].filter(Boolean) as string[] : [];
 
-  // 4. Grounded Document Chunk Retrieval
-  // Source priority: the October 2026 SKU Blueprint (DOC #7) supersedes Technical Annex v3 (DOC #2) for SKU
-  // specifications and status, so when both carry a matching passage the Blueprint's is the one quoted.
-  const SOURCE_WEIGHT: Record<string, number> = {'07': 1.15, '02': 0.85};
-  const scoredChunks: { chunk: UnifiedChunk; score: number }[] = [];
-  graphIndex.chunks.forEach((chunk, i) => {
-    const raw = useSem ? Math.max(0, sem!.chunks[i]) : dotProduct(qVec, chunk.vector);
-    const score = raw * (SOURCE_WEIGHT[chunk.docNum] ?? 1);
-    if (score > 0) {
-      scoredChunks.push({ chunk, score });
-    }
-  });
+  const relatedTopics = [
+    { label: 'SKU-10: what it replaces', query: 'What does SKU-10 DG32-Max replace, and how does it boot only signed firmware?' },
+    { label: 'D100 failsafe island', query: 'How does the D100 failsafe island work, and why can it be built at 130 nm?' },
+    { label: 'Compare SKU-1 and SKU-4', query: 'Compare SKU-1 and SKU-4: what does each do?' },
+    { label: 'December 2026 shuttle', query: 'Which chips go on the December 2026 shuttle?' },
+    { label: '39-cycle fault trip', query: 'How does the 39-cycle hardware lockstep trip work?' },
+  ].filter(t => t.query.toLowerCase() !== q);
 
-  scoredChunks.sort((a, b) => b.score - a.score);
-  const bestChunk = scoredChunks.length > 0 ? scoredChunks[0].chunk : graphIndex.chunks[0];
-  const cleanedPdfText = cleanExtractedText(bestChunk.text);
-
-  // 5. Match Catalog Item
-  const matchedItem = deepGridCatalog.find(c => c.id === primarySeed.id) ||
-                      deepGridCatalog.find(c => primarySeed.description.toLowerCase().includes(c.id.toLowerCase())) ||
-                      deepGridCatalog[0];
-
-  // 6. SYNTHESIS RESOLUTION: Prefer Rich Executive Theme when matched
+  // 6. A curated theme answers the question it was written for; the graph's evidence is attached to it.
   if (matchedTheme && maxThemeScore >= 15) {
-    const primaryDoc = groundedDocuments.find(d => d.docNum === matchedTheme!.docNum) || groundedDocuments[0];
-
+    const primaryDoc = groundedDocuments.find(d => d.docNum === matchedTheme!.docNum) || groundedDocuments.find(d => d.id === 'doc5')!;
     return {
       query: rawQuery,
       domainTag: matchedTheme.tag,
@@ -837,10 +779,7 @@ export function executeGraphRAG(rawQuery: string, sem?: SemanticScores | null): 
       communityName: primarySeed.communityName,
       seedEntities,
       traversedEdges,
-      graphPath: {
-        summary: graphPathSummary,
-        steps: traversedSteps.slice(0, 3)
-      },
+      graphPath: {summary: graphPathSummary, steps: traversedSteps.slice(0, 3)},
       matchedItem,
       matchedDoc: primaryDoc,
       answer: matchedTheme.lead,
@@ -849,110 +788,39 @@ export function executeGraphRAG(rawQuery: string, sem?: SemanticScores | null): 
       visualEvidence: matchedTheme.visualEvidence,
       referenceLinks: matchedTheme.refLinks,
       citation: {
-        documentTitle: matchedTheme.docTitle,
-        documentNum: matchedTheme.docNum,
-        section: matchedTheme.section,
-        page: matchedTheme.page,
-        pdfPath: matchedTheme.pdfPath,
-        pdfSize: matchedTheme.pdfSize,
-        specPath: matchedTheme.specPath
+        documentTitle: matchedTheme.docTitle, documentNum: matchedTheme.docNum, section: matchedTheme.section,
+        page: matchedTheme.page, pdfPath: matchedTheme.pdfPath, pdfSize: matchedTheme.pdfSize, specPath: matchedTheme.specPath,
       },
       technicalDetails: {
-        summary: `Silicon Specifications for ${matchedTheme.title}:`,
-        specPoints: [
-          `Document Classification: ${matchedTheme.docTitle} (${matchedTheme.section})`,
-          `Fabrication Node: ${matchedItem.nodeFoundry || 'SkyWater 130 nm CMOS / SCL Mohali 180 nm BCD'}`,
-          `Safety Standard: ${matchedItem.standards || 'AEC-Q100 Grade 1, ISO 26262 ASIL-D, DAP-2020 Make-II'}`,
-          `Verified Evidence: Grounded in ${matchedTheme.docTitle} · ${matchedTheme.page}`
-        ],
-        deepLink: {
-          label: 'Inspect Architecture',
-          hash: 'architecture',
-          context: 'Review cycle-by-cycle comparator divergence and safe-state latching.'
-        }
+        summary: `Where this answer comes from: ${matchedTheme.docTitle}`,
+        specPoints: [`${matchedTheme.docTitle}, ${matchedTheme.section}, ${matchedTheme.page}`, ...specPoints],
+        deepLink: {label: 'Open the evidence page', hash: 'evidence', context: 'How every figure on this site was obtained, and what is not claimed.'},
       },
-      relatedTopics: [
-        { label: '50 MHz Operating Frequency & Fmax Timing', query: 'Why does DG32 run at 50 MHz?' },
-        { label: '39-Cycle Hardware Fault Trip & Field Safety', query: 'How does 39-cycle hardware lockstep protect against recalls?' },
-        { label: 'BOM Unit Cost & Sovereign Supply Continuity', query: 'What makes DeepGrid silicon immune to supply chain disruption?' },
-        { label: '100 kHz High-Speed Motor Control Headroom', query: 'What is the loop budget and timing margin at 100 kHz?' },
-        { label: 'DG32-2DOM Neural Co-Processor Architecture', query: 'How does DG32-2DOM run bearing diagnostics without stalling the motor?' }
-      ].filter(t => t.query.toLowerCase() !== q)
+      relatedTopics,
+      retrieval,
     };
   }
 
-  // Fallback: Rich Catalog Item or Free-Form Synthesis
-  const communityName = primarySeed.communityName || 'Silicon Architecture & Systems';
-  let domainTag = communityName.toUpperCase();
-  if (communityName.includes('AI') || communityName.includes('Use Cases')) {
-    domainTag = 'EDGE AI & PREDICTIVE DIAGNOSTICS · ARCHITECTURAL PROFILE';
-  } else if (communityName.includes('Motor Control') || communityName.includes('Power Stage')) {
-    domainTag = 'DETERMINISTIC MOTION & MOTOR CONTROL · ARCHITECTURAL PROFILE';
-  } else if (communityName.includes('Safety') || communityName.includes('Lockstep')) {
-    domainTag = 'FUNCTIONAL SAFETY & ASIL-D · FAULT ISOLATION';
-  } else if (communityName.includes('Defence') || communityName.includes('Moats')) {
-    domainTag = 'STATUTORY DEFENCE MOATS & SOVEREIGN SUPPLY · DAP-2020';
-  } else if (communityName.includes('Economics') || communityName.includes('Foundry')) {
-    domainTag = 'MATURE-NODE UNIT ECONOMICS & SUPPLY CONTINUITY';
-  }
+  // 7. Everything else is answered from the evidence, or says it is not established.
+  const communityName = primarySeed.communityName || 'DeepGrid documents';
+  const named = retrieval.seeds.find(sd => sd.why === 'named in the question');
+  const contextualTitle = retrieval.comparison ? `Comparing ${retrieval.comparison.join(' and ')}`
+    : named ? named.name : (retrieval.answerable ? 'What the sources say' : 'Not established by the sources');
+  const domainTag = retrieval.answerable ? `GRAPH-GUIDED ANSWER · ${communityName.toUpperCase()}` : 'NOT ESTABLISHED · CLOSEST MATERIAL';
+  const primaryDoc = groundedDocuments.find(d => d.title.toLowerCase().startsWith(lead.docTitle.toLowerCase().split(' (')[0]))
+    || groundedDocuments.find(d => d.pdfFile.endsWith(lead.pdfPath.split('/').pop() || '')) || groundedDocuments.find(d => d.id === 'doc5')!;
 
-  let contextualTitle = primarySeed.name;
-  let answer = '';
-  let explanation: string[] = [];
-  let keyBusinessFacts: string[] = [];
-
-  if (matchedItem && matchedItem.id === primarySeed.id) {
-    contextualTitle = matchedItem.name;
-    answer = `${matchedItem.summary} Manufactured on mature planar nodes, it combines deterministic hardware execution with predictable multi-year supply.`;
-    
-    explanation = [
-      `${matchedItem.name} addresses critical automotive and industrial drive requirements: ${matchedItem.tagline}. By hardwiring critical control functions directly into silicon logic, it eliminates firmware timing jitter and protects power switches from transient faults.`,
-      `System Topology & Hardware Interfaces: The architecture interfaces seamlessly with connected platform blocks (${traversedSteps.slice(0, 3).map(s => `[${s.target}] via ${s.relation}`).join(', ')}). Fabricated on ${matchedItem.nodeFoundry || 'SkyWater 130 nm / SCL Mohali 180 nm'}, it delivers robust electrical tolerances across automotive temperature corners (-40 °C to +125 °C AEC-Q100 Grade 1 target).`,
-      `Operational & Grounded Compliance: Certified against ${matchedItem.standards || 'ISO 26262 ASIL-D and DAP-2020 Make-II'}, this configuration guarantees sovereign domestic procurement priority and eliminates external discrete mathematical co-processors.`
-    ];
-    keyBusinessFacts = matchedItem.keyFacts.slice(0, 4);
-  } else {
-    contextualTitle = primarySeed.name.length > 55 ? primarySeed.name.slice(0, 52) + '...' : primarySeed.name;
-    answer = `Grounded in ${bestChunk.docTitle}: ${cleanedPdfText.slice(0, 240)}... DeepGrid silicon hardwires this functionality into mature-node silicon to guarantee deterministic execution and predictable supply.`;
-    
-    explanation = [
-      `Architectural Overview: ${primarySeed.name} is a key functional component of the ${communityName} subsystem. ${primarySeed.description}`,
-      `Inter-Block Connectivity: Within the DeepGrid system hierarchy, this block establishes verified hardware links (${traversedSteps.slice(0, 3).map(s => `[${s.source}] ──(${s.relation})──> [${s.target}]`).join('; ')}), guaranteeing isolated execution domains and cycle-accurate predictability.`,
-      `Specification & Grounded Verification: As documented in ${bestChunk.docTitle} (${bestChunk.section}, ${bestChunk.pageLabel}): "${cleanedPdfText.slice(0, 420)}..."`
-    ];
-    keyBusinessFacts = [
-      `Functional Subsystem: ${primarySeed.name} (${communityName})`,
-      `Verified Specification: ${bestChunk.docTitle} · ${bestChunk.pageLabel} (${bestChunk.pdfSize})`,
-      `Silicon Process: 130nm CMOS / 180nm BCD · AEC-Q100 Grade 1 (-40 °C to +125 °C)`,
-      `Safety Classification: ASIL-D ready hardware supervisor with autonomous trip latch`
-    ];
-  }
-
-  const primaryDoc = groundedDocuments.find(d => d.title.toLowerCase().includes(bestChunk.docTitle.toLowerCase())) ||
-                     groundedDocuments[0];
-
-  const referenceLinks = traversedSteps.slice(0, 3).map(s => ({
-    label: `Inspect ${s.target.slice(0, 28)}`,
-    hash: 'architecture',
-    description: `Relational link: [${s.source}] ──(${s.relation})──> [${s.target}]`
-  }));
-
-  // A diagram only for its own chip. Keyword rules that attached simulator screenshots and a rendered die to unrelated
-  // questions were removed: every caption here is read off the image itself (knowledge/image-descriptions.json).
+  // A diagram only for its own chip; every caption is read off the image itself (knowledge/image-descriptions.json).
   let fallbackVisual: VisualEvidence | undefined;
   if (/2dom|dual[- ]domain|attention engine|int8|clock[- ]domain/.test(q)) {
     fallbackVisual = {
-      id: 'visual_dg32-2dom-architecture',
-      title: 'DG32-2DOM system architecture',
-      type: 'ARCHITECTURE DIAGRAM',
+      id: 'visual_dg32-2dom-architecture', title: 'DG32-2DOM system architecture', type: 'ARCHITECTURE DIAGRAM',
       filePath: 'diagrams/dg32-2dom-architecture.svg',
       caption: 'Block diagram of DG32-2DOM: a 50 MHz control domain, identical to DG32-LITE, bridged to a 114 MHz compute domain that holds the INT8 attention engine.'
     };
-  } else if (/dg32|lockstep|comparator|fault_n|fault injection|block diagram/.test(q)) {
+  } else if (/dg32-lite|lockstep|comparator|fault_n|fault injection/.test(q)) {
     fallbackVisual = {
-      id: 'visual_dg32-lite-architecture',
-      title: 'DG32-LITE system architecture',
-      type: 'ARCHITECTURE DIAGRAM',
+      id: 'visual_dg32-lite-architecture', title: 'DG32-LITE system architecture', type: 'ARCHITECTURE DIAGRAM',
       filePath: 'diagrams/dg32-lite-architecture.svg',
       caption: 'Block diagram of DG32-LITE: safety core, memory and boot, supervision, motor drive, sensing and math, and connectivity on one 50 MHz clock domain, joined by an on-chip bus.'
     };
@@ -965,46 +833,24 @@ export function executeGraphRAG(rawQuery: string, sem?: SemanticScores | null): 
     communityName,
     seedEntities,
     traversedEdges,
-    graphPath: {
-      summary: graphPathSummary,
-      steps: traversedSteps.slice(0, 3)
-    },
+    graphPath: {summary: graphPathSummary, steps: traversedSteps.slice(0, 3)},
     matchedItem,
     matchedDoc: primaryDoc,
-    answer,
-    explanation,
-    keyBusinessFacts,
+    answer: retrieval.bluf,
+    explanation: [],
+    keyBusinessFacts: itemIsAsked && retrieval.answerable ? matchedItem.keyFacts.slice(0, 4) : [],
     visualEvidence: fallbackVisual,
-    referenceLinks,
+    referenceLinks: [],
     citation: {
-      documentTitle: bestChunk.docTitle,
-      documentNum: bestChunk.docNum,
-      section: bestChunk.section,
-      page: bestChunk.pageLabel,
-      pdfPath: bestChunk.pdfPath,
-      pdfSize: bestChunk.pdfSize,
-      specPath: bestChunk.specPath
+      documentTitle: lead.docTitle, documentNum: lead.docNum, section: lead.section, page: leadPage,
+      pdfPath: lead.pdfPath, pdfSize: lead.pdfSize, specPath: lead.specPath,
     },
     technicalDetails: {
-      summary: `Silicon Specifications for ${primarySeed.name}:`,
-      specPoints: [
-        `Fabrication Node: ${matchedItem.nodeFoundry || 'SkyWater 130 nm CMOS / SCL Mohali 180 nm BCD'}`,
-        `Supply Voltage Rails: ${matchedItem.voltageRail || '1.8V Core / 3.3V I/O'}`,
-        `Safety Standard: ${matchedItem.standards || 'AEC-Q100 Grade 1, ISO 26262 ASIL-D, DAP-2020 Make-II'}`,
-        `Physical Verification: Grounded in ${bestChunk.docTitle} (${bestChunk.pageLabel})`
-      ],
-      deepLink: {
-        label: 'Inspect Subsystem Architecture',
-        hash: 'architecture',
-        context: 'Review cycle-by-cycle comparator divergence and safe-state latching.'
-      }
+      summary: itemIsAsked ? `${matchedItem.name}: catalog entry` : 'Where this answer comes from',
+      specPoints: specPoints.length ? specPoints : [`${lead.docTitle}, ${lead.section}, ${leadPage}`],
+      deepLink: {label: 'Open the evidence page', hash: 'evidence', context: 'How every figure on this site was obtained, and what is not claimed.'},
     },
-    relatedTopics: [
-      { label: '50 MHz Operating Frequency & Fmax Timing', query: 'Why does DG32 run at 50 MHz?' },
-      { label: '39-Cycle Hardware Fault Trip & Field Safety', query: 'How does 39-cycle hardware lockstep protect against recalls?' },
-      { label: 'BOM Unit Cost & Sovereign Supply Continuity', query: 'What makes DeepGrid silicon immune to supply chain disruption?' },
-      { label: '100 kHz High-Speed Motor Control Headroom', query: 'What is the loop budget and timing margin at 100 kHz?' },
-      { label: 'DG32-2DOM Neural Co-Processor Architecture', query: 'How does DG32-2DOM run bearing diagnostics without stalling the motor?' }
-    ].filter(t => t.query.toLowerCase() !== q)
+    relatedTopics,
+    retrieval,
   };
 }

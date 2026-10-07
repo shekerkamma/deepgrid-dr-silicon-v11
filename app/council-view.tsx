@@ -13,6 +13,8 @@ import {
 } from 'lucide-react';
 import {executeGraphRAG,type SemanticScores} from './data/graphrag-engine';
 import {getSemantic} from './data/semantic';
+import {readHref} from './doc-links';
+import {asset} from './routes';
 
 interface GroundedAnswerViewProps {
   query: string;
@@ -20,7 +22,7 @@ interface GroundedAnswerViewProps {
   go: (hash: string) => void;
 }
 
-const DEFAULT_QUESTION = 'What makes DeepGrid silicon immune to supply chain disruption?';
+const DEFAULT_QUESTION = 'What does SKU-10 DG32-Max replace, and how does it boot only signed firmware?';
 
 // Semantic scores for the question on screen, once the in-browser model has them. Loading starts when
 // Ask opens; each question is embedded 250 ms after typing pauses, so fast typing costs nothing. Until
@@ -41,11 +43,19 @@ function useSemanticScores(question: string): SemanticScores | null {
   return state && state.q === question ? state.s : null;
 }
 
+/** PDF link to the cited page: "p. 37" becomes #page=37. */
+function pageHref(pdfPath: string, pageLabel: string): string {
+  pdfPath = asset(pdfPath.replace(/^\./, ''));
+  const n = pageLabel.match(/\d+/)?.[0];
+  return pdfPath.endsWith('.pdf') && n ? `${pdfPath}#page=${n}` : pdfPath;
+}
+
 export default function GroundedAnswerView({query, onSelectQuery, go}: GroundedAnswerViewProps) {
   const [showTechnical, setShowTechnical] = useState(false);
   const question = query || DEFAULT_QUESTION;
   const sem = useSemanticScores(question);
   const result = executeGraphRAG(question, sem);
+  const r = result.retrieval;
 
   return (
     <div className="dr-grounded-answer-wrap" data-semantic={sem ? 'on' : 'off'}>
@@ -65,8 +75,10 @@ export default function GroundedAnswerView({query, onSelectQuery, go}: GroundedA
         {/* Query-Contextual Title */}
         <h2 className="dr-contextual-title">{result.contextualTitle}</h2>
 
-        {/* Executive Bottom-Line Answer */}
-        <p className="dr-answer-lead">{result.answer}</p>
+        {/* Direct answer (story-architect BLUF): a sentence quoted from the best evidence, or a plain statement
+            that the sources do not establish it. */}
+        <span className="mono dr-facts-heading">{r.answerable ? 'DIRECT ANSWER' : 'NOT ESTABLISHED'}</span>
+        <p className="dr-answer-lead">{result.answer}{r.answerable && result.explanation.length === 0 && r.evidence.length > 0 && <sup className="dr-ev-ref">{r.blufRefs.map(n => `[${n}]`).join('')}</sup>}</p>
 
         {/* In-Depth Explanation & Architectural Breakdown */}
         <div className="dr-answer-explanation">
@@ -75,9 +87,41 @@ export default function GroundedAnswerView({query, onSelectQuery, go}: GroundedA
           ))}
         </div>
 
-        {/* Key Strategic & Operational Metrics */}
+        {/* Numbered evidence: each passage the graph and the question selected, quoted and cited. */}
+        {r.evidence.length > 0 && (
+          <section className="dr-evidence" aria-label="Evidence">
+            <span className="mono dr-facts-heading">{r.answerable ? 'EVIDENCE' : 'CLOSEST MATERIAL (DOES NOT ANSWER THE QUESTION)'}</span>
+            <ol className="dr-evidence-list">
+              {r.evidence.map(e => (
+                <li key={e.n} className="dr-evidence-item" data-kind={e.kind}>
+                  <span className="mono dr-evidence-n">[{e.n}]</span>
+                  <div>
+                    <blockquote className="dr-evidence-quote">{e.quote}</blockquote>
+                    <p className="dr-evidence-cite">
+                      {e.chunk.docTitle} · {e.chunk.section} · {e.chunk.pageLabel}
+                      {' · '}<a href={readHref(e.chunk.specPath.replace(/^\./, ''), e.chunk.section)}>Read in site</a>
+                      {' · '}<a href={pageHref(e.chunk.pdfPath, e.chunk.pageLabel)}>PDF page</a>
+                    </p>
+                    {e.via.length > 0 && <p className="dr-evidence-via">Reached through: {e.via.join(', ')}</p>}
+                  </div>
+                </li>
+              ))}
+            </ol>
+          </section>
+        )}
+
+        {/* What the sources do not establish. */}
+        {r.limits.length > 0 && (
+          <section className="dr-limits" aria-label="Evidence limits">
+            <span className="mono dr-facts-heading">WHAT THE SOURCES DO NOT ESTABLISH</span>
+            <ul className="dr-facts-list">{r.limits.map((l, i) => <li key={i}><span className="dr-bullet-dot" /><span>{l}</span></li>)}</ul>
+          </section>
+        )}
+
+        {/* Catalog facts, only when the question is about that part. */}
+        {result.keyBusinessFacts.length > 0 && (
         <div className="dr-answer-facts">
-          <span className="mono dr-facts-heading">KEY STRATEGIC & OPERATIONAL METRICS:</span>
+          <span className="mono dr-facts-heading">KEY FACTS:</span>
           <ul className="dr-facts-list">
             {result.keyBusinessFacts.map((fact, idx) => (
               <li key={idx}>
@@ -87,12 +131,30 @@ export default function GroundedAnswerView({query, onSelectQuery, go}: GroundedA
             ))}
           </ul>
         </div>
+        )}
+
+        {/* Retrieval trace: why these passages, and what the graph contributed. */}
+        <details className="dr-trace">
+          <summary>How this answer was found</summary>
+          <div className="dr-trace-body">
+            <p><strong>Starting points.</strong> {r.seeds.map(sd => `${sd.name} (${sd.why})`).join('; ') || 'none'}.</p>
+            {r.hops.length > 0 && (
+              <ul className="dr-trace-hops">
+                {r.hops.map((h, i) => <li key={i}>{h.from} <span className="mono">─{h.relation}→</span> {h.to} <span className="dr-trace-conf">{h.confidence.toLowerCase()} · {h.weight.toFixed(2)}</span></li>)}
+              </ul>
+            )}
+            <p>Passages are ranked by {r.byMeaning ? 'meaning' : 'shared words (the meaning model is still loading)'} plus the graph score of the entities they mention. The graph changed {r.graphChanged} of {r.evidence.length} evidence passages compared with that ranking alone.</p>
+            <ul className="dr-trace-hops">
+              {r.evidence.map(e => <li key={e.n}>[{e.n}] {r.byMeaning ? 'meaning' : 'word match'} {e.semantic.toFixed(2)} · graph {e.graph.toFixed(2)} · {e.kind === 'direct' ? 'answers the question' : 'closest material'}</li>)}
+            </ul>
+          </div>
+        </details>
 
         {/* Further References & Deep Dives */}
         <div className="dr-answer-references">
-          <div className="dr-ref-header">
-            <span className="mono dr-ref-title">FURTHER REFERENCES & DEEP-DIVE SECTIONS:</span>
-          </div>
+          {result.referenceLinks.length > 0 && <div className="dr-ref-header">
+            <span className="mono dr-ref-title">FURTHER REFERENCES:</span>
+          </div>}
 
           <div className="dr-ref-links-grid">
             {result.referenceLinks.map((link, idx) => (
@@ -118,7 +180,7 @@ export default function GroundedAnswerView({query, onSelectQuery, go}: GroundedA
                 <FileText size={20} style={{color: 'var(--copper)'}} />
               </div>
               <div className="dr-citation-meta">
-                <span className="mono dr-citation-tag">OFFICIAL PRIMARY SOURCE</span>
+                <span className="mono dr-citation-tag">PRIMARY SOURCE</span>
                 <strong className="dr-citation-title">
                   {result.citation.documentTitle} · {result.citation.section}
                 </strong>
@@ -128,7 +190,7 @@ export default function GroundedAnswerView({query, onSelectQuery, go}: GroundedA
 
             <div className="dr-citation-actions">
               <a 
-                href={result.citation.pdfPath}
+                href={asset(result.citation.pdfPath.replace(/^\./, ''))}
                 download
                 className="dr-citation-btn primary"
                 title={`Download the source (${result.citation.pdfSize})`}
@@ -138,7 +200,7 @@ export default function GroundedAnswerView({query, onSelectQuery, go}: GroundedA
                 <span>{result.citation.pdfPath.endsWith('.pdf') ? 'Download PDF' : 'Download guide'} ({result.citation.pdfSize})</span>
               </a>
               <a 
-                href={result.citation.specPath}
+                href={asset(result.citation.specPath.replace(/^\./, ''))}
                 download
                 className="dr-citation-btn outline"
                 title="Download full Markdown specification"
@@ -201,9 +263,9 @@ export default function GroundedAnswerView({query, onSelectQuery, go}: GroundedA
             onClick={() => setShowTechnical(!showTechnical)}
             aria-expanded={showTechnical}
           >
-            <span>Need deeper engineering details, pinouts, or cycle timing?</span>
+            <span>Where this answer comes from</span>
             <span className="dr-tech-toggle-label">
-              {showTechnical ? 'Hide Technical Details' : 'View Technical Specifications'}
+              {showTechnical ? 'Hide' : 'Show'}
               {showTechnical ? <ChevronUp size={16} /> : <ChevronDown size={16} />}
             </span>
           </button>
@@ -211,7 +273,7 @@ export default function GroundedAnswerView({query, onSelectQuery, go}: GroundedA
           {showTechnical && (
             <div className="dr-tech-panel">
               <div className="dr-tech-specs">
-                <span className="mono dr-specs-heading">SILICON SPECIFICATIONS & CONSTRAINTS:</span>
+                <span className="mono dr-specs-heading">{result.technicalDetails.summary.toUpperCase()}</span>
                 <ul className="dr-specs-list">
                   {result.technicalDetails.specPoints.map((spec, i) => (
                     <li key={i}>{spec}</li>
@@ -238,7 +300,7 @@ export default function GroundedAnswerView({query, onSelectQuery, go}: GroundedA
 
       {/* 3. Suggested Follow-Up Questions */}
       <div className="dr-related-wrap">
-        <span className="mono dr-related-heading">RELATED STRATEGIC QUESTIONS:</span>
+        <span className="mono dr-related-heading">RELATED QUESTIONS:</span>
         <div className="dr-related-chips">
           {result.relatedTopics.map((topic, i) => (
             <button

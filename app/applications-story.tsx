@@ -133,16 +133,16 @@ export default function ApplicationsStory() {
         </nav>
       </section>
 
-      {/* 1b. Where it goes: the Annex's sockets, each with the tasks that fit it. */}
+      {/* 1b. Where it goes: the portfolio's sockets, each with the tasks that fit it. */}
       <section className="st-beat" id="st-sockets" aria-labelledby="st-sockets-h">
         <div className="st-beat-text">
           <h2 id="st-sockets-h">It goes into five places, and each one has its own faults worth watching.</h2>
           <p>
-            The sockets below are DeepGrid&rsquo;s own, from the portfolio annex. Beside each are the
-            tasks from this page that fit it. That pairing is ours: the annex names the sockets and the
-            playbook costs the tasks, but neither document matches them up.
+            The sockets below are DeepGrid&rsquo;s own. Beside each are the tasks from this page that
+            fit it. That pairing is ours: the portfolio documents name the sockets and the playbook
+            costs the tasks, but neither matches them up.
           </p>
-          <Source>{SOCKET_SOURCE}: &ldquo;replaces Microchip/Renesas functional-safety MCU sockets&rdquo;</Source>
+          <Source>{SOCKET_SOURCE}: &ldquo;Functional-safety microcontrollers from Microchip and Renesas&rdquo;</Source>
         </div>
         <div className="st-beat-wide">
           <ol className="st-sockets">
@@ -160,7 +160,7 @@ export default function ApplicationsStory() {
             ))}
           </ol>
           <p className="st-aside st-sockets-foot">
-            The annex describes the lockstep safety MCU as on an ISO&nbsp;26262 ASIL-D path. That is a
+            The SKU Blueprint puts the lockstep MCU on an ISO&nbsp;26262 ASIL-D path. That is a
             direction, not a certification: no functional-safety certification is claimed for DG32.
           </p>
         </div>

@@ -379,7 +379,7 @@ chunks_data = [
         "nodes": [
             {
                 "id": "deepgrid_10_sku_sovereign_portfolio",
-                "label": "DeepGrid 10-SKU Sovereign Silicon Portfolio",
+                "label": "DeepGrid Sovereign Silicon Portfolio (11 SKUs + D100)",
                 "file_type": "concept",
                 "source_location": "Master Whitepaper v3 · Section 9, p. 30–48",
                 "rationale": "Targeted silicon replacements addressing India's $9B electronics import deficit across motors, smart meters, power, and radar."

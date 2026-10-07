@@ -172,7 +172,7 @@ export const diagramNotes: Record<'lite' | '2dom' | 'd100', DiagramNotes> = {
     ],
     primary: [
       {title: 'D100 architecture guide', note: 'Every block group, both data flows, prototype versus product, and what the architecture does not establish.', href: readHref(D100_GUIDE), meta: 'Opens in the site'},
-      {title: 'SKU Architecture Compendium, Technical Annex v3', note: 'Sheet 11 carries the D100 figure this diagram is redrawn from; the SiP sheet covers the package. Some of its values differ from this page, which the diagram follows; the Sources section below lists each one.', href: url(DOCS + 'deepgrid-sku-compendium-technical-annex-v3.pdf'), meta: 'PDF · 14 pages · values differ from this page'},
+      {title: 'SKU Blueprint, October 2026', note: 'D100: what it replaces, who uses it, its status and its architecture diagram.', href: url(DOCS + 'deepgrid-sku-blueprint-oct2026.pdf'), meta: 'PDF · 46 pages'},
     ],
     background: [
       {title: 'A Multi-State Constraint Kalman Filter for vision-aided inertial navigation', note: 'Mourikis and Roumeliotis, ICRA 2007: the EKF over a sliding window of camera poses that visual-inertial pose engines build on.', href: 'https://www-users.cse.umn.edu/~stergios/papers/ICRA07-MSCKF.pdf', meta: 'University of Minnesota · PDF'},
@@ -189,18 +189,16 @@ export const diagramNotes: Record<'lite' | '2dom' | 'd100', DiagramNotes> = {
 
 /** The architecture diagram each product page shows, keyed by product id. SKU-4 shows DG32-LITE because
  *  DG32-LITE is the implemented SKU-4 part; `note` says so on the page. The other SKUs are redrawn from
- *  their annex sheets by scripts/sku-diagrams/ into sku-diagram-notes.ts. */
+ *  their specs by scripts/sku-diagrams/ into sku-diagram-notes.ts. */
 export type ProductDiagram = {notes: DiagramNotes; src: string; title: string; alt: string; width: number; height: number; drawio: string; guide: string; caption: string; note?: string;
-  /** Where the annex sheet's values differ from this page, sheet value against page value. Shown beside every annex link. */
-  annexDiffers?: string};
+};
 export const productDiagrams: Partial<Record<string, ProductDiagram>> = {
   ...skuDiagrams,
   d100: {
     notes: diagramNotes.d100, src: '/diagrams/d100-architecture.svg', title: 'D100 system architecture', width: 1553, height: 945,
     drawio: '/downloads/d100-architecture.drawio', guide: D100_GUIDE,
     alt: 'D100 system architecture diagram: flight control, visual-inertial odometry and a variant-2 AI die on a 128-bit AXI4 crossbar, the platform blocks, and a failsafe island with its own path to the ESCs',
-    annexDiffers: 'the camera input (a stereo pair at 720p60 on the sheet; two lanes, up to 1080p60 here)',
-    caption: 'Redrawn from the Technical Annex v3, sheet 11, with process labels from the SKU Blueprint, October 2026 (a 28 nm chip; failsafe island buildable at 130 nm). Numbered markers trace normal flight; F marks the failsafe path to the ESCs. The dashed zone is the phase-2 AI accelerator.',
+    caption: 'Architecture from the SKU Blueprint, October 2026: a 28 nm chip with a failsafe island buildable at 130 nm. Numbered markers trace normal flight; F marks the failsafe path to the ESCs. The dashed zone is the phase-2 AI accelerator.',
   },
   sku4: {
     notes: diagramNotes.lite, src: '/diagrams/dg32-lite-architecture.svg', title: 'DG32-LITE system architecture', width: 1518, height: 1045,
