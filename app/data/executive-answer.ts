@@ -79,20 +79,32 @@ export function executiveAnswer(query: string, r: Retrieval): ExecutiveAnswer {
   const directRefs = () => direct.slice(0, 2).flatMap((e) => ref(e.chunk));
 
   // 1. Comparison: Detect whether query asks to compare multiple products
-  const comparisonCodes = r.comparison && r.comparison.length > 1
+  const comparisonCodes: string[] | null = r.comparison && r.comparison.length > 1
     ? r.comparison
     : (() => {
-        const matches = Array.from(query.matchAll(/\b(?:SKU[ -]?(\d+)|D100|DG32[- ]?Max|DG32[- ]?LITE)\b/gi)).map(m => m[0]);
-        const keys = Array.from(new Set(matches.map(m => keyFor(m)).filter((k): k is string => !!k)));
+        const matches = query.match(/\b(?:SKU[ -]?\d+|D100|DG32[- ]?Max|DG32[- ]?LITE)\b/gi);
+        if (!matches) return null;
+        const keys: string[] = [];
+        for (let i = 0; i < matches.length; i++) {
+          const k = keyFor(matches[i]);
+          if (k && keys.indexOf(k) === -1) {
+            keys.push(k);
+          }
+        }
         return keys.length > 1 ? keys : null;
       })();
 
   if (comparisonCodes && comparisonCodes.length > 1) {
     const parts = comparisonCodes
-      .map((code) => (code.startsWith('sku') || code === 'd100' ? code : keyFor(code)))
+      .map((code) => keyFor(code))
       .filter((k): k is string => !!k && !!productStories[k]);
 
     if (parts.length > 1) {
+      const p0 = parts[0];
+      const p1 = parts[1];
+      const s0 = productStories[p0];
+      const s1 = productStories[p1];
+
       // Gather primary sources for each compared product to ensure rich references
       const productRefs: Record<string, number[]> = {};
       parts.forEach((k) => {
@@ -102,7 +114,7 @@ export function executiveAnswer(query: string, r: Retrieval): ExecutiveAnswer {
       });
 
       // Special handling for SKU-10 vs SKU-11 comparison
-      const isSku10vs11 = parts.includes('sku10') && parts.includes('sku11');
+      const isSku10vs11 = parts.indexOf('sku10') >= 0 && parts.indexOf('sku11') >= 0;
 
       const title = isSku10vs11
         ? 'Choose by system responsibility: SKU-10 is a general secure host MCU; SKU-11 specializes that platform for battery intelligence.'
@@ -114,14 +126,14 @@ export function executiveAnswer(query: string, r: Retrieval): ExecutiveAnswer {
 
       const beats = [
         {
-          title: `${label(parts[0])}: ${productStories[parts[0]].beatTitles?.brings ?? productStories[parts[0]].headline}`,
-          body: `${productStories[parts[0]].short} Sourcing impact: ${productStories[parts[0]].whyNow}`,
-          refs: productRefs[parts[0]] || [],
+          title: `${label(p0)}: ${s0?.beatTitles?.brings ?? s0?.headline ?? p0}`,
+          body: `${s0?.short ?? ''} Sourcing impact: ${s0?.whyNow ?? ''}`,
+          refs: productRefs[p0] || [],
         },
         {
-          title: `${label(parts[1])}: ${productStories[parts[1]].beatTitles?.brings ?? productStories[parts[1]].headline}`,
-          body: `${productStories[parts[1]].short} Sourcing impact: ${productStories[parts[1]].whyNow}`,
-          refs: productRefs[parts[1]] || [],
+          title: `${label(p1)}: ${s1?.beatTitles?.brings ?? s1?.headline ?? p1}`,
+          body: `${s1?.short ?? ''} Sourcing impact: ${s1?.whyNow ?? ''}`,
+          refs: productRefs[p1] || [],
         },
         ...(isSku10vs11
           ? [
@@ -223,7 +235,7 @@ export function executiveAnswer(query: string, r: Retrieval): ExecutiveAnswer {
     } else if (isCert) {
       const certTopic = topicStories[0];
       title = `${label(key)} is not certified or qualified yet — treat qualification as the adoption gate.`;
-      answer = `${certTopic.story.short} ${s.short}`;
+      answer = `${certTopic?.story.short ?? ''} ${s.short}`;
     }
 
     const beats = [
@@ -320,37 +332,39 @@ export function executiveAnswer(query: string, r: Retrieval): ExecutiveAnswer {
   if (!key && r.answerable && direct.length) {
     const refs = directRefs();
     const finding = clean(r.bluf);
-    const topChunk = direct[0].chunk;
+    const topChunk = direct[0]?.chunk;
 
-    return {
-      title: `Architectural finding: ${topChunk.docTitle} establishes ${topChunk.section}.`,
-      answer: finding,
-      answerRefs: refs,
-      beats: [
-        {
-          title: 'Documented Architecture & Operational Parameter',
-          body: `Published specifications in ${topChunk.docTitle} (${topChunk.section}) establish this technical boundary. The design prioritizes predictable real-time execution and transient resilience on mature silicon nodes over fine-node scaling.`,
-          refs,
-        },
-        {
-          title: 'System Impact & Bill of Materials Consequence',
-          body: 'This architectural parameter directly impacts power delivery, thermal budgets, and interface routing across the system board. Equipment makers must evaluate whether this hardware allocation satisfies their worst-case operating envelope.',
-          refs: [],
-        },
-        {
-          title: 'Pre-Silicon Truth: Evidence Stage & Open Validation',
-          body: 'All DeepGrid evidence is at the design stage: simulated in gate-level EDA tools, estimated from post-route floorplans, or derived analytically. Nothing has been measured on manufactured silicon, and no formal qualification has been conducted.',
-          refs,
-        },
-        {
-          title: 'Actionable Engineering Recommendation',
-          body: 'Define the critical pass/fail acceptance threshold for this parameter in your target application, and structure an early evaluation using DeepGrid’s simulation models or FPGA bitstreams.',
-          refs: [],
-        },
-      ],
-      sources,
-      supported: true,
-    };
+    if (topChunk) {
+      return {
+        title: `Architectural finding: ${topChunk.docTitle} establishes ${topChunk.section}.`,
+        answer: finding,
+        answerRefs: refs,
+        beats: [
+          {
+            title: 'Documented Architecture & Operational Parameter',
+            body: `Published specifications in ${topChunk.docTitle} (${topChunk.section}) establish this technical boundary. The design prioritizes predictable real-time execution and transient resilience on mature silicon nodes over fine-node scaling.`,
+            refs,
+          },
+          {
+            title: 'System Impact & Bill of Materials Consequence',
+            body: 'This architectural parameter directly impacts power delivery, thermal budgets, and interface routing across the system board. Equipment makers must evaluate whether this hardware allocation satisfies their worst-case operating envelope.',
+            refs: [],
+          },
+          {
+            title: 'Pre-Silicon Truth: Evidence Stage & Open Validation',
+            body: 'All DeepGrid evidence is at the design stage: simulated in gate-level EDA tools, estimated from post-route floorplans, or derived analytically. Nothing has been measured on manufactured silicon, and no formal qualification has been conducted.',
+            refs,
+          },
+          {
+            title: 'Actionable Engineering Recommendation',
+            body: 'Define the critical pass/fail acceptance threshold for this parameter in your target application, and structure an early evaluation using DeepGrid’s simulation models or FPGA bitstreams.',
+            refs: [],
+          },
+        ],
+        sources,
+        supported: true,
+      };
+    }
   }
 
   // 6. Not established: honest, authoritative executive abstention
