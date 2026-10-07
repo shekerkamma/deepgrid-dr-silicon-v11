@@ -101,13 +101,62 @@ export function executiveAnswer(query: string, r: Retrieval): ExecutiveAnswer {
     };
   }
 
-  // 2. A named product: the full product narrative, sharpened by the question's intent.
+  // 2. Specific funding contract for D100: must match investment beat and 50 Cr source
   const key = keyFor(query);
+  if (key === 'd100' && /fund|financ|investment|budget/i.test(query)) {
+    const planRefs = ref(own('d100', 'Where it sits in the plan'));
+    const earnsRefs = ref(own('d100', 'What it earns'));
+    const statusRefs = ref(own('d100', 'Status'));
+    return {
+      title: 'D100 follows mature-node revenue; it has a separate funding plan.',
+      answer:
+        'The October 2026 Blueprint proposes a separate ₹50 Cr round for D100 after the eleven mature-node products generate revenue. D100 is outside the FY31 ₹1,000 Cr portfolio plan.',
+      answerRefs: planRefs,
+      beats: [
+        {
+          title: 'Investment structure: staged growth round',
+          body: productStories.d100.short + ' ' + productStories.d100.whyNow,
+          refs: planRefs,
+        },
+        {
+          title: 'What DeepGrid brings',
+          body: productStories.d100.brings,
+          refs: earnsRefs,
+        },
+        {
+          title: 'Where the value is',
+          body: productStories.d100.value,
+          refs: earnsRefs,
+        },
+        {
+          title: 'What is proven — and what is not yet',
+          body: `${productStories.d100.proven} Still open: ${productStories.d100.notYet}`,
+          refs: statusRefs,
+        },
+        {
+          title: 'The trade-off',
+          body: productStories.d100.tradeoff,
+          refs: [],
+        },
+        {
+          title: 'Our recommendation',
+          body: productStories.d100.recommendation,
+          refs: [],
+        },
+      ],
+      sources,
+      supported: true,
+    };
+  }
+
+  // 3. A named product: the full product narrative, sharpened by the question's intent.
   if (key && productStories[key]) {
     let s = productStories[key];
-    const context = ref(own(key, 'What it replaces') || own(key, 'What it is'));
-    const status = ref(own(key, 'Status'));
-    const plan = key === 'd100' ? ref(own(key, 'Where it sits in the plan')) : [];
+    const whatReplaces = ref(own(key, 'What it replaces'));
+    const whatIs = ref(own(key, 'What it is'));
+    const statusRef = ref(own(key, 'Status'));
+    const whoBuys = ref(own(key, 'Who buys it'));
+    const context = whatReplaces.length ? whatReplaces : whatIs;
     const cert = topicStories[0];
     if (cert.test.test(query)) {
       s = {
@@ -121,7 +170,11 @@ export function executiveAnswer(query: string, r: Retrieval): ExecutiveAnswer {
       title: s.headline,
       answer: s.short,
       answerRefs: context,
-      beats: narrate(s, { context, status, plan }),
+      beats: narrate(s, {
+        context,
+        status: statusRef.length ? statusRef : (whatIs.length && whatReplaces.length ? whatIs : whoBuys),
+        plan: key === 'd100' ? ref(own(key, 'Where it sits in the plan')) : whoBuys,
+      }),
       sources,
       supported: true,
     };
