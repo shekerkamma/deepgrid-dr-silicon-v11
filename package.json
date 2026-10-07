@@ -7,18 +7,19 @@
   },
   "scripts": {
     "dev": "vinext dev",
-    "build": "node scripts/check-classes.mjs && node scripts/check-css-bans.mjs && node scripts/check-claims.mjs && node scripts/check-crossrefs.mjs && node scripts/check-usecases.mjs && node scripts/check-clips.mjs && node scripts/check-visuals.mjs && node scripts/check-semantic.mjs && node scripts/copy-runtime.mjs && node scripts/build.mjs",
+    "build": "node scripts/check-classes.mjs && node scripts/check-css-bans.mjs && node scripts/check-claims.mjs && node scripts/check-crossrefs.mjs && node scripts/check-usecases.mjs && node scripts/check-clips.mjs && node scripts/check-visuals.mjs && node scripts/check-semantic.mjs && node scripts/check-executive-story.mjs && node scripts/copy-runtime.mjs && node scripts/build.mjs",
     "start": "wrangler dev --config dist/server/wrangler.json",
     "lint": "oxlint",
     "format": "oxfmt",
     "typecheck": "tsc --noEmit",
-    "build:pages": "node scripts/check-classes.mjs && node scripts/check-css-bans.mjs && node scripts/check-claims.mjs && node scripts/check-crossrefs.mjs && node scripts/check-usecases.mjs && node scripts/check-clips.mjs && node scripts/check-visuals.mjs && node scripts/check-semantic.mjs && node scripts/copy-runtime.mjs && node scripts/build.mjs && node scripts/package-pages.mjs",
+    "build:pages": "node scripts/check-classes.mjs && node scripts/check-css-bans.mjs && node scripts/check-claims.mjs && node scripts/check-crossrefs.mjs && node scripts/check-usecases.mjs && node scripts/check-clips.mjs && node scripts/check-visuals.mjs && node scripts/check-semantic.mjs && node scripts/check-executive-story.mjs && node scripts/copy-runtime.mjs && node scripts/build.mjs && node scripts/package-pages.mjs",
     "build:semantic": "node scripts/build-semantic-index.mjs",
     "publish:graph": "node scripts/publish-graph.mjs",
     "check:semantic": "node scripts/check-semantic.mjs",
     "verify": "bash scripts/verify-local.sh",
     "verify:url": "node scripts/verify-routes.mjs",
-    "verify:nav": "node scripts/verify-nav.mjs"
+    "verify:nav": "node scripts/verify-nav.mjs",
+    "check:story": "node scripts/check-executive-story.mjs"
   },
   "dependencies": {
     "@base-ui/react": "1.7.0",

@@ -4,6 +4,7 @@ import {useEffect, useRef, useState} from 'react';
 import {ArrowUpRight, ArrowRight, ArrowLeft, Menu, X} from 'lucide-react';
 import {byId, nextRoute, prevRoute, resolveTarget, url, type RouteId} from './routes';
 
+import {StoryRoute} from './executive-story';
 import {MegaNav} from './mega-nav';
 import {useReveal, useScrollVars} from './motion';
 import {useDraw, useRail} from './devices';
@@ -110,7 +111,7 @@ export function Shell({
             ))}
           </nav>
         )}
-        {children}
+        <StoryRoute.Provider value={route}>{children}</StoryRoute.Provider>
 
 
         {(prev || next) && (

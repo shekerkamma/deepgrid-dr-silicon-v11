@@ -26,6 +26,7 @@ import {groundedDocuments} from './documents-data';
 import {readHref} from './doc-links';
 import {url} from './routes';
 import './product-page.css';
+import executiveProducts from './executive-products.json';
 
 const SECTIONS = [
   ['pp-inside', 'Overview'],
@@ -51,7 +52,16 @@ export default function ProductPageView({slug}: {slug: string}) {
   const dg = productDiagrams[p.id];
   const story = archStories[p.id];
   const explainer = explainers.find(e => e.slug === p.slug);
-  const S = story?.sections;
+  const executive=executiveProducts[p.id as keyof typeof executiveProducts];
+  const S = {
+   specs:{title:'Test the requirements behind the proposed benefit.',copy:'These design targets define what an evaluation must confirm. They are not measured production specifications.'},
+   questions:{title:'Close the adoption risks before committing.',copy:executive.gate},
+   evidence:{title:'Match the commitment to the current evidence.',copy:executive.gate},
+   fit:{title:'Choose the customer programme this product can serve.',copy:executive.implication},
+   sources:{title:'Check the basis for the product case.',copy:'Use the current Blueprint for scope and status, then examine the detailed engineering evidence where it affects your decision.'},
+   close:{title:'Agree the next milestone for your product.',copy:executive.implication},
+   physics:{title:'The operating environment determines the fit.',copy:executive.context},
+  };
   const base = p.id === 'sku4' ? 'dg32-lite' : p.slug;
   const fits = areas.flatMap(a => a.items.filter(i => i.product === p.id).map(i => ({area: a, role: i.role})));
   const sheet = `page ${bpPage}`;
@@ -72,7 +82,7 @@ export default function ProductPageView({slug}: {slug: string}) {
       <header className="pp-hero">
         <div className="pp-hero-copy">
           <h1><span className="pp-hero-code">{part.code} · {nbspUnits(part.process)}</span> {part.name}</h1>
-          <p className="pp-hero-claim">{nbspUnits(p.headline)}</p>
+          <p className="pp-hero-claim">{executive.headline}</p>
           <div className="pp-actions">
             <a className="primary" href={contact}>Discuss this part <ArrowUpRight size={16} aria-hidden="true"/></a>
             {explainer && <a className="text-link" href="#pp-inside"><Play size={14} aria-hidden="true"/> Watch how it works · {explainer.length}</a>}
@@ -93,8 +103,8 @@ export default function ProductPageView({slug}: {slug: string}) {
       {/* 2 · Overview: name, status line, actions; the media carousel (DG-A100: three product views). */}
       <section id="pp-inside" className="pp-sec pp-overview pp-reveal">
         <div className="pp-overview-copy">
-          <h2 className="dr-h2">{nbspUnits(part.job)}</h2>
-          <p className="pp-lede">{nbspUnits(p.lede)}</p>
+          <h2 className="dr-h2">{executive.headline}</h2>
+          <p className="pp-lede">{executive.context}</p>
           <dl className="pp-facts">
             <div><dt>Job</dt><dd>{part.job}</dd></div>
             <div><dt>Replaces</dt><dd>{record.replaces}</dd></div>
@@ -115,9 +125,9 @@ export default function ProductPageView({slug}: {slug: string}) {
       {/* 2b · Why it exists: the Blueprint's own answers to what the part replaces, who uses it, the policy
           behind the demand and why its process node. */}
       <section id="pp-why" className="pp-sec pp-reveal">
-        <Head title={`Why ${part.code} exists, and why on this node.`} copy={`From the SKU Blueprint, October 2026, ${sheet}.`}/>
+        <Head title={`The business case for ${part.code}`} copy={executive.implication}/>
         <div className="pp-readiness-cards pp-why-cards">
-          {([['What it replaces', record.replaces ?? ''], ['Who uses it', p.fit.buyers], ['Policy and demand', p.fit.policy], ['Why this node', p.fit.node]] as const).map(([k, v]) => (
+          {([['What it replaces', record.replaces ?? ''], ['Customer opportunity', p.fit.buyers], ['Policy and demand', p.fit.policy], ['The delivery trade-off', p.fit.node]] as const).map(([k, v]) => (
             <article key={k}><p className="pp-card-kicker">{k}</p><p>{nbspUnits(v)}</p></article>
           ))}
         </div>
@@ -125,18 +135,11 @@ export default function ProductPageView({slug}: {slug: string}) {
       </section>
 
       {/* 3 · Key features: one card per storyboard beat (DG-A100: a grid of six feature cards). */}
-      {story && (
+      {executive && (
         <section id="pp-features" className="pp-sec pp-reveal">
-          <Head title={story.headline} copy={story.lead.split('. ')[0] + '.'}/>
+          <Head title="Understand what must work together." copy="The following mechanisms explain the proposed customer benefit. Each still needs to be validated in the complete product."/>
           <ol className="pp-features">
-            {story.beats.slice(0, 6).map((b, i) => { const Icon = iconFor(b.title + ' ' + b.zones.join(' ')); return (
-              <li key={i}>
-                <Icon size={22} aria-hidden="true"/>
-                <p className="pp-feature-zone">{(b.zones[0] ?? '').split('  ·  ')[0]}</p>
-                <h3>{nbspUnits(b.title)}</h3>
-                <p>{nbspUnits(firstSentence(b.body))}</p>
-              </li>
-            ); })}
+            {[[executive.headline,executive.context],[executive.valueTitle,executive.implication],[executive.gateTitle,executive.gate]].map(([title,body])=><li key={title}><h3>{title}</h3><p>{body}</p></li>)}
           </ol>
         </section>
       )}
@@ -153,7 +156,7 @@ export default function ProductPageView({slug}: {slug: string}) {
         {dg && <a className="pp-arch-figure" href="#pp-diagram" onClick={() => { const d = document.getElementById('pp-diagram') as HTMLDetailsElement | null; if (d) d.open = true; }}>
           <img src={url(animated)} alt={dg.alt} width={dg.width} height={dg.height} loading="lazy"/>
         </a>}
-        <dl className="pp-spec-cards pp-arch-cards">{p.specs.map(r => <SpecCard key={r[0]} row={r}/>)}</dl>
+        <details className="executive-sources"><summary>Detailed architecture and specifications</summary><dl className="pp-spec-cards pp-arch-cards">{p.specs.map(r => <SpecCard key={r[0]} row={r}/>)}</dl></details>
         <dl className="pp-chips">
           <div><dt>Process</dt><dd>{nbspUnits(part.process)}</dd></div>
           <div><dt>Maturity</dt><dd>{part.maturity}</dd></div>

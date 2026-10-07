@@ -430,3 +430,7 @@ body was rebuilt. The exact 24-route review is in `docs/v6/site-review.md`.
 
 
 
+
+
+### Executive narrative, October 2026
+The main reading order is customer problem → proposed value → evidence → adoption gate → next decision. `docs/executive-story-pack-v12.md` is the narrative source of record. Route openings, product benefit cards, detailed-section introductions and closing decisions use the executive story registries. Keep measurements and technical labels exact in the supporting layer. Ask leads with an executive brief and source-specific business implications; sources are disclosed on demand. Never expose retrieval scores, graph paths or implementation vocabulary as the answer’s structure.

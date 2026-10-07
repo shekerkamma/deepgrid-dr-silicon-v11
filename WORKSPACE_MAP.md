@@ -24,3 +24,7 @@ Windows: run npm through `node 'C:/Program Files/nodejs/node_modules/npm/bin/npm
 - `scripts/verify-layout.mjs`: v12 four-width route geometry, visible navigation, header-height and sticky-control regression checks.
 
 - `app/data/graph-retrieval.ts`, `scripts/eval-graphrag.mjs`: provenance-weighted graph retrieval and lexical/semantic answer evaluation.
+
+- `docs/executive-story-pack-v12.md`, `app/executive-{routes,products,sections}.json`: business audience storyboards, source-specific summaries and section roles.
+- `app/data/executive-answer.ts`, `app/council-view.tsx`: executive narrative over retrieved evidence; sources disclosed separately.
+- `scripts/check-executive-story.mjs`, `scripts/verify-ask.mjs`: story coverage, grounded answer and browser gates.

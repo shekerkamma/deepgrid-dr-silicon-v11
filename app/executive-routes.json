@@ -1,0 +1,224 @@
+{
+  "home": {
+    "headline": "Build the systems that move, protect and connect.",
+    "context": "DeepGrid is developing a silicon portfolio for equipment makers in motion, power, sensing and communications. Start with the job your product must do, then judge each part by its evidence and readiness.",
+    "decision": "Choose a system opportunity before choosing a chip.",
+    "next": "/products"
+  },
+  "products": {
+    "headline": "Choose the product by the problem it removes.",
+    "context": "Eleven mature-node products and the separate D100 programme address different equipment needs. Compare the function, what it could replace and what remains to be proven before adoption.",
+    "decision": "Shortlist a part, then agree the evidence needed to adopt it.",
+    "next": "/evidence"
+  },
+  "technology": {
+    "headline": "A product advantage matters only when the system can rely on it.",
+    "context": "DG32 combines hardware control with fault detection. The engineering evidence explains the proposed benefits—and the boundaries that must be tested before customers depend on them.",
+    "decision": "Connect each claimed benefit to a measurable system requirement.",
+    "next": "/evidence"
+  },
+  "safety": {
+    "headline": "A detected fault must lead to a controlled outcome.",
+    "context": "DG32’s fault path is designed to act without waiting for application software. For a buyer, the key question is whether the complete machine reaches its intended safe state under the failures that matter.",
+    "decision": "Define the safe state and test the complete response.",
+    "next": "/contact"
+  },
+  "control": {
+    "headline": "Protect the control task before adding more intelligence.",
+    "context": "A predictable control workload can leave capacity for diagnostics. That capacity depends on operating speed, signal quality and the work the product must perform.",
+    "decision": "Prioritise the core control requirement, then budget additional functions.",
+    "next": "/applications"
+  },
+  "die": {
+    "headline": "Shared foundations must not put the safety function at risk.",
+    "context": "The design groups control, memory, sensing and communications around a defined safety core. Use the layout to understand which functions can change and which constraints remain fixed.",
+    "decision": "Assess change scope before committing to a customised design.",
+    "next": "/contact"
+  },
+  "package": {
+    "headline": "A promising chip still has to fit the customer’s board.",
+    "context": "The package, interfaces and supply requirements set the integration work for the equipment maker. Some choices are defined today; final electrical limits depend on silicon characterisation.",
+    "decision": "Separate board decisions that can proceed from those awaiting measurement.",
+    "next": "/procurement"
+  },
+  "applications": {
+    "headline": "Start with the operating problem, then select the silicon.",
+    "context": "Motion, vehicles, defence, energy and board infrastructure face different failure modes. Match the proposed chip to the system job and the evidence needed for that environment.",
+    "decision": "Name the failure or product limitation you want to address.",
+    "next": "/contact"
+  },
+  "uc-motors": {
+    "headline": "Keep the motor productive while retaining a way to stop it safely.",
+    "context": "The motor controller and safety supervisor address different responsibilities. Assess both against the drive, its operating conditions and the consequences of failure.",
+    "decision": "Define the drive requirements and its independent stop response.",
+    "next": "/products/sku-1"
+  },
+  "uc-vehicles": {
+    "headline": "Evaluate the vehicle zone, not an isolated chip feature.",
+    "context": "DeepGrid’s proposed parts serve sensing, displays, power and communications around the vehicle. Their value depends on how they fit the vehicle architecture and safety responsibilities.",
+    "decision": "Scope one zone or subsystem before extending the evaluation.",
+    "next": "/products/sku-9"
+  },
+  "uc-defence": {
+    "headline": "Local supply is valuable only when the equipment can qualify it.",
+    "context": "Defence, aviation and drone programmes need both a suitable component and the evidence required for their operating environment. Country of origin does not replace performance or qualification.",
+    "decision": "Identify the programme, screening route and acceptance evidence.",
+    "next": "/procurement"
+  },
+  "uc-grid": {
+    "headline": "Metering adoption depends on trusted measurement and records.",
+    "context": "Utilities need accurate energy measurement, tamper evidence and continuity through outages. Evaluate these outcomes together before judging the proposed integration benefit.",
+    "decision": "Use the utility’s acceptance criteria to define the trial.",
+    "next": "/products/sku-2"
+  },
+  "uc-boards": {
+    "headline": "Reliable startup and communication support the whole product.",
+    "context": "Power supervision and interfaces are small parts of a board with system-wide consequences. Select them against actual supply disturbances, wiring and service conditions.",
+    "decision": "Test the board’s failure conditions before approving a replacement.",
+    "next": "/products/sku-6"
+  },
+  "evidence": {
+    "headline": "Make the next commitment match the evidence available.",
+    "context": "Design studies, simulation, prototypes and measured silicon support different decisions. This register helps separate an opportunity worth evaluating from a product ready for deployment.",
+    "decision": "Ask for the proof required by the next decision—not a broader claim.",
+    "next": "/procurement"
+  },
+  "procurement": {
+    "headline": "Begin evaluation now; make production commitments against proven readiness.",
+    "context": "Compare DG32’s proposed strengths with the functions, measurements and qualification your product requires. Roadmap items should remain explicit dependencies in an adoption plan.",
+    "decision": "Agree acceptance criteria, milestones and a fallback before selection.",
+    "next": "/contact"
+  },
+  "resources": {
+    "headline": "Find the evidence for the decision in front of you.",
+    "context": "Start with the portfolio for product scope, the evidence register for maturity, or the detailed documents for integration. Every source has a different role in an evaluation.",
+    "decision": "Choose the question first, then the document that can answer it.",
+    "next": "/resources/docs"
+  },
+  "docs": {
+    "headline": "Use the right source for the right question.",
+    "context": "The October 2026 Blueprint defines the current portfolio. Architecture and test documents explain particular designs and results; they do not establish readiness beyond their stated scope.",
+    "decision": "Read the current product scope before comparing detailed figures.",
+    "next": "/evidence"
+  },
+  "videos": {
+    "headline": "Understand the system before examining every detail.",
+    "context": "The films explain the proposed jobs and mechanisms across the portfolio. Use them to build context, then use the source documents and evidence register for a decision.",
+    "decision": "Treat an animation as an explanation, not a performance demonstration.",
+    "next": "/evidence"
+  },
+  "read": {
+    "headline": "Read the assumptions that sit behind the claim.",
+    "context": "A source is useful when its scope, date and evidence match the decision being made. Keep design targets separate from measured results and current product status.",
+    "decision": "Check the conditions and the current product record.",
+    "next": "/resources/docs"
+  },
+  "ask": {
+    "headline": "Ask the business question. Understand the decision.",
+    "context": "Explore the opportunity, customer value, trade-offs and readiness of DeepGrid’s portfolio. Answers lead with the implication for your business, with supporting sources available when you need them.",
+    "decision": "Use the answer to frame the next conversation or evaluation.",
+    "next": "/contact"
+  },
+  "about": {
+    "headline": "Build a semiconductor business around equipment makers’ needs.",
+    "context": "DeepGrid’s portfolio connects control, power, sensing and interfaces to physical systems. The company story explains that focus; individual product evidence determines what can be adopted.",
+    "decision": "Judge the strategy through a specific customer requirement.",
+    "next": "/company"
+  },
+  "team": {
+    "headline": "Match the partnership to the work that must be delivered.",
+    "context": "Leadership and advisers provide company context. A successful programme also needs clear responsibilities for product definition, validation, manufacturing and qualification.",
+    "decision": "Agree ownership and delivery evidence for the proposed programme.",
+    "next": "/contact"
+  },
+  "recognition": {
+    "headline": "Recognition opens a conversation; delivery evidence supports a commitment.",
+    "context": "Awards and ecosystem participation describe the company’s development. Assess product maturity separately through the published evidence and the requirements of your programme.",
+    "decision": "Use recognition as context, then examine the product case.",
+    "next": "/evidence"
+  },
+  "company": {
+    "headline": "Build repeatable capability around specific customer products.",
+    "context": "The mature-node portfolio shares selected foundations while retaining product-specific development and qualification. The commercial route is through equipment makers and the systems they deliver.",
+    "decision": "Select a customer programme and stage the investment against evidence.",
+    "next": "/contact"
+  },
+  "contact": {
+    "headline": "Turn a business need into a defined evaluation.",
+    "context": "Tell us the product you are building, the outcome you need, your timing and what must be proven before you can proceed. Technical requirements can then be scoped with the relevant team.",
+    "decision": "Leave the conversation with a clear scope and next decision.",
+    "next": "/products"
+  },
+  "sku1": {
+    "headline": "Simplify the motor drive without losing control of the system.",
+    "context": "A controller and gate driver usually require separate parts. SKU-1 proposes to combine those roles for motors, appliances and actuators.",
+    "decision": "Choose the drive by its operating environment and required response, then assess whether integration reduces the complexity of your product.",
+    "next": "/contact"
+  },
+  "sku2": {
+    "headline": "Make billing accuracy and tamper resilience part of the same product.",
+    "context": "SKU-2 brings energy measurement, meter control and outage records together for utilities and meter makers.",
+    "decision": "The commercial test is whether the meter meets the tender’s accuracy, tamper and service requirements.",
+    "next": "/contact"
+  },
+  "sku3": {
+    "headline": "Develop a domestic option for power systems with demanding reliability needs.",
+    "context": "SKU-3 targets the power supplies used in military, railway and space equipment, where qualification is part of the buying decision.",
+    "decision": "Select the required grade and equipment programme first; a general power-management claim is not enough.",
+    "next": "/contact"
+  },
+  "sku4": {
+    "headline": "Keep a control failure from becoming an uncontrolled machine.",
+    "context": "SKU-4 uses two processors to detect disagreement and trigger a hardware fault response. It is intended to support a system safety case.",
+    "decision": "Evaluate the complete response—from detecting a failure to reaching the machine’s safe state.",
+    "next": "/contact"
+  },
+  "sku5": {
+    "headline": "Keep equipment connected when interface components become a sourcing risk.",
+    "context": "SKU-5 targets the wired interfaces used across industrial and vehicle equipment, combining bus functions on one part.",
+    "decision": "Start with the installed equipment and the replacement requirements; compatibility determines the opportunity.",
+    "next": "/contact"
+  },
+  "sku6": {
+    "headline": "Protect the equipment when its power supplies behave unexpectedly.",
+    "context": "SKU-6 watches supply conditions and records a fault so the wider system can respond. It targets a function needed across many boards.",
+    "decision": "Define which power disturbances should stop the system and which should be tolerated.",
+    "next": "/contact"
+  },
+  "sku7": {
+    "headline": "Turn radar sensing into usable range and motion information.",
+    "context": "SKU-7 separates radio-frequency sensing from digital processing, targeting radar functions for vehicles and other platforms.",
+    "decision": "Choose the detection task, operating environment and required range before selecting a radar architecture.",
+    "next": "/contact"
+  },
+  "sku8": {
+    "headline": "Make the display trustworthy in demanding operating conditions.",
+    "context": "SKU-8 targets rugged displays, combining panel-driving functions with detection of a frozen image.",
+    "decision": "Evaluate readability and failure indication as part of the operator’s task, not simply as display specifications.",
+    "next": "/contact"
+  },
+  "sku9": {
+    "headline": "Bring vehicle power and communications closer to the loads they serve.",
+    "context": "SKU-9 combines network and power-distribution functions within a vehicle zone; the central vehicle computer remains separate.",
+    "decision": "Assess the loads, network traffic and failure isolation of a specific zone before considering consolidation.",
+    "next": "/contact"
+  },
+  "sku10": {
+    "headline": "Combine secure control and trusted startup in one product.",
+    "context": "DG32-Max targets imported secure microcontrollers and the separate security chip often used to check firmware before it runs.",
+    "decision": "The opportunity is simpler secure control for industrial, drone and EV equipment, provided customer requirements can be met.",
+    "next": "/contact"
+  },
+  "sku11": {
+    "headline": "Combine battery intelligence with protection that remains independent of software.",
+    "context": "SKU-11 brings control, battery-health estimation and authentication together. The cell-measuring and isolation components remain external.",
+    "decision": "The adoption decision depends on the measurement partner and battery data, as well as the controller itself.",
+    "next": "/contact"
+  },
+  "d100": {
+    "headline": "Treat D100 as a separate growth investment after the mature-node portfolio.",
+    "context": "D100 proposes an Indian flight-control and navigation chip, with a failsafe function that remains separate from higher-level computing.",
+    "decision": "The Blueprint places it outside the FY31 portfolio revenue plan and proposes a separate ₹50 Cr round after mature-node revenue.",
+    "next": "/contact"
+  }
+}

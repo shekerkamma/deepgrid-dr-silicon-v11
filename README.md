@@ -174,3 +174,6 @@ app/fmax-chart.tsx     post-route frequency per block, on /technology because it
 
 Two scroll systems coexist because they never run on the same document.
 
+
+
+The site-wide executive storyboard is in `docs/executive-story-pack-v12.md`. `npm run check:story` verifies all 37 route narratives and grounded executive answer contracts. Technical documents remain evidence; customer value, adoption conditions and a next decision lead the web experience.

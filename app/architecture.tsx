@@ -37,7 +37,7 @@ function Intro({kicker,title,em,children}:{kicker:string;title:string;em:string;
 function Lite({block,reduced,setReduced,exploded,setExploded,update,go}:Props){
  const g=blocks[block];
  return <>
-  <Intro kicker="DG32-LITE / LOCKSTEP ARCHITECTURE" title="DG32-LITE runs a second identical core two cycles behind the first," em="so a datapath fault reaches the gate driver without firmware.">
+  <Intro kicker="DG32-LITE / LOCKSTEP ARCHITECTURE" title="Keep the control function dependable," em="and make a fault observable.">
    <p>DG32-LITE combines a RISC-V microcontroller, the peripherals a brushless drive needs and a hardware safety monitor on one 130 nm die. The monitor is a second, identical core that runs two cycles behind the first. If the two ever disagree, the chip latches the first cause and drives a pin that can turn the power bridge off without waiting for firmware.</p>
    <p>Six block groups share one deterministic bus on a single 50 MHz clock. Below: the four constraints that shaped the chip, then the full diagram, every block and why it exists, and how a control loop, a boot and a fault move through it.</p>
    <div className="dr-links"><button className="text-link" onClick={()=>go('library?pkg=lite')}>Architecture deck and film <ArrowUpRight size={16}/></button><button className="text-link" onClick={()=>go('control')}>Control-loop budget <ArrowUpRight size={16}/></button></div>
@@ -46,7 +46,7 @@ function Lite({block,reduced,setReduced,exploded,setExploded,update,go}:Props){
    alt="Illustration of a silicon die under a microscope with two identical core regions side by side"
    caption="Illustration of a lockstep die: two identical cores side by side, a comparator between them. DG32’s own block diagram is below."/>
   <Stats items={[['50 MHz','ONE CLOCK DOMAIN'],['2','BUS MASTERS'],['16','INTERRUPT SOURCES'],['64 KB','BOOT ROM'],['32 KB','DUAL-PORT SRAM'],['39 cycles','FAULT TO LATCH, SIMULATED']]}/>
-  <Sec kicker="ARCHITECTURAL CONSTRAINTS" title="Four hardening findings set the shape of every block," em="starting with a lockstep core that tops out near 55–62 MHz." copy="Read across a row to see what each constraint means and what the design does about it.">
+  <Sec kicker="ARCHITECTURAL CONSTRAINTS" title="Four hardening findings set the shape of every block," em="starting with a lockstep core that tops out near 55–62 MHz." copy="Each constraint below sets a boundary for the customer workload and the scope of an evaluation.">
    <DataTable caption="Design premises and what they set" head={['Constraint','What it means','What the design does']} rows={litePremises} wide/>
   </Sec>
 

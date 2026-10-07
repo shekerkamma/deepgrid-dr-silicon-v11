@@ -1,4 +1,5 @@
 'use client';
+import {useRouteStory} from './executive-story';
 // Renders a Software / Use case / About / Contact page from app/company-pages.ts, in the showcase's
 // look: the showcase's SectionHead, its tokens, and a small set of section shapes taken from
 // deepgridsemi.com's templates (split, card grid, steps, stats, people, figures, contact, CTA).
@@ -424,6 +425,7 @@ function Reveal() {
 /** The page hero, after deepgridsemi.com's page heroes: a dark full-width band with a pill badge, the title
  *  and lede, the page's image behind it (still captioned for what it is), and its key points as cards. */
 function PageBand({ page }: { page: CompanyPage }) {
+  const story=useRouteStory();
   const bg = page.heroImage && page.heroImage.fit !== 'natural' ? page.heroImage : undefined;
   return (
     <header className={'cp-band' + (page.chips ? '' : ' is-centered')}>
@@ -431,8 +433,8 @@ function PageBand({ page }: { page: CompanyPage }) {
       <div className="cp-band-inner">
         <div className="cp-band-copy">
           <p className="cp-pill">{page.kicker}</p>
-          <h1>{page.title}</h1>
-          <p className="cp-band-lede">{page.lede}</p>
+          <h1>{story.headline}</h1>
+          <p className="cp-band-lede">{story.context}</p>
         </div>
         {page.chips && (
           <ul className="cp-chips">

@@ -167,7 +167,7 @@ export default function ApplicationsStory() {
       </section>
 
       {/* 2. Context: control comes first. */}
-      <Beat id="st-why" title="In a motor drive, control comes first. Diagnostics has to fit around it."
+      <Beat id="st-why" title="Protect the core product function before adding diagnostic features."
         films={[{clip: clips.why, label: 'Why control comes first'}]}>
         <p>
           A drive switches its power transistors thousands of times a second, and one wrong switching
@@ -183,7 +183,7 @@ export default function ApplicationsStory() {
       </Beat>
 
       {/* 3. The budget. */}
-      <Beat id="st-budget" title="Control costs a fixed amount of hardware time, so what is left is a known budget."
+      <Beat id="st-budget" title="Evaluate additional functions against the capacity the control task leaves."
         films={[{clip: clips.budget, label: 'What one control loop costs'}]}>
         <p>
           The expensive steps of motor control run in dedicated hardware, so one loop costs about
@@ -207,7 +207,7 @@ export default function ApplicationsStory() {
       </Beat>
 
       {/* 4. The method. */}
-      <Beat id="st-method" title="On this core, small classical models beat neural networks, and the signal matters more than the model."
+      <Beat id="st-method" title="Choose the simplest diagnostic method that answers the service question."
         wide={
           <div className="st-table-scroll">
             <table className="st-models">
@@ -266,7 +266,7 @@ export default function ApplicationsStory() {
       ))}
 
       {/* 9. The honest limit. */}
-      <Beat id="st-sensors" title="Compute is not the limit. The sensors are."
+      <Beat id="st-sensors" title="Measurement quality can decide whether a diagnostic feature is useful."
         films={[{clip: clips.analog, label: 'Where DG32 trails on analog'}]}>
         <p>
           Rotor-bar and eccentricity faults show up as sidebands 40 to 60&nbsp;dB below the supply
@@ -297,7 +297,7 @@ export default function ApplicationsStory() {
       </Beat>
 
       {/* 10. The upgrade path. */}
-      <Beat id="st-engine" title="DG32-2DOM adds an attention engine, on its own clock, for the models the scalar core runs slowly."
+      <Beat id="st-engine" title="A larger diagnostic workload may justify a different product variant."
         films={[
           {clip: clips.engine, label: 'What DG32-2DOM adds'},
           {clip: clips.bearing, label: 'What the engine is for'},
@@ -316,7 +316,7 @@ export default function ApplicationsStory() {
       </Beat>
 
       {/* 11. What the numbers rest on. */}
-      <Beat id="st-basis" title="Every figure here is derived, not measured, and the classifier never holds the trip."
+      <Beat id="st-basis" title="Use the analysis to design a trial, not to claim field performance."
         films={[
           {clip: clips.trip, label: 'How the hardware trips the drive'},
           {clip: clips.measured, label: 'What is not yet measured'},
@@ -339,7 +339,7 @@ export default function ApplicationsStory() {
       {/* 12. The next step. */}
       <section className="st-beat st-close" id="st-next" aria-labelledby="st-next-h">
         <div className="st-beat-text">
-          <h2 id="st-next-h">Bring a failure mode and a sample rate. We will tell you whether it fits.</h2>
+          <h2 id="st-next-h">Choose a service problem and agree how the diagnostic benefit will be tested.</h2>
           <p>
             If your machine is not among these thirty, the method is the same: the fault, the sensor
             that sees it, the rate it needs, and the model that fits the budget.

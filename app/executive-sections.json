@@ -1,0 +1,106 @@
+{
+  "Self-test cannot see a fault between runs;": {
+    "title": "Fault detection supports a stronger control proposition.",
+    "copy": "DG32 is designed to detect processor disagreement as it happens. The customer benefit depends on the complete machine response, and must be demonstrated in an evaluation."
+  },
+  "Six block groups on one clock;": {
+    "title": "Add diagnostic capability without redefining the control product.",
+    "copy": "The two DG32 variants share their control foundation. Evaluate the added computation only where the customer workload needs it."
+  },
+  "The loop runs in hardware,": {
+    "title": "Predictable control creates a budget for additional value.",
+    "copy": "The design assigns control work to dedicated hardware. The remaining capacity can support other functions, subject to the operating rate and signal quality."
+  },
+  "Mature-node silicon,": {
+    "title": "Target the physical functions around the main computer.",
+    "copy": "Power, sensing and interfaces have requirements beyond computing density. DeepGrid’s portfolio addresses these surrounding functions; each product has its own development and qualification work."
+  },
+  "Start on DG32-LITE;": {
+    "title": "Choose the smallest product that meets the customer need.",
+    "copy": "Begin with the required control and safety functions. Add the separate compute capability only when the diagnostic workload justifies it."
+  },
+  "Every gap is a deliberate sequencing choice,": {
+    "title": "Product gaps are dependencies in the adoption decision.",
+    "copy": "Compare the functions available for evaluation with those still on the roadmap. A planned feature cannot support a present production commitment."
+  },
+  "Closing the gaps": {
+    "title": "Stage the programme against demonstrated milestones.",
+    "copy": "Design validation, returned silicon and added capabilities are different gates. Agree which gate must be reached before each commitment."
+  },
+  "Evaluate DG32-LITE now if the drive needs lockstep;": {
+    "title": "Start a bounded evaluation before making a production selection.",
+    "copy": "Assess the current design against your required control and fault response. If essential analog or memory features are missing, make them explicit dependencies."
+  },
+  "This form composes an email in your own client,": {
+    "title": "Start with the outcome your product needs.",
+    "copy": "Describe the customer problem, timing and acceptance criteria. The button opens your email app with the brief; you review and send it."
+  },
+  "Three of these answer most questions without waiting for a reply,": {
+    "title": "Resolve the questions you can before the first meeting.",
+    "copy": "Review product scope, evidence and the relevant explanation. Bring the remaining decision or evidence gap to the team."
+  },
+  "Design, verification and bring-up are in one building in Hyderabad": {
+    "title": "Connect the requirement with the team responsible for delivery.",
+    "copy": "Use the enquiry to establish the product scope, responsible people and the evidence needed for the next milestone."
+  },
+  "One rail powers": {
+    "title": "Integration requirements affect the customer’s board and schedule.",
+    "copy": "Supply, startup and timing choices determine what the equipment team can design now and what needs later validation."
+  },
+  "Every electrical limit": {
+    "title": "Plan for characterisation before freezing electrical commitments.",
+    "copy": "The published electrical values are process nominals. Measured limits must replace those assumptions before a production decision."
+  },
+  "What a design can lock now,": {
+    "title": "Separate decisions that can proceed from those that must wait.",
+    "copy": "Use the defined package and interfaces to scope integration. Keep unmeasured electrical behaviour as an explicit validation dependency."
+  },
+  "The fault path in ninety seconds,": {
+    "title": "Follow the failure all the way to the system response.",
+    "copy": "The explanation below connects detection to the protective action. Use it to identify the response your own machine must demonstrate."
+  },
+  "Each failure ends at a signal,": {
+    "title": "Different failures need different evidence.",
+    "copy": "Incorrect computation, a stopped processor and an invalid access are distinct events. An evaluation should exercise the failures relevant to your equipment."
+  },
+  "Firmware fires the fault on purpose,": {
+    "title": "A protection function needs a repeatable test.",
+    "copy": "Deliberate fault injection gives an evaluator a way to exercise the proposed response. It is one part of the evidence needed for adoption."
+  },
+  "A classifier can warn.": {
+    "title": "Use diagnostics to guide service; retain a separate protective response.",
+    "copy": "Condition monitoring may recommend maintenance. It does not replace the hardware fault response or establish functional-safety certification."
+  },
+  "Four hardening findings set the shape of every block,": {
+    "title": "Design constraints define where the product can compete.",
+    "copy": "Clock, memory and physical implementation limits shape the workloads the design can serve. Evaluate the intended application within those limits."
+  },
+  "Six block groups share one deterministic 50 MHz bus,": {
+    "title": "The design assigns a clear responsibility to each function.",
+    "copy": "Control, memory, sensing and communications work together. The architecture below explains the proposed product behaviour and its integration boundaries."
+  },
+  "Four decisions are frozen until first-silicon test,": {
+    "title": "Protect the baseline while gathering the evidence for change.",
+    "copy": "The first evaluation should test the defined design. Additional features require their own scope and validation, rather than an assumption that the current evidence transfers."
+  },
+  "Every subsystem is configured for a first shuttle with no respin,": {
+    "title": "The first manufacturing step is a validation milestone.",
+    "copy": "A fixed implementation gives the team a baseline to test. Manufacturing and qualification outcomes must still be demonstrated."
+  },
+  "All 44 signal pads are allocated,": {
+    "title": "Interface choices set the room for customer changes.",
+    "copy": "The allocation below shows the available connections. A new interface requirement may change the integration scope."
+  },
+  "Four gates run on the final hardened die,": {
+    "title": "Release depends on all required checks passing.",
+    "copy": "The listed checks are gates for the completed physical design. Their existence does not establish that the design has passed them."
+  },
+  "The core fetches every instruction,": {
+    "title": "Allocate computing capacity around the product’s primary job.",
+    "copy": "The design moves recurring control work into dedicated functions. Evaluate the remaining workload against the actual timing budget."
+  },
+  "What firmware can count on,": {
+    "title": "Make the application requirements explicit before committing.",
+    "copy": "The detailed capabilities below define the current design envelope. Use them to scope the trial and the work still required."
+  }
+}

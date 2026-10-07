@@ -304,9 +304,9 @@ export default function AskDeepGrid({go}: {go: (hash: string) => void}) {
             className={`dr-ask-toggle-btn ${activeView === 'council' ? 'active' : ''}`}
             aria-pressed={activeView === 'council'}
             onClick={() => setActiveView('council')}
-            title="Direct Grounded Answers with Official Citations"
+            title="Business implications with supporting sources"
           >
-            <BookOpen size={16} /> <span>Grounded Answers</span>
+            <BookOpen size={16} /> <span>Executive answers</span>
           </button>
           <button
             className={`dr-ask-toggle-btn ${activeView === 'graph' ? 'active' : ''}`}
@@ -344,7 +344,7 @@ export default function AskDeepGrid({go}: {go: (hash: string) => void}) {
               className="dr-ask-input"
               value={query}
               onChange={e => handleQuerySelect(e.target.value)}
-              placeholder="Ask about DG32 silicon…"
+              placeholder="Ask about customer value, readiness or investment…"
               aria-label="Search DeepGrid knowledge"
             />
             {query && (
@@ -356,7 +356,12 @@ export default function AskDeepGrid({go}: {go: (hash: string) => void}) {
 
           {/* Quick High-Yield Technical Queries (2 from each PDF document) */}
           <div className="dr-ask-prompts" style={{marginTop: '10px'}} aria-label="Quick queries">
-            {filteredPrompts.map(p => (
+            {(activeView==='council' ? [
+ {id:'value',query:'What does SKU-10 DG32-Max replace?',docBadge:'CUSTOMER VALUE',label:'Why secure control?'},
+ {id:'funding',query:'How is the D100 drone chip funded?',docBadge:'INVESTMENT',label:'The D100 funding decision'},
+ {id:'compare',query:'What is the difference between SKU-10 and SKU-11?',docBadge:'PRODUCT CHOICE',label:'Control or battery intelligence?'},
+ {id:'buyer',query:'Who buys the SKU-5 interface transceiver?',docBadge:'CUSTOMERS',label:'Who needs the interface product?'},
+ ] : filteredPrompts).map(p => (
               <button
                 key={p.id}
                 className={`dr-ask-chip ${query === p.query ? 'active' : ''}`}

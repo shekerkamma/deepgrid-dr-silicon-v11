@@ -2,6 +2,8 @@
 import {useEffect,useRef,useState} from 'react';
 import {ArrowUpRight,Download} from 'lucide-react';
 import {url} from './routes';
+import sectionStories from './executive-sections.json';
+import {useRouteStory} from './executive-story';
 import {readHref} from './doc-links';
 import {nbspUnits as nb, type DiagramNotes as DiagramNotesData, type DiagramRef} from './diagram-notes';
 import type {Explained,Step} from './detail-content';
@@ -9,14 +11,15 @@ import type {Explained,Step} from './detail-content';
 // Layout primitives for the detailed sections. Content lives in detail-content.ts.
 
 export function Eyebrow({children}:{children:React.ReactNode}){return <p className="eyebrow"><span/> {children}</p>}
-export function SectionHead({title,copy,kicker}:{tag?:string;kicker?:string;title:string;copy:string}){return <header className="section-head"><div>{kicker&&<p className="kicker">{kicker}</p>}<h1>{title}</h1></div><p>{copy}</p></header>}
+export function SectionHead({title,copy,kicker}:{tag?:string;kicker?:string;title:string;copy:string}){const story=useRouteStory(); title=story.headline; copy=story.context;return <header className="section-head"><div>{kicker&&<p className="kicker">{kicker}</p>}<h1>{title}</h1></div><p>{copy}</p></header>}
 
 export function Sec({kicker,title,em,copy,children}:{kicker?:string;title:string;em?:string;copy?:React.ReactNode;children?:React.ReactNode}){
+ const story=sectionStories[title.replace(/\u00a0/g,' ') as keyof typeof sectionStories]; if(story){title=story.title;copy=story.copy;em=undefined;}
  return <section className="dr-sec"><header className="dr-sec-head"><div>{kicker&&<p className="dr-kicker">{kicker}</p>}<h2 className="dr-h2">{title}{em&&<><br/><em>{em}</em></>}</h2></div>{copy&&<div className="dr-sec-copy">{typeof copy==='string'?<p>{copy}</p>:copy}</div>}</header>{children}</section>;
 }
 
 export function ExplainedGrid({items,cols=3}:{items:Explained[];cols?:2|3}){
- return <div className={'dr-explained dr-cols-'+cols}>{items.map(x=><article key={x.name}><h3>{x.name}</h3><p>{x.what}</p><p className="dr-why-line"><span className="mono">WHY</span>{x.why}</p>{x.points&&<ul>{x.points.map(p=><li key={p}>{p}</li>)}</ul>}</article>)}</div>;
+ return <div className={'dr-explained dr-cols-'+cols}>{items.map(x=><article key={x.name}><h3>{x.name}</h3><p>{x.why}</p><details className="executive-sources"><summary>Supporting detail</summary><p>{x.what}</p>{x.points&&<ul>{x.points.map(p=><li key={p}>{p}</li>)}</ul>}</details></article>)}</div>;
 }
 
 export function Steps({steps,label}:{steps:Step[];label?:string}){

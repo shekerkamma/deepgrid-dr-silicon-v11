@@ -1,0 +1,110 @@
+{
+  "sku1": {
+    "headline": "Simplify the motor drive without losing control of the system.",
+    "context": "A controller and gate driver usually require separate parts. SKU-1 proposes to combine those roles for motors, appliances and actuators.",
+    "implication": "Choose the drive by its operating environment and required response, then assess whether integration reduces the complexity of your product.",
+    "gate": "Validate the complete power stage before treating a component reduction as a production benefit.",
+    "page": 10,
+    "valueTitle": "Integration is useful only if the complete drive performs.",
+    "gateTitle": "Power-stage validation is the adoption gate."
+  },
+  "sku2": {
+    "headline": "Make billing accuracy and tamper resilience part of the same product.",
+    "context": "SKU-2 brings energy measurement, meter control and outage records together for utilities and meter makers.",
+    "implication": "The commercial test is whether the meter meets the tender’s accuracy, tamper and service requirements.",
+    "gate": "Accuracy and outage behaviour need measured evidence before a utility deployment.",
+    "page": 13,
+    "valueTitle": "Utility acceptance sets the commercial bar.",
+    "gateTitle": "Measurement quality must be demonstrated."
+  },
+  "sku3": {
+    "headline": "Develop a domestic option for power systems with demanding reliability needs.",
+    "context": "SKU-3 targets the power supplies used in military, railway and space equipment, where qualification is part of the buying decision.",
+    "implication": "Select the required grade and equipment programme first; a general power-management claim is not enough.",
+    "gate": "Each environmental and screening requirement must be demonstrated for the intended grade.",
+    "page": 16,
+    "valueTitle": "The required grade determines the programme.",
+    "gateTitle": "Reliability claims require grade-specific evidence."
+  },
+  "sku4": {
+    "headline": "Keep a control failure from becoming an uncontrolled machine.",
+    "context": "SKU-4 uses two processors to detect disagreement and trigger a hardware fault response. It is intended to support a system safety case.",
+    "implication": "Evaluate the complete response—from detecting a failure to reaching the machine’s safe state.",
+    "gate": "Simulation of fault detection does not establish product certification or system-level safety.",
+    "page": 19,
+    "valueTitle": "The machine’s safe state is the business requirement.",
+    "gateTitle": "A fault-detection result is not a safety certificate."
+  },
+  "sku5": {
+    "headline": "Keep equipment connected when interface components become a sourcing risk.",
+    "context": "SKU-5 targets the wired interfaces used across industrial and vehicle equipment, combining bus functions on one part.",
+    "implication": "Start with the installed equipment and the replacement requirements; compatibility determines the opportunity.",
+    "gate": "Electrical protection, wiring limits and interchangeability still require validation.",
+    "page": 22,
+    "valueTitle": "Compatibility determines the replacement opportunity.",
+    "gateTitle": "Protection and wiring limits need real tests."
+  },
+  "sku6": {
+    "headline": "Protect the equipment when its power supplies behave unexpectedly.",
+    "context": "SKU-6 watches supply conditions and records a fault so the wider system can respond. It targets a function needed across many boards.",
+    "implication": "Define which power disturbances should stop the system and which should be tolerated.",
+    "gate": "The response must be tested against real supply noise and the intended screening requirements.",
+    "page": 25,
+    "valueTitle": "The equipment response determines the value of supervision.",
+    "gateTitle": "Noise tolerance must be proven on the board."
+  },
+  "sku7": {
+    "headline": "Turn radar sensing into usable range and motion information.",
+    "context": "SKU-7 separates radio-frequency sensing from digital processing, targeting radar functions for vehicles and other platforms.",
+    "implication": "Choose the detection task, operating environment and required range before selecting a radar architecture.",
+    "gate": "The radio and processing combination must be proven together in the intended scene.",
+    "page": 28,
+    "valueTitle": "The sensing task comes before the radar specification.",
+    "gateTitle": "The complete sensing chain must perform in its scene."
+  },
+  "sku8": {
+    "headline": "Make the display trustworthy in demanding operating conditions.",
+    "context": "SKU-8 targets rugged displays, combining panel-driving functions with detection of a frozen image.",
+    "implication": "Evaluate readability and failure indication as part of the operator’s task, not simply as display specifications.",
+    "gate": "Panel compatibility, environmental performance and fault indication need system tests.",
+    "page": 31,
+    "valueTitle": "The operator must be able to trust the display.",
+    "gateTitle": "Panel and environmental tests determine adoption."
+  },
+  "sku9": {
+    "headline": "Bring vehicle power and communications closer to the loads they serve.",
+    "context": "SKU-9 combines network and power-distribution functions within a vehicle zone; the central vehicle computer remains separate.",
+    "implication": "Assess the loads, network traffic and failure isolation of a specific zone before considering consolidation.",
+    "gate": "Network timing, power protection and the vehicle safety case remain adoption gates.",
+    "page": 34,
+    "valueTitle": "Consolidation must preserve the vehicle’s responsibilities.",
+    "gateTitle": "Timing and protection remain system-level gates."
+  },
+  "sku10": {
+    "headline": "Combine secure control and trusted startup in one product.",
+    "context": "DG32-Max targets imported secure microcontrollers and the separate security chip often used to check firmware before it runs.",
+    "implication": "The opportunity is simpler secure control for industrial, drone and EV equipment, provided customer requirements can be met.",
+    "gate": "Customer design wins and validation remain essential; the documented design status is not qualified production.",
+    "page": 37,
+    "valueTitle": "Secure control needs a customer design win.",
+    "gateTitle": "A completed design is not qualified production."
+  },
+  "sku11": {
+    "headline": "Combine battery intelligence with protection that remains independent of software.",
+    "context": "SKU-11 brings control, battery-health estimation and authentication together. The cell-measuring and isolation components remain external.",
+    "implication": "The adoption decision depends on the measurement partner and battery data, as well as the controller itself.",
+    "gate": "The Blueprint leaves the measurement partner and field dataset as key dependencies; no manufacturing shuttle is assigned.",
+    "page": 40,
+    "valueTitle": "The battery data and measurement partner shape the opportunity.",
+    "gateTitle": "Partner selection and field data remain open."
+  },
+  "d100": {
+    "headline": "Treat D100 as a separate growth investment after the mature-node portfolio.",
+    "context": "D100 proposes an Indian flight-control and navigation chip, with a failsafe function that remains separate from higher-level computing.",
+    "implication": "The Blueprint places it outside the FY31 portfolio revenue plan and proposes a separate ₹50 Cr round after mature-node revenue.",
+    "gate": "The advanced-process development cost and aviation qualification path remain major delivery gates.",
+    "page": 43,
+    "valueTitle": "The investment follows the mature-node business.",
+    "gateTitle": "Development cost and qualification determine the delivery case."
+  }
+}
