@@ -30,7 +30,13 @@ const keyFor = (q: string) => {
 };
 
 const label = (key: string) =>
-  key === 'd100' ? 'D100' : key === 'sku10' ? 'DG32-Max' : key === 'sku4' ? 'SKU-4 (DG32-LITE)' : `SKU-${key.slice(3)}`;
+  key === 'd100'
+    ? 'D100'
+    : key === 'sku10'
+      ? 'SKU-10 (DG32-Max)'
+      : key === 'sku4'
+        ? 'SKU-4 (DG32-LITE)'
+        : `SKU-${key.slice(3)}`;
 
 /** Strip retrieval scaffolding so evidence text reads as prose. */
 const clean = (s: string) =>
@@ -119,29 +125,14 @@ export function executiveAnswer(query: string, r: Retrieval): ExecutiveAnswer {
           refs: planRefs,
         },
         {
-          title: 'What DeepGrid brings',
-          body: productStories.d100.brings,
-          refs: earnsRefs,
-        },
-        {
           title: 'Where the value is',
-          body: productStories.d100.value,
+          body: productStories.d100.value + ' ' + productStories.d100.brings,
           refs: earnsRefs,
         },
         {
           title: 'What is proven — and what is not yet',
-          body: `${productStories.d100.proven} Still open: ${productStories.d100.notYet}`,
+          body: `${productStories.d100.proven} Still open: ${productStories.d100.notYet} Recommendation: ${productStories.d100.recommendation}`,
           refs: statusRefs,
-        },
-        {
-          title: 'The trade-off',
-          body: productStories.d100.tradeoff,
-          refs: [],
-        },
-        {
-          title: 'Our recommendation',
-          body: productStories.d100.recommendation,
-          refs: [],
         },
       ],
       sources,
