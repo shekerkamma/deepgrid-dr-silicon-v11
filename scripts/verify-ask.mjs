@@ -59,6 +59,20 @@ assert.match(await page.locator('.executive-arc').innerText(), /SKU-11/);
 await page.waitForFunction(
   () => !document.querySelector('.executive-sources')?.open,
 );
+await input.fill('Thirty use cases, no accelerator');
+await page.waitForFunction(() =>
+  /calculated design scenarios/.test(
+    document.querySelector('.dr-answer-lead')?.textContent || '',
+  ),
+);
+assert.equal(await page.locator('.executive-arc>li').count(), 4);
+assert.match(await page.locator('.executive-arc').innerText(), /focused pilot/);
+await page.locator('.executive-sources summary').click();
+assert(
+  !/N A V I G A T E Contents|Every entry links to its slide/.test(
+    await page.locator('.executive-sources').innerText(),
+  ),
+);
 await page.setViewportSize({ width: 390, height: 844 });
 assert(
   await page.evaluate(

@@ -41,6 +41,25 @@ for (const q of [
   for (const n of [...a.answerRefs, ...a.beats.flatMap((b) => b.refs)])
     assert(a.sources[n - 1]);
 }
+for (const q of [
+  'Thirty use cases, no accelerator',
+  'Can DG32-LITE work without an AI accelerator?',
+]) {
+  const a = ask(q);
+  assert(a.supported, q);
+  assert.match(a.title, /machine diagnostics/);
+  assert.match(a.answer, /calculated design scenarios/);
+  assert.equal(a.beats.length, 4);
+  assert(a.sources.every((c) => !/_p[12]$/.test(c.id)));
+  assert(
+    a.sources.some((c) => c.text.includes('not been measured on silicon')),
+  );
+  assert(
+    a.sources.some((c) =>
+      c.text.includes('No workload here has been compiled'),
+    ),
+  );
+}
 assert(!ask('What is the weather in Hyderabad today?').supported);
 assert(!ask('What is SKU-99?').supported);
 const r = JSON.parse(fs.readFileSync('app/executive-routes.json', 'utf8'));
