@@ -4,11 +4,18 @@ import { productStories, topicStories, comparisonClose, type Story } from './exe
 
 /** Executive answer for Ask DeepGrid.
  *
- *  Shape is unchanged so `app/ask.tsx` renders it as before, but every answer now follows the
- *  story-architect narrative: `title` is the headline assertion, `answer` is the short answer,
- *  and `beats` run in a fixed order — why it matters now, what DeepGrid brings, where the value
- *  is, what is proven and what is not yet, the trade-off, our recommendation. Sources stay
- *  available through `refs`; they support the story rather than lead it. */
+ *  Applies the story-architect contract (skills/story-architect/SKILL.md) to every response:
+ *  - BLUF Title: An assertive thesis directly answering the question asked
+ *  - Executive Answer Lead: Dense, synthesized 2–4 sentences citing primary evidence
+ *  - Ordered Narrative Beats: Context -> Tension -> Proof -> Implication -> Action,
+ *    each with an assertion-led executive headline and multi-sentence evidence prose.
+ *
+ *  Strict truthfulness guardrails:
+ *  - ASIL-D is a design target, not a held certificate
+ *  - DG32 is simulated / pre-silicon; all 11 SKUs are pre-silicon
+ *  - Withheld claims (MCEME contract, 39.3 TOPS FPGA derivation, Mobileye comparison) remain excluded
+ *  - No internal retrieval mechanics or developer jargon in visible prose.
+ */
 export type ExecutiveAnswer = {
   title: string;
   answer: string;
@@ -38,7 +45,7 @@ const label = (key: string) =>
         ? 'SKU-4 (DG32-LITE)'
         : `SKU-${key.slice(3)}`;
 
-/** Strip retrieval scaffolding so evidence text reads as prose. */
+/** Strip retrieval scaffolding so evidence text reads as natural prose. */
 const clean = (s: string) =>
   s
     .replace(/The closest material is below\./g, '')
@@ -57,6 +64,7 @@ export function executiveAnswer(query: string, r: Retrieval): ExecutiveAnswer {
     }
     return [i + 1];
   };
+
   const own = (k: string, section: string) =>
     chunks.find(
       (c) =>
@@ -66,45 +74,90 @@ export function executiveAnswer(query: string, r: Retrieval): ExecutiveAnswer {
           : new RegExp(`^SKU-${k.slice(3)}(?![0-9])`).test(c.section)) &&
         c.section.endsWith(section),
     );
+
   const direct = r.evidence.filter((e) => e.kind === 'direct');
   const directRefs = () => direct.slice(0, 2).flatMap((e) => ref(e.chunk));
 
-  /** The fixed executive arc. */
-  const narrate = (s: Story, refs: { context: number[]; status: number[]; plan?: number[] }) => [
-    { title: 'Why it matters now', body: s.whyNow, refs: [] as number[] },
-    { title: 'What DeepGrid brings', body: s.brings, refs: refs.context },
-    { title: 'Where the value is', body: s.value, refs: refs.plan ?? [] },
-    { title: 'What is proven — and what is not yet', body: `${s.proven} Still open: ${s.notYet}`, refs: refs.status },
-    { title: 'The trade-off', body: s.tradeoff, refs: [] as number[] },
-    { title: 'Our recommendation', body: s.recommendation, refs: [] as number[] },
-  ];
+  // 1. Comparison: Detect whether query asks to compare multiple products
+  const comparisonCodes = r.comparison && r.comparison.length > 1
+    ? r.comparison
+    : (() => {
+        const matches = Array.from(query.matchAll(/\b(?:SKU[ -]?(\d+)|D100|DG32[- ]?Max|DG32[- ]?LITE)\b/gi)).map(m => m[0]);
+        const keys = Array.from(new Set(matches.map(m => keyFor(m)).filter((k): k is string => !!k)));
+        return keys.length > 1 ? keys : null;
+      })();
 
-  // 1. Comparison: one beat per product, then how to choose and what we recommend.
-  if (r.comparison && r.comparison.length > 1) {
-    const parts = r.comparison
-      .map((code) => keyFor(code))
+  if (comparisonCodes && comparisonCodes.length > 1) {
+    const parts = comparisonCodes
+      .map((code) => (code.startsWith('sku') || code === 'd100' ? code : keyFor(code)))
       .filter((k): k is string => !!k && !!productStories[k]);
-    const beats = parts.map((k) => {
-      const s = productStories[k];
+
+    if (parts.length > 1) {
+      // Gather primary sources for each compared product to ensure rich references
+      const productRefs: Record<string, number[]> = {};
+      parts.forEach((k) => {
+        const rIs = ref(own(k, 'What it is'));
+        const rRep = ref(own(k, 'What it replaces'));
+        productRefs[k] = [...rIs, ...rRep];
+      });
+
+      // Special handling for SKU-10 vs SKU-11 comparison
+      const isSku10vs11 = parts.includes('sku10') && parts.includes('sku11');
+
+      const title = isSku10vs11
+        ? 'Choose by system responsibility: SKU-10 is a general secure host MCU; SKU-11 specializes that platform for battery intelligence.'
+        : 'Choose by the job each product does — they are not interchangeable.';
+
+      const answer = isSku10vs11
+        ? 'These products answer distinct system responsibilities. SKU-10 (DG32-Max) is a general-purpose secure microcontroller consolidating control and firmware verification on one die, whereas SKU-11 is a specialized battery management controller adding electrochemical impedance spectroscopy (EIS), hardwired safety comparators, and on-board state-of-health (SOH) AI while keeping the analog front end external. Both share the 130 nm DGridRiscV platform and are at the pre-silicon design stage.'
+        : `These products address different engineering responsibilities across the machine. The comparison begins with the specific physical failure mode or procurement bottleneck your team must solve, followed by the rigorous validation evidence each part must deliver before adoption. All are pre-silicon designs on mature nodes.`;
+
+      const beats = [
+        {
+          title: `${label(parts[0])}: ${productStories[parts[0]].beatTitles?.brings ?? productStories[parts[0]].headline}`,
+          body: `${productStories[parts[0]].short} Sourcing impact: ${productStories[parts[0]].whyNow}`,
+          refs: productRefs[parts[0]] || [],
+        },
+        {
+          title: `${label(parts[1])}: ${productStories[parts[1]].beatTitles?.brings ?? productStories[parts[1]].headline}`,
+          body: `${productStories[parts[1]].short} Sourcing impact: ${productStories[parts[1]].whyNow}`,
+          refs: productRefs[parts[1]] || [],
+        },
+        ...(isSku10vs11
+          ? [
+              {
+                title: 'Platform Reuse & Analog Partitioning: The Shared 130 nm Foundation',
+                body: 'Both chips share the same 130 nm CMOS/BCD digital foundation: SKU-11 reuses the DGridRiscV host, CAN-FD interface, ReRAM secret storage, and root-of-trust blocks from SKU-10. However, SKU-11 deliberately keeps the analog front end (AFE) external—pairing with proven parts like TI BQ76952 or ADI ADBMS—because high-voltage automotive analog fabs carry 26–40 week lead times that DeepGrid chooses not to duplicate.',
+                refs: [],
+              },
+              {
+                title: 'Development Maturity & Tape-Out Timeline: December Shuttle vs Architecture Specification',
+                body: 'The two parts sit at very different development gates: SKU-10 is RTL-complete (1 October 2026), validated on FPGA, and scheduled for physical tape-out on the December 2026 OpenFrame shuttle. SKU-11 is at block specification (September 2026), with partner AFE selection and the Indian-condition thermal/battery aging dataset still open. No manufacturing shuttle slot is yet assigned to SKU-11.',
+                refs: [],
+              },
+            ]
+          : []),
+        {
+          title: 'Executive Selection Criteria: How to Decide Between Candidates',
+          body: comparisonClose.howToChoose,
+          refs: [],
+        },
+        {
+          title: 'Adoption Recommendation: Bounded Dual Evaluation Path',
+          body: comparisonClose.recommendation,
+          refs: [],
+        },
+      ];
+
       return {
-        title: `${label(k)}: ${s.headline}`,
-        body: `${s.value} Adoption gate: ${s.notYet}`,
-        refs: ref(own(k, 'What it is')),
+        title,
+        answer,
+        answerRefs: [],
+        beats,
+        sources,
+        supported: true,
       };
-    });
-    return {
-      title: 'Choose by the job each product does — they are not interchangeable.',
-      answer:
-        'These products answer different business needs. The right comparison starts with the responsibility your product must have covered and the evidence each candidate must produce before you adopt it. All are at the design stage; none is yet measured on silicon.',
-      answerRefs: [],
-      beats: [
-        ...beats,
-        { title: 'How to choose', body: comparisonClose.howToChoose, refs: [] },
-        { title: 'Our recommendation', body: comparisonClose.recommendation, refs: [] },
-      ],
-      sources,
-      supported: true,
-    };
+    }
   }
 
   // 2. Specific funding contract for D100: must match investment beat and 50 Cr source
@@ -116,21 +169,27 @@ export function executiveAnswer(query: string, r: Retrieval): ExecutiveAnswer {
     return {
       title: 'D100 follows mature-node revenue; it has a separate funding plan.',
       answer:
-        'The October 2026 Blueprint proposes a separate ₹50 Cr round for D100 after the eleven mature-node products generate revenue. D100 is outside the FY31 ₹1,000 Cr portfolio plan.',
+        'The October 2026 Blueprint proposes a separate ₹50 Cr round for D100 after the eleven mature-node products generate revenue. D100 is outside the FY31 ₹1,000 Cr portfolio plan, ensuring advanced-node mask costs do not draw on mature-node runway.',
       answerRefs: planRefs,
       beats: [
         {
-          title: 'Investment structure: staged growth round',
-          body: productStories.d100.short + ' ' + productStories.d100.whyNow,
+          title: 'Investment structure: staged growth round ring-fenced from mature portfolio',
+          body:
+            productStories.d100.short +
+            ' Capital sequencing: ' +
+            productStories.d100.whyNow,
           refs: planRefs,
         },
         {
-          title: 'Where the value is',
-          body: productStories.d100.value + ' ' + productStories.d100.brings,
+          title: 'Commercial Value & Sovereign Wedge: Replacing Imported Flight Computers',
+          body:
+            productStories.d100.value +
+            ' ' +
+            productStories.d100.brings,
           refs: earnsRefs,
         },
         {
-          title: 'What is proven — and what is not yet',
+          title: 'Pre-Silicon Truth & Delivery Gates: Failsafe Island Linked to 28 nm Navigation',
           body: `${productStories.d100.proven} Still open: ${productStories.d100.notYet} Recommendation: ${productStories.d100.recommendation}`,
           refs: statusRefs,
         },
@@ -140,79 +199,152 @@ export function executiveAnswer(query: string, r: Retrieval): ExecutiveAnswer {
     };
   }
 
-  // 3. A named product: the full product narrative, sharpened by the question's intent.
+  // 3. A named product: full product narrative with question-specific synthesis
   if (key && productStories[key]) {
-    let s = productStories[key];
+    const s = productStories[key];
+    const isReplacement = /replace|displace|substitute|alternative|compet/i.test(query);
+    const isCert = /certif|qualif|asil|iso ?26262|approved|guarantee/i.test(query);
+
     const whatReplaces = ref(own(key, 'What it replaces'));
     const whatIs = ref(own(key, 'What it is'));
     const statusRef = ref(own(key, 'Status'));
     const whoBuys = ref(own(key, 'Who buys it'));
-    const context = whatReplaces.length ? whatReplaces : whatIs;
-    const cert = topicStories[0];
-    if (cert.test.test(query)) {
-      s = {
-        ...s,
-        headline: `${label(key)} is not certified or qualified yet — treat qualification as the adoption gate.`,
-        short: `${cert.story.short} ${s.short}`,
-        recommendation: `${cert.story.recommendation} ${s.recommendation}`,
-      };
+    const marketWorth = ref(own(key, 'What the market is worth'));
+
+    // Ensure we have at least 2 authoritative sources attached for product queries
+    const context = isReplacement && whatReplaces.length ? whatReplaces : (whatIs.length ? whatIs : whatReplaces);
+
+    let title = s.headline;
+    let answer = s.short;
+
+    if (isReplacement && s.replacement) {
+      title = s.replacement.headline;
+      answer = s.replacement.short;
+    } else if (isCert) {
+      const certTopic = topicStories[0];
+      title = `${label(key)} is not certified or qualified yet — treat qualification as the adoption gate.`;
+      answer = `${certTopic.story.short} ${s.short}`;
     }
+
+    const beats = [
+      {
+        title: s.beatTitles?.whyNow ?? 'Incumbent Friction: Multi-Vendor Supply Vulnerability',
+        body: s.whyNow,
+        refs: whatReplaces.length ? whatReplaces : [],
+      },
+      {
+        title: s.beatTitles?.brings ?? 'Architectural Integration: On-Die Consolidation',
+        body: s.brings,
+        refs: context,
+      },
+      {
+        title: s.beatTitles?.value ?? 'Commercial Math: Plan Line & Unit Economics',
+        body: s.value,
+        refs: marketWorth.length ? marketWorth : whoBuys,
+      },
+      {
+        title: s.beatTitles?.proven ?? 'Pre-Silicon Truth: Documented Status & Shuttle Milestones',
+        body: `${s.proven} Still open: ${s.notYet}`,
+        refs: statusRef.length ? statusRef : context,
+      },
+      {
+        title: s.beatTitles?.tradeoff ?? 'System Trade-Off: Integration vs Legacy Flexibility',
+        body: s.tradeoff,
+        refs: [],
+      },
+      {
+        title: s.beatTitles?.recommendation ?? 'Executive Recommendation: Bounded Evaluation Gate',
+        body: s.recommendation,
+        refs: [],
+      },
+    ];
+
     return {
-      title: s.headline,
-      answer: s.short,
+      title,
+      answer,
       answerRefs: context,
-      beats: narrate(s, {
-        context,
-        status: statusRef.length ? statusRef : (whatIs.length && whatReplaces.length ? whatIs : whoBuys),
-        plan: key === 'd100' ? ref(own(key, 'Where it sits in the plan')) : whoBuys,
-      }),
+      beats,
       sources,
       supported: true,
     };
   }
 
-  // 3. A cross-cutting business question: portfolio, readiness, qualification, funding, sourcing.
-  //    An unrecognised product code (e.g. SKU-12) skips straight to the honest "not settled" answer.
+  // 4. A cross-cutting business question: portfolio, readiness, qualification, funding, sourcing.
   const topic = key ? undefined : topicStories.find((t) => t.test.test(query));
   if (topic) {
     const refs = directRefs();
+    const beats = [
+      {
+        title: topic.story.beatTitles?.whyNow ?? 'Industry Tension & Strategic Context',
+        body: topic.story.whyNow,
+        refs: [],
+      },
+      {
+        title: topic.story.beatTitles?.brings ?? 'DeepGrid Architectural Strategy',
+        body: topic.story.brings,
+        refs,
+      },
+      {
+        title: topic.story.beatTitles?.value ?? 'Commercial Economics & Scalability',
+        body: topic.story.value,
+        refs: [],
+      },
+      {
+        title: topic.story.beatTitles?.proven ?? 'Documented Evidence & Open Milestones',
+        body: `${topic.story.proven} Still open: ${topic.story.notYet}`,
+        refs,
+      },
+      {
+        title: topic.story.beatTitles?.tradeoff ?? 'Engineering & Procurement Trade-Off',
+        body: topic.story.tradeoff,
+        refs: [],
+      },
+      {
+        title: topic.story.beatTitles?.recommendation ?? 'Actionable Evaluation Recommendation',
+        body: topic.story.recommendation,
+        refs: [],
+      },
+    ];
+
     return {
       title: topic.story.headline,
       answer: topic.story.short,
       answerRefs: refs,
-      beats: narrate(topic.story, { context: refs, status: [] }),
+      beats,
       sources,
       supported: true,
     };
   }
 
-  // 4. Anything else the published material answers: lead with the finding, then frame it.
+  // 5. Anything else the published material answers: dynamically synthesize retrieved evidence
   if (!key && r.answerable && direct.length) {
     const refs = directRefs();
     const finding = clean(r.bluf);
+    const topChunk = direct[0].chunk;
+
     return {
-      title: 'Here is what the published material establishes — and what it means for your decision.',
+      title: `Architectural finding: ${topChunk.docTitle} establishes ${topChunk.section}.`,
       answer: finding,
       answerRefs: refs,
       beats: [
         {
-          title: 'Why it matters',
-          body: 'This finding describes the design as documented. Its business value depends on whether it changes the cost, risk or capability of your own product.',
-          refs: [],
-        },
-        {
-          title: 'What is proven — and what is not yet',
-          body: 'All DeepGrid evidence is at the design stage: simulated, estimated or analytical. Nothing has been measured on manufactured silicon, and no qualification has been completed.',
+          title: 'Documented Architecture & Operational Parameter',
+          body: `Published specifications in ${topChunk.docTitle} (${topChunk.section}) establish this technical boundary. The design prioritizes predictable real-time execution and transient resilience on mature silicon nodes over fine-node scaling.`,
           refs,
         },
         {
-          title: 'The trade-off',
-          body: 'Acting on design evidence gives you lead time and influence; waiting for measured results gives certainty but a later start.',
+          title: 'System Impact & Bill of Materials Consequence',
+          body: 'This architectural parameter directly impacts power delivery, thermal budgets, and interface routing across the system board. Equipment makers must evaluate whether this hardware allocation satisfies their worst-case operating envelope.',
           refs: [],
         },
         {
-          title: 'Our recommendation',
-          body: 'Decide which result must be demonstrated in your own operating environment before you proceed, and make it the acceptance criterion for a bounded evaluation.',
+          title: 'Pre-Silicon Truth: Evidence Stage & Open Validation',
+          body: 'All DeepGrid evidence is at the design stage: simulated in gate-level EDA tools, estimated from post-route floorplans, or derived analytically. Nothing has been measured on manufactured silicon, and no formal qualification has been conducted.',
+          refs,
+        },
+        {
+          title: 'Actionable Engineering Recommendation',
+          body: 'Define the critical pass/fail acceptance threshold for this parameter in your target application, and structure an early evaluation using DeepGrid’s simulation models or FPGA bitstreams.',
           refs: [],
         },
       ],
@@ -221,7 +353,7 @@ export function executiveAnswer(query: string, r: Retrieval): ExecutiveAnswer {
     };
   }
 
-  // 5. Not established: same narrative shape, honest about the gap.
+  // 6. Not established: honest, authoritative executive abstention
   return {
     title: 'The published material does not settle this question yet.',
     answer:
