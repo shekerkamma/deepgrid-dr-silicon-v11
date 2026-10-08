@@ -27,8 +27,8 @@ jobs:
       # Baked into the bundle so server-rendered HTML carries correct hrefs, not just hydrated HTML.
       NEXT_PUBLIC_PAGES_BASE: /${{ github.event.repository.name }}/
       PAGES_DOMAIN: ''
-      # Zero-API-cost static build: no external model keys or endpoints are inlined.
-      # Ask DeepGrid runs fully in-browser over the 280-node knowledge graph and deterministic council.
+      # Static frontend; runtime synthesis uses the public Cloudflare answer endpoint.
+      # The model credential stays in the Worker secret, never in Pages.
     steps:
       - uses: actions/checkout@v6
       - uses: actions/setup-node@v4
@@ -37,6 +37,7 @@ jobs:
           cache: npm
       - run: npm ci --ignore-scripts --no-audit --no-fund
       - run: npm run typecheck
+      - run: node scripts/check-answer-service.mjs
       - run: npm run build:pages
       # The multi-route browser gate (scripts/verify-routes.mjs) on the built site, served under the same base path Pages uses.
       # A red gate stops the deploy.

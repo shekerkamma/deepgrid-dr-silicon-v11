@@ -4,7 +4,7 @@
 // edges, and passages are ranked by their semantic match plus the graph score of the entities they mention.
 // Every answer is a quoted sentence from a cited passage, numbered evidence, and what the sources do not
 // establish. Curated themes answer the questions they were written for, with the same evidence attached.
-// Deterministic and static: no server, no model call at answer time beyond embedding the question.
+// This module remains deterministic retrieval. Ask composes answers through the separate Cloudflare service.
 
 import unifiedIndexRaw from './graphrag-unified-index.json';
 import {THEME_EXAMPLES} from './theme-examples';

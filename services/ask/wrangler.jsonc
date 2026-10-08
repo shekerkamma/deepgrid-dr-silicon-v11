@@ -1,0 +1,10 @@
+{
+  "name": "deepgrid-rerank",
+  "account_id": "26bada7f5050e0d24e0bc67d14c10885",
+  "main": "worker.ts",
+  "compatibility_date": "2026-09-04",
+  "workers_dev": true,
+  "keep_vars": true,
+  "placement": {"region": "aws:ap-south-1"},
+  "ratelimits": [{"name": "ANSWER_RATE", "namespace_id": "1011", "simple": {"limit": 12, "period": 60}}]
+}

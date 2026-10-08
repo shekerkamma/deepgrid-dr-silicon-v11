@@ -26,5 +26,10 @@ Windows: run npm through `node 'C:/Program Files/nodejs/node_modules/npm/bin/npm
 - `app/data/graph-retrieval.ts`, `scripts/eval-graphrag.mjs`: provenance-weighted graph retrieval and lexical/semantic answer evaluation.
 
 - `docs/executive-story-pack-v12.md`, `app/executive-{routes,products,sections}.json`: business audience storyboards, source-specific summaries and section roles.
-- `app/data/executive-answer.ts`, `app/council-view.tsx`: executive narrative over retrieved evidence; sources disclosed separately.
+- `app/data/executive-answer.ts`: legacy authored stories retained for existing story tests; not the Ask answer path. `app/council-view.tsx` renders hosted, query-specific answers and disclosed sources.
 - `scripts/check-executive-story.mjs`, `scripts/verify-ask.mjs`: story coverage, grounded answer and browser gates.
+
+- `app/data/answer-evidence.ts`, `app/data/answer-generator.ts`, `services/ask/worker.ts`: general graph-evidence packet, Cloudflare-hosted Gemini synthesis and citation checks; no query-specific answer prose.
+- `docs/ask-composition-contract.md`: response quality criteria and real-model release gate.
+
+- `app/site-refinement.css`, `app/motion.tsx`, `docs/v12-site-refinement.md`: shared reading, navigation focus, visible-default motion and sitewide refinement acceptance.
