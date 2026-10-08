@@ -3,6 +3,8 @@ import raw from '../../app/data/graphrag-unified-index.json';
 import { collectEvidence, COMPOSITION_INSTRUCTIONS, answerSchema, validateAnswer, type EvidencePacket } from '../../app/data/answer-evidence';
 
 export const MODEL = 'gemini-3.8-flash';
+const PUBLICATION_POLICY = `Publication status takes priority over promotional wording in older passages: DeepGrid is pre-silicon. Planned customer relationships, anchor buyers, product approvals, qualification, future production and sales are plans or targets, not secured or achieved results. A named company in a planning document is not evidence of a signed order, design win or current customer. Gross margins, revenue, market size and profitability in the business plan are estimates or targets; never describe them as demonstrated economics. Describe the single-approval/two-markets concept as an intended qualification strategy, not a current approval. Preserve optional features as optional. For both composition and audit, enforce these distinctions even when an older passage uses confident present tense.`;
+
 const origins = new Set(['https://shekerkamma.github.io', 'http://127.0.0.1:8894', 'http://localhost:8894', 'http://127.0.0.1:8768']);
 type Env = { GEMINI_API_KEY: string; ANSWER_RATE: {limit(options: {key:string}):Promise<{success:boolean}>} };
 const corpus = new Map(raw.chunks.map(c=>[c.id,c]));
@@ -12,7 +14,7 @@ class ServiceError extends Error { constructor(public status:number, message:str
 async function generate(env:Env, system:string, data:unknown, schema:object, signal:AbortSignal) {
   const response=await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${MODEL}:generateContent`, {
     method:'POST', headers:{'Content-Type':'application/json','x-goog-api-key':env.GEMINI_API_KEY}, signal,
-    body:JSON.stringify({systemInstruction:{parts:[{text:system}]}, contents:[{role:'user',parts:[{text:JSON.stringify(data)}]}],
+    body:JSON.stringify({systemInstruction:{parts:[{text:PUBLICATION_POLICY+'\n'+system}]}, contents:[{role:'user',parts:[{text:JSON.stringify(data)}]}],
       generationConfig:{temperature:0.2,maxOutputTokens:8192,thinkingConfig:{thinkingLevel:'low'},responseMimeType:'application/json',responseJsonSchema:schema}})
   });
   if(!response.ok) {
