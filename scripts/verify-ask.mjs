@@ -19,9 +19,9 @@ assert(!(await page.getByRole('button',{name:'Submit',exact:true}).isEnabled()))
 await page.getByRole('button',{name:'The D100 funding decision',exact:true}).click();
 await page.locator('[data-model="gemini-3.8-flash"]').waitFor({timeout:20000});
 assert.equal(requests,1);assert.equal(await page.locator('.answer-essay h2').innerText(),await input.inputValue());
-assert.equal(await page.locator('.executive-sources').getAttribute('open'),null);
-await page.locator('.executive-ref').first().click();await page.locator('.executive-sources[open]').waitFor();
-for(const link of await page.locator('.executive-sources a').all()){const href=await link.evaluate(a=>a.href);assert(href.startsWith(base));assert.equal((await page.request.get(href)).status(),200);}
+assert.equal(await page.locator('.answer-essay .executive-sources').getAttribute('open'),null);
+await page.locator('.executive-ref').first().click();await page.locator('.answer-essay .executive-sources[open]').waitFor();
+for(const link of await page.locator('.answer-essay .executive-sources a').all()){const href=await link.evaluate(a=>a.href);assert(href.startsWith(base));assert.equal((await page.request.get(href)).status(),200);}
 mode='error';await input.fill('Explain the funding risk for a new investor');await input.press('Enter');
 await page.getByRole('alert').waitFor({timeout:20000});assert.equal(await page.locator('.dr-answer-lead').count(),0);
 mode='success';await page.getByRole('button',{name:'Retry answer'}).click();await page.locator('[data-model="gemini-3.8-flash"]').waitFor({timeout:20000});
