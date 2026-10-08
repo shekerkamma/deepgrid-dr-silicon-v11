@@ -4,14 +4,11 @@ import {useEffect} from 'react';
 // Scroll behaviour for the whole site, kept out of the views so the markup stays content.
 // useScrollVars publishes the navigation height (for anything that sticks under it) and the
 // page progress (for the hairline on the navigation bar). useReveal gives existing blocks one
-// restrained entrance: a 14px rise and fade, staggered 60ms among siblings, once, when the block
-// is actually in view. Under reduced motion it is a short fade with no movement.
+// restrained entrance: an 8px rise, staggered 60ms among siblings, once, when the block
+// is actually in view. Reduced motion keeps the content static.
 
-const REVEAL = ['.section-head', '.thesis-heading', '.dr-sec-head', '.dr-arch-intro', '.spec-grid', '.dr-explained>article',
-  '.dr-steps>li', '.dr-flow', '.dr-callout', '.dr-diagram', '.dr-costbars', '.dr-padplan', '.dr-ladder>div', '.dr-notclaimed',
-  '.dr-cards>*', '.dr-apps>div', '.dr-part', '.dr-pkg-card', '.dr-pkg-mini-card', '.dr-roadmap>li', '.dr-factcards>div',
-  '.dr-package', '.dr-pinout>.table-scroll', '.dr-two-tables>*', '.dr-fixed>div', '.dr-leadgap>div', '.dr-loop>li',
-  '.dr-budget>*', '.dr-fmax>*', '.dr-compare', '.dr-lib-group', '.dr-lib-film', '.dr-lib-deck', '.table-scroll'].map(s => 'main ' + s).join(',');
+// Only major narrative headings receive an entrance; reading and comparison content stays still.
+const REVEAL = ['.thesis-heading', '.dr-arch-intro'].map(s => 'main ' + s).join(',');
 
 export function useScrollVars() {
   useEffect(() => {
@@ -42,15 +39,18 @@ function settle(el: HTMLElement) {
 export function useReveal(key: string) {
   useEffect(() => {
     const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (reduce) return;
     document.documentElement.classList.add('rv-on');
     let pending: HTMLElement[] = [], frame = 0;
     const timers: number[] = [];
     const sweep = () => {
       frame = 0;
       const line = innerHeight * 0.88, counts = new Map<Element, number>();
+      // Read geometry together before writing styles, avoiding layout thrashing.
+      const positions = new Map(pending.filter(el => el.isConnected).map(el => [el, el.getBoundingClientRect()]));
       pending = pending.filter(el => {
-        if (!el.isConnected) return false;
-        const r = el.getBoundingClientRect();
+        const r = positions.get(el);
+        if (!r) return false;
         if (r.top > line) return true;
         if (r.bottom < 0) { el.classList.add('rv-in', 'rv-done'); return false; }
         const parent = el.parentElement!, i = counts.get(parent) || 0;

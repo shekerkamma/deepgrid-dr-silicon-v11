@@ -4018,11 +4018,10 @@ input[type=search]::-webkit-search-cancel-button,input[type=search]::-webkit-sea
 }
 
 /* Scroll reveal enhancements */
-/* Scoped under .rv-on, which the sweep adds: without JS the page must still render its content,
-   and an unscoped [data-rv]{opacity:0} hides everything when the script fails to run. */
+/* Content stays readable even when an animation frame or script never arrives. */
 .rv-on [data-rv]:not(.rv-in) {
-  opacity: 0;
-  transform: translateY(24px);
+  opacity: 1;
+  transform: translateY(8px);
   transition: opacity 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94),
               transform 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94);
 }

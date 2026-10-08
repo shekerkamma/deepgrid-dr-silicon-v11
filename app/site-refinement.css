@@ -1,0 +1,18 @@
+/* Shared reading and interaction floor across the v12 page families. */
+html { color-scheme: dark; scroll-padding-top: calc(var(--nav-h, 89px) + 24px); }
+main :is(h1,h2,h3) { text-wrap: balance; overflow-wrap: break-word; }
+main :is(.dr-sec-copy,.section-head>p,.cp-band p,.sb-body p) { max-width: 70ch; }
+main :is(section[id],h2[id],h3[id],details[id]) { scroll-margin-top: calc(var(--nav-h, 89px) + 24px); }
+:where(a,button,input,textarea,select,summary,[tabindex]):focus-visible { outline: 2px solid var(--accent,#d4a36e); outline-offset: 4px; }
+main a { text-underline-offset: .2em; }
+input,textarea { caret-color: var(--accent,#d4a36e); }
+.dr-table { font-variant-numeric: tabular-nums; }
+.table-scroll:focus-visible,.st-table-scroll:focus-visible,.figure-scroll:focus-visible { outline-offset: -2px; }
+@media (prefers-reduced-motion:reduce) {
+  html { scroll-behavior: auto; }
+  html .rv-on [data-rv]:not(.rv-in),html [data-rv] { opacity: 1; transform: none; transition: none; }
+}
+@media(max-width:600px) {
+  .answer-essay p { font-size: 1rem; line-height: 1.75; }
+  .answer-essay .dr-answer-lead p { font-size: 1.25rem; }
+}
