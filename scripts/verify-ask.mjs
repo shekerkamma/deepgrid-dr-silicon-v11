@@ -6,11 +6,19 @@ const browser=await chromium.launch();
 const page=await browser.newPage({viewport:{width:1440,height:1000}});
 const errors=[];page.on('pageerror',e=>errors.push(e.message));
 await page.goto(base+'ask/',{waitUntil:'networkidle'});
-await page.locator('[data-ready="true"]').waitFor();
+await page.locator('[data-ready="true"]').waitFor({state:'attached'});
 const input=page.getByRole('searchbox',{name:'Search DeepGrid knowledge'});
 assert.equal(await page.locator('.answer-essay').count(),0,'No answer before a question');
 assert.equal(await page.getByText('Your next decision',{exact:true}).count(),0);
 assert.equal(await page.getByText('Detailed evaluation checklist',{exact:true}).count(),0);
+assert.equal(await page.getByText('Enter a question above, then select Answer question.',{exact:true}).count(),0);
+assert(!(await page.getByRole('button',{name:'Submit',exact:true}).isEnabled()));
+for(const sample of ['Why secure control?','The D100 funding decision','Control or battery intelligence?','Who needs the interface product?']){
+ await page.getByRole('button',{name:sample,exact:true}).click();
+ await page.waitForFunction(()=>document.querySelector('.answer-essay h2')?.textContent===document.querySelector('.dr-ask-input')?.value);
+ assert.equal(await page.locator('.dr-grounded-answer-wrap').getAttribute('data-answerable'),'true',sample);
+ if(sample==='Who needs the interface product?')assert(!/display drivers|20–60 M/.test(await page.locator('.dr-answer-lead').innerText()));
+}
 for(const [q,expected] of [
  ['How is the D100 drone chip funded?',/50 Cr/],
  ['What is the difference between SKU-10 and SKU-11?',/SKU-10/],
@@ -36,12 +44,13 @@ for(const [q,expected] of [
   }
  }
 }
-await input.fill('How is the D100 drone chip funded?');await input.press('Enter');
+await input.fill('How is the D100 drone chip funded?');await page.getByRole('button',{name:'Submit',exact:true}).click();
 await page.locator('.answer-essay').waitFor();
 fs.mkdirSync('work/ask-review',{recursive:true});
 await page.evaluate(()=>scrollTo({top:0,behavior:'instant'}));
 await page.screenshot({path:'work/ask-review/simple-desktop.png',fullPage:true});
 await page.setViewportSize({width:390,height:844});
+await page.evaluate(()=>{document.activeElement?.blur();scrollTo({top:0,behavior:'instant'});});
 assert(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth+1));
 await page.screenshot({path:'work/ask-review/simple-mobile.png',fullPage:true});
 assert.deepEqual(errors,[]);await browser.close();

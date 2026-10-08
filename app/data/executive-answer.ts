@@ -80,9 +80,13 @@ export function executiveAnswer(query: string, r: Retrieval): ExecutiveAnswer {
     !/NAVIGATE Contents|N A V I G A T E Contents|Every entry links to its slide/i.test(
       c.text,
     ) && !/_p[12]$/.test(c.id);
-  const direct = r.evidence.filter(
-    (e) => e.kind === 'direct' && substantive(e.chunk),
-  );
+  const namedProduct = keyFor(query);
+  const belongsToProduct = (c: IndexChunk) => !namedProduct || (namedProduct === 'd100'
+    ? /\bd100\b/i.test(c.section + ' ' + c.text)
+    : new RegExp('\\bSKU[ -]?' + namedProduct.slice(3) + '(?![0-9])', 'i').test(c.section + ' ' + c.text)
+      || (namedProduct === 'sku4' && /dg32[- ]?lite/i.test(c.text))
+      || (namedProduct === 'sku10' && /dg32[- ]?max/i.test(c.text)));
+  const direct = r.evidence.filter(e => e.kind === 'direct' && substantive(e.chunk) && belongsToProduct(e.chunk));
   const diagnostics =
     !/\b(?:SKU[ -]?\d+|d100)\b/i.test(query) &&
     /(?:thirty|30) use cases|no accelerator|without (?:an? )?(?:ai )?accelerator|predictive maintenance|condition monitoring/i.test(
@@ -253,6 +257,19 @@ export function executiveAnswer(query: string, r: Retrieval): ExecutiveAnswer {
     };
   }
 
+  // Answer the requested facet directly rather than attaching the full product story.
+  const facet = /who.*(?:buy|customer)|target (?:buyer|customer)|customer segment/i.test(query) ? 'Who buys it'
+    : /status|available|availability|ready|readiness/i.test(query) ? 'Status'
+    : /price|pricing|unit economics|margin/i.test(query) ? 'What it earns'
+    : null;
+  if (key && facet) {
+    const candidate = own(key, facet);
+    // Some source buyer sections contain only volume/pricing; use the demand passage instead.
+    const volumeOnly = facet === 'Who buys it' && candidate && /^\d/.test(candidate.text.trim());
+    const passage = volumeOnly ? own(key, 'Policy and demand') ?? candidate : candidate;
+    if (passage) return { title: query, answer: clean(passage.text), answerRefs: ref(passage), beats: [], sources, supported: true };
+  }
+
   // 3. A named product: full product narrative with question-specific synthesis
   const productOverview = /^(?:what is|explain|describe|tell me about) (?:the )?(?:sku[ -]?\d+|d100|dg32(?:[ -]?(?:lite|max))?)(?: (?:chip|product))?[?.! ]*$/i.test(query.trim());
   if (key && productStories[key] && (productOverview || /replace|displace|substitute|alternative|compet|certif|qualif|asil|iso ?26262|approved|guarantee|benefit|value|trade.?off/i.test(query))) {
@@ -374,7 +391,7 @@ export function executiveAnswer(query: string, r: Retrieval): ExecutiveAnswer {
   // 5. Anything else the published material answers: dynamically synthesize retrieved evidence
   if ((!key || productStories[key]) && r.answerable && direct.length) {
     const refs = directRefs();
-    const finding = clean(r.bluf);
+    const finding = clean(namedProduct ? direct[0].quote : r.bluf);
     const topChunk = direct[0]?.chunk;
 
     if (topChunk) {

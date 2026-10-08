@@ -43,7 +43,7 @@ function useSemanticScores(question: string): SemanticScores | null {
 export default function GroundedAnswerView({
   query,
 }: GroundedAnswerViewProps) {
-  const [question, setQuestion] = useState('');
+  const question = query;
   const [ready, setReady] = useState(false);
   useEffect(() => setReady(true), []);
   const sem = useSemanticScores(question);
@@ -52,7 +52,7 @@ export default function GroundedAnswerView({
     [question, sem],
   );
   const [sourcesOpen, setSourcesOpen] = useState(false);
-  useEffect(() => { setSourcesOpen(false); setQuestion(''); }, [query]);
+  useEffect(() => { setSourcesOpen(false); }, [query]);
   const refs = (ns: number[]) =>
     ns.map((n) => (
       <a
@@ -72,10 +72,6 @@ export default function GroundedAnswerView({
       data-semantic={sem ? 'on' : 'off'}
       data-answerable={story.supported}
     >
-      <form id="deepgrid-question-form" className="answer-controls" onSubmit={e => {e.preventDefault(); if(query.trim().length >= 3) setQuestion(query.trim());}}>
-        <button type="submit" className="dr-related-chip" disabled={query.trim().length < 3}>Answer question</button>
-      </form>
-      {!question && <p className="executive-story-note" role="status">Enter a question above, then select Answer question.</p>}
       {question && <article className="dr-answer-card answer-essay" aria-label="Answer">
         <h2 className="dr-contextual-title">{question}</h2>
         <p className="dr-answer-lead">{story.answer}{refs(story.answerRefs)}</p>

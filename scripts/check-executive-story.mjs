@@ -75,3 +75,9 @@ for (const id of ids) {
 console.log(
   'PASS executive story: 37 route storyboards, grounded funding, product value, comparisons, abstention and source references.',
 );
+
+const buyers=ask('Who buys the SKU-5 interface transceiver?');
+assert(buyers.supported);
+assert(buyers.sources.every(c=>/^SKU-5(?![0-9])/.test(c.section)));
+assert.match(buyers.answer,/defence PSUs/);
+assert(!/display drivers/.test(buyers.answer));

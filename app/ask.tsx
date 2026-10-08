@@ -90,6 +90,7 @@ export function resolveItemDocument(item?: DeepGridItem | null): GroundedDoc {
 
 export default function AskDeepGrid({go}: {go: (hash: string) => void}) {
   const [query, setQuery] = useState('');
+  const [submittedQuery, setSubmittedQuery] = useState('');
   const [selectedDocId, setSelectedDocId] = useState<string>('all');
   const [activeCategory, setActiveCategory] = useState<string>('all');
   const [activeView, setActiveView] = useState<'council' | 'graph' | 'cards'>('council');
@@ -292,10 +293,68 @@ export default function AskDeepGrid({go}: {go: (hash: string) => void}) {
 
   return (
     <section className="page-wrap dr-ask-section">
-      <SectionHead 
-        title="Ask about DG32, and every answer names its source" 
-        copy="Ask about the lockstep core, the control loop, the package, the portfolio or the supply chain. Each answer cites the document and section it comes from, with the PDF one click away, so you can check it rather than take it on trust."
-      />
+      <header className="cp-band ask-band"><div className="cp-band-inner"><div className="cp-band-copy">
+        <h1>Ask DeepGrid</h1><p className="cp-band-lede">Explore the products, the business case and the evidence. Ask your question and read the answer with its supporting sources.</p>
+      </div></div></header>
+
+      {/* Query Search Bar (Active for Grounded Answers & Architecture Map) */}
+      {activeView !== 'cards' && (
+        <form id="deepgrid-question-form" className="dr-ask-bar ask-composer" onSubmit={e => {e.preventDefault(); if(query.trim().length >= 3) setSubmittedQuery(query.trim());}}>
+          <label className="ask-input-label" htmlFor="deepgrid-question">Your question</label>
+          <div className="dr-ask-input-wrap">
+            <Search className="dr-ask-search-icon" size={20} />
+            <input 
+              type="search"
+              name="deepgrid-query"
+              id="deepgrid-question"
+              autoComplete="off"
+              spellCheck={false}
+              className="dr-ask-input"
+              value={query}
+              onChange={e => handleQuerySelect(e.target.value)}
+              placeholder="Ask a question about DeepGrid…"
+              aria-label="Search DeepGrid knowledge"
+            />
+            {query && (
+              <button type="button" className="dr-ask-clear" onClick={() => handleQuerySelect('')} aria-label="Clear query">
+                <X size={18} />
+              </button>
+            )}
+          </div>
+
+          <div className="ask-query-actions">
+          <div className="dr-ask-prompts" style={{marginTop: '10px'}} aria-label="Quick queries">
+            {(activeView==='council' ? [
+ {id:'value',query:'What does SKU-10 DG32-Max replace?',docBadge:'CUSTOMER VALUE',label:'Why secure control?'},
+ {id:'funding',query:'How is the D100 drone chip funded?',docBadge:'INVESTMENT',label:'The D100 funding decision'},
+ {id:'compare',query:'What is the difference between SKU-10 and SKU-11?',docBadge:'PRODUCT CHOICE',label:'Control or battery intelligence?'},
+ {id:'buyer',query:'Who buys the SKU-5 interface transceiver?',docBadge:'CUSTOMERS',label:'Who needs the interface product?'},
+ ] : filteredPrompts).map(p => (
+              <button
+                key={p.id}
+                type="button"
+                className={`dr-ask-chip ${query === p.query ? 'active' : ''}`}
+                onClick={() => {handleQuerySelect(p.query); if(activeView === 'council') setSubmittedQuery(p.query);}}
+                title={p.query}
+              >
+                {activeView !== 'council' && <span className="dr-ask-chip-doc">{p.docBadge}</span>}
+                <span className="dr-ask-chip-text">{p.label}</span>
+              </button>
+            ))}
+          </div>
+          {activeView === 'council' && <button type="submit" className="ask-submit" disabled={query.trim().length < 3}>Submit <ArrowUpRight size={18} aria-hidden="true"/></button>}
+          </div>
+        </form>
+      )}
+
+      {/* View 0: Multi-Agent Council Deliberation (Primary View) */}
+      {activeView === 'council' && (
+        <CouncilView 
+          query={submittedQuery === query.trim() ? submittedQuery : ''}
+          onSelectQuery={handleQuerySelect} 
+          go={go} 
+        />
+      )}
 
       {/* Top View Selector Strip */}
       <details className="executive-sources ask-library-tools"><summary>Explore the knowledge library</summary><div className="dr-ask-top-bar">
@@ -328,61 +387,6 @@ export default function AskDeepGrid({go}: {go: (hash: string) => void}) {
 
 
       </div></details>
-
-      {/* Query Search Bar (Active for Grounded Answers & Architecture Map) */}
-      {activeView !== 'cards' && (
-        <div className="dr-ask-bar" style={{marginBottom: '18px'}}>
-          <div className="dr-ask-input-wrap">
-            <Search className="dr-ask-search-icon" size={20} />
-            <input 
-              type="search"
-              name="deepgrid-query"
-              form="deepgrid-question-form"
-              autoComplete="off"
-              spellCheck={false}
-              className="dr-ask-input"
-              value={query}
-              onChange={e => handleQuerySelect(e.target.value)}
-              placeholder="Ask a question about DeepGrid…"
-              aria-label="Search DeepGrid knowledge"
-            />
-            {query && (
-              <button className="dr-ask-clear" onClick={() => handleQuerySelect('')} aria-label="Clear query">
-                <X size={18} />
-              </button>
-            )}
-          </div>
-
-          {/* Quick High-Yield Technical Queries (2 from each PDF document) */}
-          <div className="dr-ask-prompts" style={{marginTop: '10px'}} aria-label="Quick queries">
-            {(activeView==='council' ? [
- {id:'value',query:'What does SKU-10 DG32-Max replace?',docBadge:'CUSTOMER VALUE',label:'Why secure control?'},
- {id:'funding',query:'How is the D100 drone chip funded?',docBadge:'INVESTMENT',label:'The D100 funding decision'},
- {id:'compare',query:'What is the difference between SKU-10 and SKU-11?',docBadge:'PRODUCT CHOICE',label:'Control or battery intelligence?'},
- {id:'buyer',query:'Who buys the SKU-5 interface transceiver?',docBadge:'CUSTOMERS',label:'Who needs the interface product?'},
- ] : filteredPrompts).map(p => (
-              <button
-                key={p.id}
-                className={`dr-ask-chip ${query === p.query ? 'active' : ''}`}
-                onClick={() => handleQuerySelect(p.query)}
-                title={p.query}
-              >
-                {activeView !== 'council' && <span className="dr-ask-chip-doc">{p.docBadge}</span>}
-                <span className="dr-ask-chip-text">{p.label}</span>
-              </button>
-            ))}
-          </div>
-        </div>
-      )}
-
-      {/* View 0: Multi-Agent Council Deliberation (Primary View) */}
-      {activeView === 'council' && (
-        <CouncilView 
-          query={query} 
-          onSelectQuery={handleQuerySelect} 
-          go={go} 
-        />
-      )}
 
       {/* View 1: Interactive Knowledge Graph View (Powered by Graphify) */}
       {activeView === 'graph' && (
