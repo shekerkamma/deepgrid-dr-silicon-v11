@@ -11,7 +11,7 @@ interface GroundedAnswerViewProps {
   onSelectQuery: (q: string) => void;
   go: (hash: string) => void;
 }
-const DEFAULT_QUESTION = 'What does SKU-10 DG32-Max replace?';
+
 function useSemanticScores(question: string): SemanticScores | null {
   const [state, setState] = useState<{ q: string; s: SemanticScores } | null>(
     null,
@@ -42,16 +42,17 @@ function useSemanticScores(question: string): SemanticScores | null {
 
 export default function GroundedAnswerView({
   query,
-  onSelectQuery,
 }: GroundedAnswerViewProps) {
-  const question = query || DEFAULT_QUESTION,
-    sem = useSemanticScores(question);
+  const [question, setQuestion] = useState('');
+  const [ready, setReady] = useState(false);
+  useEffect(() => setReady(true), []);
+  const sem = useSemanticScores(question);
   const story = useMemo(
     () => executiveAnswer(question, executeGraphRAG(question, sem).retrieval),
     [question, sem],
   );
   const [sourcesOpen, setSourcesOpen] = useState(false);
-  useEffect(() => setSourcesOpen(false), [question]);
+  useEffect(() => { setSourcesOpen(false); setQuestion(''); }, [query]);
   const refs = (ns: number[]) =>
     ns.map((n) => (
       <a
@@ -67,32 +68,20 @@ export default function GroundedAnswerView({
   return (
     <div
       className="dr-grounded-answer-wrap executive-answer"
+      data-ready={ready}
       data-semantic={sem ? 'on' : 'off'}
       data-answerable={story.supported}
     >
-      <article className="dr-answer-card">
-        <div className="dr-answer-header">
-          <span className="mono dr-domain-tag">
-            {story.supported ? 'EXECUTIVE BRIEF' : 'AN OPEN QUESTION'}
-          </span>
-        </div>
-        <h2 className="dr-contextual-title">{story.title}</h2>
-        <p className="dr-answer-lead">
-          {story.answer}
-          {refs(story.answerRefs)}
-        </p>
-        <ol className="executive-arc" aria-label="Business implications">
-          {story.beats.map((b, i) => (
-            <li key={b.title}>
-              <span className="dr-kicker">0{i + 1}</span>
-              <h3>{b.title}</h3>
-              <p>
-                {b.body}
-                {refs(b.refs)}
-              </p>
-            </li>
-          ))}
-        </ol>
+      <form id="deepgrid-question-form" className="answer-controls" onSubmit={e => {e.preventDefault(); if(query.trim().length >= 3) setQuestion(query.trim());}}>
+        <button type="submit" className="dr-related-chip" disabled={query.trim().length < 3}>Answer question</button>
+      </form>
+      {!question && <p className="executive-story-note" role="status">Enter a question above, then select Answer question.</p>}
+      {question && <article className="dr-answer-card answer-essay" aria-label="Answer">
+        <h2 className="dr-contextual-title">{question}</h2>
+        <p className="dr-answer-lead">{story.answer}{refs(story.answerRefs)}</p>
+        {story.supported && story.beats.filter(b => b.refs.length > 0).map((b, i) => (
+          <p key={i}>{b.body}{refs(b.refs)}</p>
+        ))}
         {story.sources.length > 0 && (
           <details
             className="executive-sources"
@@ -100,13 +89,8 @@ export default function GroundedAnswerView({
             onToggle={(e) => setSourcesOpen(e.currentTarget.open)}
           >
             <summary>
-              Sources and supporting detail · {story.sources.length}
+              Further details and sources · {story.sources.length}
             </summary>
-            <p className="executive-story-note">
-              The brief summarises the published material. Implications and next
-              steps are evaluation guidance; plans and targets are not achieved
-              results.
-            </p>
             <ol>
               {story.sources.map((c, i) => (
                 <li key={c.id} id={'answer-source-' + (i + 1)}>
@@ -132,31 +116,7 @@ export default function GroundedAnswerView({
             </ol>
           </details>
         )}
-      </article>
-      <div className="dr-related-wrap">
-        <span className="mono dr-related-heading">
-          Continue the business discussion
-        </span>
-        <div className="dr-related-chips">
-          {[
-            ['The D100 investment', 'How is the D100 drone chip funded?'],
-            [
-              'Secure control or battery intelligence?',
-              'What is the difference between SKU-10 and SKU-11?',
-            ],
-            ['Customer need', 'What does SKU-1 replace?'],
-          ].map(([label, q]) => (
-            <button
-              type="button"
-              className="dr-related-chip"
-              key={q}
-              onClick={() => onSelectQuery(q)}
-            >
-              {label}
-            </button>
-          ))}
-        </div>
-      </div>
+      </article>}
     </div>
   );
 }

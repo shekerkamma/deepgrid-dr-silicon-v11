@@ -298,15 +298,15 @@ export default function AskDeepGrid({go}: {go: (hash: string) => void}) {
       />
 
       {/* Top View Selector Strip */}
-      <div className="dr-ask-top-bar">
+      <details className="executive-sources ask-library-tools"><summary>Explore the knowledge library</summary><div className="dr-ask-top-bar">
         <div className="dr-ask-view-toggle">
           <button
             className={`dr-ask-toggle-btn ${activeView === 'council' ? 'active' : ''}`}
             aria-pressed={activeView === 'council'}
             onClick={() => setActiveView('council')}
-            title="Business implications with supporting sources"
+            title="Answers with supporting sources"
           >
-            <BookOpen size={16} /> <span>Executive answers</span>
+            <BookOpen size={16} /> <span>Questions &amp; answers</span>
           </button>
           <button
             className={`dr-ask-toggle-btn ${activeView === 'graph' ? 'active' : ''}`}
@@ -326,10 +326,8 @@ export default function AskDeepGrid({go}: {go: (hash: string) => void}) {
           </button>
         </div>
 
-        <span className="dr-ask-badge-verified">
-          <ShieldCheck size={14} /> SOURCES CITED
-        </span>
-      </div>
+
+      </div></details>
 
       {/* Query Search Bar (Active for Grounded Answers & Architecture Map) */}
       {activeView !== 'cards' && (
@@ -339,12 +337,13 @@ export default function AskDeepGrid({go}: {go: (hash: string) => void}) {
             <input 
               type="search"
               name="deepgrid-query"
+              form="deepgrid-question-form"
               autoComplete="off"
               spellCheck={false}
               className="dr-ask-input"
               value={query}
               onChange={e => handleQuerySelect(e.target.value)}
-              placeholder="Ask about customer value, readiness or investment…"
+              placeholder="Ask a question about DeepGrid…"
               aria-label="Search DeepGrid knowledge"
             />
             {query && (
@@ -368,7 +367,7 @@ export default function AskDeepGrid({go}: {go: (hash: string) => void}) {
                 onClick={() => handleQuerySelect(p.query)}
                 title={p.query}
               >
-                <span className="dr-ask-chip-doc">{p.docBadge}</span>
+                {activeView !== 'council' && <span className="dr-ask-chip-doc">{p.docBadge}</span>}
                 <span className="dr-ask-chip-text">{p.label}</span>
               </button>
             ))}
@@ -998,7 +997,7 @@ export default function AskDeepGrid({go}: {go: (hash: string) => void}) {
         );
       })()}
 
-      <div className="dr-links dr-sec-gap" style={{marginTop: '2.5rem'}}>
+      {activeView !== 'council' && (<div className="dr-links dr-sec-gap" style={{marginTop: '2.5rem'}}>
         <button className="text-link" onClick={() => go('overview')}>
           01 / Overview &amp; safety thesis <ArrowUpRight size={16} />
         </button>
@@ -1020,7 +1019,7 @@ export default function AskDeepGrid({go}: {go: (hash: string) => void}) {
         <button className="text-link" onClick={() => go('library')}>
           07 / Source documents and PDFs <ArrowUpRight size={16} />
         </button>
-      </div>
+      </div>)}
     </section>
   );
 }

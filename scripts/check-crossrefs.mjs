@@ -76,7 +76,8 @@ const pages = [];
 for (const f of pages) {
   const src = read(f);
   const route = src.match(/<Shell route="([\w-]+)"/)?.[1];
-  if (!route) continue;
+  // Ask is a focused Q&A surface; its answer contains its own source links.
+  if (!route || route === 'ask') continue;
   if (!/<Related\s+route="([\w-]+)"/.test(src)) {
     problems.push(`${f}: renders <Shell route="${route}"> but never renders <Related>`);
     continue;

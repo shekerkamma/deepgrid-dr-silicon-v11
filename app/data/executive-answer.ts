@@ -234,29 +234,18 @@ export function executiveAnswer(query: string, r: Retrieval): ExecutiveAnswer {
     return {
       title: 'D100 follows mature-node revenue; it has a separate funding plan.',
       answer:
-        'The October 2026 Blueprint proposes a separate ₹50 Cr round for D100 after the eleven mature-node products generate revenue. D100 is outside the FY31 ₹1,000 Cr portfolio plan, ensuring advanced-node mask costs do not draw on mature-node runway.',
+        'The October 2026 Blueprint proposes a separate ₹50 Cr round for D100 after the eleven mature-node products generate revenue. D100 is outside the FY31 ₹1,000 Cr portfolio plan, with the intention of keeping advanced-node mask costs separate from mature-node funding.',
       answerRefs: planRefs,
       beats: [
         {
-          title: 'Investment structure: staged growth round ring-fenced from mature portfolio',
-          body:
-            productStories.d100.short +
-            ' Capital sequencing: ' +
-            productStories.d100.whyNow,
-          refs: planRefs,
-        },
-        {
-          title: 'Commercial Value & Sovereign Wedge: Replacing Imported Flight Computers',
-          body:
-            productStories.d100.value +
-            ' ' +
-            productStories.d100.brings,
+          title: 'Investment use',
+          body: 'The proposed round covers the 28 nm masks and intellectual property needed to develop D100. The Blueprint identifies mask cost and DO-254 certification as major hurdles. Its pricing and margin figures are planning targets, not demonstrated commercial results.',
           refs: earnsRefs,
         },
         {
-          title: 'Pre-Silicon Truth & Delivery Gates: Failsafe Island Linked to 28 nm Navigation',
-          body: `${productStories.d100.proven} Still open: ${productStories.d100.notYet} Recommendation: ${productStories.d100.recommendation}`,
-          refs: statusRefs,
+          title: 'Funding status',
+          body: 'The sequence matters: revenue from the mature-node portfolio comes first, followed by the separate D100 round. The cited material describes this funding plan; it does not establish that the round has closed. D100 shares its lockstep safety core with SKU-4, while its funding remains separate.',
+          refs: [...planRefs, ...statusRefs],
         },
       ],
       sources,
@@ -265,7 +254,8 @@ export function executiveAnswer(query: string, r: Retrieval): ExecutiveAnswer {
   }
 
   // 3. A named product: full product narrative with question-specific synthesis
-  if (key && productStories[key]) {
+  const productOverview = /^(?:what is|explain|describe|tell me about) (?:the )?(?:sku[ -]?\d+|d100|dg32(?:[ -]?(?:lite|max))?)(?: (?:chip|product))?[?.! ]*$/i.test(query.trim());
+  if (key && productStories[key] && (productOverview || /replace|displace|substitute|alternative|compet|certif|qualif|asil|iso ?26262|approved|guarantee|benefit|value|trade.?off/i.test(query))) {
     const s = productStories[key];
     const isReplacement = /replace|displace|substitute|alternative|compet/i.test(query);
     const isCert = /certif|qualif|asil|iso ?26262|approved|guarantee/i.test(query);
@@ -382,7 +372,7 @@ export function executiveAnswer(query: string, r: Retrieval): ExecutiveAnswer {
   }
 
   // 5. Anything else the published material answers: dynamically synthesize retrieved evidence
-  if (!key && r.answerable && direct.length) {
+  if ((!key || productStories[key]) && r.answerable && direct.length) {
     const refs = directRefs();
     const finding = clean(r.bluf);
     const topChunk = direct[0]?.chunk;
@@ -392,28 +382,12 @@ export function executiveAnswer(query: string, r: Retrieval): ExecutiveAnswer {
         title: `Architectural finding: ${topChunk.docTitle} establishes ${topChunk.section}.`,
         answer: finding,
         answerRefs: refs,
-        beats: [
-          {
-            title: 'Documented Architecture & Operational Parameter',
-            body: `Published specifications in ${topChunk.docTitle} (${topChunk.section}) establish this technical boundary. The design prioritizes predictable real-time execution and transient resilience on mature silicon nodes over fine-node scaling.`,
-            refs,
-          },
-          {
-            title: 'System Impact & Bill of Materials Consequence',
-            body: 'This architectural parameter directly impacts power delivery, thermal budgets, and interface routing across the system board. Equipment makers must evaluate whether this hardware allocation satisfies their worst-case operating envelope.',
-            refs: [],
-          },
-          {
-            title: 'Pre-Silicon Truth: Evidence Stage & Open Validation',
-            body: 'All DeepGrid evidence is at the design stage: simulated in gate-level EDA tools, estimated from post-route floorplans, or derived analytically. Nothing has been measured on manufactured silicon, and no formal qualification has been conducted.',
-            refs,
-          },
-          {
-            title: 'Actionable Engineering Recommendation',
-            body: 'Define the critical pass/fail acceptance threshold for this parameter in your target application, and structure an early evaluation using DeepGrid’s simulation models or FPGA bitstreams.',
-            refs: [],
-          },
-        ],
+        // Use only query-retrieved evidence; do not invent a generic business implication.
+        beats: direct.slice(1, 4).map(e => ({
+          title: e.chunk.section,
+          body: clean(e.quote),
+          refs: ref(e.chunk),
+        })),
         sources,
         supported: true,
       };

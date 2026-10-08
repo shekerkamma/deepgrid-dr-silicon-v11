@@ -6,3 +6,15 @@
 .executive-sources{border-top:1px solid var(--rule,#394139);padding:20px 0}.executive-sources summary{cursor:pointer;min-height:44px;display:flex;align-items:center;gap:12px}.executive-sources li{padding:16px 0;overflow-wrap:anywhere}.executive-sources blockquote{margin:12px 0;font-size:15px;line-height:1.6}
 .executive-answer a{overflow-wrap:anywhere}.executive-ref{display:inline-block;margin-left:6px;min-width:24px;min-height:24px;font-size:13px;vertical-align:super}.executive-story-note{font-size:14px;line-height:1.5;color:var(--muted-foreground,#a0a59b)}
 @media(max-width:600px){.executive-arc>li{padding:20px 0}.executive-answer .dr-answer-header{flex-wrap:wrap}.executive-decision{padding:24px 0}}
+
+.answer-essay{max-width:76ch}.answer-essay>h2{font-size:clamp(26px,3vw,38px);line-height:1.2}.answer-essay section{margin:30px 0}.answer-essay h3{font-size:22px;line-height:1.35}.answer-essay p{font-size:18px;line-height:1.8}.answer-essay .dr-answer-lead p{font-size:22px;line-height:1.6}.answer-interpretation{font-size:14px;font-weight:600}.answer-controls{display:flex;gap:14px;align-items:center;flex-wrap:wrap;margin:24px 0}.answer-controls p{flex-basis:100%}.answer-controls button:disabled{opacity:.55;cursor:not-allowed}.answer-setup p{max-width:68ch;line-height:1.7}.answer-error,.answer-gaps{border-top:1px solid var(--rule,#394139);padding:12px 20px}.answer-essay a:focus-visible,.answer-controls button:focus-visible{outline:2px solid currentColor;outline-offset:4px}
+
+/* Ask is a reading surface: one question, a narrative answer, optional references. */
+.dr-ask-section > .section-head { padding-top:36px; padding-bottom:28px; min-height:0; background:none; }
+.dr-ask-section > .section-head h1 { font-size:clamp(32px,4vw,48px); }
+.executive-answer .answer-essay { background:none; border:0; padding:24px 0; max-width:70ch; }
+.executive-answer .answer-essay > h2 { font-size:24px; line-height:1.35; margin-bottom:20px; }
+.executive-answer .answer-essay > p { font-size:18px; line-height:1.75; margin:0 0 20px; }
+.executive-answer .answer-essay > .dr-answer-lead { font-size:20px; line-height:1.65; font-weight:400; }
+.ask-library-tools { margin-bottom:20px; }
+@media(max-width:600px) { .executive-answer .answer-essay > p { font-size:16px; } .executive-answer .answer-essay > .dr-answer-lead { font-size:18px; } }

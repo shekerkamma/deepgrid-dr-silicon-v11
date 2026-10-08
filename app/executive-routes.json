@@ -114,8 +114,8 @@
     "next": "/resources/docs"
   },
   "ask": {
-    "headline": "Ask the business question. Understand the decision.",
-    "context": "Explore the opportunity, customer value, trade-offs and readiness of DeepGrid’s portfolio. Answers lead with the implication for your business, with supporting sources available when you need them.",
+    "headline": "Ask DeepGrid",
+    "context": "Ask a question about DeepGrid. Read the answer, then open the supporting sources for further detail.",
     "decision": "Use the answer to frame the next conversation or evaluation.",
     "next": "/contact"
   },

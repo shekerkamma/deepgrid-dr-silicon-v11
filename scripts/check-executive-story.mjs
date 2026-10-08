@@ -62,6 +62,7 @@ for (const q of [
 }
 assert(!ask('What is the weather in Hyderabad today?').supported);
 assert(!ask('What is SKU-99?').supported);
+assert(!ask('What is the warranty period for SKU-10?').supported, 'A named product must not substitute an overview for an unanswered question');
 const r = JSON.parse(fs.readFileSync('app/executive-routes.json', 'utf8'));
 const ids = [
   ...fs.readFileSync('app/routes.ts', 'utf8').matchAll(/\{id: '([^']+)'/g),
