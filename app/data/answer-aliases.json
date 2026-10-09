@@ -1,0 +1,136 @@
+{
+  "products": {
+    "D100: Architecture Guide": [
+      "d100",
+      "d100 drone",
+      "d100 drone soc",
+      "drone soc"
+    ],
+    "DG32-2DOM — Architecture Guide": [
+      "dg32 2dom",
+      "dg322dom"
+    ],
+    "DG32-LITE — Architecture Guide": [
+      "dg32 lite",
+      "dg32lite"
+    ],
+    "SKU-1: Architecture Guide": [
+      "bldc motor",
+      "bldc motor controller",
+      "sku 1",
+      "sku1"
+    ],
+    "SKU-2: Architecture Guide": [
+      "sku 2",
+      "sku2",
+      "smart meter",
+      "smart meter soc"
+    ],
+    "SKU-3: Architecture Guide": [
+      "hi rel pmic",
+      "high reliability pmic",
+      "high reliability power",
+      "high reliability power ic",
+      "sku 3",
+      "sku3"
+    ],
+    "SKU-5: Architecture Guide": [
+      "interface transceiver",
+      "rs 485 and can fd transceiver",
+      "sku 5",
+      "sku5"
+    ],
+    "SKU-6: Architecture Guide": [
+      "quad rail supervisor",
+      "sku 6",
+      "sku6",
+      "voltage supervisor"
+    ],
+    "SKU-7: Architecture Guide": [
+      "4d radar",
+      "4d radar rf",
+      "77 ghz 4d radar",
+      "77 ghz radar",
+      "sku 7",
+      "sku7"
+    ],
+    "SKU-8: Architecture Guide": [
+      "display driver",
+      "rugged display",
+      "rugged display driver",
+      "sku 8",
+      "sku8"
+    ],
+    "SKU-9: Architecture Guide": [
+      "sdv zonal gateway",
+      "sku 9",
+      "sku9",
+      "zonal controller gateway",
+      "zonal gateway"
+    ]
+  },
+  "areas": {
+    "applications_motors": [
+      "actuator",
+      "appliance",
+      "appliances",
+      "drives",
+      "fan",
+      "fans",
+      "motor",
+      "motor drive",
+      "motors",
+      "motors and drives",
+      "robot",
+      "robotics",
+      "robots"
+    ],
+    "applications_vehicles": [
+      "automotive",
+      "car",
+      "cars",
+      "e 2w",
+      "e 3w",
+      "electric vehicle",
+      "electric vehicles",
+      "ev",
+      "evs",
+      "three wheeler",
+      "truck",
+      "trucks",
+      "two wheeler",
+      "vehicle",
+      "vehicles"
+    ],
+    "applications_defence": [
+      "aerospace",
+      "avionics",
+      "defence",
+      "defence avionics and drones",
+      "defense",
+      "drone",
+      "drones",
+      "military",
+      "uav"
+    ],
+    "applications_grid": [
+      "electricity board",
+      "grid",
+      "grid and metering",
+      "meter",
+      "metering",
+      "meters",
+      "utilities",
+      "utility"
+    ],
+    "applications_boards": [
+      "board level",
+      "every board",
+      "interface",
+      "on nearly every board",
+      "power rail",
+      "power rails",
+      "supervisor"
+    ]
+  }
+}

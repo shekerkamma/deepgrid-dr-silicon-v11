@@ -1164,5 +1164,60 @@
     "pageLabel": "Primary architecture guide",
     "section": "Designed toward",
     "text": "Targets the design is developed toward, not certificates held:\n\n- ISO 26262 ASIL-D\n- EVITA Full\n- AUTOSAR Classic 4.4\n- AEC-Q100 Grade 1"
+  },
+  {
+    "id": "applications_motors",
+    "docTitle": "SKU Blueprint, October 2026 (11 SKUs + D100)",
+    "docNum": "applications",
+    "pdfPath": "./downloads/docs/deepgrid-sku-blueprint-oct2026.pdf",
+    "pdfSize": "",
+    "specPath": "./downloads/docs/deepgrid-sku-blueprint-oct2026.md",
+    "pageLabel": "Applications map",
+    "section": "Applications · Motors and drives",
+    "text": "In a motor drive, one chip runs the motor and another can stop it safely. SKU-1 replaces the driver-plus-microcontroller pair in fans, appliances, EV two- and three-wheelers, robots and actuators. SKU-4, DG32-LITE, is the safety processor that supervises a motor and can shut it down. Chips and roles in this system: SKU-1 (BLDC motor controller): Runs the motor: fans, appliances, EV two- and three-wheelers, robotics and actuator joints. SKU-4 (DG32-LITE safety microcontroller): Supervises the motor: motor-safety supervision, robot joints, and the field-oriented-control processor beside SKU-1. The drive and its safety supervisor are separate chips, so a fault in one cannot silence the other."
+  },
+  {
+    "id": "applications_vehicles",
+    "docTitle": "SKU Blueprint, October 2026 (11 SKUs + D100)",
+    "docNum": "applications",
+    "pdfPath": "./downloads/docs/deepgrid-sku-blueprint-oct2026.pdf",
+    "pdfSize": "",
+    "specPath": "./downloads/docs/deepgrid-sku-blueprint-oct2026.md",
+    "pageLabel": "Applications map",
+    "section": "Applications · Vehicles",
+    "text": "In a vehicle, the chips sit at the edges. The battery, the brakes, the radar, the bus and the wiring zones. The central computer of a software-defined vehicle is a sub-10 nm problem and is explicitly not claimed. What mature nodes own is everything around it. Chips and roles in this system: SKU-9 (Zonal gateway): The zonal layer of a software-defined vehicle: gateway, smart inputs and outputs, and the safety and security edge. SKU-4 (DG32-LITE safety microcontroller): EV battery management, and braking and steering controllers. Braking and steering need CAN-FD, which is on the DG32 roadmap and not on DG32-LITE. SKU-7 (77 GHz 4D radar): DeepGrid’s own truck mirror-tower radar, and automotive emergency braking. SKU-5 (RS-485 and CAN-FD transceiver): The CAN-FD and RS-485 link at every node on the vehicle bus. SKU-11 (SOH-aware battery-management controller): The battery-management controller for e-2W and e-3W packs, with on-chip state-of-health inference and hardwired protection. Mature nodes own the edges of the vehicle; the central computer is not claimed."
+  },
+  {
+    "id": "applications_defence",
+    "docTitle": "SKU Blueprint, October 2026 (11 SKUs + D100)",
+    "docNum": "applications",
+    "pdfPath": "./downloads/docs/deepgrid-sku-blueprint-oct2026.pdf",
+    "pdfSize": "",
+    "specPath": "./downloads/docs/deepgrid-sku-blueprint-oct2026.md",
+    "pageLabel": "Applications map",
+    "section": "Applications · Defence, avionics and drones",
+    "text": "Defence, avionics and drones need screened parts, and a failsafe that does not depend on software. The drone SoC keeps a hardware failsafe island wired straight to the motor controllers, so a crashed or jammed mission stack can still land the airframe. Chips and roles in this system: D100 (D100 drone SoC): Flight control and visual-inertial navigation for drones, with a hardware failsafe to the speed controllers. Navigation is geometric, so it does not depend on GPS; jamming immunity is not yet established. SKU-3 (High-reliability power IC): The sequenced 28 V power rails of avionics and military-vehicle electronics. SKU-8 (Rugged display driver): Rugged and industrial displays; a wider-temperature version for cockpits. SKU-7 (77 GHz 4D radar): Defence perimeter and counter-drone radar. SKU-4 (DG32-LITE safety microcontroller): Flight-critical redundancy feeding the D100 roadmap. Each part answers one physical requirement of a screened platform: surge, upset, a hung stack or a frozen display."
+  },
+  {
+    "id": "applications_grid",
+    "docTitle": "SKU Blueprint, October 2026 (11 SKUs + D100)",
+    "docNum": "applications",
+    "pdfPath": "./downloads/docs/deepgrid-sku-blueprint-oct2026.pdf",
+    "pdfSize": "",
+    "specPath": "./downloads/docs/deepgrid-sku-blueprint-oct2026.md",
+    "pageLabel": "Applications map",
+    "section": "Applications · Grid and metering",
+    "text": "For the national smart-meter rollout, one chip measures the power and records tampering. Tamper detection is a tender requirement, so the chip keeps an always-on clock domain that logs a magnet or an opened case while mains power is cut. Chips and roles in this system: SKU-2 (Smart-meter SoC): Class 0.5S metrology for electricity meters, with tamper logging on backup power. One chip measures the power and keeps the tamper record while mains is cut."
+  },
+  {
+    "id": "applications_boards",
+    "docTitle": "SKU Blueprint, October 2026 (11 SKUs + D100)",
+    "docNum": "applications",
+    "pdfPath": "./downloads/docs/deepgrid-sku-blueprint-oct2026.pdf",
+    "pdfSize": "",
+    "specPath": "./downloads/docs/deepgrid-sku-blueprint-oct2026.md",
+    "pageLabel": "Applications map",
+    "section": "Applications · On nearly every board",
+    "text": "Some parts go on nearly every circuit board, which is where the volume is. A supervisor watches a board’s power rails and a transceiver connects it to its bus. Neither is glamorous, and both ship with almost everything. Chips and roles in this system: SKU-6 (Voltage supervisor): Watches up to four power rails and latches a fault, on nearly every circuit board. SKU-10 (DG32-Max secure microcontroller): A secure microcontroller that boots only signed firmware, for industrial controllers, drone flight controllers, EV chargers and IoT gateways. SKU-5 (RS-485 and CAN-FD transceiver): Ships with every node on every industrial bus, including harsh wiring harnesses. SKU-8 (Rugged display driver): Industrial control panels, rail passenger displays and automotive instrument clusters. Supervision and the bus link decide whether a board starts and talks predictably, below firmware."
   }
 ]

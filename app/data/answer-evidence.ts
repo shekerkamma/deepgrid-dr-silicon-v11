@@ -1,5 +1,6 @@
 import raw from './graphrag-unified-index.json';
 import primary from './primary-answer-evidence.json';
+import aliases from './answer-aliases.json';
 
 import { executeGraphRAG, type SemanticScores } from './graphrag-engine';
 
@@ -86,6 +87,27 @@ const terms = (s: string) =>
   );
 
 
+
+const phrase = (s: string) => ' ' + s.toLowerCase().replace(/[^a-z0-9]+/g, ' ').trim() + ' ';
+// Light stemming so "tampering" meets "tamper" and "detect" meets "detection".
+const stem = (w: string) => w.length > 5 ? w.replace(/(ations|ation|ings|ing|ions|ion|ed|es|s)$/, '') : w;
+
+/** Architecture guides a question names, by code or by the part names the site and Blueprint publish. */
+export function namedGuides(question: string): {title: string; names: string[]}[] {
+  const p = phrase(question);
+  return Object.entries(aliases.products).filter(([,names]) => names.some(n => p.includes(' ' + n + ' '))).map(([title,names]) => ({title, names}));
+}
+/** Application-map passages a question names ("EV maker", "drone", "meter"). */
+export function namedAreas(question: string): string[] {
+  const p = phrase(question);
+  return Object.entries(aliases.areas).filter(([,names]) => names.some(n => p.includes(' ' + n + ' '))).map(([id]) => id);
+}
+/** True when no guide is named, or the text identifies one of the named parts. */
+export function mentionsGuide(text: string, guides: {names: string[]}[]): boolean {
+  if (!guides.length) return true;
+  const p = phrase(text);
+  return guides.some(g => g.names.some(n => p.includes(' ' + n + ' ')));
+}
 
 /** General context expansion: no query-to-answer tables or product prose. */
 
@@ -208,28 +230,28 @@ export function collectEvidence(
     .sort((a, b) => b.rank - a.rank);
 
   // Primary guides are the publication authority; PDF graph chunks also include
-  // older variants. Reserve room for the named product's relevant guide sections.
-  const normalizedQuestion = question.toLowerCase().replace(/[^a-z0-9]+/g, ' ');
-  const primaryWords = primary.map(c => terms(c.section + ' ' + c.text));
-  const primaryRanks = primary.map((c,index) => {
-    const product = c.docTitle.split(/ — | – /)[0].toLowerCase().replace(/[^a-z0-9]+/g, ' ').trim();
-    const namedProduct = (' ' + normalizedQuestion + ' ').includes(' ' + product + ' ');
-    const words = primaryWords[index];
-    const topical = [...q].filter(w => !terms(product).has(w) && !['during','about','which','their','there','when','then','into','also'].includes(w));
-    const overlap = topical.filter(w => words.has(w));
-    const score = overlap.reduce((sum,w) => sum + Math.log(1 + primary.length / (1 + primaryWords.filter(words => words.has(w)).length)) * (terms(c.section).has(w) ? 3 : 1), 0);
-    return {c, score, relevant: overlap.length > 0 && namedProduct};
-  }).filter(x => x.relevant).sort((a,b) => b.score-a.score).slice(0,5);
-  const sources: IndexChunk[] = primaryRanks.map(x => x.c);
-  const primaryProducts = [...new Set(sources.map(c => c.docTitle.split(/ — | – /)[0].toLowerCase().replace(/[^a-z0-9]+/g,' ').trim()))];
+  // older variants. Reserve room for the named product's relevant guide sections,
+  // and for the application map when the question names a system, not a part.
+  const guides = namedGuides(question);
+  const guideTitles = new Set(guides.map(g => g.title));
+  const nameWords = new Set(guides.flatMap(g => g.names.flatMap(n => n.split(' '))));
+  const topical = [...q].filter(w => !nameWords.has(w) && !['during','about','which','their','there','when','then','into','also'].includes(w)).map(stem);
+  const guideChunks = primary.filter(c => c.docNum === 'primary' && guideTitles.has(c.docTitle));
+  const guideWords = guideChunks.map(c => new Set([...terms(c.section + ' ' + c.text)].map(stem)));
+  const primaryRanks = guideChunks.map((c,index) => {
+    const section = new Set([...terms(c.section)].map(stem));
+    const score = topical.filter(w => guideWords[index].has(w)).reduce((sum,w) => sum + Math.log(1 + guideChunks.length / (1 + guideWords.filter(words => words.has(w)).length)) * (section.has(w) ? 3 : 1), 0);
+    return {c, score, index};
+  }).sort((a,b) => b.score-a.score || a.index-b.index).slice(0,5);
+  const areaIds = namedAreas(question);
+  const sources: IndexChunk[] = [...primaryRanks.map(x => x.c), ...primary.filter(c => c.docNum === 'applications' && areaIds.includes(c.id)).slice(0,2)];
 
   let length = sources.reduce((n,c) => n+c.text.length,0);
 
   for (const { c } of ranks) {
     // Do not let generic portfolio claims override a named product's guide.
     // A cross-document passage must explicitly identify that product.
-    const scope = ' ' + (c.docTitle+' '+c.section+' '+c.text).toLowerCase().replace(/[^a-z0-9]+/g,' ') + ' ';
-    if(primaryProducts.length && !primaryProducts.some(product => scope.includes(' '+product+' '))) continue;
+    if (!mentionsGuide(c.docTitle+' '+c.section+' '+c.text, guides)) continue;
 
     if (sources.length >= 14 || length + c.text.length > 21000) continue;
 
@@ -531,7 +553,7 @@ Adapt depth and organization to the question: a single fact needs a short answer
 
 Every paragraph must contain support entries with exact source IDs and exact short supporting quotes. Copy 8-25 consecutive words verbatim for each quote, without ellipses or paraphrasing. Cite all material factual claims; use separate paragraphs when different claims need different evidence. Mark interpretation paragraphs as interpretation and express them conditionally. Recommendations must follow specific evidence, not generic requests to evaluate. No unsupported ROI, customer savings, certification, availability or revenue claims. Preserve units, dates, scope and product distinctions. Do not infer equity versus debt from the word round. Describe planned funding as planned, not secured. Scope absence of validation to the specific workloads and source date; never broaden it into nothing has been proven about the company or product. When figures in the evidence conflict, describe the discrepancy or omit the uncertain number. Targets, simulations and calculated estimates are not measured results. Graph relationships help connect passages but never establish facts on their own. Inferred graph edges are uncertain.
 
-Use the October 2026 SKU Blueprint for current SKU identity and portfolio plans; older documents provide scoped supporting architecture. Flag contradictions and missing evidence rather than silently resolving them. The MCEME contract claim, 39.3 TOPS measured on FPGA and 12.9x cheaper than Mobileye claims are withheld and must not be asserted. Do not claim certification from an architectural safety target.
+Use the October 2026 SKU Blueprint for current SKU identity and portfolio plans; older documents provide scoped supporting architecture. Flag contradictions and missing evidence rather than silently resolving them. The MCEME contract claim, 39.3 TOPS measured on FPGA and 12.9x cheaper than Mobileye claims are withheld and must not be asserted. When a question asks about one, say only that the published documents do not establish it: do not repeat its figures, and never mention withholding, instructions or policy to the reader. Do not claim certification from an architectural safety target.
 
 For a broad question, answer the supported portion with citations and put missing aspects in gaps. Do not silently turn a broad question into a demand for a comprehensive plan and then refuse because details are missing. The packet limits are retrieval diagnostics, not source facts: verify them against the passages. Only if no material portion of the actual question can be answered from the passages, return answerable=false, a short specific lead explaining what is not established (kind=evidence, support=[]), sections=[], and gaps listing what is missing. Never substitute a product overview for an unanswered question. Otherwise answerable=true.
 
