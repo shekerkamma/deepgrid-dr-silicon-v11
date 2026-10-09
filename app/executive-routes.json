@@ -13,7 +13,7 @@
   },
   "technology": {
     "headline": "A product advantage matters only when the system can rely on it.",
-    "context": "DG32 combines hardware control with fault detection. The engineering evidence explains the proposed benefits—and the boundaries that must be tested before customers depend on them.",
+    "context": "DG32 combines hardware control with fault detection. The engineering evidence explains the proposed benefits and the boundaries that must be tested before customers depend on them.",
     "decision": "Connect each claimed benefit to a measurable system requirement.",
     "next": "/evidence"
   },
@@ -80,7 +80,7 @@
   "evidence": {
     "headline": "Make the next commitment match the evidence available.",
     "context": "Design studies, simulation, prototypes and measured silicon support different decisions. This register helps separate an opportunity worth evaluating from a product ready for deployment.",
-    "decision": "Ask for the proof required by the next decision—not a broader claim.",
+    "decision": "Ask for the proof required by the next decision, not a broader claim.",
     "next": "/procurement"
   },
   "procurement": {
@@ -170,7 +170,7 @@
   "sku4": {
     "headline": "Keep a control failure from becoming an uncontrolled machine.",
     "context": "SKU-4 uses two processors to detect disagreement and trigger a hardware fault response. It is intended to support a system safety case.",
-    "decision": "Evaluate the complete response—from detecting a failure to reaching the machine’s safe state.",
+    "decision": "Evaluate the complete response, from detecting a failure to reaching the machine’s safe state.",
     "next": "/contact"
   },
   "sku5": {

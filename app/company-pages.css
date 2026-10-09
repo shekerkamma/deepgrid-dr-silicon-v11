@@ -242,6 +242,8 @@
 @media (max-width: 900px) {
   .cp-band-inner { grid-template-columns: minmax(0, 1fr); }
   .cp-band-credit { position: static; padding: 1rem 1rem 0; text-align: left; }
+  /* One column: the copy spans the band, so the left-to-right fade would leave its right edge on bare photo. */
+  .cp-band::after { background: linear-gradient(180deg, color-mix(in srgb, var(--background) 90%, transparent) 0%, color-mix(in srgb, var(--background) 80%, transparent) 70%, var(--background)); }
   .cp-tiles .cp-card { min-height: 16rem; }
 }
 @media (max-width: 1150px) { .cp-band { margin-top: -45px; } }

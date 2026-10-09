@@ -29,7 +29,7 @@
   "sku4": {
     "headline": "Keep a control failure from becoming an uncontrolled machine.",
     "context": "SKU-4 uses two processors to detect disagreement and trigger a hardware fault response. It is intended to support a system safety case.",
-    "implication": "Evaluate the complete response—from detecting a failure to reaching the machine’s safe state.",
+    "implication": "Evaluate the complete response, from detecting a failure to reaching the machine’s safe state.",
     "gate": "Simulation of fault detection does not establish product certification or system-level safety.",
     "page": 19,
     "valueTitle": "The machine’s safe state is the business requirement.",

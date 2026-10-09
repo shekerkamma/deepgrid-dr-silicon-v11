@@ -76,7 +76,7 @@ export const groundedDocuments: GroundedDoc[] = [
       { label: 'Format', value: 'Nine questions per SKU, answered in the same order' },
       { label: 'Shuttle', value: 'Nine prototypes on the ChipFoundry December 2026 shuttle' },
     ],
-    summary: 'The current product portfolio. Each SKU is a standalone handout answering the same nine questions: what the part is, what it replaces, how big the market is, what share is needed and whether that is realistic, what each unit earns, who buys it, the policy driver, why this process node, and where the FPGA prototype ends and the chip begins. Adds SKU-10 DG32-Max Secure MCU and SKU-11 SOH-Aware BMS Controller to the earlier nine. Volumes, prices and shares are the company\'s own estimates.',
+    summary: 'The current product portfolio. Each SKU is a standalone handout answering the same nine questions: what the part is, what it replaces, how big the market is, what share is needed and whether that is realistic, what each unit earns, who buys it, the policy driver, why this process node, and where the FPGA prototype ends and the chip begins. Adds SKU-10 DG32-Max Secure MCU and SKU-11 SOH-Aware BMS Controller to the earlier nine. Volumes, prices and shares are the company’s own estimates.',
     highlights: [
       'New in this edition: SKU-10 DG32-Max Secure MCU and SKU-11 SOH-Aware BMS Controller',
       'Each SKU states what it replaces, who buys it, the policy driver and why its process node was chosen',
