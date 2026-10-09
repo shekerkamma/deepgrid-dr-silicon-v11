@@ -34,10 +34,19 @@ for (const [width, reduced] of [[1440, false], [390, false], [390, true]]) {
   const errors = [];
   page.on('pageerror', e => errors.push('pageerror: ' + e.message));
   page.on('console', m => { if (m.type() === 'error') errors.push('console: ' + m.text().slice(0, 140)); });
+  // GitHub Pages answers 503 for a few minutes after a deploy while the CDN fills: the verify-live
+  // run for 0cd8189 failed on one SVG unchanged since 10-06, which served 200 on the next two passes
+  // and on every request after. A route whose load saw a server 5xx is checked once more; a real
+  // defect reproduces and still fails, a CDN miss does not.
+  let server5xx = 0;
+  page.on('response', r => { if (r.status() >= 500) server5xx++; });
 
   for (const route of declared) {
     const url = site + (route === '/' ? '' : route.replace(/^\//, '') + '.html');
-    const before = errors.length;
+    const tag = `${width === 390 ? (reduced ? 'reduced' : 'phone  ') : 'desktop'} ${route}`;
+    let d, problems;
+    for (let attempt = 0; ; attempt++) {
+    const before = errors.length, before5xx = server5xx;
     const resp = await page.goto(url, {waitUntil: 'networkidle'});
     await page.waitForTimeout(500);
     // Scroll the whole page so entrance animations resolve; a block stuck at opacity 0 is
@@ -75,7 +84,7 @@ for (const [width, reduced] of [[1440, false], [390, false], [390, true]]) {
       null, {timeout: 6000},
     ).catch(() => {});
 
-    const d = await page.evaluate(bp => ({
+    d = await page.evaluate(bp => ({
       base: document.querySelector('meta[name="site-base"]')?.getAttribute('content'),
       offBase: [...document.querySelectorAll('a[href^="/"]')].map(a => a.getAttribute('href')).filter(h => !h.startsWith(bp)),
       brokenImgs: [...document.images].filter(i => i.complete && i.naturalWidth === 0).map(i => i.getAttribute('src')),
@@ -108,7 +117,7 @@ for (const [width, reduced] of [[1440, false], [390, false], [390, true]]) {
         .slice(0, 6),
     }), basePath);
 
-    const problems = [];
+    problems = [];
     if (resp.status() !== 200) problems.push('status ' + resp.status());
     if (d.base !== basePath) problems.push(`site-base "${d.base}" != "${basePath}"`);
     if (d.offBase.length) problems.push('links outside base: ' + d.offBase.slice(0, 3).join(', '));
@@ -120,11 +129,14 @@ for (const [width, reduced] of [[1440, false], [390, false], [390, true]]) {
     if (width === 390 && d.smallTargets.length) problems.push('tap targets under 24px: ' + d.smallTargets.join(', '));
     if (errors.length > before) problems.push(errors.slice(before, before + 2).join(' | '));
     if (width === 1440) {
-      if (titles.has(d.title)) problems.push(`same title as ${titles.get(d.title)}: "${d.title}"`);
+      if (titles.has(d.title) && titles.get(d.title) !== route) problems.push(`same title as ${titles.get(d.title)}: "${d.title}"`);
       else titles.set(d.title, route);
     }
+    if (!problems.length || attempt > 0 || (server5xx === before5xx && resp.status() < 500)) break;
+    console.log(`     retry ${tag}: ${server5xx - before5xx} server 5xx response(s) on load (${problems.join('; ').slice(0, 120)})`);
+    await page.waitForTimeout(5000);
+    }
 
-    const tag = `${width === 390 ? (reduced ? 'reduced' : 'phone  ') : 'desktop'} ${route}`;
     if (problems.length) { fails.push(`${tag}: ${problems.join('; ')}`); console.log(`FAIL ${tag}: ${problems.join('; ')}`); }
     else console.log(`ok   ${tag}  ${d.title.slice(0, 60)}`);
 
