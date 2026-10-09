@@ -22,6 +22,11 @@ assert.equal(requests,1);assert.equal(await page.locator('.answer-essay h2').inn
 assert.equal(await page.locator('.answer-essay .executive-sources').getAttribute('open'),null);
 await page.locator('.executive-ref').first().click();await page.locator('.answer-essay .executive-sources[open]').waitFor();
 for(const link of await page.locator('.answer-essay .executive-sources a').all()){const href=await link.evaluate(a=>a.href);assert(href.startsWith(base));assert.equal((await page.request.get(href)).status(),200);}
+const previousQuestion=await input.inputValue();
+await input.fill(previousQuestion+' edited');await input.fill(previousQuestion);
+await page.waitForTimeout(5500);
+assert.equal(requests,1,'Restoring draft text must not submit a paid query');
+assert.equal(await page.locator('.answer-essay').count(),0);
 mode='error';await input.fill('Explain the funding risk for a new investor');await input.press('Enter');
 await page.getByRole('alert').waitFor({timeout:20000});assert.equal(await page.locator('.dr-answer-lead').count(),0);
 mode='success';await page.getByRole('button',{name:'Retry answer'}).click();await page.locator('[data-model="gemini-3.8-flash"]').waitFor({timeout:20000});

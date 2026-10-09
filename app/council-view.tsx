@@ -61,8 +61,8 @@ export default function GroundedAnswerView({query}: GroundedAnswerViewProps) {
           <ol>{result.sources.map((c,i)=><li key={c.id} id={'answer-source-'+(i+1)}>
             <strong>{c.docTitle} · {c.section} · {c.pageLabel}</strong>
             <blockquote>{c.text}</blockquote>
-            <a href={asset(c.pdfPath.replace(/^\./,''))+'#page='+(c.pageLabel.match(/\d+/)?.[0]||1)}>Open source page</a>{' · '}
-            <a href={readHref(c.specPath.replace(/^\./,''),c.section)}>Read in site</a>
+            <a href={asset(c.pdfPath.replace(/^\./,''))+(c.pdfPath.endsWith('.pdf')?'#page='+(c.pageLabel.match(/\d+/)?.[0]||1):'')}>Open source document</a>{' · '}
+            <a href={readHref(c.specPath.replace(/^\./,''),c.docNum==='primary'?c.section:undefined)}>Read in site</a>
           </li>)}</ol>
         </details>}
       </>}

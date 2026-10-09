@@ -1,4 +1,5 @@
 import raw from './graphrag-unified-index.json';
+import primary from './primary-answer-evidence.json';
 
 import { executeGraphRAG, type SemanticScores } from './graphrag-engine';
 
@@ -206,11 +207,29 @@ export function collectEvidence(
 
     .sort((a, b) => b.rank - a.rank);
 
-  const sources: IndexChunk[] = [];
+  // Primary guides are the publication authority; PDF graph chunks also include
+  // older variants. Reserve room for the named product's relevant guide sections.
+  const normalizedQuestion = question.toLowerCase().replace(/[^a-z0-9]+/g, ' ');
+  const primaryWords = primary.map(c => terms(c.section + ' ' + c.text));
+  const primaryRanks = primary.map((c,index) => {
+    const product = c.docTitle.split(/ — | – /)[0].toLowerCase().replace(/[^a-z0-9]+/g, ' ').trim();
+    const namedProduct = (' ' + normalizedQuestion + ' ').includes(' ' + product + ' ');
+    const words = primaryWords[index];
+    const topical = [...q].filter(w => !terms(product).has(w) && !['during','about','which','their','there','when','then','into','also'].includes(w));
+    const overlap = topical.filter(w => words.has(w));
+    const score = overlap.reduce((sum,w) => sum + Math.log(1 + primary.length / (1 + primaryWords.filter(words => words.has(w)).length)) * (terms(c.section).has(w) ? 3 : 1), 0);
+    return {c, score, relevant: overlap.length > 0 && namedProduct};
+  }).filter(x => x.relevant).sort((a,b) => b.score-a.score).slice(0,5);
+  const sources: IndexChunk[] = primaryRanks.map(x => x.c);
+  const primaryProducts = [...new Set(sources.map(c => c.docTitle.split(/ — | – /)[0].toLowerCase().replace(/[^a-z0-9]+/g,' ').trim()))];
 
-  let length = 0;
+  let length = sources.reduce((n,c) => n+c.text.length,0);
 
   for (const { c } of ranks) {
+    // Do not let generic portfolio claims override a named product's guide.
+    // A cross-document passage must explicitly identify that product.
+    const scope = ' ' + (c.docTitle+' '+c.section+' '+c.text).toLowerCase().replace(/[^a-z0-9]+/g,' ') + ' ';
+    if(primaryProducts.length && !primaryProducts.some(product => scope.includes(' '+product+' '))) continue;
 
     if (sources.length >= 14 || length + c.text.length > 21000) continue;
 

@@ -12,7 +12,7 @@
     "lint": "oxlint",
     "format": "oxfmt",
     "typecheck": "tsc --noEmit",
-    "build:pages": "node scripts/check-classes.mjs && node scripts/check-css-bans.mjs && node scripts/check-claims.mjs && node scripts/check-crossrefs.mjs && node scripts/check-usecases.mjs && node scripts/check-clips.mjs && node scripts/check-visuals.mjs && node scripts/check-semantic.mjs && node scripts/check-executive-story.mjs && node scripts/copy-runtime.mjs && node scripts/build.mjs && node scripts/package-pages.mjs",
+    "build:pages": "node scripts/build-primary-answer-evidence.mjs --check && node scripts/check-classes.mjs && node scripts/check-css-bans.mjs && node scripts/check-claims.mjs && node scripts/check-crossrefs.mjs && node scripts/check-usecases.mjs && node scripts/check-clips.mjs && node scripts/check-visuals.mjs && node scripts/check-semantic.mjs && node scripts/check-executive-story.mjs && node scripts/copy-runtime.mjs && node scripts/build.mjs && node scripts/package-pages.mjs",
     "build:semantic": "node scripts/build-semantic-index.mjs",
     "publish:graph": "node scripts/publish-graph.mjs",
     "check:semantic": "node scripts/check-semantic.mjs",

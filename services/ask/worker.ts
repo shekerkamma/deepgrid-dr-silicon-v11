@@ -1,13 +1,14 @@
 import legacy from './legacy-rerank.js';
 import raw from '../../app/data/graphrag-unified-index.json';
+import primary from '../../app/data/primary-answer-evidence.json';
 import { collectEvidence, COMPOSITION_INSTRUCTIONS, answerSchema, validateAnswer, type EvidencePacket } from '../../app/data/answer-evidence';
 
 export const MODEL = 'gemini-3.8-flash';
-const PUBLICATION_POLICY = `Publication status takes priority over promotional wording in older passages: DeepGrid is pre-silicon. Planned customer relationships, anchor buyers, product approvals, qualification, future production and sales are plans or targets, not secured or achieved results. A named company in a planning document is not evidence of a signed order, design win or current customer. Gross margins, revenue, market size and profitability in the business plan are estimates or targets; never describe them as demonstrated economics. Describe the single-approval/two-markets concept as an intended qualification strategy, not a current approval. Preserve optional features as optional. For both composition and audit, enforce these distinctions even when an older passage uses confident present tense.`;
+const PUBLICATION_POLICY = `Primary architecture guide passages (docNum primary) are the publication authority for their named product. Keep variant identities separate: facts about another part or an older master whitepaper do not override the named product guide. Distinguish simulation, post-route analysis, design targets and measured silicon; absence of physical silicon does not erase simulation or post-route results. A watchdog reset signal and a hardware fault-to-gate-driver path are different mechanisms. Do not infer absence of one from incomplete wiring of the other. Publication status takes priority over promotional wording in older passages: DeepGrid is pre-silicon. Planned customer relationships, anchor buyers, product approvals, qualification, future production and sales are plans or targets, not secured or achieved results. A named company in a planning document is not evidence of a signed order, design win or current customer. Gross margins, revenue, market size and profitability in the business plan are estimates or targets; never describe them as demonstrated economics. Describe the single-approval/two-markets concept as an intended qualification strategy, not a current approval. Preserve optional features as optional. For both composition and audit, enforce these distinctions even when an older passage uses confident present tense.`;
 
 const origins = new Set(['https://shekerkamma.github.io', 'http://127.0.0.1:8894', 'http://localhost:8894', 'http://127.0.0.1:8768']);
 type Env = { GEMINI_API_KEY: string; ANSWER_RATE: {limit(options: {key:string}):Promise<{success:boolean}>} };
-const corpus = new Map(raw.chunks.map(c=>[c.id,c]));
+const corpus = new Map([...raw.chunks,...primary].map(c=>[c.id,c]));
 const normalize = (s:string)=>s.replace(/\s+/g,' ').trim();
 class ServiceError extends Error { constructor(public status:number, message:string) { super(message); } }
 
@@ -58,9 +59,13 @@ export default {
     const packet=collectEvidence(question);
     // Clients send only IDs selected by their semantic+graph retrieval. All
     // passages and source links are resolved from the trusted bundled corpus.
-    const requested=Array.isArray(body.sourceIds)?body.sourceIds.slice(0,14):[];
-    const selected=requested.filter((id:unknown)=>typeof id==='string'&&corpus.has(id as string)).map((id:string)=>corpus.get(id)!);
-    const sources=[...new Map([...selected,...packet.sources].map(c=>[c.id,c])).values()];
+    const requested:string[]=Array.isArray(body.sourceIds)?body.sourceIds.filter((id:unknown):id is string=>typeof id==='string').slice(0,14):[];
+    const primaryProducts=[...new Set(packet.sources.filter(c=>c.docNum==='primary').map(c=>c.docTitle.split(/ — | – /)[0].toLowerCase().replace(/[^a-z0-9]+/g,' ').trim()))];
+    const selected=requested.filter((id:unknown)=>typeof id==='string'&&corpus.has(id as string)).map((id:string)=>corpus.get(id)!).filter(c=>{
+      const scope=' '+(c.docTitle+' '+c.section+' '+c.text).toLowerCase().replace(/[^a-z0-9]+/g,' ')+' ';
+      return !primaryProducts.length || primaryProducts.some(product=>scope.includes(' '+product+' '));
+    });
+    const sources=[...new Map([...packet.sources.filter(c=>c.docNum==='primary'),...selected,...packet.sources].map(c=>[c.id,c])).values()];
     let chars=0; packet.sources=sources.filter(c=>{if(chars+c.text.length>26000)return false;chars+=c.text.length;return true;}).slice(0,18);
     if(!packet.sources.length) return json({model:MODEL,answer:{answerable:false,title:question,lead:{text:'The indexed DeepGrid documents do not establish an answer to this question.',kind:'evidence',support:[]},sections:[],gaps:['No relevant source evidence was found.']},sources:[]});
     const signal=AbortSignal.timeout(110000);
@@ -70,10 +75,11 @@ export default {
     for(let attempt=0;attempt<2;attempt++) {
       const draft=await generate(env,COMPOSITION_INSTRUCTIONS,feedback?{...packet,correction:feedback}:packet,answerSchema,signal);
       try { answer=validateAnswer(draft,packet); }
-      catch(error) {feedback={issues:[String(error)],draft};answer=undefined;continue;}
+      catch(error) {console.warn('Answer validation rejected draft',String(error));feedback={issues:[String(error)],draft};answer=undefined;continue;}
       if(!answer.answerable)break;
       const review=await generate(env,auditInstructions,{question,sources:packet.sources,answer},{type:'object',properties:{issues:{type:'array',items:{type:'string'}}},required:['issues'],additionalProperties:false},signal);
       if(Array.isArray(review.issues)&&!review.issues.length)break;
+      console.warn('Answer audit requested correction',JSON.stringify(review.issues));
       feedback={issues:review.issues||['Review could not be read'],draft:answer};answer=undefined;
     }
     if(!answer) throw new ServiceError(502,'The draft could not be verified against the sources. Please retry or narrow the question.');

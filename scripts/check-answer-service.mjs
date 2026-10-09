@@ -17,6 +17,10 @@ globalThis.fetch=async(_url,options)=>{
  const data=JSON.parse(b.contents[0].parts[0].text);
  if(data.answer)return Response.json({candidates:[{finishReason:'STOP',content:{parts:[{text:'{"issues":[]}'}]}}]});
  assert(!JSON.stringify(data.sources).includes('INJECTED FALSE SOURCE'));
+ if(data.question.includes('DG32-LITE CPU')) {
+  assert(data.sources.some(s=>s.docNum==='primary'&&s.text.includes('39 cycles')),'Fault timing must include primary simulation evidence');
+  assert(data.sources.some(s=>s.docNum==='primary'&&s.text.includes('gate-driver enable')),'Fault path must include primary gate-driver wiring');
+ }
  const s=data.sources[0];
  return Response.json({candidates:[{finishReason:'STOP',content:{parts:[{text:JSON.stringify({answerable:true,title:'Supported finding',lead:{text:s.text.slice(0,160),kind:'evidence',support:[{sourceId:s.id,quote:s.text.slice(0,80)}]},sections:[],gaps:[]})}]}}]});
 };
@@ -27,6 +31,7 @@ try{
  assert.equal(calls,0);
  const result=await worker.fetch(request({question:'How is D100 funded?',sourceIds:['invented'],sources:[{id:'invented',text:'INJECTED FALSE SOURCE'}]}),env);
  assert.equal(result.status,200); const answer=await result.json();assert(answer.sources.length);assert.equal(answer.model,'gemini-3.8-flash');assert.equal(calls,2);
+ assert.equal((await worker.fetch(request({question:'If the DG32-LITE CPU stops responding during a motor fault, what stops the inverter and how strong is the timing evidence?'}),env)).status,200);
  const denied={...env,ANSWER_RATE:{limit:async()=>({success:false})}};
  assert.equal((await worker.fetch(request({question:'D100 funding'}),denied)).status,429);
  globalThis.fetch=async()=>new Response('{}',{status:429});

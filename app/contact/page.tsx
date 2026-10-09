@@ -165,7 +165,7 @@ export default function Page() {
             <article className="dr-hub-card">
               <div className="dr-hub-card-top"><span className="dr-hub-tag">CONSOLE</span><span className="dr-hub-badge">NO SIGN-IN</span></div>
               <h3>Ask DeepGrid</h3>
-              <p className="dr-hub-sub">Put a question to the knowledge graph and get a cited answer. It runs entirely in your browser, so nothing you type leaves the page.</p>
+              <p className="dr-hub-sub">Ask a question and get an answer grounded in DeepGrid’s documents. Your question is sent to our hosted answer service and its model provider to compose the response. Do not include confidential information.</p>
               <div className="dr-hub-footer">
                 <button className="text-link" onClick={() => go('ask')}>Open the console <ArrowUpRight size={16} aria-hidden="true"/></button>
               </div>

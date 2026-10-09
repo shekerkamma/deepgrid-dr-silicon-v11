@@ -311,7 +311,7 @@ export default function AskDeepGrid({go}: {go: (hash: string) => void}) {
               spellCheck={false}
               className="dr-ask-input"
               value={query}
-              onChange={e => handleQuerySelect(e.target.value)}
+              onChange={e => {setSubmittedQuery(''); handleQuerySelect(e.target.value);}}
               placeholder="Ask a question about DeepGrid…"
               aria-label="Search DeepGrid knowledge"
             />
