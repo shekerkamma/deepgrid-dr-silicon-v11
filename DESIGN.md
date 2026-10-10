@@ -27,19 +27,19 @@ typography:
   hero:
     fontFamily: "'Inter Variable', system-ui, sans-serif"
     fontSize: "clamp(2.6rem, 4.4vw, 3.9rem)"
-    fontWeight: 700
+    fontWeight: 300
     lineHeight: 1.1
     letterSpacing: "-0.02em"
   display:
     fontFamily: "'Inter Variable', system-ui, sans-serif"
     fontSize: "clamp(2.3rem, 3.6vw, 3.25rem)"
-    fontWeight: 700
+    fontWeight: 400
     lineHeight: 1.12
     letterSpacing: "-0.02em"
   headline:
     fontFamily: "'Inter Variable', system-ui, sans-serif"
     fontSize: "clamp(1.9rem, 2.9vw, 2.75rem)"
-    fontWeight: 700
+    fontWeight: 400
     lineHeight: 1.15
     letterSpacing: "-0.02em"
   title:
@@ -153,7 +153,7 @@ Restrained: navy neutrals plus one blue.
 
 ## Typography
 
-**Headings:** Inter Variable, weight 700 (h1, h2) and 600 (h3, h4), tracking -0.02em on h1 and h2.
+**Headings:** Inter Variable, **light**: 300 for the home hero, 400 for h1 and h2, 600 for h3 and h4; tracking -0.025em (-0.03em on the hero). Changed from 700 on 2026-10-10. Every Awwwards deep-tech winner and silicon peer in `ai-graphics/assets/references/` sets display type at 300 to 400.
 **Body:** Source Sans 3 Variable (the maintained Source Sans Pro), 1rem / 1.65, held to a 64ch measure.
 **Code and measurements:** JetBrains Mono Variable, only for part codes (SKU-4, D100), measured values (39 cycles, 198 days) and diagram internals.
 
@@ -181,6 +181,8 @@ Restrained: navy neutrals plus one blue.
 - **Shell.** Above 1100px the sticky header holds the wordmark, the mega-navigation, Contact and the blue "Discuss your application" button in one row; below 1100px the labelled menu control opens the phone sheet. `--nav-h` is measured by `app/motion.tsx`.
 - **Home hero.** Full-bleed photograph (`public/images/dgs/home-hero.webp`) under a left-to-right scrim that covers only the copy column (`rgb(10 10 10 / .92)` to transparent at 68%); copy max 620px, left. Below 760px the scrim runs top to bottom and the caption moves under the copy.
 - **Inner photo heroes.** Products, Technology and Evidence use a full-viewport `::before` image (`app/assets/dgs/*`) behind the first `section-head`, with copy stacked in the dark left column (max 600px). Other routes use a plain black hero band that bleeds to the viewport edge (`box-shadow: 0 0 0 100vmax` plus `clip-path: inset(-160px -100vmax 0)`).
+- **Proof strip.** Directly under the home hero: four cells on black with hairline dividers. Each cell is a figure (Inter 300), a short label paraphrasing the claim, and its maturity plus source title, linked to the source document. The three engineering figures come from `app/claims.ts` (fault-39, fmax-lockstep, node-130) and are never typed by hand; the fourth is the 12-architecture portfolio count. Two columns below 900 px.
+- **One scroll act.** The home fault path is the page's single pinned act: `ScrollAct` (`app/scroll-act.tsx`) mounts the vendored scrollcraft engine (`public/vendor/scrollcraft`, unedited, MIT). The span is 4.5 viewport heights, about 0.7 per fault step, which is reading pace. It pins only at 1100 px and wider with motion allowed; on phones and under reduced motion the stage stays click-driven. The stage declares `data-sc-verify-state` for scroll-craft's harness. Never add a second scroll device to a page.
 - **Section heads, every page.** Title left, intro paragraph right, stacked below 760px. Home uses the same grammar as the inner routes. The reference centres its section heads; this site does not (owner, 2026-10-10), so the hero, every section, the close and the footer share one left edge.
 - **Band order on home.** Black hero, black application strip, then navy bands (product finder, system section, films), the Brand Blue capability band, navy fault-path stage and diagnostics, navy grid-paper stages, decision gates, the Navy Close band, the next-decision block, footer navy.
 - **Engineering pages.** One `page-wrap` column (max 1600px, 8% gutter, 5% below 650px).
@@ -207,7 +209,7 @@ Flat at rest: cards are lifted by a lighter navy surface and a hairline, not a s
 - **Primary button:** Brand Blue, white text, 6px, 52px high, hover Blue Hover. Enforced with `:not(#_)` over the legacy layers.
 - **Outline button (on dark):** 1.5px white border, 6px, white text, hover `rgb(255 255 255 / .08)`.
 - **Text link:** blue, underline offset 4px; a lucide `ArrowUpRight` (14px, `aria-hidden`) only on outbound and primary links.
-- **Product row (home finder):** Navy Card, 8px, Navy Border; hover lifts 1px with a Light Blue border.
+- **Product row (home finder):** a hairline-ruled index row (no card, no radius, no shadow); hover takes the Navy Card ground. It reads as a datasheet index, as on the reference sites.
 - **Filter:** Navy Card with a border; `aria-pressed` selected state is Brand Blue with white text.
 - **Fault chain:** Navy Card rows; reached rows take Navy Surface and white text; the current row takes a Light Blue border and a 14% blue tint.
 - **Header:** black at 95% with blur, white 500 links.

@@ -20,7 +20,7 @@ export default function Related({route}: {route: RouteId}) {
 
   return (
     <aside className="dr-related" aria-labelledby={'related-' + route}>
-      <DecisionClose route={route}/>
+      {route !== 'home' && <DecisionClose route={route}/>}
       {route !== 'home' && route !== 'company' && hasBrief(route) && <details className="dr-evaluation-guide"><summary>Detailed evaluation checklist</summary><RouteJourney route={route}/></details>}
       <h2 className="dr-related-head" id={'related-' + route}>Where to go next</h2>
 

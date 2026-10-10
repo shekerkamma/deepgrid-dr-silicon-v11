@@ -49,7 +49,7 @@
 
 /* Which regions are dark. Selectors, not markup, so no component changes for the band split. */
 .topbar,.mobile-sheet,.navigation-sheet,.footer,
-.v11-hero,.v11-application-strip,.v6-home .v6-close,.executive-decision,
+.v11-hero,.v11-application-strip,.dgs-proof-strip,.v6-home .v6-close,.executive-decision,
 html .page-wrap>.section-head:first-child,.cp-band,.pp-hero,.breadcrumbs,.technology-nav,
 .v6-company>.v6-section:first-child>header,.rd-empty,
 .v6-stage,.die-stage,.dr-stage,.evidence-clip,.pt-tile video,.dgs-dark{
@@ -287,3 +287,35 @@ body .pt-code:not(#_){text-transform:none}
 body .dr-qfn-body:not(#_){background:var(--dgs-blue)}
 /* Storyboard zone lists are labels: sentence case in the text face ("28 nm", not "28 NM"). */
 body .sb-zones:not(#_),body .sb-zones span:not(#_){text-transform:none;font-family:var(--font-text);letter-spacing:0}
+
+/* ---------- Reference-led pass (Awwwards + deep-tech silicon sets, 2026-10-10) ---------- */
+/* Light display: every award winner and silicon peer sets large type at 300-400, not bold. */
+body :is(h1,h2):not(#_){font-weight:400;letter-spacing:-.025em}
+body .v6-home.v11-home .v11-hero h1:not(#_){font-weight:300;letter-spacing:-.03em}
+body :is(h3,h4):not(#_){font-weight:600}
+
+/* Proof strip: four real figures from the claims register under the hero, each with maturity and source. */
+.dgs-proof-strip{background:var(--t-bg);border-bottom:1px solid #1f2937;padding:0 5%}
+.dgs-proof-strip ul{list-style:none;margin:0 auto;padding:0;max-width:1680px;display:grid;grid-template-columns:repeat(4,minmax(0,1fr))}
+.dgs-proof-strip li+li{border-left:1px solid #1f2937}
+.dgs-proof-strip a{display:grid;gap:4px;padding:26px 24px 24px;color:var(--t-fg);text-decoration:none;min-height:100%;transition:background-color .2s}
+.dgs-proof-strip a:hover{background:#111827}
+.dgs-proof-strip strong{font:300 clamp(2rem,2.8vw,2.75rem)/1.05 var(--font-display);letter-spacing:-.03em;color:#fff;font-variant-numeric:tabular-nums}
+.dgs-proof-strip span{font-size:.95rem;color:#e5e7eb}
+.dgs-proof-strip small{font-size:.8rem;color:#9ca3af}
+.dgs-proof-strip li:first-child a{padding-left:0}
+@media(max-width:900px){.dgs-proof-strip ul{grid-template-columns:repeat(2,minmax(0,1fr))}.dgs-proof-strip li:nth-child(3){border-left:0}.dgs-proof-strip li:nth-child(n+3){border-top:1px solid #1f2937}.dgs-proof-strip li a{padding-left:0}.dgs-proof-strip li:nth-child(even) a{padding-left:20px}}
+
+/* The one pinned scroll act (scrollcraft engine, vendored unedited): the stage sticks under the header. */
+.dgs-scroll-act{position:relative}
+.dgs-scroll-stage.sc-stage,.dgs-scroll-stage{position:sticky;top:var(--nav-h);height:calc(100svh - var(--nav-h));overflow:clip;display:flex;align-items:center}
+.dgs-scroll-stage>*{width:100%}
+
+/* Hairline structure on home: the product list reads as a datasheet index, not a stack of cards. */
+.v11-product-list{gap:0;border-top:1px solid var(--t-line)}
+body .v6-home.v11-home a.v11-product-row:not(#_){background:transparent;border:0;border-bottom:1px solid var(--t-line);border-radius:0;box-shadow:none;padding:22px 8px;transform:none}
+body .v6-home.v11-home a.v11-product-row:not(#_):hover{background:var(--t-card);box-shadow:none}
+.dgs-fault-act{margin-block:0 32px}
+/* Proof strip cells stack figure, label, source; a home-level link rule laid them out in a row. */
+body .dgs-proof-strip a:not(#_){display:flex;flex-direction:column;align-items:flex-start;gap:6px;text-decoration:none}
+body .dgs-proof-strip strong:not(#_){white-space:nowrap;font-size:clamp(1.75rem,2.3vw,2.4rem)}
