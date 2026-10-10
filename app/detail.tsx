@@ -15,7 +15,7 @@ export function SectionHead({title,copy,kicker}:{tag?:string;kicker?:string;titl
 
 export function Sec({kicker,title,em,copy,children}:{kicker?:string;title:string;em?:string;copy?:React.ReactNode;children?:React.ReactNode}){
  const story=sectionStories[title.replace(/\u00a0/g,' ') as keyof typeof sectionStories]; if(story){title=story.title;copy=story.copy;em=undefined;}
- return <section className="dr-sec"><header className="dr-sec-head"><div><h2 className="dr-h2">{title}{em&&<><br/><em>{em}</em></>}</h2></div>{copy&&<div className="dr-sec-copy">{typeof copy==='string'?<p>{copy}</p>:copy}</div>}</header>{children}</section>;
+ return <section className="dr-sec"><header className="dr-sec-head"><div><h2 className="dr-h2">{title}{em&&<><br/>{em}</>}</h2></div>{copy&&<div className="dr-sec-copy">{typeof copy==='string'?<p>{copy}</p>:copy}</div>}</header>{children}</section>;
 }
 
 export function ExplainedGrid({items,cols=3}:{items:Explained[];cols?:2|3}){

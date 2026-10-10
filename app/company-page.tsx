@@ -24,7 +24,7 @@ const captionFor = (src: string) =>
 function Figure({ src, alt, className = '' }: { src: string; alt: string; className?: string }) {
   return (
     <figure className={'cp-figure ' + className}>
-      <img src={src} alt={alt} loading="lazy" decoding="async" />
+      <img src={src} alt={alt} width={1600} height={900} loading="lazy" decoding="async" />
       <figcaption>{captionFor(src)}</figcaption>
     </figure>
   );
@@ -214,7 +214,7 @@ function Block({ s }: { s: Section }) {
             {s.items.map((c) => {
               const inner = (
                 <>
-                  {c.image && <img className="cp-card-img" src={c.image} alt="" loading="lazy" decoding="async" />}
+                  {c.image && <img className="cp-card-img" src={c.image} alt="" width={640} height={360} loading="lazy" decoding="async" />}
                   {c.icon && <span className={'cp-card-icon is-' + c.icon}><Icon name={c.icon} /></span>}
                   {c.meta && <p className="cp-meta">{c.meta}</p>}
                   <h3>{c.title}</h3>

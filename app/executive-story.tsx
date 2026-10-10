@@ -1,5 +1,6 @@
 'use client';
 import { createContext, useContext } from 'react';
+import {ArrowUpRight} from 'lucide-react';
 import routes from './executive-routes.json';
 import type { RouteId } from './routes';
 import { url } from './routes';
@@ -16,7 +17,7 @@ export function DecisionClose({ route }: { route: RouteId }) {
       <p className="dr-kicker">YOUR NEXT DECISION</p>
       <h2>{s.decision}</h2>
       <a className="text-link" href={url(s.next)}>
-        Take the next step ↗
+        Take the next step <ArrowUpRight size={14} aria-hidden="true"/>
       </a>
     </section>
   );

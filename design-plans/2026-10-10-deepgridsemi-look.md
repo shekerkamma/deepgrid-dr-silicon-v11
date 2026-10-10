@@ -67,7 +67,7 @@ The reference's product names and specs (DG-A100, ASIL-D, 100 TOPS) do not come 
    - Blue "Why" band → "Build on shared capability", on a #0863A1 band with white text.
    - Dark centred CTA → "Define the opportunity", with buttons centred.
    - Navy five-column footer → the footer, keeping v11's links (Products, Technology, Applications, Evidence, Company).
-6. **Section heads are centred** (title plus one subtitle line), as on the reference. Long intro paragraphs move below the head, left-aligned in the content column.
+6. **Section heads are left-aligned on every page** (owner, 2026-10-10, overriding the first build's centred home heads). Home uses the inner routes' grammar: title left, intro right, stacked on phones. One left edge from hero to footer.
 
 ## 4. Phases
 

@@ -1,5 +1,6 @@
 'use client';
 import {url,type RouteId} from './routes';
+import {ArrowUpRight} from 'lucide-react';
 import {readHref} from './doc-links';
 import './route-journey.css';
 type Brief=[string,string,string[],string,string];
@@ -41,4 +42,4 @@ recognition:['Separate recognition from product readiness','Awards and participa
 contact:['Bring the constraints that decide the part','A useful enquiry starts with a system requirement and a defined evidence gap.',['State the platform and silicon function, not only the chip name.','Include voltage, signal quality, interfaces, timing and environment.','Name qualification requirements and what must be measured before adoption.'],'deepgrid-sku-compendium-architecture.md','/products']};
 /** Whether a route has an evaluation guide; Related renders the disclosure only then, so it never opens empty. */
 export const hasBrief=(route:RouteId)=>Boolean(briefs[route]);
-export function RouteJourney({route}:{route:RouteId}){const b=briefs[route];if(!b)return null;return <aside className="route-journey" aria-label="Engineering evaluation guide"><div><span>YOUR EVALUATION / {route.toUpperCase()}</span><h2>{b[0]}</h2><p>{b[1]}</p></div><ol>{b[2].map((x,i)=><li key={x}><b>0{i+1}</b>{x}</li>)}</ol><nav aria-label="Evaluation next steps"><a href={readHref('/downloads/'+b[3])}>Read the relevant architecture ↗</a><a href={url(b[4])}>Continue the evaluation ↗</a></nav></aside>}
+export function RouteJourney({route}:{route:RouteId}){const b=briefs[route];if(!b)return null;return <aside className="route-journey" aria-label="Engineering evaluation guide"><div><span>YOUR EVALUATION / {route.toUpperCase()}</span><h2>{b[0]}</h2><p>{b[1]}</p></div><ol>{b[2].map((x,i)=><li key={x}><b>0{i+1}</b>{x}</li>)}</ol><nav aria-label="Evaluation next steps"><a href={readHref('/downloads/'+b[3])}>Read the relevant architecture <ArrowUpRight size={14} aria-hidden="true"/></a><a href={url(b[4])}>Continue the evaluation <ArrowUpRight size={14} aria-hidden="true"/></a></nav></aside>}

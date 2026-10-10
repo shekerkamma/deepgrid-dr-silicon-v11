@@ -19,7 +19,7 @@ THESIS: DeepGrid's evidence catalogue wearing the company's public face. Visitor
 OWN-WORLD: Black #0A0A0A nav and photo heroes; light reading bands (white, #F9FAFB, #F1F5F9, #E5E7EB); brand blue #0863A1 for actions and links on light; cyan #4DE2FF for the hero headline only; navy #232C48 footer with #61A6FA heads; dark-blue #111827 call-to-action band. Inter 700 headings at zero tracking; Source Sans 3 body. White cards with 8px radius, a 1px blue-tint border and an offset soft shadow. Technical stages (die, fault path, 3D, films, diagrams) are dark cards on light bands. Mono only for part codes and measured values.
 STORY: unchanged. Identify the physical task, find an architecture, inspect the mechanism, understand evidence maturity, discuss an application.
 FIRST VIEWPORT: a full-bleed blue/violet PCB concept render under a local left scrim. Text sits left: cyan Inter 700 headline, light lead, solid blue primary button and an outline secondary. No scroll cue and no eyebrow. Then the application strip on black.
-FORM: company-site canon played straight (reference: deepgridsemi.com). Not copied: two-tone headings, gradient text, glow, placeholder copy, icon tiles, check bullets, rotated labels, partner-logo strip, eyebrows and pills above headings.
+FORM: company-site canon played straight (reference: deepgridsemi.com). Not copied: centred section heads (owner chose one left axis, 2026-10-10), two-tone headings, gradient text, glow, placeholder copy, icon tiles, check bullets, rotated labels, partner-logo strip, eyebrows and pills above headings.
 FINISH: unreviewed and undocumented is unfinished. This build ends with the finish review, the verdict, a rewritten DESIGN.md, and provenance on every new raster.
 
 ## Scope

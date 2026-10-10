@@ -54,7 +54,7 @@ const declared=[...routeSrc.matchAll(/href:\s*'([^']+)'/g)].map(m=>m[1]);
 if(declared.length<8)throw Error(`Only ${declared.length} routes parsed from app/routes.ts; the route table looks wrong`);
 const missing=declared.filter(r=>{const f=r==='/'?'index.html':r.replace(/^\//,'')+'.html';return !fs.existsSync(path.join(output,f));});
 if(missing.length)throw Error(`Declared routes missing from the export: ${missing.join(', ')}`);
-for (const file of pages) { const t = fs.readFileSync(file, 'utf8'); fs.writeFileSync(file, t.replace(/<body([^>]*)>/, '<body$1>'+"<!-- THESIS: Silicon starts with the system; named portfolio functions lead and DG32 supplies inspectable proof. OWN-WORLD: ink, copper and bone; industrial material illustration and precise source-labelled diagrams. STORY: identify a socket, inspect architecture and maturity, understand the mechanism, scope an evaluation. FIRST VIEWPORT: left system headline/actions, right dominant assembly and functional selectors; mobile stacks. FORM: system workbench A with field-guide B labels; seed deepgrid-v6-workbench. FINISH: unreviewed and undocumented is unfinished; this build ends with the finish review, the verdict, and DESIGN.md -->")); }
+// The design direction contract is development-only (impeccable): it is never shipped in page source.
 fs.writeFileSync(path.join(output,'.nojekyll'),'');
 if(domain)fs.writeFileSync(path.join(output,'CNAME'),domain+'\n');
 fs.writeFileSync(path.join(output,'build-info.json'),JSON.stringify({commit:process.env.GITHUB_SHA||'local',base,domain:domain||null,builtAt:new Date().toISOString()}));

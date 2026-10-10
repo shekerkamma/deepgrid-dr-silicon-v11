@@ -135,7 +135,7 @@ export function Shell({
       <footer className="footer">
         <div className="footer-top">
           <a className="brand" href={href('/')} aria-label="DeepGrid Semi home"><Brand/></a>
-          <h2>Safety in the core.<br/>Control in silicon.</h2>
+          <p className="footer-tagline">Safety in the core.<br/>Control in silicon.</p>
           <a className="text-link" href="https://deepgridsemi.com" target="_blank" rel="noreferrer">
             deepgridsemi.com <ArrowUpRight size={20}/>
           </a>
@@ -144,7 +144,7 @@ export function Shell({
           <span>© 2026 DEEPGRID SEMI PVT LTD</span>
           <span>HYDERABAD · INDIA</span>
           <span>PRE-SILICON · DESIGN VALUES, NOT MEASUREMENTS</span>
-          <a href={href('/resources')}>Documents &amp; media ↗</a>
+          <a href={href('/resources')}>Documents &amp; media <ArrowUpRight size={14} aria-hidden="true"/></a>
         </div>
       </footer>
     </div>
