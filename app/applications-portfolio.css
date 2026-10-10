@@ -126,5 +126,5 @@
   .pf-filters button, .pf-layout button, .pf-card { transition: none; }
 }
 
-.pf-function-path{display:grid;grid-template-columns:repeat(3,1fr);gap:2rem;border-block:1px solid #485440;padding:2rem 0;margin-bottom:1.5rem}.pf-function-path>span{font-size:1.2rem;line-height:1.5}.pf-function-path small{display:block;font-family:var(--font-mono);color:#d4a36e;font-size:.75rem;margin-bottom:.8rem}@media(max-width:700px){.pf-function-path{gap:1rem}.pf-function-path>span{font-size:.9rem}}
+.pf-function-path{display:grid;grid-template-columns:repeat(3,1fr);gap:2rem;border-block:1px solid var(--t-border);padding:2rem 0;margin-bottom:1.5rem}.pf-function-path>span{font-size:1.2rem;line-height:1.5}.pf-function-path small{display:block;font-family:var(--font-mono);color:var(--t-accent);font-size:.75rem;margin-bottom:.8rem}@media(max-width:700px){.pf-function-path{gap:1rem}.pf-function-path>span{font-size:.9rem}}
 .st-story{grid-template-columns:minmax(0,1fr)}.pf{min-width:0;max-width:100%}.pf .st-table-scroll{max-width:100%}.st-task-note a{display:inline-block;min-height:28px;padding:.2rem 0;line-height:1.8}

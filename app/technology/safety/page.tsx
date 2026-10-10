@@ -40,7 +40,7 @@ export default function Page() {
         </Sec>
         <FaultTrace steps={faultPath} intro={
           <>
-            <h2 className="dr-h2">Two paths cross the die,<br/><em>and only one is firmware.</em></h2>
+            <h2 className="dr-h2">Two paths cross the die,<br/>and only one is firmware.</h2>
             <p className="dr-lead">A trailing checker core compares every committed store. A mismatch trips the FAULT pin and disables the PWM bridge in a reported simulated 39 cycles, on a path with no software in it.</p>
             <p className="dr-lead">Firmware can still prove the path works: a locked injection register fires it on purpose, alongside other hardware fault-injection and validation methods.</p>
             <div className="dr-links">

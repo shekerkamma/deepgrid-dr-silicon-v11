@@ -23,7 +23,7 @@ h1, h2, h3 { text-wrap: balance; }
 p { text-wrap: pretty; }
 
 /* ------------------------------------------------------------------ menu */
-.main-nav { display: block; padding: 0 clamp(16px, 4.3%, 64px); overflow: visible; position: sticky; top: 0; z-index: 30; background: #101613; border-bottom: 1px solid var(--line-soft); }
+.main-nav { display: block; padding: 0 clamp(16px, 4.3%, 64px); overflow: visible; position: sticky; top: 0; z-index: 30; background: var(--t-surface); border-bottom: 1px solid var(--line-soft); }
 .mega-nav { display: flex; align-items: stretch; gap: .1rem; min-height: 3.5rem; max-width: 1600px; margin: 0 auto; }
 .mega-nav > a, .mega-trigger { display: inline-flex; align-items: center; gap: .4rem; padding: .8rem .95rem; font: 500 var(--sc-t-control)/1 var(--font-text); color: var(--ink-2); background: transparent; border: 0; border-bottom: 2px solid transparent; cursor: pointer; white-space: nowrap; transition: color .15s ease, border-color .15s ease; }
 .mega-nav > a:hover, .mega-trigger:hover, .mega-trigger[aria-expanded='true'] { color: var(--ink); }
@@ -69,14 +69,14 @@ p { text-wrap: pretty; }
 
 /* three.js scenes (app/three) */
 .s3 { margin: 0; display: grid; gap: .6rem; }
-.s3-stage { position: relative; border: 1px solid var(--line); border-radius: 8px; overflow: hidden; background: radial-gradient(ellipse at 50% 45%, #29302b, #121615 72%); touch-action: pan-y; cursor: grab; }
+.s3-stage { position: relative; border: 1px solid var(--line); border-radius: 8px; overflow: hidden; background: radial-gradient(ellipse at 50% 45%, var(--t-surface-2), var(--t-surface) 72%); touch-action: pan-y; cursor: grab; }
 .s3-stage:active { cursor: grabbing; }
 .s3-stage:focus-visible { outline: 2px solid var(--copper); outline-offset: 3px; }
 .s3-stage canvas { display: block; width: 100%; height: 100%; }
 .s3-labels { position: absolute; inset: 0; pointer-events: none; }
-.s3-label { position: absolute; left: 0; top: 0; padding: .15rem .45rem; border-radius: 4px; background: #101212cc; font: 500 var(--sc-t-meta)/1.3 var(--font-mono); letter-spacing: .04em; white-space: nowrap; color: var(--ink-2); border: 1px solid var(--line-soft); }
+.s3-label { position: absolute; left: 0; top: 0; padding: .15rem .45rem; border-radius: 4px; background: color-mix(in srgb,var(--t-bg) 80%,transparent); font: 500 var(--sc-t-meta)/1.3 var(--font-mono); letter-spacing: .04em; white-space: nowrap; color: var(--ink-2); border: 1px solid var(--line-soft); }
 .s3-label.is-copper { color: var(--copper); }
-.s3-label.is-teal { color: var(--safe, #2f9e8c); }
+.s3-label.is-teal { color: var(--safe, var(--t-safe)); }
 .s3-fallback { position: absolute; inset: 0; display: grid; place-items: center; padding: 2rem; margin: 0; color: var(--ink-2); text-align: center; }
 .s3-fallback[hidden] { display: none; }
 .s3-caption { color: var(--ink-3); font-size: var(--sc-t-meta); line-height: 1.5; max-width: 72ch; }

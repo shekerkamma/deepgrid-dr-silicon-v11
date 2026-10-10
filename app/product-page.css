@@ -120,11 +120,11 @@
 .pp-chip-ring { position: absolute; width: 78%; aspect-ratio: 1; border-radius: 50%; border: 1px solid color-mix(in srgb, var(--copper) 45%, transparent); }
 .pp-chip-stack { position: relative; width: 58%; aspect-ratio: 1; transform-style: preserve-3d; transform: rotateX(58deg) rotateZ(-40deg); }
 .pp-chip-layer { position: absolute; inset: 0; border-radius: 6px; transform-style: preserve-3d; }
-.pp-chip-sub { background: linear-gradient(135deg, #1d2420, #121614); border: 1px solid var(--line); transform: translateZ(0); }
+.pp-chip-sub { background: linear-gradient(135deg, var(--t-surface-2), var(--t-surface)); border: 1px solid var(--line); transform: translateZ(0); }
 .pp-chip-sub i { position: absolute; inset: 8%; background-image: radial-gradient(circle, color-mix(in srgb, var(--copper) 55%, transparent) 1.6px, transparent 2.2px); background-size: 9% 9%; opacity: .7; }
-.pp-chip-die { inset: 14%; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 5%; padding: 7%; background: linear-gradient(135deg, #2a2f2a, #181c1a); border: 1px solid color-mix(in srgb, var(--copper) 50%, var(--line)); transform: translateZ(70px); }
+.pp-chip-die { inset: 14%; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 5%; padding: 7%; background: linear-gradient(135deg, var(--t-surface-2), var(--t-surface)); border: 1px solid color-mix(in srgb, var(--copper) 50%, var(--line)); transform: translateZ(70px); }
 .pp-chip-die span { display: grid; place-items: center; padding: 4%; border: 1px solid color-mix(in srgb, var(--copper) 35%, transparent); border-radius: 3px; background: color-mix(in srgb, var(--copper) 7%, transparent); font: 600 clamp(8px, .8vw, 12px)/1.15 var(--font-mono); letter-spacing: .02em; text-transform: uppercase; color: var(--ink-2); text-align: center; overflow: hidden; }
-.pp-chip-lid { inset: 22%; display: grid; place-items: center; background: linear-gradient(135deg, color-mix(in srgb, var(--copper) 26%, #1a1d1b), color-mix(in srgb, var(--copper) 10%, #121514)); border: 1px solid color-mix(in srgb, var(--copper) 70%, transparent); transform: translateZ(150px); opacity: .9; }
+.pp-chip-lid { inset: 22%; display: grid; place-items: center; background: linear-gradient(135deg, color-mix(in srgb, var(--copper) 26%, var(--t-surface)), color-mix(in srgb, var(--copper) 10%, var(--t-surface))); border: 1px solid color-mix(in srgb, var(--copper) 70%, transparent); transform: translateZ(150px); opacity: .9; }
 .pp-chip-lid b { font: 600 clamp(12px, 1.3vw, 20px) var(--font-mono); letter-spacing: .12em; color: var(--ink); }
 @media (prefers-reduced-motion: no-preference) {
   .pp-chip-ring { animation: pp-pulse 3.2s ease-in-out 1.4s 1; }

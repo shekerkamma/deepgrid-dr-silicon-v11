@@ -40,7 +40,7 @@
 .cp-card-link:hover { border-color: var(--copper); background: var(--surface-2); }
 .cp-card-go { display: inline-flex; align-items: center; gap: .3rem; margin-top: .25rem; color: var(--copper); font-size: var(--sc-t-control); }
 .cp-meta { color: var(--copper) !important; font-size: var(--sc-t-meta) !important; letter-spacing: var(--sc-track-meta); text-transform: uppercase; }
-.cp-card-img { width: calc(100% + 2.5rem); margin: -1.25rem -1.25rem .5rem; height: 170px; object-fit: contain; background: #0b0d0c; border-bottom: 1px solid var(--line-soft); }
+.cp-card-img { width: calc(100% + 2.5rem); margin: -1.25rem -1.25rem .5rem; height: 170px; object-fit: contain; background: var(--t-bg); border-bottom: 1px solid var(--line-soft); }
 
 .cp-steps { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 1rem; counter-reset: s; }
 .cp-steps li { padding: 1.25rem; border: 1px solid var(--line); border-radius: 8px; background: var(--surface); }
@@ -86,7 +86,7 @@
 .cp-films { display: grid; gap: 1rem; max-width: 60rem; }
 .cp-films-multi { grid-template-columns: repeat(3, minmax(0, 1fr)); max-width: none; }
 .cp-film { margin: 0; display: grid; gap: .6rem; }
-.cp-film video { display: block; width: 100%; height: auto; aspect-ratio: 16 / 9; background: #000; }
+.cp-film video { display: block; width: 100%; height: auto; aspect-ratio: 16 / 9; background: var(--t-bg); }
 .cp-film figcaption { display: grid; gap: .15rem; }
 .cp-film figcaption strong { color: var(--ink); font-weight: 600; }
 .cp-film figcaption span { color: var(--ink-3); font-size: var(--sc-t-meta); }
@@ -113,7 +113,7 @@
 .cp-yts-short { grid-template-columns: repeat(auto-fill, minmax(9.5rem, 1fr)); margin-bottom: 1rem; }
 .cp-shorts-title { margin: .75rem 0 .5rem !important; }
 .cp-yt { margin: 0; display: grid; gap: .55rem; align-content: start; }
-.cp-yt-frame { position: relative; aspect-ratio: 16 / 9; border: 1px solid var(--line); border-radius: 8px; overflow: hidden; background: #0b0d0c; }
+.cp-yt-frame { position: relative; aspect-ratio: 16 / 9; border: 1px solid var(--line); border-radius: 8px; overflow: hidden; background: var(--t-bg); }
 .cp-yt.is-short .cp-yt-frame { aspect-ratio: 9 / 16; }
 .cp-yt-frame iframe, .cp-yt-play { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; }
 .cp-yt-play { padding: 0; cursor: pointer; background: none; }
@@ -145,7 +145,7 @@
 .cp-flow { margin: 0; padding: 1.5rem 1.5rem 1.25rem; border: 1px solid var(--line); border-radius: 8px; background: var(--surface); }
 .cp-flow figcaption { margin: 0 0 1rem !important; }
 .cp-flow ol { list-style: none; margin: 0; padding: 0; display: grid; gap: .6rem; position: relative; }
-.cp-flow li { position: relative; display: grid; grid-template-columns: 44px 1fr; gap: .9rem; align-items: center; padding: .7rem .85rem; border: 1px solid var(--line-soft); border-radius: 8px; background: var(--bg, #101212); }
+.cp-flow li { position: relative; display: grid; grid-template-columns: 44px 1fr; gap: .9rem; align-items: center; padding: .7rem .85rem; border: 1px solid var(--line-soft); border-radius: 8px; background: var(--bg, var(--t-bg)); }
 /* the connector between stages: a short 2px stem, not a card edge */
 .cp-flow li + li::before { content: ''; position: absolute; left: calc(.85rem + 21px); top: -.65rem; width: 2px; height: .6rem; background: var(--line); }
 .cp-flow-icon { display: grid; place-items: center; width: 44px; height: 44px; border-radius: 8px; border: 1px solid var(--line); color: var(--copper); background: var(--surface-2); }

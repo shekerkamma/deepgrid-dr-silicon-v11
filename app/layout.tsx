@@ -6,18 +6,16 @@ import './dr.css';
 // became a CSS-only chunk shared by five entries, and the bundler preloaded a JS stub it never emitted.
 import './story.css';
 import './visual-refinement.css';
-import '@fontsource-variable/newsreader/opsz.css';
-import '@fontsource-variable/newsreader/opsz-italic.css';
 import '@fontsource-variable/inter';
 import '@fontsource-variable/jetbrains-mono';
 import './company-pages.css';
 import './v3.css';
-import '@fontsource-variable/manrope';
 import './modern-v11.css';
 import './site-refinement.css';
+import './theme-dgs.css';
 import {url} from './routes';
 export const metadata:Metadata={title:'DeepGrid Semi: Silicon for Physical Systems',description:'Motion, power, sensing, interfaces and safety: explore DeepGrid’s mature-node silicon portfolio, strategy and DG32 engineering evidence.',icons:{icon:url('/brand/deepgrid-d-64.png'),apple:url('/brand/deepgrid-d-192.png')}};
 export default function RootLayout({children}:Readonly<{children:React.ReactNode}>){
  // content is rewritten by scripts/package-pages.mjs to the real PAGES_BASE; "/" is the dev value.
- return <html lang="en" className="dark"><head><meta name="site-base" content="/"/><meta name="theme-color" content="#101212"/></head><body>{children}</body></html>;
+ return <html lang="en" className="dark"><head><meta name="site-base" content="/"/><meta name="theme-color" content="#0a0a0a"/></head><body>{children}</body></html>;
 }

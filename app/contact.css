@@ -62,7 +62,7 @@
 
 /* Inline validation: errors render next to their field and are announced through
    aria-describedby; the first invalid field takes focus on submit. */
-.dr-enq-error { margin: 0; color: #e8a08a; font-size: var(--text-meta); line-height: 1.45; }
-.dr-enq-field [aria-invalid="true"] { border-color: #e8a08a; }
+.dr-enq-error { margin: 0; color: var(--t-danger); font-size: var(--text-meta); line-height: 1.45; }
+.dr-enq-field [aria-invalid="true"] { border-color: var(--t-danger); }
 .dr-enq-field input::placeholder,
 .dr-enq-field textarea::placeholder { color: var(--muted-foreground); opacity: 1; }

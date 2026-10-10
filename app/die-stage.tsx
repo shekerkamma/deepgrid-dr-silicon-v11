@@ -67,7 +67,7 @@ export function DieStage({reduced}: {reduced: boolean}) {
           format is understood before the first scroll. */}
       <header className="dg-split-head">
         <div>
-          <h1>Customise the product.<br/><em>Protect the safety foundation.</em></h1>
+          <h1>Customise the product.<br/>Protect the safety foundation.</h1>
         </div>
         <div>
           <p>
@@ -143,7 +143,7 @@ export function DieStage({reduced}: {reduced: boolean}) {
           <span className="mono">{blocks[FROZEN].code}</span>
           <span className="dg-tag dg-tag-frozen"><Lock size={11} aria-hidden="true"/> FROZEN</span>
         </p>
-        <h2>Five of the six are yours.<br/><em>This one is not.</em></h2>
+        <h2>Five of the six are yours.<br/>This one is not.</h2>
         <p className="dg-collapse-copy">
           {blocks[FROZEN].why}
         </p>

@@ -1,0 +1,7 @@
+Render this design specification exactly as a photographic concept render.
+
+DESIGN SPEC
+Style: photoreal macro product photography of semiconductor hardware, shallow depth of field, cinematic low-key lighting. Palette: near-black (#0a0a0a) ground, deep navy shadows, electric blue (#2f7fd6) and violet (#7a5cff) light running along copper-free PCB traces, cool cyan specular highlights (#4de2ff). No warm, orange, gold or copper tones anywhere. Matte black package bodies with subtle metallic edges.
+RULES: no text, no letters, no numbers, no logos, no markings on any chip, no watermark, no people, no UI overlay. Leave the specified empty dark region genuinely empty and dark so white text can sit on it.
+
+SCENE: a single square chip package mounted on a dense multilayer circuit board, seen at a 30-degree oblique angle from above, placed in the right 55% of the frame. Fine circuit traces fan out from the package toward the edges and glow faintly blue and violet. The LEFT 40% of the frame is deep black, out-of-focus board fading into darkness, with only a few dim blue trace lines. Landscape 3:2.

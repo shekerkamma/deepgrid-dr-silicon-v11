@@ -155,7 +155,7 @@ export function Overview({
           <span>WHAT IMPROVES IN YOUR SYSTEM?</span>
         </div>
         <div className="thesis-heading" data-rv data-rv-delay="200">
-          <h2>Three things change<br/><em>when safety is hardware.</em></h2>
+          <h2>Three things change<br/>when safety is hardware.</h2>
           <div>
             <p>
               Entry-level motor-control parts catch faults between faults: watchdogs, brown-out
@@ -208,7 +208,7 @@ export function Overview({
         </div>
         <FaultTrace steps={faultPath} intro={
           <>
-            <h2 className="dr-h2">Two paths cross the die,<br/><em>and only one is firmware.</em></h2>
+            <h2 className="dr-h2">Two paths cross the die,<br/>and only one is firmware.</h2>
             <p className="dr-lead">
               The control path runs ADC, CORDIC, PI regulators and PWM, and the CPU only
               supervises it. The fault-response path runs lockstep comparator, fault latch and
@@ -244,7 +244,7 @@ export function Overview({
           <span>WHERE DOES IT GO?</span>
         </div>
         <div className="thesis-heading" data-rv data-rv-delay="200">
-          <h2>Twelve chips,<br/><em>five kinds of system.</em></h2>
+          <h2>Twelve chips,<br/>five kinds of system.</h2>
           <div>
             <p>
               DG32-LITE is one of ten DeepGrid chips, each built to take a socket an imported part holds
@@ -282,7 +282,7 @@ export function Overview({
           <span>WHAT CAN BE VERIFIED TODAY?</span>
         </div>
         <div className="thesis-heading" data-rv data-rv-delay="200">
-          <h2>Every figure says<br/><em>how it was obtained.</em></h2>
+          <h2>Every figure says<br/>how it was obtained.</h2>
           <div>
             <p>
               DG32 is pre-silicon as of September 2026. Every number on this site carries the kind
@@ -320,7 +320,7 @@ export function Overview({
           <span>WHAT SHOULD YOU DO NOW?</span>
         </div>
         <div className="thesis-heading" data-rv data-rv-delay="200">
-          <h2>Tell us what<br/><em>your system needs.</em></h2>
+          <h2>Tell us what<br/>your system needs.</h2>
           <div>
             <p>
               Describe the drive, the requirement that decides the design, and the timing you are

@@ -135,7 +135,7 @@ export function Shell({
       <footer className="footer">
         <div className="footer-top">
           <a className="brand" href={href('/')} aria-label="DeepGrid Semi home"><Brand/></a>
-          <h2>Safety in the core.<br/><em>Control in silicon.</em></h2>
+          <h2>Safety in the core.<br/>Control in silicon.</h2>
           <a className="text-link" href="https://deepgridsemi.com" target="_blank" rel="noreferrer">
             deepgridsemi.com <ArrowUpRight size={20}/>
           </a>

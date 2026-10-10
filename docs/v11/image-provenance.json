@@ -1,1 +1,50 @@
-{"status": "Existing DeepGrid assets only; generated trial imagery rejected by user and removed from publication", "assets": [{"file": "public/images/v5/semiconductor-hero-1536.webp, semiconductor-hero-768.webp", "source": "shekerkamma/deepgrid-platform-showcase images/semiconductor-hero.png", "evidence": "DeepGrid concept render used as the homepage hero from 2026-10-05; illustrative, captioned as a concept render, not a product photograph"}, {"file": "public/images/v11/dg32-layout.png", "source": "/home/sheke/content-ideas/runs/2026-09-12-dgse-tool-video/deck/assets/die-cover.png", "evidence": "Exact viewer capture; source visual-spec.json v-cover-die; pre-silicon layout, not manufactured silicon; no longer the homepage hero (replaced 2026-10-05)"}, {"file": "public/images/v11/dg32-viewer.png", "source": "/home/sheke/content-ideas/runs/2026-09-12-dgse-tool-video/deck/assets/die-iso.png", "evidence": "Existing DeepGrid Silicon Engine capture"}, {"file": "public/images/v11/dg32-lite-architecture.svg", "source": "C:/Users/sheke/Downloads/DG32-Architecture-Package/Diagrams/DG32-LITE-Architecture.svg", "evidence": "Original architecture diagram, reused unchanged"}, {"file": "public/diagrams/sku-1-architecture.svg, sku-3-architecture.svg, sku-7-architecture.svg, d100-architecture.svg", "source": "Existing DeepGrid v10 repository public/diagrams", "evidence": "Per-product architecture diagrams; pre-silicon targets"}]}
+{
+ "status": "2026-10-10: owner asked for the deepgridsemi.com look and approved the plan regenerating the heroes as blue/violet concept renders (design-plans/2026-10-10-deepgridsemi-look.md, decision 4). Earlier: existing DeepGrid assets only. The copper semiconductor-hero render stays in public/images/v5 for revert.",
+ "assets": [
+  {
+   "file": "public/images/dgs/evidence-hero.webp, evidence-hero-768.webp; app/assets/dgs/evidence-hero.webp",
+   "source": "Generated 2026-10-10 by Codex built-in image_gen (gpt-5.6-sol) from docs/v11/dgs-renders/evidence.txt (shared preamble docs/v11/dgs-renders/preamble.txt); 1536x1024 PNG work/dgs-renders/evidence.png",
+   "evidence": "Concept render for the Evidence hero (app/theme-dgs.css); text-free, no product markings; illustrative, not a product photograph or a DeepGrid part"
+  },
+  {
+   "file": "public/images/dgs/technology-hero.webp, technology-hero-768.webp; app/assets/dgs/technology-hero.webp",
+   "source": "Generated 2026-10-10 by Codex built-in image_gen (gpt-5.6-sol) from docs/v11/dgs-renders/technology.txt (shared preamble docs/v11/dgs-renders/preamble.txt); 1536x1024 PNG work/dgs-renders/technology.png",
+   "evidence": "Concept render for the Technology index hero (app/theme-dgs.css); text-free, no product markings; illustrative, not a product photograph or a DeepGrid part"
+  },
+  {
+   "file": "public/images/dgs/products-hero.webp, products-hero-768.webp; app/assets/dgs/products-hero.webp",
+   "source": "Generated 2026-10-10 by Codex built-in image_gen (gpt-5.6-sol) from docs/v11/dgs-renders/products.txt (shared preamble docs/v11/dgs-renders/preamble.txt); 1536x1024 PNG work/dgs-renders/products.png",
+   "evidence": "Concept render for the Products index hero (app/theme-dgs.css); text-free, no product markings; illustrative, not a product photograph or a DeepGrid part"
+  },
+  {
+   "file": "public/images/dgs/home-hero.webp, home-hero-768.webp",
+   "source": "Generated 2026-10-10 by Codex built-in image_gen (gpt-5.6-sol) from docs/v11/dgs-renders/home.txt (shared preamble docs/v11/dgs-renders/preamble.txt); 1536x1024 PNG work/dgs-renders/home.png",
+   "evidence": "Concept render for the homepage hero (app/deepgrid-visual.tsx); text-free, no product markings; illustrative, not a product photograph or a DeepGrid part"
+  },
+  {
+   "file": "public/images/v5/semiconductor-hero-1536.webp, semiconductor-hero-768.webp",
+   "source": "shekerkamma/deepgrid-platform-showcase images/semiconductor-hero.png",
+   "evidence": "DeepGrid concept render used as the homepage hero from 2026-10-05; illustrative, captioned as a concept render, not a product photograph"
+  },
+  {
+   "file": "public/images/v11/dg32-layout.png",
+   "source": "/home/sheke/content-ideas/runs/2026-09-12-dgse-tool-video/deck/assets/die-cover.png",
+   "evidence": "Exact viewer capture; source visual-spec.json v-cover-die; pre-silicon layout, not manufactured silicon; no longer the homepage hero (replaced 2026-10-05)"
+  },
+  {
+   "file": "public/images/v11/dg32-viewer.png",
+   "source": "/home/sheke/content-ideas/runs/2026-09-12-dgse-tool-video/deck/assets/die-iso.png",
+   "evidence": "Existing DeepGrid Silicon Engine capture"
+  },
+  {
+   "file": "public/images/v11/dg32-lite-architecture.svg",
+   "source": "C:/Users/sheke/Downloads/DG32-Architecture-Package/Diagrams/DG32-LITE-Architecture.svg",
+   "evidence": "Original architecture diagram, reused unchanged"
+  },
+  {
+   "file": "public/diagrams/sku-1-architecture.svg, sku-3-architecture.svg, sku-7-architecture.svg, d100-architecture.svg",
+   "source": "Existing DeepGrid v10 repository public/diagrams",
+   "evidence": "Per-product architecture diagrams; pre-silicon targets"
+  }
+ ]
+}

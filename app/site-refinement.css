@@ -3,9 +3,9 @@ html { color-scheme: dark; scroll-padding-top: calc(var(--nav-h, 89px) + 24px); 
 main :is(h1,h2,h3) { text-wrap: balance; overflow-wrap: break-word; }
 main :is(.dr-sec-copy,.section-head>p,.cp-band p,.sb-body p) { max-width: 70ch; }
 main :is(section[id],h2[id],h3[id],details[id]) { scroll-margin-top: calc(var(--nav-h, 89px) + 24px); }
-:where(a,button,input,textarea,select,summary,[tabindex]):focus-visible { outline: 2px solid var(--accent,#d4a36e); outline-offset: 4px; }
+:where(a,button,input,textarea,select,summary,[tabindex]):focus-visible { outline: 2px solid var(--accent,var(--t-accent)); outline-offset: 4px; }
 main a { text-underline-offset: .2em; }
-input,textarea { caret-color: var(--accent,#d4a36e); }
+input,textarea { caret-color: var(--accent,var(--t-accent)); }
 .dr-table { font-variant-numeric: tabular-nums; }
 .table-scroll:focus-visible,.st-table-scroll:focus-visible,.figure-scroll:focus-visible { outline-offset: -2px; }
 @media (prefers-reduced-motion:reduce) {

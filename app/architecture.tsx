@@ -31,7 +31,7 @@ export default function Architecture(props:Props){
 }
 
 function Intro({kicker,title,em,children}:{kicker:string;title:string;em:string;children:React.ReactNode}){
- return <div className="dr-arch-intro"><div><p className="dr-kicker">{kicker}</p><h2 className="dr-h2">{title}<br/><em>{em}</em></h2></div><div className="dr-sec-copy">{children}</div></div>;
+ return <div className="dr-arch-intro"><div><p className="dr-kicker">{kicker}</p><h2 className="dr-h2">{title}<br/>{em}</h2></div><div className="dr-sec-copy">{children}</div></div>;
 }
 
 function Lite({block,reduced,setReduced,exploded,setExploded,update,go}:Props){
