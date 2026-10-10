@@ -73,7 +73,7 @@ export default function ProductPageView({slug}: {slug: string}) {
   return (
     <article className="pp">
       <nav className="pp-bar" aria-label={`${part.code} sections`}>
-        <div className="pp-bar-name"><span className="mono">{part.code}</span> {part.name}</div>
+        <div className="pp-bar-name"><span className="mono">{part.code}</span> <span className="pp-bar-title">{part.name}</span></div>
         <ul>{SECTIONS.map(([id, label]) => <li key={id}><a href={'#' + id}>{label}</a></li>)}</ul>
         <a className="pp-bar-cta" href={contact}>Discuss this part <ArrowUpRight size={14} aria-hidden="true"/></a>
       </nav>

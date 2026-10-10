@@ -34,15 +34,20 @@
     "displayName": "Footer Navy",
     "canonical": "#232c48"
    },
-   "gray-50": {
+   "navy-page": {
     "role": "neutral",
-    "displayName": "Gray 50",
-    "canonical": "#f9fafb"
+    "displayName": "Navy Page",
+    "canonical": "#0b1220"
    },
-   "slate-100": {
+   "navy-card": {
     "role": "neutral",
-    "displayName": "Slate 100",
-    "canonical": "#f1f5f9"
+    "displayName": "Navy Card",
+    "canonical": "#162033"
+   },
+   "navy-close": {
+    "role": "neutral",
+    "displayName": "Navy Close",
+    "canonical": "#0e1a33"
    }
   },
   "typographyMeta": {
@@ -69,13 +74,8 @@
   },
   "shadows": [
    {
-    "name": "card",
-    "value": "0 4px 16px rgb(30 50 80 / .08)",
-    "purpose": "Resting cards on light bands."
-   },
-   {
     "name": "card-hover",
-    "value": "0 10px 28px rgb(8 99 161 / .16)",
+    "value": "0 12px 28px rgb(0 0 0 / .35)",
     "purpose": "Interactive cards and rows on hover."
    },
    {
@@ -121,16 +121,16 @@
    "refersTo": "card",
    "description": "A product in the home finder.",
    "html": "<a class=\"ds-row\" href=\"#\"><span class=\"c\">SKU-4</span><span><strong>DG32 safety MCU</strong><small>Make a control-core disagreement observable.</small></span></a>",
-   "css": ".ds-row{display:grid;grid-template-columns:80px 1fr;gap:20px;align-items:center;padding:20px 22px;background:#fff;border:1px solid #d3dde8;border-radius:8px;box-shadow:0 4px 16px rgb(30 50 80 / .08);color:#111827;text-decoration:none;font-family:'Source Sans 3',system-ui,sans-serif}.ds-row .c{font:500 .8rem 'JetBrains Mono',monospace;color:#0863a1}.ds-row small{display:block;color:#4b5563}.ds-row:hover{border-color:#0863a1;box-shadow:0 10px 28px rgb(8 99 161 / .16)}"
+   "css": ".ds-row{display:grid;grid-template-columns:80px 1fr;gap:20px;align-items:center;padding:20px 22px;background:#162033;border:1px solid #2a3854;border-radius:8px;color:#f8fafc;text-decoration:none;font-family:'Source Sans 3',system-ui,sans-serif}.ds-row .c{font:500 .8rem 'JetBrains Mono',monospace;color:#61a6fa}.ds-row small{display:block;color:#cbd5e1}.ds-row:hover{border-color:#61a6fa;box-shadow:0 12px 28px rgb(0 0 0 / .35)}"
   }
  ],
  "narrative": {
   "northStar": "The Company Site That Shows Its Working",
-  "overview": "deepgridsemi.com's public face (black frames, photographic heroes, light bands, one brand blue) carrying the evidence catalogue's discipline: maturity beside every figure, illustrations labelled as such.",
+  "overview": "deepgridsemi.com's public face (black frames, photographic heroes, one brand blue) on navy reading bands, carrying the evidence catalogue's discipline.",
   "keyCharacteristics": [
-   "Dark frames, light reading bands",
-   "Technical stages stay dark cards",
-   "One brand blue; cyan only in the home hero",
+   "One navy world; black frames",
+   "Brand Blue capability band and buttons",
+   "Cards lifted by surface, not shadow",
    "Inter 700 headings, Source Sans 3 body"
   ],
   "rules": [
@@ -166,7 +166,8 @@
    "Partner-logo strips",
    "Monospace labels",
    "Centred section headings",
-   "Text glyphs as icons"
+   "Text glyphs as icons",
+   "White reading bands"
   ]
  }
 }

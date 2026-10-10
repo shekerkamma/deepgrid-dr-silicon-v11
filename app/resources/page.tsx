@@ -1,5 +1,9 @@
 'use client';
 
+// Static by declaration: vinext otherwise renders this route speculatively and silently skips it when that
+// render fails, which dropped /resources from the export under local load (2026-10-10). Now a failure is a build error.
+export const dynamic = 'force-static';
+
 import {Shell, useQuery, useNav} from '../shell';
 import {SectionHead} from '../detail';
 import Library from '../library';

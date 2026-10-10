@@ -58,6 +58,7 @@ jobs:
       - run: node scripts/verify-layout.mjs http://127.0.0.1:8768/${{ github.event.repository.name }}/
       - run: node scripts/verify-v11.mjs http://127.0.0.1:8768/${{ github.event.repository.name }}/
       - run: node scripts/verify-nav.mjs http://127.0.0.1:8768/${{ github.event.repository.name }}/
+      - run: node scripts/verify-text-fit.mjs http://127.0.0.1:8768/${{ github.event.repository.name }}/
       - if: failure()
         uses: actions/upload-artifact@v4
         with:
@@ -125,6 +126,7 @@ jobs:
       - run: node scripts/verify-layout.mjs "$SITE"
       - run: node scripts/verify-v11.mjs "$SITE"
       - run: node scripts/verify-nav.mjs "$SITE"
+      - run: node scripts/verify-text-fit.mjs "$SITE"
       - if: failure()
         uses: actions/upload-artifact@v4
         with:

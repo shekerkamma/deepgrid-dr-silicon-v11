@@ -1,6 +1,6 @@
 ---
 name: DeepGrid Silicon Portfolio
-description: The company's public look (deepgridsemi.com) carrying the evidence catalogue. Black frames and photographic heroes, light reading bands, one brand blue, Inter headings over Source Sans body. Technical stages stay dark cards on the light page.
+description: The company's public look (deepgridsemi.com) carrying the evidence catalogue. Black frames and photographic heroes, navy reading bands, one brand blue, Inter headings over Source Sans body.
 colors:
   brand-blue: "#0863a1"
   brand-blue-hover: "#0a75bd"
@@ -11,19 +11,18 @@ colors:
   night-2: "#1f2937"
   navy: "#232c48"
   white: "#ffffff"
-  gray-50: "#f9fafb"
-  slate-100: "#f1f5f9"
-  gray-200: "#e5e7eb"
-  ink: "#111827"
-  ink-2: "#4b5563"
-  ink-on-dark: "#ffffff"
-  ink-2-on-dark: "#d1d5db"
-  border-light: "#d3dde8"
-  border-dark: "#374151"
-  safe-light: "#0f766e"
-  safe-dark: "#2dd4bf"
-  ok-light: "#047857"
-  danger-light: "#b42318"
+  navy-page: "#0b1220"
+  navy-surface: "#0f172a"
+  navy-surface-2: "#111827"
+  navy-card: "#162033"
+  navy-close: "#0e1a33"
+  navy-line: "#1e293b"
+  navy-border: "#2a3854"
+  text: "#f8fafc"
+  text-2: "#cbd5e1"
+  safe: "#2dd4bf"
+  ok: "#34d399"
+  danger: "#fca5a5"
 typography:
   hero:
     fontFamily: "'Inter Variable', system-ui, sans-serif"
@@ -90,8 +89,8 @@ components:
     textColor: "{colors.white}"
     rounded: "{rounded.sm}"
   card:
-    backgroundColor: "{colors.white}"
-    textColor: "{colors.ink}"
+    backgroundColor: "{colors.navy-card}"
+    textColor: "{colors.text}"
     rounded: "{rounded.md}"
     padding: "20px 22px"
   header:
@@ -101,7 +100,7 @@ components:
     backgroundColor: "{colors.navy}"
     textColor: "{colors.white}"
   close-band:
-    backgroundColor: "{colors.night}"
+    backgroundColor: "{colors.navy-close}"
     textColor: "{colors.white}"
 ---
 
@@ -115,42 +114,42 @@ design-plans/2026-10-10-deepgridsemi-look.md. The previous system is kept at doc
 
 **Creative North Star: "The Company Site That Shows Its Working"**
 
-A visitor arriving from deepgridsemi.com should recognise the same company: black header, a photographic hero with a cyan headline, light sections, one brand blue, a dark call to action and a navy footer. Underneath that public face the site stays an evidence catalogue: every figure carries its maturity, every illustration says it is illustrative, and DG32's pre-silicon evidence never transfers to another part.
-
-The look is the reference's; the content discipline is this site's own. What the reference does that this system refuses is listed under Do's and Don'ts.
+A visitor arriving from deepgridsemi.com should recognise the same company: black header, a photographic hero with a cyan headline, one brand blue, a navy close and footer. The reading sections are navy too (owner, 2026-10-10: white bands "do not look good at all"; the navy close band was the model). Underneath that public face the site stays an evidence catalogue: every figure carries its maturity, every illustration says it is illustrative, and DG32's pre-silicon evidence never transfers to another part.
 
 **Key characteristics:**
-- Frames are dark (header, heroes, application strip, close, footer); reading bands are light and alternate white, Gray 50 and Slate 100.
-- Technical stages (die explorer, fault-path stage, system workbench, films, 3D) keep a dark ground and sit on light bands as dark cards.
-- One brand blue carries every action and link; cyan appears only in the home hero headline.
+- One navy world: black frames (header, heroes, application strip), navy reading bands alternating three close depths, a bluer navy close, a lighter navy footer.
+- Brand Blue is the one saturated section (the capability band) and the fill of every primary button.
+- Cards are raised navy with a hairline border; depth comes from the lighter surface, not shadows.
 - Photographic concept renders, text-free and captioned as illustrations, carry the home, Products, Technology and Evidence heroes.
 
 ## Colors
 
-Restrained: neutrals plus one accent. Blue owns action; the rest of the page is white, gray and ink.
+Restrained: navy neutrals plus one blue.
 
 ### Primary
-- **Brand Blue** (`#0863a1`): buttons, links, selected filters, focus rings and accent marks on light bands (6.6:1 on white).
-- **Blue Hover** (`#0a75bd`): the hover fill of a blue button.
-- **Blue on Dark** (`#61a6fa`): links and accents inside dark bands. Not a button fill under white text (2.5:1).
+- **Brand Blue** (`#0863a1`): primary button fills (white text, 6.6:1), selected filters, the capability band.
+- **Blue Hover** (`#0a75bd`).
+- **Light Blue** (`#61a6fa`): links, focus rings and accent marks on navy (7.3:1 on Navy Page).
 - **Hero Cyan** (`#4de2ff`): the home hero headline only.
 
 ### Neutral
-- **Black** (`#0a0a0a`): header (at 95% with an 8px backdrop blur), heroes, the application strip.
-- **Night** (`#111827`) and **Night 2** (`#1f2937`): the close band, raised surfaces and hairlines inside dark bands.
-- **Navy** (`#232c48`): the footer only.
-- **White, Gray 50 (`#f9fafb`), Slate 100 (`#f1f5f9`), Gray 200 (`#e5e7eb`)**: light bands and hairlines.
-- **Ink** (`#111827`) and **Ink 2** (`#4b5563`): text on light. On dark: white and `#d1d5db`.
+- **Black** (`#0a0a0a`): header (95% with an 8px blur), heroes, the application strip.
+- **Navy Page** (`#0b1220`), **Navy Surface** (`#0f172a`), **Navy Surface 2** (`#111827`): reading bands, alternating so sections separate without a hard edge.
+- **Navy Card** (`#162033`) with **Navy Border** (`#2a3854`): cards, product rows, filters, diagram plates.
+- **Navy Close** (`#0e1a33`, hairline `#1e3a5f`): the call-to-action band. **Footer Navy** (`#232c48`).
+- **Text** (`#f8fafc`) and **Text 2** (`#cbd5e1`).
 
 ### Signal
-- **Safe** (`#0f766e` light, `#2dd4bf` dark): a held value, a safe state or a passing gate. Never decorative.
+- **Safe** (`#2dd4bf`): a held value, a safe state or a passing gate. Never decorative.
 
 ### Named Rules
-**The Band Decides Rule.** No stylesheet names a colour. Rules speak role tokens (`--t-bg`, `--t-surface`, `--t-surface-2`, `--t-fg`, `--t-fg-2`, `--t-line`, `--t-border`, `--t-accent`, `--t-on-accent`, `--t-safe`, `--t-ok`, `--t-danger`), and the band an element sits in sets their values. `scripts/dgs-tokenize-colors.py` converted the 571 historical literals; the mapping is in `docs/v11/dgs-tokenize-map.tsv`.
+**The Band Decides Rule.** No stylesheet names a colour. Rules speak role tokens (`--t-bg`, `--t-surface`, `--t-surface-2`, `--t-card`, `--t-plate`, `--t-fg`, `--t-fg-2`, `--t-line`, `--t-border`, `--t-accent`, `--t-on-accent`, `--t-safe`, `--t-ok`, `--t-danger`), and the band sets their values. `scripts/dgs-tokenize-colors.py` converted the 571 historical literals; the mapping is in `docs/v11/dgs-tokenize-map.tsv`.
 
-**The Re-alias Rule.** Legacy names (`--copper`, `--ink`, `--v6-*`, `--v11-*`) are re-declared inside every band, never set once on `:root`, because a custom property resolves where it is declared and would carry light values into a dark stage.
+**The Re-alias Rule.** Legacy names (`--copper`, `--ink`, `--v6-*`, `--v11-*`) are re-declared inside every band, because a custom property resolves where it is declared.
 
-**The One Blue Rule.** Blue marks what can be acted on or what the reader should land on. Headings are ink, never blue.
+**The One Blue Rule.** Blue marks what can be acted on. Headings are white, never blue.
+
+**The Opaque Ground Rule.** A card on a coloured band takes the opaque colour it renders as (`#1b6fa8` on Brand Blue), so alpha-blind contrast checks measure the real ground.
 
 ## Typography
 
@@ -183,22 +182,21 @@ Restrained: neutrals plus one accent. Blue owns action; the rest of the page is 
 - **Home hero.** Full-bleed photograph (`public/images/dgs/home-hero.webp`) under a left-to-right scrim that covers only the copy column (`rgb(10 10 10 / .92)` to transparent at 68%); copy max 620px, left. Below 760px the scrim runs top to bottom and the caption moves under the copy.
 - **Inner photo heroes.** Products, Technology and Evidence use a full-viewport `::before` image (`app/assets/dgs/*`) behind the first `section-head`, with copy stacked in the dark left column (max 600px). Other routes use a plain black hero band that bleeds to the viewport edge (`box-shadow: 0 0 0 100vmax` plus `clip-path: inset(-160px -100vmax 0)`).
 - **Section heads, every page.** Title left, intro paragraph right, stacked below 760px. Home uses the same grammar as the inner routes. The reference centres its section heads; this site does not (owner, 2026-10-10), so the hero, every section, the close and the footer share one left edge.
-- **Band order on home.** Black hero, black application strip, Slate 100 product finder, Gray 50 system section, white films, Brand Blue capability band, white fault-path stage, white diagnostics, Gray 50 grid-paper stages, white decision gates, Night close, Night next-decision band, navy footer.
+- **Band order on home.** Black hero, black application strip, then navy bands (product finder, system section, films), the Brand Blue capability band, navy fault-path stage and diagnostics, navy grid-paper stages, decision gates, the Navy Close band, the next-decision block, footer navy.
 - **Engineering pages.** One `page-wrap` column (max 1600px, 8% gutter, 5% below 650px).
 - Tap targets are at least 24px; controls that take a press are 44px.
 
 ## Elevation & Depth
 
-Light bands use a soft offset shadow on cards, because white on white needs one edge more than a hairline.
+Flat at rest: cards are lifted by a lighter navy surface and a hairline, not a shadow.
 
-- **Card** (`0 4px 16px rgb(30 50 80 / .08)`): resting cards on light bands.
-- **Card hover** (`0 10px 28px rgb(8 99 161 / .16)`, plus `translateY(-1px)` and a blue border): interactive rows and cards.
+- **Card hover** (`0 12px 28px rgb(0 0 0 / .35)`, `translateY(-1px)`, a Light Blue border): interactive rows and cards.
 - **Overlay** (`0 12px 32px rgba(0,0,0,.45)`): modals, drawers, the deck viewer.
 
 ### Named Rules
 **The No Halo Rule.** A shadow has an offset. Zero-offset coloured halos are banned and gated in the build (`scripts/check-css-bans.mjs`).
 
-**The Dark Card Rule.** Cards inside dark bands and on the blue band carry no shadow; they use a 1px border and a translucent white ground.
+**The Lift By Surface Rule.** Depth on navy comes from a lighter surface step, never a resting shadow.
 
 ## Shapes
 
@@ -209,9 +207,9 @@ Light bands use a soft offset shadow on cards, because white on white needs one 
 - **Primary button:** Brand Blue, white text, 6px, 52px high, hover Blue Hover. Enforced with `:not(#_)` over the legacy layers.
 - **Outline button (on dark):** 1.5px white border, 6px, white text, hover `rgb(255 255 255 / .08)`.
 - **Text link:** blue, underline offset 4px; a lucide `ArrowUpRight` (14px, `aria-hidden`) only on outbound and primary links.
-- **Product row (home finder):** white card, 8px, blue-tint border, card shadow; hover lifts 1px with a blue border.
-- **Filter:** white with a border; `aria-pressed` selected state is Brand Blue with white text.
-- **Fault chain:** white rows; reached rows take Gray 50 and ink; the current row takes a blue border and an 8% blue tint.
+- **Product row (home finder):** Navy Card, 8px, Navy Border; hover lifts 1px with a Light Blue border.
+- **Filter:** Navy Card with a border; `aria-pressed` selected state is Brand Blue with white text.
+- **Fault chain:** Navy Card rows; reached rows take Navy Surface and white text; the current row takes a Light Blue border and a 14% blue tint.
 - **Header:** black at 95% with blur, white 500 links.
 - **Footer:** navy, white links that turn Blue on Dark on hover; the tagline is a paragraph (not a heading), 1.75rem, hidden below 650px.
 - **Focus:** a 2px outline in the band's accent at 3px offset, never removed.
@@ -220,7 +218,8 @@ Light bands use a soft offset shadow on cards, because white on white needs one 
 
 - **Do** paint every dark region's own ground; a dark band with transparent background renders white text on white.
 - **Do** caption every concept render as illustrative ("not a product photograph") and record it in `docs/v11/image-provenance.json` with its prompt in `docs/v11/dgs-renders/`.
-- **Do** keep technical stages dark: their renderer materials (`app/portfolio-workbench.css`, `app/die-stage.css`) are literal on purpose.
+- **Do** keep renderer materials literal: technical stages (`app/portfolio-workbench.css`, `app/die-stage.css`) are literal on purpose.
+- **Don't** reintroduce white reading bands; the owner rejected them on 2026-10-10.
 - **Don't** copy the reference's two-tone headings, gradient text, glow shadows, random coloured icon tiles, check icons on every bullet, rotated card labels, placeholder copy or partner-logo strip.
 - **Don't** put a kicker or eyebrow above a heading; such kickers are hidden by rule (`[class*="kicker"]:has(+ h1, h2, h3, h4)`).
 - **Don't** centre section headings, closes or link lists.

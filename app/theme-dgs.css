@@ -1,4 +1,4 @@
-/* deepgridsemi.com look (2026-10-10). Imported last, so it owns every colour, face and band.
+/* deepgridsemi.com look (2026-10-10), navy reading bands (owner, same day: "white does not look good"). Imported last, so it owns every colour, face and band.
    Every stylesheet speaks role tokens (--t-*), which scripts/dgs-tokenize-colors.py wrote in place of
    571 colour literals. A band decides the values: the page is light, and dark frames (header,
    heroes, application strip, call to action, footer) and technical stages re-declare them.
@@ -14,16 +14,16 @@
   --serif:var(--font-display);--v11-display:var(--font-display);
   --dgs-blue:#0863a1;--dgs-blue-hover:#0a75bd;--dgs-blue-dark:#61a6fa;--dgs-cyan:#4de2ff;
   --dgs-navy:#232c48;--dgs-night:#111827;--dgs-black:#0a0a0a;
-  --dgs-shadow:0 4px 16px rgb(30 50 80 / .08);--dgs-shadow-hover:0 10px 28px rgb(8 99 161 / .16);
+  --dgs-shadow:none;--dgs-shadow-hover:0 12px 28px rgb(0 0 0 / .35);
   --sc-radius-sm:6px;--sc-radius-md:8px;--sc-radius-lg:12px;
 }
 
-/* Light band: the page. */
+/* Reading band: the page. Navy, after the close band the owner preferred over white. */
 :root,.dgs-light{
-  --t-bg:#ffffff;--t-surface:#f9fafb;--t-surface-2:#f1f5f9;--t-muted:#e5e7eb;--t-plate:#ffffff;
-  --t-fg:#111827;--t-fg-2:#4b5563;--t-line:#e5e7eb;--t-border:#d3dde8;
-  --t-accent:#0863a1;--t-on-accent:#ffffff;--t-ok:#047857;--t-safe:#0f766e;--t-danger:#b42318;
-  --t-card:#ffffff;
+  --t-bg:#0b1220;--t-surface:#0f172a;--t-surface-2:#111827;--t-muted:#1e293b;--t-plate:#162033;
+  --t-fg:#f8fafc;--t-fg-2:#cbd5e1;--t-line:#1e293b;--t-border:#2a3854;
+  --t-accent:#61a6fa;--t-on-accent:#0b1220;--t-ok:#34d399;--t-safe:#2dd4bf;--t-danger:#fca5a5;
+  --t-card:#162033;
 }
 /* Dark band: frames and technical stages. */
 .dgs-dark{
@@ -131,15 +131,15 @@ body :is(.v11-section-head,.v6-section>header,.v6-close>header,.executive-decisi
 /* ---------- Product finder: gray band, white row cards ---------- */
 .v6-home.v11-home .v11-finder{background:var(--t-surface-2)}
 .v11-product-list{border:0;display:grid;gap:10px}
-.v6-home.v11-home a.v11-product-row{background:#fff;border:1px solid var(--t-border);border-radius:8px;padding:20px 22px;box-shadow:var(--dgs-shadow);transition:box-shadow .2s,border-color .2s,transform .2s}
-.v6-home.v11-home a.v11-product-row:hover{background:#fff;border-color:var(--dgs-blue);box-shadow:var(--dgs-shadow-hover);transform:translateY(-1px)}
-.v11-filters button{border-radius:6px;background:#fff;border-color:var(--t-border)}
+.v6-home.v11-home a.v11-product-row{background:var(--t-card);border:1px solid var(--t-border);border-radius:8px;padding:20px 22px;box-shadow:var(--dgs-shadow);transition:box-shadow .2s,border-color .2s,transform .2s}
+.v6-home.v11-home a.v11-product-row:hover{background:#1a2740;border-color:var(--dgs-blue-dark);box-shadow:var(--dgs-shadow-hover);transform:translateY(-1px)}
+.v11-filters button{border-radius:6px;background:var(--t-card);border-color:var(--t-border)}
 .v11-filters button[aria-pressed=true]{background:var(--dgs-blue);border-color:var(--dgs-blue);color:#fff}
 .v11-search{border-bottom-color:var(--t-border)}
 
 /* ---------- Cards across the site: white, 8px, blue-tint hairline, offset soft shadow ---------- */
 .pp-readiness-cards>article,.pp-spec-cards>div,.pp-hero-specs>div,.v6-foundation,.v6-proposed,.dr-card,.pt-tile,.v11-visual-products>a{
-  background:#fff;border:1px solid var(--t-border);border-radius:8px;box-shadow:var(--dgs-shadow)}
+  background:var(--t-card);border:1px solid var(--t-border);border-radius:8px;box-shadow:none}
 .pp-hero .pp-hero-specs>div{background:rgb(255 255 255 / .04);border-color:#1f2937;box-shadow:none}
 
 /* ---------- Blue band (reference: "Why Deepgrid Semi?"): shared capability ---------- */
@@ -153,11 +153,11 @@ body :is(.v11-section-head,.v6-section>header,.v6-close>header,.executive-decisi
 
 /* ---------- Commitment stages: faint blue grid paper (reference journey section) ---------- */
 .v6-home .v6-section:has(.v6-gates){background-color:var(--t-surface);
-  background-image:linear-gradient(rgb(8 99 161 / .06) 1px,transparent 1px),linear-gradient(90deg,rgb(8 99 161 / .06) 1px,transparent 1px);background-size:32px 32px}
+  background-image:linear-gradient(rgb(97 166 250 / .07) 1px,transparent 1px),linear-gradient(90deg,rgb(97 166 250 / .07) 1px,transparent 1px);background-size:32px 32px}
 .v6-home .v6-gates li::before{background:var(--dgs-blue)}
 
 /* ---------- Close: dark call to action, centred ---------- */
-.v6-home .v6-close{--t-bg:#111827;background:#111827}
+.v6-home .v6-close{--t-bg:#0e1a33;background:#0e1a33;border-top:1px solid #1e3a5f}
 .executive-decision{--t-bg:#111827;background:#111827;box-shadow:0 0 0 100vmax #111827;clip-path:inset(0 -100vmax);border:0;padding-block:72px}
 .executive-decision .eyebrow,.executive-decision>span:first-child{display:none}
 
@@ -168,7 +168,7 @@ body .footer :is(h2,h3,strong,em,.footer-tagline):not(#_){color:#fff;font-style:
 
 /* ---------- Technical stages keep their dark ground on the light page ---------- */
 .v6-stage,.die-stage,.dr-stage{border-radius:8px;overflow:hidden}
-.pt-tile{background:#fff}
+.pt-tile{background:var(--t-card)}
 
 /* ---------- Monospace only for codes and measured values ---------- */
 .eyebrow,.v6-mono,.dr-kicker,.pp-kicker,.section-label>span{font-family:var(--font-text);letter-spacing:.02em;text-transform:none;font-weight:600}
@@ -194,11 +194,11 @@ body :is(h1,h2,h3) :is(span,em,i,small):not(#_){font-weight:inherit;font-style:n
 body .v11-button:not(#_),body .v6-primary:not(#_){background:var(--dgs-blue);color:#fff;border:0;border-radius:6px}
 body .v11-button:not(#_):hover,body .v6-primary:not(#_):hover{background:var(--dgs-blue-hover)}
 /* Fault chain: UI rules in the renderer stylesheet, re-expressed in tokens. */
-body .v6-fault-chain li:not(#_){border-color:var(--t-border);color:var(--t-fg-2);background:#fff}
+body .v6-fault-chain li:not(#_){border-color:var(--t-border);color:var(--t-fg-2);background:var(--t-card)}
 body .v6-fault-chain li+li:not(#_){border-top:0}
 body .v6-fault-chain li:not(#_)>span,body .v6-fault-chain li:not(#_) small{color:var(--t-fg-2)}
 body .v6-fault-chain li[data-active="true"]:not(#_){border-color:var(--t-border);background:var(--t-surface);color:var(--t-fg)}
-body .v6-fault-chain li[data-current="true"]:not(#_){border-color:var(--dgs-blue);background:color-mix(in srgb,var(--dgs-blue) 8%,#fff)}
+body .v6-fault-chain li[data-current="true"]:not(#_){border-color:var(--dgs-blue-dark);background:color-mix(in srgb,var(--dgs-blue-dark) 14%,var(--t-card))}
 body .v6-fault-chain li[data-current="true"]:not(#_) small{color:var(--dgs-blue)}
 .v6-home .v6-section:has(.v6-gates) h2{color:var(--t-fg)}
 @media(max-width:760px){
@@ -245,11 +245,45 @@ body .footer .footer-tagline:not(#_){font-size:1.75rem;line-height:1.15}
 @media(max-width:650px){body .footer .footer-tagline:not(#_){display:none}}
 /* ---------- Finish review fixes ---------- */
 /* On home the close band already asks for the decision; the shared next-decision block follows as a light band. */
-.view-home .executive-decision{--t-bg:#fff;--t-fg:#111827;--t-fg-2:#4b5563;--t-accent:#0863a1;--foreground:#111827;--copper:#0863a1;color:#111827;background:#fff;box-shadow:none;clip-path:none;padding-block:64px 24px}
-body .view-home .executive-decision h2:not(#_){color:#111827}
+.view-home .executive-decision{background:var(--t-bg);box-shadow:none;clip-path:none;border-top:1px solid var(--t-line);padding-block:64px 24px}
 /* Card labels: sentence case, text face, never a monospace kicker. */
 body :is(.v6-foundation,.v6-proposed)>small:not(#_){font-family:var(--font-text);letter-spacing:0;text-transform:none;font-weight:600;font-size:.875rem;color:var(--t-fg-2)}
 .v6-home .v6-bone h2{max-width:30ch}
 a svg.lucide-arrow-up-right{vertical-align:-2px;flex:none}
 /* Blue-band cards: the opaque colour the 8% white rendered as, so contrast gates that ignore alpha measure the real ground. */
 body .v6-home .v6-bone :is(.v6-foundation,.v6-proposed):not(#_){background:#1b6fa8}
+
+/* ---------- Navy reading bands ---------- */
+/* Diagram frames take the card navy; draw.io SVGs render their dark variant inside them. */
+:is(.figure-scroll,.dr-diagram-body,.dr-pin-figure,.dr-lib-diagram) img{color-scheme:dark}
+body .skip-link:not(#_){background:#fff;color:#0b1220}
+/* ---------- improve-ui plans (design-plans/2026-10-10-*) ---------- */
+/* Citations are document titles: text face, not monospace (Machine Voice Rule). */
+body .v6-cite:not(#_){font-family:var(--font-text);letter-spacing:0;font-size:.875rem}
+/* Workbench toggles are aria-pressed groups like the product filters: one treatment. */
+body .v6-tabs button:not(#_){border-radius:var(--sc-radius-sm);background:var(--t-card);border:1px solid var(--t-border);color:var(--t-fg);transition:background-color .15s,border-color .15s}
+body .v6-tabs button[aria-pressed=true]:not(#_){background:var(--dgs-blue);border-color:var(--dgs-blue);color:#fff}
+body .v6-tabs button:not([aria-pressed=true]):hover:not(#_){border-color:var(--dgs-blue-dark)}
+
+/* ---------- Text cut-off and overlap fixes (site-wide detector, 2026-10-10) ---------- */
+/* Product tiles: an open tile grows to its content instead of clipping at a fixed 33rem. */
+.pt-row:not(.is-stacked){height:auto;min-height:33rem;align-items:stretch}
+.pt-row:not(.is-stacked) .pt-tile.is-open .pt-body{position:relative;inset:auto}
+body .pt-body h3:not(#_){font-size:clamp(1.5rem,2vw,1.875rem);line-height:1.15}
+/* Stat cells never narrower than their longest value; they wrap to a second row instead of splitting "8 × CAN-FD". */
+body .pt-body dl:not(#_){grid-template-columns:repeat(auto-fit,minmax(9.5rem,1fr))}
+.pt-body dd{overflow-wrap:normal;word-break:keep-all}
+/* Film stills carry their title in the image: show the whole frame, never crop it. */
+body .pt-still:not(#_){height:auto;aspect-ratio:16/9;object-fit:contain;background:#0a0a0a}
+/* Library: package groups are spaced, not pulled up over the previous group (-28px overlapped longer tab text). */
+body .dr-lib-group+.dr-lib-group:not(#_){margin-top:28px}
+/* Product sub-nav on phones: the part code and the action; the full name is the page heading just below. */
+@media(max-width:560px){.pp-bar-title{display:none}}
+body .pt-actions a.primary:not(#_){background:var(--dgs-blue);color:#fff;border-radius:6px;padding:0 1rem}
+body .pt-actions a.primary:not(#_):hover{background:var(--dgs-blue-hover)}
+/* Units keep their case: "130 nm", not "130 NM". */
+body .pt-code:not(#_){text-transform:none}
+/* QFN package body: Brand Blue fill under white text (the accent is light blue on navy, 2.5:1). */
+body .dr-qfn-body:not(#_){background:var(--dgs-blue)}
+/* Storyboard zone lists are labels: sentence case in the text face ("28 nm", not "28 NM"). */
+body .sb-zones:not(#_),body .sb-zones span:not(#_){text-transform:none;font-family:var(--font-text);letter-spacing:0}
