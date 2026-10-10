@@ -432,7 +432,6 @@ function PageBand({ page }: { page: CompanyPage }) {
       {bg && <img className="cp-band-bg" src={bg.src} alt="" width={1536} height={864} loading="eager" decoding="async" />}
       <div className="cp-band-inner">
         <div className="cp-band-copy">
-          <p className="cp-pill">{page.kicker}</p>
           <h1>{story.headline}</h1>
           <p className="cp-band-lede">{story.context}</p>
         </div>
