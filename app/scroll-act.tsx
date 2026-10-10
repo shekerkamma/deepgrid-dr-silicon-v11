@@ -1,5 +1,5 @@
 'use client';
-/** One pinned scroll act driven by the vendored scrollcraft engine (public/vendor/scrollcraft, unedited).
+/** One pinned scroll act driven by the vendored scrollcraft engine (public/engine/scrollcraft, unedited).
  *  The engine pins the [data-sc-stage] child for `span` viewport heights and publishes act progress as --sc-p;
  *  this component reads it once per frame and hands the children a progress value.
  *  Pinned only where it can be read: desktop widths (the stage must fit one screen) and motion allowed. Elsewhere
@@ -14,7 +14,7 @@ function loadEngine(): Promise<void> {
   if (window.ScrollCraft) return Promise.resolve();
   engine ??= new Promise((resolve, reject) => {
     const s = document.createElement('script');
-    s.src = url('/vendor/scrollcraft/scrollcraft.js');
+    s.src = url('/engine/scrollcraft/scrollcraft.js');
     s.onload = () => resolve(); s.onerror = () => reject(new Error('scrollcraft engine failed to load'));
     document.head.appendChild(s);
   });
