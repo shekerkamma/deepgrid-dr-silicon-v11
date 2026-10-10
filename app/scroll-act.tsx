@@ -40,6 +40,9 @@ export function ScrollAct({span, minWidth = 1100, className, children}: {span: n
       if (!live || !root.current || !window.ScrollCraft) return;
       window.ScrollCraft.mount(root.current);              // the engine finds [data-sc-act] inside the root
       if (!pinned || !act.current) return;
+      // Pin only when the stage content fits the screen: a stage taller than the viewport would be clipped.
+      const stage = act.current.querySelector('[data-sc-stage]') as HTMLElement | null, body = stage?.firstElementChild as HTMLElement | null;
+      if (stage && body && body.scrollHeight > stage.clientHeight) { setPinned(false); return; }
       const tick = () => {
         if (!live || !act.current) return;
         const p = parseFloat(getComputedStyle(act.current).getPropertyValue('--sc-p')) || 0;

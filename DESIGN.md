@@ -117,8 +117,8 @@ design-plans/2026-10-10-deepgridsemi-look.md. The previous system is kept at doc
 A visitor arriving from deepgridsemi.com should recognise the same company: black header, a photographic hero with a cyan headline, one brand blue, a navy close and footer. The reading sections are navy too (owner, 2026-10-10: white bands "do not look good at all"; the navy close band was the model). Underneath that public face the site stays an evidence catalogue: every figure carries its maturity, every illustration says it is illustrative, and DG32's pre-silicon evidence never transfers to another part.
 
 **Key characteristics:**
-- One navy world: black frames (header, heroes, application strip), navy reading bands alternating three close depths, a bluer navy close, a lighter navy footer.
-- Brand Blue is the one saturated section (the capability band) and the fill of every primary button.
+- Two grounds only: Frame for header, hero, strips and footer; Page for every reading section, divided by hairlines.
+- Brand Blue fills primary buttons and marks links and feature-card edges; no section uses it as a ground.
 - Cards are raised navy with a hairline border; depth comes from the lighter surface, not shadows.
 - Photographic concept renders, text-free and captioned as illustrations, carry the home, Products, Technology and Evidence heroes.
 
@@ -132,12 +132,13 @@ Restrained: navy neutrals plus one blue.
 - **Light Blue** (`#61a6fa`): links, focus rings and accent marks on navy (7.3:1 on Navy Page).
 - **Hero Cyan** (`#4de2ff`): the home hero headline only.
 
-### Neutral
-- **Black** (`#0a0a0a`): header (95% with an 8px blur), heroes, the application strip.
-- **Navy Page** (`#0b1220`), **Navy Surface** (`#0f172a`), **Navy Surface 2** (`#111827`): reading bands, alternating so sections separate without a hard edge.
-- **Navy Card** (`#162033`) with **Navy Border** (`#2a3854`): cards, product rows, filters, diagram plates.
-- **Navy Close** (`#0e1a33`, hairline `#1e3a5f`): the call-to-action band. **Footer Navy** (`#232c48`).
+### Neutral: two grounds and one card (owner, 2026-10-10: backgrounds must gel)
+- **Frame** (`#070b14`): header (94% with blur), hero, proof strip, application strip, footer, inner-page heroes.
+- **Page** (`#0b1220`): every reading section, **one ground**, sections separated by a `#1b2538` hairline rule, never by alternating colours.
+- **Card** (`#121b2d`) with border `#2a3854`: cards, rows on hover, filters, diagram plates, fault-chain rows.
 - **Text** (`#f8fafc`) and **Text 2** (`#cbd5e1`).
+
+Retired after measurement: the live home used seven grounds from two families (neutral `#0a0a0a`/`#111827`, blue `#0f172a`/`#0b1220`/`#232c48`) plus a saturated `#0863a1` section. Brand Blue is never a section ground; it marks actions, links and the 2 px top edge of feature cards.
 
 ### Signal
 - **Safe** (`#2dd4bf`): a held value, a safe state or a passing gate. Never decorative.
@@ -221,7 +222,8 @@ Flat at rest: cards are lifted by a lighter navy surface and a hairline, not a s
 - **Do** paint every dark region's own ground; a dark band with transparent background renders white text on white.
 - **Do** caption every concept render as illustrative ("not a product photograph") and record it in `docs/v11/image-provenance.json` with its prompt in `docs/v11/dgs-renders/`.
 - **Do** keep renderer materials literal: technical stages (`app/portfolio-workbench.css`, `app/die-stage.css`) are literal on purpose.
-- **Don't** reintroduce white reading bands; the owner rejected them on 2026-10-10.
+- **Don't** reintroduce white reading bands, a saturated section ground, or a third navy; the owner rejected each on 2026-10-10.
+- **Don't** crop an image with text or a subject the caption names: scene illustrations show the whole frame, the phone hero image sits above the copy, and phone diagrams fit the width.
 - **Don't** copy the reference's two-tone headings, gradient text, glow shadows, random coloured icon tiles, check icons on every bullet, rotated card labels, placeholder copy or partner-logo strip.
 - **Don't** put a kicker or eyebrow above a heading; such kickers are hidden by rule (`[class*="kicker"]:has(+ h1, h2, h3, h4)`).
 - **Don't** centre section headings, closes or link lists.
