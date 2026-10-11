@@ -103,7 +103,7 @@ Safety-relevant control silicon is bought on evidence, and every part here is pr
 
 | # | Claim | Role | Evidence | Visual | Takeaway | Status |
 |---|---|---|---|---|---|---|
-| 1 | Thirty motor diagnostics fit on DG32-LITE's one core. The sensor, not the chip, sets the limit. | Context | **12-chip "where it goes / replaces / node / evidence" table, 823 words** | Table and cards | (a portfolio story, not this page's) | **MOVE** the table to Products §8 (see §7) |
+| 1 | Twelve chips go into five kinds of system, and DG32-LITE can also watch the motor it drives. | Context | 12-chip "where it goes / replaces / node / evidence" table with filters | Table and cards | The portfolio by system; DG32 opens into the story below | **FIXED**: the mismatch was this heading (changed earlier on 2026-10-11), not the table |
 | 2 | DG32-LITE is a safety microcontroller for motors and batteries, and it can watch the machine it controls. | Context | SKU-4; Microchip/Renesas socket; 24 of 30 tasks > 1 kHz; slowest 10.3 ms; largest 20 KB | Text and four family counts | The second job in spare cycles | OK |
 | 3 | It goes into five places, and each one has its own faults worth watching. | Fit | Five sockets with their tasks; CAN-FD not on LITE | Socket list | Where it earns its place | OK |
 | 4 | In a motor drive, control comes first. Diagnostics has to fit around it. | Tension | A wrong PWM edge can short the bridge; diagnostics only advise | Text and film frame | The trip never waits on a model | OK |
@@ -195,3 +195,17 @@ Safety-relevant control silicon is bought on evidence, and every part here is pr
 - **Are there unsupported or internal claims?** Two:
   - The About mission text is the company's own claim, kept under About.
   - The S1–S4 investor table lives on /company only.
+
+## 10. Open items closed (2026-10-11, owner: "go ahead with your decisions")
+
+**§7 item 2, move the 12-chip table: reversed after inspection.**
+- Applications was built as the portfolio by system. Its own title in the source is "Twelve chips, five kinds of system".
+- Products' table says "Per-chip facts live on /applications (one home per fact)", and Products, Company, the overview and Evidence link into its `#chip-` cards.
+- The mismatch came from my headline change earlier the same day. The fix is the headline: "Twelve chips go into five kinds of system, and DG32-LITE can also watch the motor it drives."
+
+**§7 item 6, collapse the task families: withdrawn, replaced by density.**
+- A disclosure would have hidden the body again: the defect this storyboard exists to fix.
+- Measured: the four families were 5,974 px at 1440, of which the 30 rows were about 4,600 px at about 130 px each.
+- Each family now keeps its claim and every task. The family head reads title-left/intro-right, and a row puts its three costs on one line.
+- Result: rows 130 → 99 px; families 5,974 → 4,386 px; page 20.1 → 18.3 screens at 1440 and 31.2 → 30.6 at 390.
+- Further cuts would remove content (the 17-model table, 1,782 px; the five sockets, 1,306 px). They are left to the owner.

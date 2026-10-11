@@ -42,8 +42,8 @@
     "next": "/procurement"
   },
   "applications": {
-    "headline": "Thirty motor diagnostics fit on DG32-LITE’s one core. The sensor, not the chip, sets the limit.",
-    "context": "Motion, vehicles, defence, energy and board infrastructure face different failure modes. Match the proposed chip to the system job and the evidence needed for that environment.",
+    "headline": "Twelve chips go into five kinds of system, and DG32-LITE can also watch the motor it drives.",
+    "context": "DeepGrid’s portfolio by the systems it goes into. Open a chip for what it replaces and its SKU Blueprint page; DG32-LITE, the pre-silicon proof point, opens into its diagnostic story: thirty tasks that fit its one core, and the sensor that limits them.",
     "decision": "Name the failure or product limitation you want to address.",
     "next": "/contact"
   },
