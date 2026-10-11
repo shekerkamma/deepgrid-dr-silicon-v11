@@ -12,8 +12,8 @@
     "next": "/evidence"
   },
   "technology": {
-    "headline": "A product advantage matters only when the system can rely on it.",
-    "context": "DG32 combines hardware control with fault detection. The engineering evidence explains the proposed benefits and the boundaries that must be tested before customers depend on them.",
+    "headline": "DG32 turns a silent processor fault into a hardware signal.",
+    "context": "Two RISC-V cores run two cycles apart. A comparator checks every committed store, latches the first cause and drives FAULT_N, which can switch off the motor bridge without waiting for firmware: 39 cycles in simulation.",
     "decision": "Connect each claimed benefit to a measurable system requirement.",
     "next": "/evidence"
   },
@@ -24,7 +24,7 @@
     "next": "/contact"
   },
   "control": {
-    "headline": "Protect the control task before adding more intelligence.",
+    "headline": "The CPU runs two regulators, not the loop.",
     "context": "A predictable control workload can leave capacity for diagnostics. That capacity depends on operating speed, signal quality and the work the product must perform.",
     "decision": "Prioritise the core control requirement, then budget additional functions.",
     "next": "/applications"
@@ -36,13 +36,13 @@
     "next": "/contact"
   },
   "package": {
-    "headline": "A promising chip still has to fit the customer’s board.",
+    "headline": "44 signals in a 9 × 9 mm package.",
     "context": "The package, interfaces and supply requirements set the integration work for the equipment maker. Some choices are defined today; final electrical limits depend on silicon characterisation.",
     "decision": "Separate board decisions that can proceed from those awaiting measurement.",
     "next": "/procurement"
   },
   "applications": {
-    "headline": "Start with the operating problem, then select the silicon.",
+    "headline": "Thirty motor diagnostics fit on DG32-LITE’s one core. The sensor, not the chip, sets the limit.",
     "context": "Motion, vehicles, defence, energy and board infrastructure face different failure modes. Match the proposed chip to the system job and the evidence needed for that environment.",
     "decision": "Name the failure or product limitation you want to address.",
     "next": "/contact"
@@ -78,13 +78,13 @@
     "next": "/products/sku-6"
   },
   "evidence": {
-    "headline": "Make the next commitment match the evidence available.",
+    "headline": "Sixteen figures carry this site. Each names the evidence it rests on.",
     "context": "Design studies, simulation, prototypes and measured silicon support different decisions. This register helps separate an opportunity worth evaluating from a product ready for deployment.",
     "decision": "Ask for the proof required by the next decision, not a broader claim.",
     "next": "/procurement"
   },
   "procurement": {
-    "headline": "Begin evaluation now; make production commitments against proven readiness.",
+    "headline": "DG32 leads the STM32G0 on lockstep, DShot and CORDIC. The G0 leads on ADC and embedded flash.",
     "context": "Compare DG32’s proposed strengths with the functions, measurements and qualification your product requires. Roadmap items should remain explicit dependencies in an adoption plan.",
     "decision": "Agree acceptance criteria, milestones and a fallback before selection.",
     "next": "/contact"

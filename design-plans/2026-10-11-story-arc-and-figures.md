@@ -142,3 +142,39 @@ add only the sentence title.
 - **Not done:** inner-route closes. The journey block is already collapsed in a `<details>`, so each route shows one decision section plus links.
 - **Found on the way:** `SafetyWorkbench` Reset returned control to the scroll state, so a reader arriving from below (act at its last step) saw Reset do nothing. Reset now holds normal operation until the reader scrolls (`heldAt`).
 - **Colour (owner: buttons "too bright"):** see DESIGN.md, One Fill Rule.
+
+## 11. Section synthesis, every page (2026-10-11, tranche 1)
+
+Owner: "in spite of using story-architect, why are we missing synthesis of content across each section of every page".
+
+**Root cause.** Commit d71c389 (7 Oct, "Apply executive story architecture") added an overlay:
+- `app/executive-sections.json` (26 entries), applied by `Sec` in `app/detail.tsx`;
+- `executive-routes.json` page titles, applied by `SectionHead`;
+- hand edits to Applications, architecture, fmax and die headings.
+
+It replaced each section's own finding with generic advice. Its pack (`docs/executive-story-pack-v12.md`) gives every one of the 37 routes the same "Evidence" and "Visual treatment" cells, which shows a template filled, not a synthesis. Story-architect's own rules ("use source-specific examples"; "every slide must advance the argument") fail there.
+
+**Rule applied now.** A heading states what its section proves, using a figure or fact already in that section. No new claims.
+
+| Where | Was (overlay) | Now (the section's finding) |
+|---|---|---|
+| 26 `Sec` sections | e.g. "Fault detection supports a stronger control proposition." | The original title + second line, e.g. "Self-test cannot see a fault between runs; lockstep checks every store." (overlay no longer applied) |
+| Applications, 7 beats | e.g. "Measurement quality can decide whether a diagnostic feature is useful." | e.g. "Compute is not the limit. The sensors are." (pre-d71c389 text) |
+| Technology intro | "Keep the control function dependable, and make a fault observable." | "DG32-LITE runs a second identical core two cycles behind the first, so a datapath fault reaches the gate driver without firmware." |
+| Timing chart | "Choose workloads within the validated timing envelope." | "The lockstep core is the slowest block, so it sets the clock." |
+| Die | "Customise the product. Protect the safety foundation." | "Six functional groups. One of them is frozen." |
+| Home fault act | "Make fault response part of the customer evaluation." | "In simulation, a processor fault switches off the motor bridge in 39 cycles, without firmware." (claims `fault-39`) |
+| Home diagnostics | "Add diagnostics where they improve the product." | "At a 10 kHz loop, 82 % of the core stays free for diagnostics." (claims `headroom-82`) |
+| Finder (home and products) | "Choose the opportunity. Then assess the product." | "Twelve architectures. Two carry engineering evidence today." (SKU-4, SKU-10; the other ten are architecture scope) |
+| Home system | "Start with the system your customer needs." | "Four parts take the motion, power and interface jobs around DG32." (SKU-1, SKU-3, SKU-6, SKU-5) |
+| Home stages | "Stage the commitment against the evidence." | "Four of the six gates to production can only be passed on returned silicon." (gates 03–06) |
+| Products, 3D parts | "One footprint, two chips" | "DG32-LITE and DG32-2DOM share one pinout, pin for pin" |
+| Page titles | technology, evidence, applications, procurement, control, package | Findings from each page (`executive-routes.json` `headline`) |
+
+**Tranche 2 (next):**
+- Tell each story once. The fault path is told in full on Home, Products, Technology and Safety; the cycle budget on Home, Products, Applications and Control loop. Keep the owner page and give the others one line plus a link.
+- Remove film-transcript quotes that restate their section (Applications ×4).
+- Remove the "What this site does not claim" list duplicated from Evidence on Procurement.
+- Merge Procurement's shuttle caption and section.
+
+**Owner decision pending:** the About body is deepgridsemi.com copy about ADAS and edge AI acceleration. Its headings describe equipment-maker silicon.

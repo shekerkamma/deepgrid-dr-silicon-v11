@@ -37,7 +37,7 @@ function Intro({kicker,title,em,children}:{kicker:string;title:string;em:string;
 function Lite({block,reduced,setReduced,exploded,setExploded,update,go}:Props){
  const g=blocks[block];
  return <>
-  <Intro kicker="DG32-LITE / LOCKSTEP ARCHITECTURE" title="Keep the control function dependable," em="and make a fault observable.">
+  <Intro kicker="DG32-LITE / LOCKSTEP ARCHITECTURE" title="DG32-LITE runs a second identical core two cycles behind the first," em="so a datapath fault reaches the gate driver without firmware.">
    <p>DG32-LITE combines a RISC-V microcontroller, the peripherals a brushless drive needs and a hardware safety monitor on one 130 nm die. The monitor is a second, identical core that runs two cycles behind the first. If the two ever disagree, the chip latches the first cause and drives a pin that can turn the power bridge off without waiting for firmware.</p>
    <p>Six block groups share one deterministic bus on a single 50 MHz clock. Below: the four constraints that shaped the chip, then the full diagram, every block and why it exists, and how a control loop, a boot and a fault move through it.</p>
    <div className="dr-links"><button className="text-link" onClick={()=>go('library?pkg=lite')}>Architecture deck and film <ArrowUpRight size={16}/></button><button className="text-link" onClick={()=>go('control')}>Control-loop budget <ArrowUpRight size={16}/></button></div>

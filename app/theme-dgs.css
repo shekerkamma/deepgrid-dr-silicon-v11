@@ -382,6 +382,9 @@ body .v6-home.v11-home .v11-hero .v11-visual img:not(#_){background:var(--dgs-fr
    Brand Blue deepened (#0863a1 -> #0e4c7a, white text 9:1) and Light Blue softened (#61a6fa -> #7fb0e6, 8:1 on Page).
    One filled button per view: header, hero, close and the part page's "Discuss" keep the fill; selection states and
    secondary actions are quiet; figures are white, because blue marks only what can be acted on (One Blue Rule). */
+/* globals.css fills every .primary with the accent (link) colour; only some were re-pointed. The base fill is Brand Blue. */
+body .primary:not(#_){background:var(--dgs-blue);color:#fff}
+body .primary:not(#_):hover{background:var(--dgs-blue-hover);color:#fff}
 body .v11-filters button[aria-pressed=true]:not(#_),body .v6-tabs button[aria-pressed=true]:not(#_){background:#1a2740;border-color:var(--dgs-blue-dark);color:#fff}
 body .v6-safety .v6-primary:not(#_),body .pp-actions a.primary:not(#_){background:transparent;color:#fff;border:1.5px solid rgb(255 255 255 / .45);border-radius:6px}
 body .v6-safety .v6-primary:not(#_):hover,body .pp-actions a.primary:not(#_):hover{background:rgb(255 255 255 / .08);border-color:#fff}

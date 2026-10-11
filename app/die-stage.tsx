@@ -67,7 +67,7 @@ export function DieStage({reduced}: {reduced: boolean}) {
           format is understood before the first scroll. */}
       <header className="dg-split-head">
         <div>
-          <h1>Customise the product.<br/>Protect the safety foundation.</h1>
+          <h1>Six functional groups.<br/>One of them is frozen.</h1>
         </div>
         <div>
           <p>

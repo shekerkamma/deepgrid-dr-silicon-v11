@@ -25,7 +25,7 @@ Windows: run npm through `node 'C:/Program Files/nodejs/node_modules/npm/bin/npm
 
 - `app/data/graph-retrieval.ts`, `scripts/eval-graphrag.mjs`: provenance-weighted graph retrieval and lexical/semantic answer evaluation.
 
-- `docs/executive-story-pack-v12.md`, `app/executive-{routes,products,sections}.json`: business audience storyboards, source-specific summaries and section roles.
+- `docs/executive-story-pack-v12.md`, `app/executive-{routes,products}.json`: business audience storyboards and route titles. `app/executive-sections.json` is retired (2026-10-11): sections render their own findings; see `design-plans/2026-10-11-story-arc-and-figures.md` §11.
 - `app/data/executive-answer.ts`: legacy authored stories retained for existing story tests; not the Ask answer path. `app/council-view.tsx` renders hosted, query-specific answers and disclosed sources.
 - `scripts/check-executive-story.mjs`, `scripts/verify-ask.mjs`: story coverage, grounded answer and browser gates.
 
