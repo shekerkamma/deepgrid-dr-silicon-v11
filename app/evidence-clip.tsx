@@ -117,7 +117,9 @@ export function EvidenceSaid({clip}: {clip: Clip}) {
  *  comes from. The full-width slide screenshot with a play button over it read as a gallery of
  *  screenshots rather than as part of the page's story (user, 2026-09-24). Pressing play swaps the
  *  frame for the player in place, with sound and captions, playing only that slide's segment. */
-export function FilmMoment({clip, label}: {clip: Clip; label: string}) {
+/** said=false drops the narration quote where the section's own text already makes the point (Applications);
+ *  Evidence keeps it, because there the narration is the evidence. */
+export function FilmMoment({clip, label, said = true}: {clip: Clip; label: string; said?: boolean}) {
   const [open, setOpen] = useState(false);
   const range = `${mmss(clip.start)}\u2013${mmss(clip.start + clip.duration)}`;
   return (
@@ -138,7 +140,7 @@ export function FilmMoment({clip, label}: {clip: Clip; label: string}) {
         </button>
       )}
       <figcaption className="dr-moment-said">
-        <p>&ldquo;{clip.saying}&rdquo;</p>
+        {said ? <p>&ldquo;{clip.saying}&rdquo;</p> : <p>{label}</p>}
         <cite>{clip.deck} film · slide {clip.slide} · {range}</cite>
       </figcaption>
     </figure>

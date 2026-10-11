@@ -5,7 +5,6 @@
 import {useState} from 'react';
 import {ArrowUpRight} from 'lucide-react';
 import {blocks, parts, loopRates, CLOCK_HZ, HW_FIXED_CYCLES} from './content';
-import {faultPath} from './detail-content';
 import {tabIndexFor, tablistKeys} from './tablist';
 import {url} from './routes';
 import './products-story.css';
@@ -28,15 +27,6 @@ export function WhyLockstep() {
           <tbody>{contrast.map(([q, a, b]) => <tr key={q}><th scope="row">{q}</th><td>{a}</td><td>{b}</td></tr>)}</tbody>
         </table>
       </div>
-      <ol className="ps-fault" aria-label="What happens when the CPU faults">
-        {faultPath.map(([t, d], i) => (
-          <li key={t} data-last={i === faultPath.length - 1 ? 'true' : undefined}>
-            <span className="ps-fault-n" aria-hidden="true">{i + 1}</span>
-            <h3>{t}</h3>
-            <p>{d}</p>
-          </li>
-        ))}
-      </ol>
     </div>
   );
 }

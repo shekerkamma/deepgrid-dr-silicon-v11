@@ -3,9 +3,10 @@
 import {Shell, useReduced, useQuery, useNav} from '../shell';
 import {ArrowUpRight,Check,Download} from 'lucide-react';
 import {DataTable,ExplainedGrid,Eyebrow,Sec,SectionHead} from '../detail';
-import {notClaimed,positionNotes,roadmapDetail} from '../detail-content';
+import {positionNotes,roadmapDetail} from '../detail-content';
 import {comparison,gaps,leads} from '../content';
 import Related from '../related';
+import {url} from '../routes';
 import {MotionLoop} from '../motion-loop';
 import {ShuttleScene} from '../three/blocks';
 
@@ -31,7 +32,7 @@ export default function Page() {
    <MotionLoop wide name="roadmap-gaps" label="Animation: where the STM32G0 leads today, and the spin that closes each gap: the 12-bit ADC and embedded flash in the second spin, CAN-FD and interactive debug after; USB, package range and production maturity are not yet scheduled"/>
    <div className="dr-rail"><div className="dr-rail-stage"><div className="dr-rail-track"><ol className="dr-roadmap">{roadmapDetail.map(([when,t,what,proves])=><li key={t}><span className="mono">{when}</span><h3>{t}</h3><p>{what}</p><p className="dr-proves"><span className="mono">WHAT IT DELIVERS</span>{proves}</p></li>)}</ol></div><div className="dr-rail-progress" aria-hidden="true"><i/></div></div></div>
   </Sec>
-  <div className="dr-notclaimed"><p className="dr-kicker">WHAT THIS SITE DOES NOT CLAIM</p><ul>{notClaimed.map(n=><li key={n}>{n}</li>)}</ul></div>
+  <p className="disclaimer">No silicon results, safety certificate or competitor price claims are made here; <a className="text-link" href={url('/evidence')}>the Evidence page lists what this site does not claim</a>.</p>
   {/* The close (docs/site-story.md): turn the leads and gaps into the buying decision. */}
   <Sec kicker="WHAT TO DO NOW" title="Evaluate DG32-LITE now if the drive needs lockstep;" em="wait for the second spin if it needs a 12-bit ADC or embedded flash.">
    <ExplainedGrid cols={2} items={[

@@ -57,32 +57,32 @@ export const companyPages: CompanyPage[] = [
     lede: 'Our mission is to provide businesses with cutting-edge AI acceleration technology to thrive in today’s intelligent systems market.',
     sections: [
       { kind: 'stats', from: REF + '/about/story', items: [['2020', 'Founded'], ['28', 'Team Members'], ['4', 'Product Lines']] },
-      { kind: 'split', title: 'The company is organised around physical product needs', from: REF + '/about/story',
+      { kind: 'split', title: 'Founded in Hyderabad in 2020 to bring edge AI into vehicles, robots and infrastructure', from: REF + '/about/story',
         paras: [
           'Deepgrid Semi is a pioneering semiconductor company specializing in AI acceleration solutions for edge computing. Founded by a team of industry veterans with decades of combined experience in chip design, AI, and autonomous systems, we are at the forefront of the AI revolution.',
           'Our headquarters in Hyderabad, India, serves as a hub of innovation where world-class engineers and researchers collaborate to push the boundaries of what’s possible in AI hardware acceleration.',
           'We focus on delivering specialized System-on-Chip (SoC) solutions that bring datacenter-class AI performance to edge devices, enabling real-time intelligence in autonomous vehicles, robotics, industrial automation, and smart infrastructure.',
         ],
         image: img('scenes/company-wafer-1536.webp'), imageAlt: 'Illustration of a 200 mm silicon wafer covered in identical small dies, lit in copper' },
-      { kind: 'cards', title: 'Build the capability around a defined customer problem', cols: 3, from: REF + '/about/story',
+      { kind: 'cards', title: 'The mission is road safety: zero road fatalities, looking back from 2040', cols: 3, from: REF + '/about/story',
         items: [
           { title: 'Our Philosophy', text: 'Our philosophy is simple: innovate with a purpose. We don’t just create technology for the sake of innovation; we aim to solve real-world problems that impact road safety and mobility. Our approach is focused on delivering practical, high-performance solutions that enhance driver awareness, anticipate potential hazards, and respond rapidly to keep you safe.' },
           { title: 'Our Vision', text: 'Towards ZERO Fatalities on Roads. We envision a world where roads are safer for everyone, where AI-powered automotive technology significantly reduces traffic accidents. By equipping vehicles with state-of-the-art ADAS solutions, we aim to make this vision a reality. Looking back from 2040, we should proudly declare that there used to be so many fatalities on our roads, but now we have achieved zero.' },
           { title: 'Our Mission', text: 'Our mission is to push the boundaries of automotive technology by developing intelligent chipsets that provide predictive safety features and real-time assistance. We aim to set new benchmarks in the ADAS industry by making vehicles smarter, more responsive, and capable of preventing accidents before they happen.' },
         ] },
-      { kind: 'cards', title: 'Make safety, quality and collaboration programme requirements', cols: 4, from: REF + '/about/story',
+      { kind: 'cards', title: 'Safety is the foundation; innovation, quality and collaboration serve it', cols: 4, from: REF + '/about/story',
         items: [
           { title: 'Innovation', text: 'We are dedicated to continuously exploring new technologies and methodologies to enhance automotive safety.' },
           { title: 'Safety', text: 'Our core focus is on keeping drivers and passengers safe, making it the foundation of all our developments.' },
           { title: 'Quality', text: 'We deliver reliable, high-performance technology designed to meet stringent automotive standards.' },
           { title: 'Collaboration', text: 'We work closely with leading automotive manufacturers and partners to bring the best ADAS solutions to the market.' },
         ] },
-      { kind: 'split', title: 'Move from a concept to an evidence-backed programme', from: REF + '/about/story',
+      { kind: 'split', title: 'The products aim at hard driving conditions, with radar assistance and blind-spot detection', from: REF + '/about/story',
         paras: [
           'At DeepGrid Semi, we take pride in turning innovative concepts into reality. Our development process involves rigorous research, extensive testing, and collaboration with industry leaders to ensure our hardware & software solutions are not only technologically advanced but also practical and effective in real-world applications.',
           'We aim to deliver products that address the most challenging driving conditions, such as low visibility and unpredictable obstacles, with features like radar-based assistance and blind-spot detection.',
         ] },
-      { kind: 'steps', title: 'Each stage must earn the next commitment', from: REF + '/about/story',
+      { kind: 'steps', title: 'Research, testing, collaboration, then validation in the field', from: REF + '/about/story',
         items: [
           { title: 'Rigorous Research', text: 'Extensive R&D for cutting-edge solutions' },
           { title: 'Extensive Testing', text: 'Real-world validation and optimization' },

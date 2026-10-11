@@ -42,7 +42,7 @@ function Beat({id, title, films, wide, children}: {
       </div>
       {films?.length ? (
         <div className="st-beat-aside">
-          {films.map(f => <FilmMoment key={f.label} clip={f.clip} label={f.label}/>)}
+          {films.map(f => <FilmMoment key={f.label} clip={f.clip} label={f.label} said={false}/>)}
         </div>
       ) : null}
       {wide && <div className="st-beat-wide">{wide}</div>}

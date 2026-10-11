@@ -178,3 +178,22 @@ It replaced each section's own finding with generic advice. Its pack (`docs/exec
 - Merge Procurement's shuttle caption and section.
 
 **Owner decision pending:** the About body is deepgridsemi.com copy about ADAS and edge AI acceleration. Its headings describe equipment-maker silicon.
+
+## 12. Tranche 2, as built (owner: "go ahead with self answers, decisions, recommendations")
+
+**One story, one owner page.**
+- The step-by-step fault path lives on `/technology/safety` and in the home scroll act. Products keeps the self-test vs lockstep table and its "Follow the fault path step by step" link; the five-step list is gone from `WhyLockstep`.
+- Applications film moments keep the frame, the label and the player, but drop the narration quote (`FilmMoment said={false}`): each beat's paragraph already makes the point. Evidence keeps the quotes, because there the narration is the evidence.
+- Procurement's copy of the "What this site does not claim" list becomes one line linking to Evidence, which owns it.
+- Kept: the cycle-budget table on Products ("The loop runs in hardware, so its cost is fixed."). Choosing a loop rate is a part-selection question there.
+
+**About (decision).** The body stays as written: it is deepgridsemi.com copy, the owner's named authority. The headings now say what that text says, instead of contradicting it:
+- "Founded in Hyderabad in 2020 to bring edge AI into vehicles, robots and infrastructure"
+- "The mission is road safety: zero road fatalities, looking back from 2040"
+- "Safety is the foundation; innovation, quality and collaboration serve it"
+- "The products aim at hard driving conditions, with radar assistance and blind-spot detection"
+- "Research, testing, collaboration, then validation in the field"
+
+Page title: the page's own "A semiconductor company for edge AI, in Hyderabad."
+
+**Not changed:** the shuttle-scene duplicates were a 3D label, an aria-label and a no-WebGL fallback, which are not visible repetition.
