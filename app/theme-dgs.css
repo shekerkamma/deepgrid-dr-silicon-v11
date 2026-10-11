@@ -399,3 +399,9 @@ body :is(.v6-proof,.v6-budget,.pp-highlights) strong:not(#_),body .st-fam-n:not(
 .dgs-split-track span:first-child{background:color-mix(in srgb,var(--dgs-blue-dark) 22%,var(--dgs-card));color:#fff}
 .dgs-split-track b{font-family:'JetBrains Mono Variable',ui-monospace,monospace;font-weight:500;color:#fff;font-variant-numeric:tabular-nums}
 .dgs-split-bar figcaption{margin-top:8px;font-size:.78rem;color:var(--t-fg-2)}
+/* The route close sits inside page-wrap, which already sets the gutter: no second indent (One Left Axis Rule). */
+.dr-related .route-journey{margin:24px 0 48px}
+.dr-related .route-journey h2{font-size:clamp(1.6rem,2.4vw,2.2rem);line-height:1.2;letter-spacing:-0.02em;max-width:28ch}
+/* Card titles are headings: white, never blue (One Blue Rule). The close's links keep their icon on the same line. */
+body .dr-explained h3:not(#_){color:var(--t-fg)}
+.dr-related .route-journey nav a{display:inline-flex;align-items:center;gap:6px;white-space:nowrap}

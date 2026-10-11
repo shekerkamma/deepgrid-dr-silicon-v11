@@ -6,12 +6,16 @@ import {readHref} from './doc-links';
 import {related} from './cross-references';
 import {groundedDocuments} from './documents-data';
 import './related.css';
-import {DecisionClose} from './executive-story';
+import {DecisionClose, routeStories} from './executive-story';
 import {RouteJourney, hasBrief} from './route-journey';
 
 /** The cross-reference block every route ends on. Sections first, because a reader who wants more
  *  usually wants the neighbouring argument rather than a 71-page PDF; documents second, with the
  *  page count stated so nobody opens a 71-page file expecting a summary. */
+/** Routes whose page already ends on its own close (Applications: "Bring a failure mode…"; About: the company's own
+ *  call to action). A second close after it would compete, so the route close is skipped there. */
+const ownClose=new Set<RouteId>(['applications','about']);
+
 export default function Related({route}: {route: RouteId}) {
   const r = related[route];
   const docs = r.docs
@@ -20,8 +24,9 @@ export default function Related({route}: {route: RouteId}) {
 
   return (
     <aside className="dr-related" aria-labelledby={'related-' + route}>
-      {route !== 'home' && <DecisionClose route={route}/>}
-      {route !== 'home' && route !== 'company' && hasBrief(route) && <details className="dr-evaluation-guide"><summary>Detailed evaluation checklist</summary><RouteJourney route={route}/></details>}
+      {/* One close per route: the decision heading with its brief as the body (lead, three checks, two links).
+          Routes without a brief keep the short DecisionClose. */}
+      {route !== 'home' && !ownClose.has(route) && (route !== 'company' && hasBrief(route) ? <RouteJourney route={route} title={routeStories[route].decision}/> : <DecisionClose route={route}/>)}
       <h2 className="dr-related-head" id={'related-' + route}>Where to go next</h2>
 
       <ul className="dr-related-sections">

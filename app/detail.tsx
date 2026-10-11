@@ -17,7 +17,7 @@ export function Sec({kicker,title,em,copy,children}:{kicker?:string;title:string
 }
 
 export function ExplainedGrid({items,cols=3}:{items:Explained[];cols?:2|3}){
- return <div className={'dr-explained dr-cols-'+cols}>{items.map(x=><article key={x.name}><h3>{x.name}</h3><p>{x.why}</p><details className="executive-sources"><summary>Supporting detail</summary><p>{x.what}</p>{x.points&&<ul>{x.points.map(p=><li key={p}>{p}</li>)}</ul>}</details></article>)}</div>;
+ return <div className={'dr-explained dr-cols-'+cols}>{items.map(x=><article key={x.name}><h3>{x.name}</h3><p>{x.what}</p><p className="dr-why-line"><span className="mono">WHY</span>{x.why}</p>{x.points&&<ul>{x.points.map(p=><li key={p}>{p}</li>)}</ul>}</article>)}</div>;
 }
 
 export function Steps({steps,label}:{steps:Step[];label?:string}){
