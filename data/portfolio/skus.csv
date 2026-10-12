@@ -1,0 +1,13 @@
+sku,name,process,clock_mhz,readiness,mpw,dec2026_shuttle,plan_line_cr,fy31_ramp_cr,addressable_units,price_low_usd,price_high_usd,market_low_cr,market_high_cr,share_mid_pct,share_top_pct,verdict,dev_cost_low_cr,dev_cost_high_cr
+SKU-1,BLDC Motor Controller,130 nm,100,RTL + analog schematics ready,MPW cycle 1,yes,320.0,256.0,25 M – 78 M,0.5,12.0,337.0,2719.0,26,12,PLAUSIBLE,5.2,11.1
+SKU-2,Smart-Meter SoC,130 nm,100,RTL + analog schematics ready,MPW cycle 1,yes,250.0,175.0,16 M – 45 M,0.8,10.0,273.0,1794.0,29,14,PLAUSIBLE,2.2,4.6
+SKU-3,Hi-Rel PMIC,"130 nm first, 180 nm production",,RTL + analog schematics ready,,yes,40.0,12.0,162 K – 560 K,8.0,1500.0,22.0,358.0,29,11,PLAUSIBLE,5.0,11.1
+SKU-4,Lockstep MCU,130 nm,100,RTL ready,,yes,40.0,4.0,3 M – 10 M,4.0,12.0,114.0,1145.0,8,3,CONSERVATIVE,3.4,7.8
+SKU-5,Interface Transceiver,130 nm,,RTL + analog schematics ready,MPW cycle 2,yes,45.0,14.0,20 M – 60 M,0.4,1.5,76.0,859.0,12,5,CONSERVATIVE,3.9,9.3
+SKU-6,Voltage Supervisor,"130 nm first, 180 nm production",,RTL + analog schematics ready,MPW cycle 1,yes,40.0,16.0,30 M – 80 M,0.2,50.0,58.0,658.0,14,6,PLAUSIBLE,3.9,8.3
+SKU-7,4D Radar RF,SiGe front end + 130 nm CMOS,,digital RTL ready,,no,35.0,4.0,1M – 5M,8.0,25.0,76.0,1192.0,7,3,CONSERVATIVE,6.4,12.8
+SKU-8,Display Driver,130 nm high-voltage CMOS,,RTL + analog schematics ready,,yes,20.0,8.0,0.5 M – 2 M,3.0,12.0,14.0,229.0,22,9,PLAUSIBLE,2.4,5.3
+SKU-9,SDV Zonal Gateway,130 nm,100,digital RTL ready,,yes,60.0,6.0,1M – 4M,6.0,20.0,57.0,763.0,19,8,PLAUSIBLE,3.8,8.8
+SKU-10,DG32-Max Secure MCU,130 nm,100,RTL ready,"ChipFoundry OpenFrame, December 2026",yes,110.0,110.0,8 M – 25 M,3.0,8.0,229.0,1908.0,13,6,CONSERVATIVE,2.1,4.3
+SKU-11,SOH-Aware BMS Controller,130 nm,100,specification,MPW slot not yet assigned,no,40.0,4.0,3 M – 10 M,2.0,6.0,57.0,572.0,16,7,PLAUSIBLE,3.4,7.8
+D100,D100 Drone SoC,28 nm,,,,no,,,,,,,,,,,,

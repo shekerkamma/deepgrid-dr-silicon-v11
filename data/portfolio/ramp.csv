@@ -1,0 +1,6 @@
+group,FY29,FY30,FY31,FY32,FY33
+"DG32-Max, motor controller",70.0,210.0,366.0,430.0,430.0
+"Smart meter, transceiver, display",,82.0,196.0,302.0,315.0
+"Supervisor, PMIC (defence first)",,4.0,28.0,60.0,80.0
+"Automotive: SKU-4, 7, 9, 11",,,18.0,52.0,122.0
+Total,70.0,296.0,608.0,844.0,948.0
