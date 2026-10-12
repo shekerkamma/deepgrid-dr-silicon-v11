@@ -98,7 +98,11 @@ check(len(unit) == 4, f'unit cost: 4 chips ({len(unit)})')
 uses = []
 for l in L:
     m = re.match(r'^(Nine prototypes, December 2026 shuttle|Bring-up and evaluation boards|First approvals|Respin reserve|Engineering team|Design tools and lab|Contingency) ([\d.]+) (.+)$', l)
-    if m: uses.append([m.group(1), num(m.group(2)), m.group(3)])
+    if m:
+        d, j = m.group(3), L.index(l) + 1
+        while d.endswith('+') and j < len(L):  # the delivers cell wraps onto the next line
+            d, j = d + ' ' + L[j], j + 1
+        uses.append([m.group(1), num(m.group(2)), d])
 check(len(uses) == 7 and abs(sum(u[1] for u in uses) - 10.0) < 0.01, f"tranche 1 uses: 7 lines summing to ₹10 Cr ({len(uses)}, {sum(u[1] for u in uses):.1f})")
 
 # 9. DG32 datasheets: the part line under "Part Package Process Core Clock".
