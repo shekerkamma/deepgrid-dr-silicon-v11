@@ -152,7 +152,8 @@ export function MegaNav({ route, onNavigate, label = 'Primary navigation', compa
               <ul>
                 {m.items.map((it) => (
                   <li key={it.href + it.label}>
-                    <a href={it.href} aria-current={it.href === url(byId[route].href) ? 'page' : undefined} onClick={() => { setOpen(null); onNavigate?.(); }}>
+                    <a href={it.href} aria-current={it.href === url(byId[route].href) ? 'page' : undefined} onClick={() => { setOpen(null); onNavigate?.(); }}
+                      {...(/^https?:\/\//.test(it.href) ? { target: '_blank', rel: 'noopener noreferrer' } : {})}>
                       <span>{it.label}</span>
                       {it.note && <small>{it.note}</small>}
                     </a>

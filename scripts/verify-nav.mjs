@@ -38,7 +38,8 @@ async function landed(p, want, via) {
     await p.goto(BASE + 'contact', { waitUntil: 'networkidle' });
     const hrefs = await p.$$eval(`#${id} a`, (as) => as.map((a) => a.href));
     for (const [href, target] of await p.$$eval(`#${id} a`, (as) => as.map((a) => [a.href, a.target])))
-      if (new URL(href).origin !== new URL(BASE).origin && (!/^https:\/\/(www\.)?youtube\.com\/@DeepgridSemi/.test(href) || target !== '_blank'))
+      // Allowed off-site: the YouTube channel, and the extra link an internal build sets (NEXT_PUBLIC_EXTRA_MENU_URL); both in a new tab.
+      if (new URL(href).origin !== new URL(BASE).origin && (!(/^https:\/\/(www\.)?youtube\.com\/@DeepgridSemi/.test(href) || href === process.env.NEXT_PUBLIC_EXTRA_MENU_URL) || target !== '_blank'))
         fail(`menu ${id}: external link ${href} (target ${target || 'self'})`);
     for (let i = 0; i < hrefs.length; i++) {
       if (new URL(hrefs[i]).origin !== new URL(BASE).origin) continue; // external: checked above, not followed
