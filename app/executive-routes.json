@@ -220,5 +220,11 @@
     "context": "D100 proposes an Indian flight-control and navigation chip, with a failsafe function that remains separate from higher-level computing.",
     "decision": "The Blueprint places it outside the FY31 portfolio revenue plan and proposes a separate ₹50 Cr round after mature-node revenue.",
     "next": "/contact"
+  },
+  "plan": {
+    "headline": "The business plan, by segment and year.",
+    "context": "The company model as plan targets: revenue by segment, margins, cash and the P&L, each panel linked to the data behind it. Not results, not audited, not contracted.",
+    "decision": "Agree which plan figures an investment decision rests on, then ask for the data room.",
+    "next": "/contact"
   }
 }

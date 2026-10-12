@@ -27,6 +27,9 @@ jobs:
       # Baked into the bundle so server-rendered HTML carries correct hrefs, not just hydrated HTML.
       NEXT_PUBLIC_PAGES_BASE: /${{ github.event.repository.name }}/
       PAGES_DOMAIN: ''
+      # Publishes the business-plan dashboard at /plan (owner, 2026-10-12: "publish it publicly").
+      # Without it the route shows a notice and no plan figure is built (scripts/build-plan-data.mjs).
+      DGS_PLAN: '1'
       # Static frontend; runtime synthesis uses the public Cloudflare answer endpoint.
       # The model credential stays in the Worker secret, never in Pages.
     steps:

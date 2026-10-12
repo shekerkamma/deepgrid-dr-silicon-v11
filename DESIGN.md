@@ -191,6 +191,20 @@ Retired after measurement: the live home used seven grounds from two families (n
 - **Engineering pages.** One `page-wrap` column (max 1600px, 8% gutter, 5% below 650px).
 - Tap targets are at least 24px; controls that take a press are 44px.
 
+## Business-plan dashboard (/plan)
+
+- **Where it runs:** `/plan` (`app/plan-dashboard.tsx`), published on v11/v12 (`DGS_PLAN=1` in `pages.yml`; owner, 2026-10-12) and on the Sheker-semi droplet. A build without the flag shows a notice; see `data/plan/README.md`.
+- **Layout:**
+  - a KPI row of four cells, each with a label, a large figure, a context line and its definition, visible and taken from `data/plan/metrics.md`;
+  - then one panel per question: segments, margins, cash, use of funds, the P&L, and the reconciliation with /company.
+  - Each panel's heading is the finding, computed from the data, and each ends on a source line linking its CSV.
+- **Charts:**
+  - hand-built SVG on the theme tokens, one axis per chart;
+  - series colours are the dataviz dark slots 1–4 (`#3987e5 #d95926 #199e70 #c98500`), validated on the card surface `#121b2d`;
+  - a 2 px surface gap between stacked segments, and value labels outlined in the page colour so gridlines never strike through them;
+  - a legend plus direct labels, a hover tooltip on every mark, and a table carrying the same numbers.
+- **Plan-specific wording** lives in the generated data, not the component, so a build without the flag carries none of it.
+
 ## Elevation & Depth
 
 Flat at rest: cards are lifted by a lighter navy surface and a hairline, not a shadow.

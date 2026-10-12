@@ -30,7 +30,7 @@ export const notClaimed = [
   'No sign-off result for the tape-in die: the four gates it must pass are listed, not reported as passed.',
   'No price or cost claims against any competitor.',
   'No silicon result for the other eleven chips: they rest on architecture designs, RTL and logic validated on an FPGA; nine prototypes are planned for the December 2026 shuttle (SKU Blueprint, October 2026). The one DeepGrid chip returned so far is a 130 nm test chip made on its own flow (whitepaper v3, §3).',
-  'No market size or price for the wider portfolio: the Blueprint’s market estimates are internal planning figures and are not shown. The only revenue figures on this site are the plan targets on the company page, which are not results.',
+  'No market size or price for the wider portfolio: the Blueprint’s market estimates are internal planning figures and are not shown. The only revenue figures on this site are plan targets, on the Portfolio strategy and Business plan pages; they are not results.',
 ];
 
 // ---------- Product family ----------

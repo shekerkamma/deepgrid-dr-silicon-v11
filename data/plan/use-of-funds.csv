@@ -1,0 +1,7 @@
+kind,item,rs_cr
+source,Pre-Series A equity round,45.0
+source,CGTMSE-backed term loan,10.0
+use,SoC2 tapeout NRE + IP (phased: MPW blocks -> full die -> dedicated mask),29.798
+use,Engineering (chip + firmware + defence),9.024
+use,AIS-162/188 certification + FPGA pilot,4.512
+use,Working capital / BD / inventory,11.656

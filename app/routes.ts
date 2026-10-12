@@ -31,7 +31,7 @@ export function asset(path: string): string {
 export type RouteId =
   | 'home' | 'products' | 'technology' | 'safety' | 'control' | 'die'
   | 'package' | 'applications' | 'evidence' | 'resources' | 'procurement' | 'ask'
-  | 'company' | 'contact' | 'videos' | 'docs' | 'read' | 'about' | 'team' | 'recognition'
+  | 'company' | 'plan' | 'contact' | 'videos' | 'docs' | 'read' | 'about' | 'team' | 'recognition'
   | 'uc-motors' | 'uc-vehicles' | 'uc-defence' | 'uc-grid' | 'uc-boards'
   | 'sku1' | 'sku2' | 'sku3' | 'sku4' | 'sku5' | 'sku6' | 'sku7' | 'sku8' | 'sku9' | 'sku10' | 'sku11' | 'd100';
 
@@ -74,6 +74,7 @@ export const routes: Route[] = [
   {id: 'team',         href: '/about/team',              label: 'Leadership & team', parent: 'about'},
   {id: 'recognition',  href: '/about/recognition',       label: 'Achievements', parent: 'about'},
   {id: 'company',      href: '/company',                 label: 'Portfolio strategy', nav: true, parent: 'about'},
+  {id: 'plan',         href: '/plan',                    label: 'Business plan', parent: 'about'},
   // A plain link at the end of the menu, and the header CTA on every page.
   {id: 'contact',      href: '/contact',                 label: 'Contact'},
 ];

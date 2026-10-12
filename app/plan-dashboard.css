@@ -1,0 +1,72 @@
+/* Business-plan dashboard (app/plan-dashboard.tsx). Tokens: the theme's role tokens for text, lines and
+   surfaces; series colours are the dataviz reference dark slots 1-6, validated on the card surface
+   #121b2d (lightness band, chroma, adjacent CVD ΔE ≥ 8.4, normal-vision ΔE ≥ 19.3, contrast ≥ 3:1). */
+.pd-root{--series-1:#3987e5;--series-2:#d95926;--series-3:#199e70;--series-4:#c98500;--series-5:#d55181;--series-6:#008300;display:grid;gap:40px;margin:8px 0 56px}
+.pd-head h2{max-width:34ch;margin:0 0 14px}
+.pd-flag{max-width:70ch;color:var(--t-fg-2);margin:0}
+.pd-flag strong{color:var(--t-fg)}
+.pd-kpis{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:2px;background:var(--t-line);border:1px solid var(--t-line);border-radius:8px;overflow:hidden}
+.pd-kpis>li{background:var(--dgs-card);padding:20px 22px;display:grid;gap:6px;align-content:start}
+.pd-kpi-label{font-size:.875rem;font-weight:600;color:var(--t-fg-2)}
+.pd-kpi-value{font-size:clamp(1.6rem,2.4vw,2.1rem);font-weight:400;color:var(--t-fg);font-variant-numeric:tabular-nums;letter-spacing:-.01em}
+.pd-kpi-context{font-size:.875rem;color:var(--t-fg-2);line-height:1.5}
+.pd-panel{border-top:1px solid var(--t-line);padding-top:28px;display:grid;gap:18px;min-width:0}
+.pd-panel h3{margin:0;max-width:52ch;font-size:clamp(1.15rem,1.6vw,1.4rem);line-height:1.35}
+.pd-lede{margin:0;max-width:70ch;color:var(--t-fg-2)}
+.pd-figure{margin:0;display:grid;gap:10px;min-width:0}
+.pd-legend{list-style:none;margin:0;padding:0;display:flex;flex-wrap:wrap;gap:6px 18px;font-size:.875rem;color:var(--t-fg-2)}
+.pd-legend li{display:inline-flex;align-items:center;gap:8px}
+.pd-swatch{display:inline-block;width:12px;height:12px;border-radius:3px;margin-right:8px;vertical-align:-1px}
+.pd-legend .pd-swatch{margin-right:0}
+.pd-plot{position:relative;min-width:0}
+.pd-svg{display:block;width:100%;height:auto;overflow:visible}
+.pd-grid{stroke:var(--t-line);stroke-width:1}
+.pd-zero{stroke:var(--t-fg-2);stroke-width:1}
+.pd-cross{stroke:var(--t-fg-2);stroke-width:1;stroke-dasharray:3 3}
+.pd-axis{fill:var(--t-fg-2);font-size:12px;font-variant-numeric:tabular-nums}
+.pd-value{fill:var(--t-fg);font-size:12px;font-weight:600;font-variant-numeric:tabular-nums}
+.pd-s1{fill:var(--series-1);background:var(--series-1)}
+.pd-s2{fill:var(--series-2);background:var(--series-2)}
+.pd-s3{fill:var(--series-3);background:var(--series-3)}
+.pd-s4{fill:var(--series-4);background:var(--series-4)}
+.pd-s5{fill:var(--series-5);background:var(--series-5)}
+.pd-s6{fill:var(--series-6);background:var(--series-6)}
+rect.pd-s1,rect.pd-s2,rect.pd-s3,rect.pd-s4,rect.pd-s5,rect.pd-s6{transition:opacity .12s}
+.pd-plot:hover rect:not(:hover){opacity:.82}
+.pd-line{fill:none;stroke-width:2}
+.pd-line.pd-l1{stroke:var(--series-1)}.pd-line.pd-l2{stroke:var(--series-2)}.pd-line.pd-l3{stroke:var(--series-3)}
+.pd-dot{stroke:var(--dgs-card);stroke-width:2}
+.pd-dot.pd-l1{fill:var(--series-1)}.pd-dot.pd-l2{fill:var(--series-2)}.pd-dot.pd-l3{fill:var(--series-3)}
+.pd-tip{position:absolute;transform:translate(-50%,calc(-100% - 10px));pointer-events:none;background:var(--t-bg);border:1px solid var(--t-border);border-radius:6px;padding:8px 10px;display:grid;gap:2px;font-size:.8rem;color:var(--t-fg-2);white-space:nowrap;box-shadow:0 12px 28px rgb(0 0 0 / .35);z-index:2}
+.pd-tip-head{color:var(--t-fg);font-weight:600}
+.pd-table{width:100%;border-collapse:collapse;font-size:.9rem;font-variant-numeric:tabular-nums}
+.pd-table th,.pd-table td{padding:8px 12px;border-bottom:1px solid var(--t-line);text-align:right;white-space:nowrap}
+.pd-table th:first-child{text-align:left}
+.pd-table thead th{font-size:.8rem;font-weight:600;color:var(--t-fg-2)}
+.pd-table tbody th{font-weight:400;color:var(--t-fg)}
+.pd-total th,.pd-total td,.pd-strong th,.pd-strong td{font-weight:600;color:var(--t-fg)}
+.pd-inbar{display:inline-block;width:64px;height:8px;margin-right:10px;border-radius:4px;background:var(--t-line);vertical-align:1px;overflow:hidden}
+.pd-inbar-fill{display:block;height:100%;border-radius:4px}
+.pd-source{margin:0;font-size:.8rem;color:var(--t-fg-2)}
+.pd-link{color:var(--dgs-blue-dark);text-decoration:underline;text-underline-offset:4px;display:inline-flex;align-items:center;min-height:24px}
+.pd-link:hover{color:var(--t-fg)}
+.pd-unavailable{border-top:1px solid var(--t-line);padding:32px 0 48px;display:grid;gap:12px;max-width:64ch}
+.pd-unavailable h2{margin:0}
+.pd-unavailable p{margin:0;color:var(--t-fg-2)}
+@media (max-width:900px){.pd-kpis{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media (max-width:520px){.pd-kpis{grid-template-columns:minmax(0,1fr)}}
+@media (prefers-reduced-motion:reduce){rect.pd-s1,rect.pd-s2,rect.pd-s3,rect.pd-s4,rect.pd-s5,rect.pd-s6{transition:none}}
+/* SVG text is in viewBox units and the charts scale to the column: below 600px the 720-unit viewBox
+   halves, so axis and value labels are drawn larger to stay at about 10-11px on screen. */
+@media (max-width:600px){.pd-axis{font-size:21px}.pd-value{font-size:22px}.pd-line{stroke-width:3}}
+/* Metric definitions (data/plan/metrics.md) sit visibly under each KPI; the cash chart's FY27 opening line. */
+.pd-def{font-size:.78rem;line-height:1.45;color:var(--t-fg-2);border-top:1px solid var(--t-line);padding-top:8px;margin-top:4px}
+.pd-ref{background:transparent;border:1.5px dashed var(--t-fg-2);box-sizing:border-box}
+.pd-refline{stroke:var(--t-fg-2);stroke-width:1.5;stroke-dasharray:6 4}
+.pd-funds th[scope=row]{white-space:normal;min-width:16rem;max-width:34rem}
+.pd-inbar-wide{width:120px}
+/* Critic pass (ai-analyst visual-design-critic, 2026-10-12): value labels carry a surface-coloured outline so a
+   gridline or the reference line never strikes through them; segment names label the last bar directly. */
+.pd-value,.pd-seglabel{paint-order:stroke;stroke:var(--t-bg);stroke-width:5px;stroke-linejoin:round}
+.pd-seglabel{fill:var(--t-fg-2);font-size:12px}
+@media (max-width:600px){.pd-seglabel{font-size:20px}}

@@ -67,3 +67,6 @@ qa/
 
 /.impeccable/review/
 /services/ask/work/
+# business-plan dashboard: generated per build (scripts/build-plan-data.mjs); never committed
+/app/plan-data.json
+/public/plan-data/

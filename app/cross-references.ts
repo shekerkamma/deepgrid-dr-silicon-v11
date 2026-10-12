@@ -318,8 +318,17 @@ export const related: Record<RouteId, Related> = {
       {id: 'evidence', why: 'Every figure on this site, graded, including the withdrawn ones.'},
       {id: 'resources', why: 'The whitepaper the plan and the stress test come from.'},
       {id: 'contact', why: 'Start an evaluation, or ask for the data room.'},
+      {id: 'plan', why: 'The whole-company model by segment and year, set beside this silicon plan.'},
     ],
     docs: ['doc7', 'doc5'],
+  },
+  plan: {
+    sections: [
+      {id: 'company', why: 'The silicon portfolio plan and the funding uses this model is compared with.'},
+      {id: 'evidence', why: 'How every figure on the site is graded, and what each one rests on.'},
+      {id: 'contact', why: 'Ask for a walk-through of the model, or for the data room.'},
+    ],
+    docs: [],
   },
   contact: {
     sections: [
