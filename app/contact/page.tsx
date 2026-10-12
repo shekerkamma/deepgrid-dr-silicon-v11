@@ -137,7 +137,7 @@ export default function Page() {
             <article className="dr-hub-card">
               <div className="dr-hub-card-top"><span className="dr-hub-tag">WHITEPAPER</span><span className="dr-hub-badge">71 PAGES</span></div>
               <h3>Mature-node silicon master whitepaper</h3>
-              <p className="dr-hub-sub">The sovereign-silicon roadmap in full: import substitution, the NRE argument, and the DAP-2020 position.</p>
+              <p className="dr-hub-sub">The sovereign-silicon roadmap in full: import substitution, the NRE argument, and the DAP-2020 position. September 2026 edition, superseded in part by the October SKU Blueprint (chip count, clock, orders, funding). Its ₹2.88 Cr orders figure includes the ₹1.01 Cr MCEME contract this site withholds as misdescribed.</p>
               <div className="dr-hub-footer">
                 <a className="text-link" href={url('/downloads/docs/deepgrid-mature-node-silicon-master-whitepaper-v3.pdf')}>
                   <Download size={16} aria-hidden="true"/> Download PDF

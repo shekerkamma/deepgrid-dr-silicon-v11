@@ -67,13 +67,18 @@ export const menus: Menu[] = [
     ],
   },
   {
-    id: 'about', label: 'About', match: ['about', 'team', 'recognition', 'company', 'plan'],
+    id: 'about', label: 'About', match: ['about', 'team', 'recognition', 'company', 'plan', 'portfolio'],
     items: [
       { label: 'Our story', href: a('/about'), note: 'A semiconductor company for edge AI, in Hyderabad' },
       { label: 'Leadership & team', href: a('/about/team'), note: 'Founders, board, engineers, advisors and partners' },
       { label: 'Achievements', href: a('/about/recognition'), note: 'Milestones and recognition' },
       { label: 'DG32 in the Indian market', href: a('/company'), note: 'A market already obliged to buy domestic' },
       { label: 'Business plan', href: a('/plan'), note: 'Revenue, margins, cash and use of funds, FY27–FY32: plan targets' },
+      { label: 'SKU portfolio', href: a('/portfolio'), note: 'Eleven chips: readiness, plan lines, ramp, approvals and cost' },
+      // One extra About link, set only by builds that pass NEXT_PUBLIC_EXTRA_MENU_URL/_LABEL/_NOTE (the internal droplet:
+      // scripts/build-droplet.sh). Next inlines them at build time and every word comes from the environment, so a
+      // public build carries neither the link nor any label for it.
+      ...(process.env.NEXT_PUBLIC_EXTRA_MENU_URL ? [{ label: process.env.NEXT_PUBLIC_EXTRA_MENU_LABEL || '', href: process.env.NEXT_PUBLIC_EXTRA_MENU_URL, note: process.env.NEXT_PUBLIC_EXTRA_MENU_NOTE }] : []),
     ],
   },
 ];

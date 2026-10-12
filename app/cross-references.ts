@@ -319,14 +319,25 @@ export const related: Record<RouteId, Related> = {
       {id: 'resources', why: 'The whitepaper the plan and the stress test come from.'},
       {id: 'contact', why: 'Start an evaluation, or ask for the data room.'},
       {id: 'plan', why: 'The whole-company model by segment and year, set beside this silicon plan.'},
+      {id: 'portfolio', why: 'Each chip’s readiness, plan line, ramp, approval time and cost, from the October SKU Blueprint.'},
     ],
     docs: ['doc7', 'doc5'],
   },
   plan: {
     sections: [
+      {id: 'portfolio', why: 'The October SKU Blueprint chip by chip, and how its funding and ramp differ from this model.'},
       {id: 'company', why: 'The silicon portfolio plan and the funding uses this model is compared with.'},
       {id: 'evidence', why: 'How every figure on the site is graded, and what each one rests on.'},
       {id: 'contact', why: 'Ask for a walk-through of the model, or for the data room.'},
+    ],
+    docs: [],
+  },
+  portfolio: {
+    sections: [
+      {id: 'plan', why: 'The September financial model: the whole company by segment and year, with cash and use of funds.'},
+      {id: 'products', why: 'The datasheet-level page for each chip in this table.'},
+      {id: 'applications', why: 'Where each chip goes, and what it replaces.'},
+      {id: 'contact', why: 'Ask for a walk-through of the Blueprint, or for the data room.'},
     ],
     docs: [],
   },

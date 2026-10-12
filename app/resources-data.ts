@@ -95,7 +95,7 @@ export const docGroups: DocGroup[] = [
     items: [{ title: 'Getting Started' }, { title: 'API Reference' }, { title: 'Code Examples' }, { title: 'Best Practices' }] },
   { title: 'Technical Whitepapers', lede: 'In-depth research papers and technical analyses',
     items: [
-      { title: 'Mature-node silicon for India’s defence and industrial base', note: 'Plain-language edition, v3.', href: D + 'deepgrid-mature-node-silicon-master-whitepaper-v3.pdf', meta: 'PDF · 71 pages · 5.4 MB' },
+      { title: 'Mature-node silicon for India’s defence and industrial base', note: 'Plain-language edition, v3. September 2026 edition, superseded in part by the October SKU Blueprint (chip count, clock, orders, funding). Its ₹2.88 Cr orders figure includes the ₹1.01 Cr MCEME contract this site withholds as misdescribed.', href: D + 'deepgrid-mature-node-silicon-master-whitepaper-v3.pdf', meta: 'PDF · 71 pages · 5.4 MB' },
       { title: 'DG32-2DOM system architecture: block definition', note: 'Per-block architecture of the attention variant.', href: D + 'deepgrid-dg32-2dom-system-architecture.pdf', meta: 'PDF · 24 pages' },
       { title: 'DG32-LITE base variant: thirty use cases and models', note: 'The AI tasks the part runs with no attention engine in the path.', href: D + 'deepgrid-dg32-ai-30-use-cases.pdf', meta: 'PDF · 12 pages' },
       { title: 'AI Acceleration Architecture' }, { title: 'Edge Computing Performance' }, { title: 'Power Efficiency Studies' },

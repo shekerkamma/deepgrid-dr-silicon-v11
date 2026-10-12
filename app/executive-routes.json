@@ -226,5 +226,11 @@
     "context": "The company model as plan targets: revenue by segment, margins, cash and the P&L, each panel linked to the data behind it. Not results, not audited, not contracted.",
     "decision": "Agree which plan figures an investment decision rests on, then ask for the data room.",
     "next": "/contact"
+  },
+  "portfolio": {
+    "headline": "The SKU portfolio, chip by chip.",
+    "context": "Eleven chips from the October SKU Blueprint: readiness, prototype slot, plan line, revenue ramp, approval time, development and unit cost, each panel linked to the data behind it. Plan targets, not results.",
+    "decision": "Pick the chips an evaluation or an investment rests on, and check each against its approval time and ramp.",
+    "next": "/contact"
   }
 }

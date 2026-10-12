@@ -70,3 +70,6 @@ qa/
 # business-plan dashboard: generated per build (scripts/build-plan-data.mjs); never committed
 /app/plan-data.json
 /public/plan-data/
+# SKU portfolio dashboard: generated per build (scripts/build-portfolio-data.mjs); never committed
+/app/portfolio-data.json
+/public/portfolio-data/

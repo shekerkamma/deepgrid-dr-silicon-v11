@@ -67,8 +67,8 @@ const r = JSON.parse(fs.readFileSync('app/executive-routes.json', 'utf8'));
 const ids = [
   ...fs.readFileSync('app/routes.ts', 'utf8').matchAll(/\{id: '([^']+)'/g),
 ].map((m) => m[1]);
-// 38 with /plan, the business-plan dashboard (published on v11/v12 by the owner, 2026-10-12).
-assert.equal(ids.length, 38);
+// 38 with /plan, the business-plan dashboard (published on v11/v12 by the owner, 2026-10-12); 39 with /portfolio.
+assert.equal(ids.length, 39);
 for (const id of ids) {
   assert(r[id], id);
   assert(r[id].headline && r[id].context && r[id].decision && r[id].next, id);

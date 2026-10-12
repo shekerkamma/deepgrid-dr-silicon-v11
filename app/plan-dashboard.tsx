@@ -16,7 +16,6 @@ import {useState} from 'react';
 import raw from './plan-data.json';
 import {revenueBuild} from './company-content';
 import {asset, url} from './routes';
-import './plan-dashboard.css';
 
 /** Generic by design: every plan-specific label arrives in the data (scripts/build-plan-data.mjs), because this
  *  file's code ships in every build, public included. */

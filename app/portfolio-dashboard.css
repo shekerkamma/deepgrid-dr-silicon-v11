@@ -1,0 +1,25 @@
+/* SKU portfolio dashboard (app/portfolio-dashboard.tsx). Builds on plan-dashboard.css (pd-*): same tokens, series
+   slots, tooltip and tables. Horizontal bars are HTML, not SVG, so their labels keep their size on a phone. */
+.sk-bars{display:grid;gap:10px}
+.sk-row{display:grid;grid-template-columns:minmax(10rem,16rem) minmax(0,1fr) minmax(4.5rem,max-content);align-items:center;gap:12px;min-width:0}
+.sk-label{font-size:.875rem;color:var(--t-fg);line-height:1.35}
+.sk-track{display:grid;gap:2px;min-width:0}
+.sk-bar{display:block;height:12px;border-radius:0 4px 4px 0;min-width:2px;cursor:default}
+.sk-bar.sk-thin{height:9px}
+.sk-bar.sk-range{border-radius:4px}
+.sk-bar:focus-visible{outline:2px solid var(--t-fg);outline-offset:2px}
+.sk-muted{background:var(--t-fg-2);opacity:.45}
+.pd-swatch.sk-muted{opacity:.45}
+.sk-end{font-size:.8rem;color:var(--t-fg-2);font-variant-numeric:tabular-nums;white-space:nowrap}
+.sk-table td{text-align:left;white-space:normal;min-width:6rem}
+.sk-table th[scope=row]{white-space:normal;min-width:11rem}
+.pd-table td.sk-wrap{white-space:normal;text-align:left;min-width:14rem}
+.sk-recon{border-left:2px solid var(--t-line);padding-left:14px}
+.sk-recon strong{color:var(--t-fg)}
+.sk-bars:hover .sk-bar:not(:hover){opacity:.82}
+.sk-bars:hover .sk-muted:not(:hover){opacity:.4}
+@media (max-width:640px){
+  .sk-row{grid-template-columns:minmax(0,1fr) max-content;gap:4px 10px}
+  .sk-label{grid-column:1 / -1}
+}
+.pd-tip.sk-tip{white-space:normal}

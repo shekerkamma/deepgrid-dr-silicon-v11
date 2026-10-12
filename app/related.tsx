@@ -14,7 +14,7 @@ import {RouteJourney, hasBrief} from './route-journey';
  *  page count stated so nobody opens a 71-page file expecting a summary. */
 /** Routes whose page already ends on its own close (Applications: "Bring a failure mode…"; About: the company's own
  *  call to action). A second close after it would compete, so the route close is skipped there. */
-const ownClose=new Set<RouteId>(['applications','about','plan']);
+const ownClose=new Set<RouteId>(['applications','about','plan','portfolio']);
 
 export default function Related({route}: {route: RouteId}) {
   const r = related[route];

@@ -382,15 +382,15 @@ export const productPages: ProductPage[] = [
   },
   {
     id: 'sku10', slug: 'sku-10', portfolioId: 'sku-10',
-    fit: {buyers: 'Industrial controllers, drone flight controllers and ESCs, EV body and charger controllers, IoT gateways; captive as the host platform inside SKU-1 and SKU-11.', policy: 'Country-of-origin rules for defence and drone procurement bar land-border-nation components; an indigenous secure MCU on an open PDK, auditable at every layer, answers that directly. Verified boot is the first security requirement buyers ask for, and here it is in mask ROM rather than a second chip.', node: 'SKY130 through ChipFoundry’s OpenFrame is a low-cost shuttle slot with 44 pads, and 100 MHz is enough for the control and crypto load. SKY130 has no OTP or eFuse, so the root key lives in mask ROM and device secrets and the rollback counter in a 1 kbit ReRAM macro.'},
+    fit: {buyers: 'Industrial controllers, drone flight controllers and ESCs, EV body and charger controllers, IoT gateways; captive as the host platform inside SKU-1 and SKU-11.', policy: 'Country-of-origin rules for defence and drone procurement bar land-border-nation components; an indigenous secure MCU on an open PDK, auditable at every layer, answers that directly. Verified boot is the first security requirement buyers ask for, and here it is in mask ROM rather than a second chip.', node: 'SKY130 through ChipFoundry’s OpenFrame is a low-cost shuttle slot with 44 pads, and its 100 MHz design target is enough for the control and crypto load. SKY130 has no OTP or eFuse, so the root key lives in mask ROM and device secrets and the rollback counter in a 1 kbit ReRAM macro.'},
     heroSpecs: ['Security', 'Memory', 'Interfaces'],
-    highlights: [['309 ms', 'Signed firmware checked from reset', 'Security'], ['128 KB', 'Error-corrected memory', 'Memory'], ['100 MHz', 'Lockstep DGridRiscV pair', 'Process']],
+    highlights: [['309 ms', 'Signed firmware checked from reset', 'Security'], ['128 KB', 'Error-corrected memory', 'Memory'], ['100 MHz', 'Design target, lockstep DGridRiscV pair', 'Process']],
     headline: 'A secure microcontroller that checks its own firmware before it runs it.',
     lede: 'SKU-10, the DG32-Max, pairs two DGridRiscV processors in lockstep with encryption instructions, a 4 KB instruction cache and 128 KB of error-corrected memory. Its boot ROM verifies the firmware’s digital signature before running it, so one die does the work of an imported secure MCU and the separate secure element a board adds for signed boot.',
     physics: [
       {requirement: 'Boot only firmware that carries a valid signature.', consequence: 'Signature verification lives in mask ROM, checked from reset, rather than in a second chip.'},
       {requirement: 'Keep a root key and device secrets on a process with no OTP or eFuse.', consequence: 'The root key sits in mask ROM; device secrets and the rollback counter sit in a 1 kbit ReRAM macro.'},
-      {requirement: 'Control and crypto work, not peak clock speed.', consequence: 'A 100 MHz lockstep pair on SKY130, reached through a low-cost shuttle slot with 44 signal pads.'},
+      {requirement: 'Control and crypto work, not peak clock speed.', consequence: 'A lockstep pair designed for 100 MHz on SKY130, reached through a low-cost shuttle slot with 44 signal pads. 100 MHz is the design target, not a measurement: the DG32-LITE lockstep core closes at about 55–62 MHz post-route today.'},
     ],
     blocks: [
       {name: 'Processor', items: ['Two DGridRiscV cores in lockstep', 'Encryption instructions', '4 KB instruction cache']},

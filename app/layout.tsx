@@ -12,6 +12,10 @@ import './company-pages.css';
 import './v3.css';
 import './modern-v11.css';
 import './site-refinement.css';
+// The /plan and /portfolio dashboards share plan-dashboard.css. Imported here, once: imported by both pages, Vite
+// split it into a CSS-only chunk, pruned the empty JS file and kept its preload, so both pages requested a 404.
+import './plan-dashboard.css';
+import './portfolio-dashboard.css';
 import './theme-dgs.css';
 import {url} from './routes';
 export const metadata:Metadata={title:'DeepGrid Semi: Silicon for Physical Systems',description:'Motion, power, sensing, interfaces and safety: explore DeepGrid’s mature-node silicon portfolio, strategy and DG32 engineering evidence.',icons:{icon:url('/brand/deepgrid-d-64.png'),apple:url('/brand/deepgrid-d-192.png')}};
