@@ -36,10 +36,20 @@ const pct = (v: number, dp = 1) => `${v < 0 ? '−' : ''}${Math.abs(v * 100).toF
 const num = (v: number) => (v < 0 ? '−' : '') + Math.abs(v).toLocaleString('en-IN', {minimumFractionDigits: 2, maximumFractionDigits: 2, useGrouping: false});
 const fy = (p: string) => 'FY' + p.slice(-2);
 
-type Tip = {x: number; y: number; lines: string[]} | null;
+/** Tooltip anchored above its mark; near either end of the plot it aligns to the inside edge so it never hangs off
+ *  the chart (or off a phone screen). frac = the mark's horizontal position, 0..1. */
+const W0 = 720;
+type Tip = {x: number; y: number; lines: string[]; frac: number; w: number} | null;
+/** Horizontal: centred on the mark, or aligned to the inside edge near either end. Vertical: above the mark, or
+ *  below it when the mark is too near the top for the tooltip to fit (verify-plan.mjs asserts it stays inside). */
+/** Edge alignment by the room in pixels (half a tooltip, ~90px), not by a fraction of the chart: on a 390px phone a
+ *  mark at 15 % of the width still pushed a centred tooltip off screen. */
+const ROOM = 90;
+const tx = (x: number, w: number) => x < ROOM ? '-8px' : w - x < ROOM ? 'calc(-100% + 8px)' : '-50%';
+const place = (x: number, w: number, y: number) => `translate(${tx(x, w)}, ${y < 96 ? '12px' : 'calc(-100% - 10px)'})`;
 function TipBox({tip}: {tip: Tip}) {
   if (!tip) return null;
-  return <div className="pd-tip" role="status" style={{left: tip.x, top: tip.y}}>{tip.lines.map((l, i) => <span key={i} className={i === 0 ? 'pd-tip-head' : undefined}>{l}</span>)}</div>;
+  return <div className="pd-tip" role="status" style={{left: tip.x, top: tip.y, transform: place(tip.x, tip.w, tip.y)}}>{tip.lines.map((l, i) => <span key={i} className={i === 0 ? 'pd-tip-head' : undefined}>{l}</span>)}</div>;
 }
 function Source({files, note}: {files: string[]; note: string}) {
   return <p className="pd-source">{note} Source: {files.map((f, i) => <span key={f}>{i > 0 && ', '}<a className="pd-link" href={asset('/plan-data/' + f)} download>{f}</a></span>)}.</p>;
@@ -66,7 +76,7 @@ function StackedBars({d}: {d: PlanData}) {
                 const v = s.values[pi]; if (v <= 0) return null;
                 const y0 = y(acc), y1 = y(acc + v); acc += v;
                 const show = (e: React.MouseEvent) => { const b = (e.currentTarget as SVGElement).ownerSVGElement!.getBoundingClientRect();
-                  setTip({x: (x + bw / 2) / W * b.width, y: y1 / H * b.height, lines: [`${s.name} · ${fy(p)}`, cr(v), `${pct(v / totals[pi])} of ${fy(p)} revenue`]}); };
+                  setTip({x: (x + bw / 2) / W * b.width, y: y1 / H * b.height, frac: (x + bw / 2) / W, w: b.width, lines: [`${s.name} · ${fy(p)}`, cr(v), `${pct(v / totals[pi])} of ${fy(p)} revenue`]}); };
                 return <rect key={s.name} className={'pd-s' + (si + 1)} x={x} y={y1} width={bw} height={Math.max(0, y0 - y1 - 2)} onMouseEnter={show} onMouseMove={show}/>;
               })}
               <text className="pd-value" x={x + bw / 2} y={y(totals[pi]) - 8} textAnchor="middle">{totals[pi] < 10 ? totals[pi].toFixed(1) : Math.round(totals[pi]).toLocaleString('en-IN')}</text>
@@ -84,7 +94,7 @@ function StackedBars({d}: {d: PlanData}) {
 }
 
 function Lines({d, series, label}: {d: PlanData; series: {name: string; values: number[]; slot: number}[]; label: string}) {
-  const [hover, setHover] = useState<number | null>(null);
+  const [hover, setHover] = useState<number | null>(null), [pw, setPw] = useState(W0);
   const W = 720, H = 300, L = 56, R = 16, T = 20, B = 32;
   const all = series.flatMap(s => s.values);
   const lo = Math.min(-0.4, Math.floor(Math.min(...all) * 5) / 5), hi = 1;
@@ -95,7 +105,7 @@ function Lines({d, series, label}: {d: PlanData; series: {name: string; values: 
       <ul className="pd-legend" aria-label="Lines">{series.map(s => <li key={s.name}><span className={'pd-swatch pd-s' + s.slot} aria-hidden="true"/>{s.name}</li>)}</ul>
       <div className="pd-plot" onMouseLeave={() => setHover(null)}>
         <svg viewBox={`0 0 ${W} ${H}`} className="pd-svg" aria-hidden="true"
-          onMouseMove={e => { const b = e.currentTarget.getBoundingClientRect(); setHover(Math.max(0, Math.min(d.periods.length - 1, Math.round(((e.clientX - b.left) / b.width * W - L) / step)))); }}>
+          onMouseMove={e => { const b = e.currentTarget.getBoundingClientRect(); setPw(b.width); setHover(Math.max(0, Math.min(d.periods.length - 1, Math.round(((e.clientX - b.left) / b.width * W - L) / step)))); }}>
           {ticks.map(t => <g key={t}><line className={t === 0 ? 'pd-zero' : 'pd-grid'} x1={L} x2={W - R} y1={y(t)} y2={y(t)}/><text className="pd-axis" x={L - 8} y={y(t) + 4} textAnchor="end">{Math.round(t * 100)}%</text></g>)}
           {d.periods.map((p, i) => <text key={p} className="pd-axis" x={x(i)} y={H - 10} textAnchor="middle">{fy(p)}</text>)}
           {hover !== null && <line className="pd-cross" x1={x(hover)} x2={x(hover)} y1={T} y2={H - B}/>}
@@ -105,7 +115,7 @@ function Lines({d, series, label}: {d: PlanData; series: {name: string; values: 
             <text className="pd-value" x={x(s.values.length - 1) - 8} y={y(s.values[s.values.length - 1]) - 9} textAnchor="end">{pct(s.values[s.values.length - 1])}</text>
           </g>)}
         </svg>
-        {hover !== null && <div className="pd-tip" role="status" style={{left: `${x(hover) / W * 100}%`, top: 8}}>
+        {hover !== null && <div className="pd-tip" role="status" style={{left: `${x(hover) / W * 100}%`, top: 8, transform: `translate(${tx(x(hover) / W * pw, pw)}, 0)`}}>
           <span className="pd-tip-head">{fy(d.periods[hover])}</span>{series.map(s => <span key={s.name}>{s.name} {pct(s.values[hover])}</span>)}</div>}
       </div>
     </figure>
@@ -129,7 +139,7 @@ function CashBars({d}: {d: PlanData}) {
           {d.periods.map((p, i) => {
             const x = L + band * i + (band - bw) / 2, v = close[i];
             const show = (e: React.MouseEvent) => { const b = (e.currentTarget as SVGElement).ownerSVGElement!.getBoundingClientRect();
-              setTip({x: (x + bw / 2) / W * b.width, y: y(v) / H * b.height, lines: [`${fy(p)} closing cash`, cr(v), `net cash flow ${cr(d.series.netCashFlow[i])}`]}); };
+              setTip({x: (x + bw / 2) / W * b.width, y: y(v) / H * b.height, frac: (x + bw / 2) / W, w: b.width, lines: [`${fy(p)} closing cash`, cr(v), `net cash flow ${cr(d.series.netCashFlow[i])}`]}); };
             return <g key={p}>
               <rect className="pd-s1" x={x} y={y(v)} width={bw} height={y(0) - y(v)} onMouseEnter={show} onMouseMove={show}/>
               <text className="pd-value" x={x + bw / 2} y={y(v) - 8} textAnchor="middle">{v.toFixed(1)}{i === trough ? ' (lowest)' : ''}</text>

@@ -136,7 +136,7 @@ async function landed(p, want, via) {
 {
   const routes = ['products', 'technology', 'technology/safety', 'technology/control-loop', 'technology/die', 'technology/package',
     'applications', 'use-cases/motors', 'use-cases/defence', 'evidence', 'procurement', 'resources', 'resources/docs', 'resources/videos',
-    'ask', 'about', 'about/team', 'about/recognition', 'company', 'contact'];
+    'ask', 'about', 'about/team', 'about/recognition', 'company', 'plan', 'contact'];
   const cap = (r) => r.split('/').map((s) => s[0].toUpperCase() + s.slice(1)).join('/');
   const variants = routes.flatMap((r) => [[cap(r), r], [r + '/', r], [r + '.html', r], [r.toUpperCase(), r]]);
   variants.push(['Resources/Videos', 'resources/videos'], ['use-cases', 'use-cases/motors'], ['Use-Cases/', 'use-cases/motors'], ['technology/', 'technology']);

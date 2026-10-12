@@ -67,12 +67,13 @@ export const menus: Menu[] = [
     ],
   },
   {
-    id: 'about', label: 'About', match: ['about', 'team', 'recognition', 'company'],
+    id: 'about', label: 'About', match: ['about', 'team', 'recognition', 'company', 'plan'],
     items: [
       { label: 'Our story', href: a('/about'), note: 'A semiconductor company for edge AI, in Hyderabad' },
       { label: 'Leadership & team', href: a('/about/team'), note: 'Founders, board, engineers, advisors and partners' },
       { label: 'Achievements', href: a('/about/recognition'), note: 'Milestones and recognition' },
       { label: 'DG32 in the Indian market', href: a('/company'), note: 'A market already obliged to buy domestic' },
+      { label: 'Business plan', href: a('/plan'), note: 'Revenue, margins, cash and use of funds, FY27–FY32: plan targets' },
     ],
   },
 ];
