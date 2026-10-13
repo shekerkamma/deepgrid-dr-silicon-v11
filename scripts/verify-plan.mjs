@@ -29,6 +29,7 @@ for (const [w, touch] of [[1440, false], [390, true]]) {
     assert(await page.locator('.pd-unavailable h2').count(), 'no dashboard and no notice');
     console.log(`${w}: notice only (no plan figures in this build)`); await ctx.close(); continue;
   }
+  check(await page.locator('.dg-ins').count() === 4 && await page.locator('.dg-chapter').count() === 6, `${w}: expected four findings and six chapters`);
   const figs = page.locator('.pd-root figure');
   assert.equal(await figs.count(), 3, 'expected three charts');
   for (const [fi, name] of [[0, 'segments'], [2, 'cash']]) {

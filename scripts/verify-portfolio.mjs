@@ -17,8 +17,10 @@ for (const [w, touch] of [[1440, false], [390, true]]) {
   const errs = []; page.on('pageerror', e => errs.push(e.message));
   await page.goto(url, {waitUntil: 'networkidle'});
   check(await page.locator('.pd-root').count() === 1, `${w}: no dashboard`);
-  check(/of .* chips go on the December 2026 shuttle/.test(await page.locator('.pd-head h2').innerText()), `${w}: headline missing`);
-  check(await page.locator('.pd-kpis > li').count() === 4, `${w}: expected four headline figures`);
+  // ai-analyst structure: a verdict, What the data says (four findings), chapters named as questions.
+  check(/chips carry \d+\s%\sof the FY31 ramp/.test(await page.locator('.pd-head h2').innerText()), `${w}: verdict missing`);
+  check(await page.locator('.dg-ins').count() === 4, `${w}: expected four findings under What the data says`);
+  check(await page.locator('.dg-chapter').count() === 5, `${w}: expected five chapters`);
   const figs = page.locator('.pd-root figure');
   const nf = await figs.count();
   check(nf === 5, `${w}: expected five charts, found ${nf}`);
@@ -72,7 +74,7 @@ for (const w of [1440, 390]) {
   // A dashboard, not text: headline tiles, charts and cards on each tab.
   const panel = page.locator('[role=tabpanel]');
   check(/925/.test(await panel.innerText()), `brief ${w}: the tranche-1 tab does not show the nine chips' plan lines`);
-  check(await panel.locator('.pd-kpis > li').count() === 4, `brief ${w}: tranche tab needs four headline tiles`);
+  check(await panel.locator('.dg-ins').count() === 4 && await panel.locator('.dg-chapter').count() === 3, `brief ${w}: tranche tab needs four findings and three chapters`);
   check(await panel.locator('figure').count() >= 5, `brief ${w}: tranche tab needs at least five charts`);
   check(await panel.locator('.bf-card').count() === 5, `brief ${w}: tranche tab needs five question cards`);
   const col = panel.locator('figure rect.sk-col').nth(2);
@@ -83,6 +85,7 @@ for (const w of [1440, 390]) {
   await tabs.nth(1).click();
   check(await tabs.nth(1).getAttribute('aria-selected') === 'true', `brief ${w}: the buyer tab did not open`);
   check(await panel.locator('.bf-matrix tbody tr').count() === 6, `brief ${w}: buyer tab needs the six-row readiness matrix`);
+  check(await panel.locator('.dg-ins').count() === 4 && await panel.locator('.dg-chapter').count() === 3, `brief ${w}: buyer tab needs four findings and three chapters`);
   check(await panel.locator('figure').count() >= 1 && await panel.locator('.bf-card').count() === 6, `brief ${w}: buyer tab needs a chart and six cards`);
   const sw = await page.evaluate(() => [document.documentElement.scrollWidth, innerWidth]);
   check(sw[0] <= sw[1] + 1, `brief ${w}: page scrolls sideways`);

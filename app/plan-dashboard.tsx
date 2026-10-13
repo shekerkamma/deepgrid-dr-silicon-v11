@@ -16,6 +16,7 @@ import {useState} from 'react';
 import raw from './plan-data.json';
 import {revenueBuild} from './company-content';
 import {asset, url} from './routes';
+import {Insights, Chapter} from './dash-charts';
 
 /** Generic by design: every plan-specific label arrives in the data (scripts/build-plan-data.mjs), because this
  *  file's code ships in every build, public included. */
@@ -162,7 +163,6 @@ export function PlanDashboard() {
   );
   const d = data, n = d.periods.length, last = n - 1, F0 = fy(d.periods[0]), FL = fy(d.periods[last]);
   const {revenue: rev, grossProfit: gp, ebitda, netIncome: ni} = d.series;
-  const cagr = Math.pow(rev[last] / rev[0], 1 / (n - 1)) - 1;
   const firstProfit = ni.findIndex(v => v > 0);
   const close = d.series.closingCash, trough = close.indexOf(Math.min(...close)), open0 = d.series.openingCash[0];
   const segs = d.segments, segTotal = (i: number) => segs.reduce((a, s) => a + s.values[i], 0);
@@ -174,17 +174,19 @@ export function PlanDashboard() {
   return (
     <div className="pd-root">
       <header className="pd-head">
-        <h2>In this plan, revenue grows from {cr(rev[0])} in {F0} to {cr(rev[last])} in {FL}; net income turns positive in {fy(d.periods[firstProfit])}, and year-end cash never falls below {cr(close[trough])}.</h2>
+        <h2 className="dg-verdict">The model turns profitable in {fy(d.periods[firstProfit])}, but cash bottoms at {cr(close[trough])} in {fy(d.periods[trough])}, and {pct(segs[0].values[last] / segTotal(last), 0)} of {FL} revenue is {segs[0].name}.</h2>
+        <p className="dg-lede">Revenue grows from {cr(rev[0])} in {F0} to {cr(rev[last])} in {FL}. {segs[0].name} carries most of it{recon && recon !== segs[0] ? `; ${recon.name} is ${pct(recon.values[last] / segTotal(last), 0)} of ${FL} revenue` : ''}. The raise has to carry the company through the {fy(d.periods[trough])} cash low before revenue catches up.</p>
         <p className="pd-flag"><strong>Plan targets, not results.</strong> {d.model}, {F0}–{FL}, base scenario, ₹{NB}Cr. Nothing here is audited or contracted. {d.checks.length} accounting identities are re-checked on every build; they show the model adds up, not that its assumptions hold.</p>
       </header>
 
-      <ul className="pd-kpis" aria-label="Headline figures">
-        <li><span className="pd-kpi-label">Revenue, {FL}</span><strong className="pd-kpi-value">{cr(rev[last])}</strong><span className="pd-kpi-context">from {cr(rev[0])} in {F0}: {pct(cagr, 0)} a year, compounded</span><Def>Units × price, summed over business lines. Growth = ({FL} ÷ {F0})^(1/{n - 1}) − 1.</Def></li>
-        <li><span className="pd-kpi-label">Gross margin, {FL}</span><strong className="pd-kpi-value">{pct(gp[last] / rev[last])}</strong><span className="pd-kpi-context">from {pct(gp[0] / rev[0])} in {F0}</span><Def>Gross profit ÷ revenue, same year.</Def></li>
-        <li><span className="pd-kpi-label">First profitable year</span><strong className="pd-kpi-value">{fy(d.periods[firstProfit])}</strong><span className="pd-kpi-context">net income {cr(ni[firstProfit])}; EBITDA {cr(ebitda[firstProfit])}</span><Def>First year with net income above zero; tax at 25 % after loss carry-forward.</Def></li>
-        <li><span className="pd-kpi-label">Lowest year-end cash</span><strong className="pd-kpi-value">{cr(close[trough])}</strong><span className="pd-kpi-context">end of {fy(d.periods[trough])}, from {cr(open0)} at the start of {F0}</span><Def>Minimum closing cash over the plan years; year-end balances only.</Def></li>
-      </ul>
+      <Insights items={[
+        {value: cr(rev[last], 0), finding: `Revenue in ${FL}`, text: `From ${cr(rev[0])} in ${F0} and ${cr(rev[Math.min(2, last)])} in ${fy(d.periods[Math.min(2, last)])}: most of the growth comes in the last three years.`, source: `${d.model} · plan target · units × price, summed over business lines`},
+        {value: pct(segs[0].values[last] / segTotal(last), 0), finding: `${segs[0].name} is most of it`, text: `${segs[0].name} is ${cr(segs[0].values[last], 0)} of ${FL} revenue${recon && recon !== segs[0] ? `; ${recon.name} is ${cr(recon.values[last], 0)} (${pct(recon.values[last] / segTotal(last), 0)})` : ''}.`, source: `${d.model} · plan target · segment ÷ total revenue, same year`},
+        {value: fy(d.periods[firstProfit]), finding: 'First profitable year', text: `Net income ${cr(ni[firstProfit])}; EBITDA ${cr(ebitda[firstProfit])}. Gross margin reaches ${pct(gp[last] / rev[last])} by ${FL}.`, source: `${d.model} · plan target · tax at 25 % after loss carry-forward`},
+        {value: cr(close[trough]), finding: `Cash is tightest in ${fy(d.periods[trough])}`, text: `Lowest year-end cash, down from ${cr(open0)} at the start of ${F0}, before revenue catches up.`, source: `${d.model} · plan target · year-end balances only`},
+      ]}/>
 
+      <Chapter id="ch-sells" title="What the company sells">
       <section className="pd-panel" aria-labelledby="pd-seg-h">
         <h3 id="pd-seg-h">{segs[0].name} carries {pct(segs[0].values[last] / segTotal(last), 0)} of {FL} revenue; {segs[1].name} follows with {pct(segs[1].values[last] / segTotal(last), 0)}.</h3>
         <StackedBars d={d}/>
@@ -200,7 +202,9 @@ export function PlanDashboard() {
         </table></div>
         <Source files={['revenue-by-segment.csv']} note="Segment share = segment revenue ÷ total revenue, same year. Segments sum to P&L revenue (checked at build)."/>
       </section>
+      </Chapter>
 
+      <Chapter id="ch-margins" title="How margins build">
       <section className="pd-panel" aria-labelledby="pd-margin-h">
         <h3 id="pd-margin-h">Gross margin rises from {pct(gp[0] / rev[0])} to {pct(gp[last] / rev[last])}; net margin turns positive in {fy(d.periods[firstProfit])} and reaches {pct(ni[last] / rev[last])}.</h3>
         <Lines d={d} label="Gross, EBITDA and net margin by year, per cent of revenue. The same figures follow from the P&L table below." series={[
@@ -210,7 +214,9 @@ export function PlanDashboard() {
         ]}/>
         <Source files={['pl.csv']} note="Gross, EBITDA and net margin = gross profit, EBITDA and net income ÷ revenue, same year."/>
       </section>
+      </Chapter>
 
+      <Chapter id="ch-cash" title="Where cash gets tight">
       <section className="pd-panel" aria-labelledby="pd-cash-h">
         <h3 id="pd-cash-h">Cash falls from {cr(open0)} to {cr(close[trough])} by the end of {fy(d.periods[trough])}, with {cr(-d.series.capex.slice(0, trough + 1).reduce((a, v) => a + v, 0), 0)} of {d.capexLabel} in {F0}–{fy(d.periods[trough])}, then rebuilds to {cr(close[last])} by {FL}.</h3>
         <CashBars d={d}/>
@@ -221,7 +227,9 @@ export function PlanDashboard() {
         </table></div>
         <Source files={['cash.csv']} note={'Closing cash = opening cash + net cash flow. ' + d.cashNote}/>
       </section>
+      </Chapter>
 
+      <Chapter id="ch-raise" title="What the raise buys">
       <section className="pd-panel" aria-labelledby="pd-funds-h">
         <h3 id="pd-funds-h">The plan raises {cr(sources.reduce((a, f) => a + f.value, 0), 0)}; the largest use takes {pct(uses[0].value / usesTotal, 0)} of it.</h3>
         <p className="pd-lede">{'Sources: ' + sources.map(f => `${f.label} (${cr(f.value, 0)})`).join(' and ') + '.'}</p>
@@ -235,7 +243,9 @@ export function PlanDashboard() {
         </table></div>
         <Source files={['use-of-funds.csv']} note="Use-of-funds share = allocation ÷ total uses; uses equal sources within ₹0.02 Cr (checked at build)."/>
       </section>
+      </Chapter>
 
+      <Chapter id="ch-pl" title="The P&L line by line">
       <section className="pd-panel" aria-labelledby="pd-pl-h">
         <h3 id="pd-pl-h">The P&L, line by line, as the model states it.</h3>
         <div className="table-scroll"><table className="pd-table">
@@ -245,7 +255,9 @@ export function PlanDashboard() {
         </table></div>
         <Source files={['pl.csv']} note="P&L sheet of the corrected model."/>
       </section>
+      </Chapter>
 
+      <Chapter id="ch-compare" title="How it compares with the Blueprint">
       <section className="pd-panel" aria-labelledby="pd-rec-h">
         <h3 id="pd-rec-h">This model and the plan on the Portfolio strategy page are different plans, and their revenue does not reconcile.</h3>
         <p className="pd-lede">{d.reconcileLede}</p>
@@ -257,6 +269,7 @@ export function PlanDashboard() {
         </table></div>
         <p className="pd-source">Portfolio strategy figures: the mature-node whitepaper, as published on <a className="pd-link" href={url('/company')}>the Portfolio strategy page</a>. Model figures: pl.csv and revenue-by-segment.csv.</p>
       </section>
+      </Chapter>
     </div>
   );
 }

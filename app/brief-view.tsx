@@ -9,7 +9,7 @@
  *  what a buyer can have today (icon + word, never colour alone). The full brief text stays at the foot of each tab. */
 import {useEffect, useState} from 'react';
 import {brief, briefVisual as v, type Block, type Status} from './brief-content';
-import {HBars, GroupedColumns} from './dash-charts';
+import {HBars, GroupedColumns, Insights, Chapter} from './dash-charts';
 import {url} from './routes';
 
 const NB = ' ';
@@ -46,24 +46,31 @@ function answer(tabId: string, n: number): Block[] {
   return out;
 }
 
-function Kpis({items}: {items: {label: string; value: string; context: string; def: string}[]}) {
-  return <ul className="pd-kpis" aria-label="Headline figures">{items.map(k =>
-    <li key={k.label}><span className="pd-kpi-label">{k.label}</span><strong className="pd-kpi-value">{k.value}</strong><span className="pd-kpi-context">{k.context}</span><span className="pd-def">{k.def}</span></li>)}</ul>;
-}
 
 const STATUS: Record<Status, [string, string]> = {yes: ['✓', 'Yes'], no: ['✕', 'No'], partial: ['◐', 'Partly']};
 
 function TrancheTab() {
   const [days, setDays] = useState<number | null>(null);
   useEffect(() => { setDays(Math.max(0, Math.ceil((Date.parse(v.shuttleDeadline + 'T23:59:59+05:30') - Date.now()) / 86400000))); }, []);
-  const kpis = v.kpis.map((k, i) => i === 1 && days != null ? {...k, context: `${days} days to the 26 Dec 2026 deadline`} : k);
   const chips = v.chips, top3 = [...chips].sort((a, b) => b.ramp - a.ramp).slice(0, 3);
   const top3Ramp = top3.reduce((a, c) => a + c.ramp, 0), ramp9 = chips.reduce((a, c) => a + c.ramp, 0);
   const y31 = v.compare.periods.indexOf('FY31');
   const fullText = brief.find(t => t.id === 'tranche-1')!.blocks;
+  const uses = [...v.tranche].sort((a, b) => b.cr - a.cr), useTotal = uses.reduce((a, u) => a + u.cr, 0), use3 = uses.slice(0, 3).reduce((a, u) => a + u.cr, 0);
+  const gap31 = v.compare.blueprintChips[y31] / v.compare.modelChips[y31];
   return <>
-    <Kpis items={kpis}/>
+    <header className="pd-head">
+      <h2 className="dg-verdict">₹10 Cr buys first silicon for nine chips; lead with the Blueprint, not the September model.</h2>
+      <p className="dg-lede">Tranche 1 puts nine of eleven chips on the 26 Dec 2026 shuttle{days != null ? `, ${days} days away,` : ''} carrying {cr(chips.reduce((a, c) => a + c.plan, 0))} of the {cr(v.planTotal)} plan lines. The Blueprint's FY31 chip ramp is {gap31.toFixed(1)}× the September model's chip line, so explain the gap before an investor finds it.</p>
+    </header>
+    <Insights items={[
+      {value: `${Math.round(use3 / useTotal * 100)}${NB}%`, finding: 'Most of tranche 1 buys silicon', text: `${uses.slice(0, 3).map(u => u.use.split(',')[0].toLowerCase()).join(', ').replace(/^./, c => c.toUpperCase())}: ${cr(use3)} of the ${cr(useTotal)}. The rest is approvals, tools and contingency.`, source: 'SKU Blueprint, Oct 2026 · plan targets'},
+      {value: `${gap31.toFixed(1)}×`, finding: 'The two plans disagree on chips', text: `FY31 chip revenue: ${cr(v.compare.blueprintChips[y31])} in the Blueprint against ${cr(v.compare.modelChips[y31])} in the model, whose ${cr(v.compare.modelTotal[y31])} total is mostly Systems.`, source: 'Blueprint, Oct 2026; model v3, Sep 2026 · plan targets'},
+      {value: cr(v.cashLow.value), finding: `Cash is tightest in ${v.cashLow.year}`, text: `Lowest closing cash in model v3, at the end of ${v.cashLow.year}, before chip and Systems revenue catch up.`, source: 'Model v3, Sep 2026 · plan target'},
+      {value: '₹41.7–91.2 Cr', finding: 'Full development is a later raise', text: 'Estimated development cost for all eleven chips (₹31.9–70.6 Cr for the nine on the shuttle). Tranche 1 funds prototypes, not full development.', source: 'SKU Blueprint, Oct 2026 · estimates'},
+    ]}/>
 
+    <Chapter id="ch-buys" title="What tranche 1 buys">
     <section className="pd-panel" aria-labelledby="bf-chips-h">
       <h3 id="bf-chips-h">Three of the nine carry {cr(top3Ramp)} of their {cr(ramp9)} FY31 ramp: {top3.map(c => c.sku).join(', ')}.</h3>
       <div className="bf-two">
@@ -77,7 +84,9 @@ function TrancheTab() {
       </div>
       <p className="pd-source">Left: plan targets, SKU Blueprint (Oct 2026). Right: approval months by first market, the Blueprint's approval table; which market each chip enters first is an estimate.</p>
     </section>
+    </Chapter>
 
+    <Chapter id="ch-differ" title="Why the two plans differ">
     <section className="pd-panel" aria-labelledby="bf-plans-h">
       <h3 id="bf-plans-h">The two plans meet in FY31 only by coincidence: {cr(v.compare.blueprintChips[y31])} of chips in the Blueprint, {cr(v.compare.modelTotal[y31])} for the whole company in the model, of which chips are {cr(v.compare.modelChips[y31])}.</h3>
       <GroupedColumns label="Chip revenue in the SKU Blueprint and in the financial model, with the model's whole-company total, FY29 to FY32, ₹ Cr" unit={cr}
@@ -102,7 +111,9 @@ function TrancheTab() {
       </div>
       <p className="pd-source">Capital: SKU Blueprint equity table and financial model sources of funds. Margins: SKU Blueprint unit-cost table (estimates, no silicon yet); the model's FY31 gross profit ₹501.0 Cr on revenue ₹594.3 Cr.</p>
     </section>
+    </Chapter>
 
+    <Chapter id="ch-ask" title="What investors will ask">
     <section className="pd-panel" aria-labelledby="bf-q-h">
       <h3 id="bf-q-h">Five investor questions: what is shown so far, and what is still a target.</h3>
       <ol className="bf-cards">{v.investor.map((q, i) => <li className="bf-card" key={q.q}>
@@ -113,6 +124,7 @@ function TrancheTab() {
         <details className="bf-more"><summary>Full answer</summary>{answer('tranche-1', i + 1).map((b, k) => <Render key={k} b={b}/>)}</details>
       </li>)}</ol>
     </section>
+    </Chapter>
 
     <aside className="bf-callout"><strong>Recommendation.</strong> Present the Blueprint as the chip plan and the ₹10 Cr table as the ask; describe the September model as the company-wide plan written before it, and commit to a model v4 with the Blueprint ramp before tranche 2.</aside>
 
@@ -127,13 +139,18 @@ function BuyerTab() {
   const fullText = brief.find(t => t.id === 'buyers')!.blocks;
   const gaps = (fullText.find(b => 'list' in b) as Extract<Block, {list: unknown}>).list;
   return <>
-    <Kpis items={[
-      {label: 'Buyer questions answered', value: String(v.buyers.length), context: 'every answer names its source', def: "As an equipment maker's engineering or programme lead would ask them."},
-      {label: 'With a sample date', value: '0', context: 'after first silicon', def: 'No source states when the December 2026 shuttle silicon returns.'},
-      {label: 'Chips asked about with no datasheet', value: String(noSheet.length), context: noSheet.map(b => b.chip).join(', '), def: 'Only DG32-LITE and DG32-2DOM have preliminary datasheets.'},
-      {label: 'Plan lines behind them', value: cr(planBehind), context: 'SKU Blueprint, Oct 2026', def: 'The undocumented chips carry most of the plan.'},
+    <header className="pd-head">
+      <h2 className="dg-verdict">A buyer can evaluate two DG32 dies today; the chips buyers ask about most have no datasheet and no sample date yet.</h2>
+      <p className="dg-lede">Six questions an equipment maker's engineering or programme lead would ask, answered with what is documented and what is still a target. None can give a sample date; {noSheet.length} name a chip with no datasheet.</p>
+    </header>
+    <Insights items={[
+      {value: '0', finding: 'No sample dates yet', text: 'No source states when the December 2026 shuttle silicon returns; every answer says "after first silicon".', source: 'Buyer answers, 13 Oct 2026'},
+      {value: `${noSheet.length} of ${v.buyers.length}`, finding: 'Chips asked about with no datasheet', text: `${noSheet.map(b => b.chip).join(', ')}. Only DG32-LITE and DG32-2DOM have preliminary datasheets.`, source: 'DG32 datasheets, 12 Sep 2026'},
+      {value: cr(planBehind), finding: 'The undocumented chips carry the plan', text: 'Plan lines of the three chips with no datasheet: most of the ₹1,000 Cr.', source: 'SKU Blueprint, Oct 2026 · plan targets'},
+      {value: '6–36 mo', finding: 'Then approval', text: "After first silicon, the buyer's market approval takes 6–12 months (industrial) to 18–36 (defence, automotive).", source: 'SKU Blueprint, Oct 2026 · estimates'},
     ]}/>
 
+    <Chapter id="ch-today" title="What a buyer can have today">
     <section className="pd-panel" aria-labelledby="bf-ready-h">
       <h3 id="bf-ready-h">What a buyer can have today: two datasheets, no sample dates, no approvals, nothing measured on silicon.</h3>
       <div className="table-scroll"><table className="pd-table bf-matrix">
@@ -153,7 +170,9 @@ function BuyerTab() {
         rows={withApproval.map(b => ({key: b.chip, label: `${b.chip} · ${b.who}`, range: b.approval as [number, number], end: `${b.approval![0]}–${b.approval![1]} mo`, tip: [b.chip, `${b.approval![0]}–${b.approval![1]} months (estimate)`, b.who]}))}/>
       <p className="pd-source">SKU Blueprint approval table by market (estimates).</p>
     </section>
+    </Chapter>
 
+    <Chapter id="ch-buyers" title="What buyers ask">
     <section className="pd-panel" aria-labelledby="bf-bq-h">
       <h3 id="bf-bq-h">Six questions, six honest answers.</h3>
       <ol className="bf-cards">{v.buyers.map((b, i) => <li className="bf-card" key={b.ask}>
@@ -165,11 +184,14 @@ function BuyerTab() {
         <details className="bf-more"><summary>Full answer</summary>{answer('buyers', i + 1).map((x, k) => <Render key={k} b={x}/>)}</details>
       </li>)}</ol>
     </section>
+    </Chapter>
 
+    <Chapter id="ch-close" title="What to close first">
     <section className="pd-panel" aria-labelledby="bf-gap-h">
       <h3 id="bf-gap-h">Four gaps to close before buyer conversations start.</h3>
       <ol className="bf-gaps">{gaps.map((g, i) => <li key={i}><span className="bf-num">{i + 1}</span><p><strong>{g.lead}</strong> {g.text}</p></li>)}</ol>
     </section>
+    </Chapter>
 
     <details className="bf-text"><summary>Read the buyer answers as text</summary>{fullText.map((b, i) => <Render key={i} b={b}/>)}</details>
   </>;

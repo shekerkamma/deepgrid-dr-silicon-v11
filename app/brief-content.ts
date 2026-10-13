@@ -124,12 +124,12 @@ export type Status = 'yes' | 'no' | 'partial';
 export const briefVisual = {
   dated: '13 Oct 2026',
   shuttleDeadline: '2026-12-26',
-  kpis: [
-    {label: 'The ask', value: '₹10 Cr', context: 'tranche 1 of ₹50 Cr in two tranches', def: 'Equity raised in tranche 1, SKU Blueprint (Oct 2026). A proposal, not committed funding.'},
-    {label: 'Chips on the shuttle', value: '9 of 11', context: 'ChipFoundry, deadline 26 Dec 2026', def: 'SKU-7 and SKU-11 are not on it; D100 is Track B.'},
-    {label: 'Their plan lines', value: '₹925 Cr', context: '₹601 Cr of the FY31 ramp', def: 'Plan targets at full run-rate and in FY31, the nine shuttle chips only.'},
-    {label: 'Their development cost', value: '₹31.9–70.6 Cr', context: '₹41.7–91.2 Cr for all eleven', def: 'Prototype, mask set and qualification, low to high estimate.'},
+  planTotal: 1000,
+  tranche: [
+    {use: 'Nine prototypes, December 2026 shuttle', cr: 2.6}, {use: 'Respin reserve', cr: 2.5}, {use: 'Engineering team', cr: 2.5},
+    {use: 'First approvals', cr: 1.0}, {use: 'Design tools and lab', cr: 1.0}, {use: 'Contingency', cr: 0.3}, {use: 'Bring-up and evaluation boards', cr: 0.1},
   ],
+  cashLow: {value: 10.1, year: 'FY29'},
   chips: [
     {sku: 'SKU-1', name: 'BLDC Motor Controller', plan: 320, ramp: 256, market: 'Industrial', approval: [6, 12], dev: [5.2, 11.1]},
     {sku: 'SKU-2', name: 'Smart-Meter SoC', plan: 250, ramp: 175, market: 'Smart meters', approval: [12, 18], dev: [2.2, 4.6]},

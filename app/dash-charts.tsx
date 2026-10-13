@@ -97,3 +97,26 @@ export function GroupedColumns({periods, series, label, unit}: {periods: string[
     </figure>
   );
 }
+
+/** ai-analyst storytelling (agents/story-architect.md): the page opens on "What the data says", three or four
+ *  findings each led by its number, then one sentence and the source with the kind of number (plan target,
+ *  estimate, schedule). Every number here is re-derived from the raw tables by scripts/analyst/validate_findings.py. */
+export type Insight = {value: string; finding: string; text: string; source: string};
+export function Insights({items, id = 'what-the-data-says'}: {items: Insight[]; id?: string}) {
+  return (
+    <section className="dg-insights" aria-labelledby={id}>
+      <h2 id={id} className="dg-ins-h">What the data says</h2>
+      <ul className="dg-ins-grid">{items.map(i => <li className="dg-ins" key={i.finding}>
+        <strong className="dg-ins-v">{i.value}</strong>
+        <span className="dg-ins-f">{i.finding}</span>
+        <p className="dg-ins-t">{i.text}</p>
+        <span className="dg-ins-src">{i.source}</span>
+      </li>)}</ul>
+    </section>
+  );
+}
+
+/** A chapter: one reader question as its heading; the panels inside answer it, each titled with its finding. */
+export function Chapter({id, title, children}: {id: string; title: string; children: React.ReactNode}) {
+  return <section className="dg-chapter" aria-labelledby={id}><h2 id={id} className="dg-ch-h">{title}</h2>{children}</section>;
+}

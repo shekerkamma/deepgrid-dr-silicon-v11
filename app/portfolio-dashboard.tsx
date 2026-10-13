@@ -14,7 +14,7 @@
 import {useEffect, useState} from 'react';
 import raw from './portfolio-data.json';
 import {asset, url} from './routes';
-import {HBars, TipBox, type Tip} from './dash-charts';
+import {HBars, TipBox, Insights, Chapter, type Tip} from './dash-charts';
 import {loadLiveTables, toPortfolio, sheetViewUrl, type PortfolioData, type Provenance, type Sku} from './data/portfolio-facts';
 
 const built = raw as unknown as PortfolioData;
@@ -69,11 +69,12 @@ function RampBars({d}: {d: PortfolioData}) {
 export function PortfolioDashboard() {
   // The built copy renders first (and is what a crawler sees); the team's public sheets replace it once read and
   // checked. A sheet that cannot be read or fails the checks leaves the built copy, and the header says which is shown.
-  const [{d, prov}, setLive] = useState<{d: PortfolioData; prov: Provenance}>({d: built, prov: {live: false}});
+  const [{d, prov}, setLive] = useState<{d: PortfolioData; prov: Provenance & {pending?: boolean}}>({d: built, prov: {live: false, pending: true}});
   useEffect(() => {
     const ac = new AbortController();
     void loadLiveTables(fetch, ac.signal).then(r => {
       if (r && !r.failures.length) setLive({d: toPortfolio(r.tables, built.model), prov: {live: true, readAt: new Date().toLocaleString('en-IN', {dateStyle: 'medium', timeStyle: 'short'})}});
+      else if (!ac.signal.aborted) setLive({d: built, prov: {live: false}});
     });
     return () => ac.abort();
   }, []);
@@ -83,7 +84,6 @@ export function PortfolioDashboard() {
   const planTotal = total('planCr'), fy31Sum = total('fy31Cr');
   const yi31 = d.years.indexOf('FY31'), last = d.years.length - 1;
   const byFy31 = [...planned].sort((a, b) => (b.fy31Cr ?? 0) - (a.fy31Cr ?? 0));
-  const top2 = byFy31.slice(0, 2), top2Share = (top2[0].fy31Cr! + top2[1].fy31Cr!) / fy31Sum;
   const notShuttle = planned.filter(s => !s.shuttle);
   const spec = planned.filter(s => /specification/i.test(s.readiness));
   const lead = d.groups.reduce((a, g) => (g.values[last] > a.values[last] ? g : a));
@@ -96,25 +96,31 @@ export function PortfolioDashboard() {
   const devMax = Math.max(...planned.map(s => s.devHighCr ?? 0));
   const devTop = [...planned].sort((a, b) => (b.devHighCr ?? 0) - (a.devHighCr ?? 0))[0];
   const short = (s: Sku) => `${s.sku} ${s.name}`;
+  const near = byFy31.filter(c => (c.fy31Cr ?? 0) / (c.planCr ?? 1) >= 0.7), farMax = Math.max(...planned.filter(c => !near.includes(c)).map(c => (c.fy31Cr ?? 0) / (c.planCr ?? 1)));
+  const top3r = byFy31.slice(0, 3), top3rSum = top3r.reduce((x, c) => x + (c.fy31Cr ?? 0), 0);
+  const slowMarkets = d.approvals.filter(x => x.high === apHi).map(x => x.market.toLowerCase());
+  const fastest = d.approvals.reduce((x, y) => (y.high < x.high ? y : x));
   const specRows: [string, string][] = [['Core', 'core'], ['Clock', 'clock'], ['SRAM', 'sram'], ['Boot ROM', 'boot_rom'], ['ADC', 'adc'], ['Supply', 'supply'], ['Package', 'package'], ['Process', 'process'], ['Status', 'status']];
 
   return (
     <div className="pd-root">
       <header className="pd-head">
-        <h2>{Say(onShuttle.length)} of {say(planned.length)} chips go on the December 2026 shuttle. Their plan lines total {cr(planTotal)}; the ramp reaches {cr(d.total[yi31])} in FY31.</h2>
+        <h2 className="dg-verdict">{Say(top3r.length)} chips carry {pct(top3rSum / fy31Sum)} of the FY31 ramp; approval time, not market size, sets the pace for the rest.</h2>
+        <p className="dg-lede">{Say(onShuttle.length)} of {say(planned.length)} chips go on the December 2026 shuttle, and their plan lines total {cr(planTotal)} at full rate. On the Blueprint's approval times the ramp reaches {cr(d.total[yi31])} in FY31, {pct(d.total[yi31] / planTotal)} of that; {top3r.map(c => c.sku).join(', ')} carry most of it, because they sell into industrial and metering markets, which approve soonest.</p>
         <p className="pd-flag"><strong>Plan targets, not results.</strong> Every figure is from the {d.source} (<a className="pd-link" href={asset('/downloads/docs/' + d.sourceFile)}>PDF</a>) or the DG32 preliminary datasheets. A plan line is what a chip can carry at full rate; the ramp is what the Blueprint expects year by year. Nothing here is a purchase order.</p>
-        <p className="pd-source sk-prov" data-live={prov.live ? 'true' : 'false'}>{prov.live ? `Live from the team's tables, read ${prov.readAt}.` : 'From the copy checked at the last site build; the live tables could not be read.'} The tables are public: <a className="pd-link" href={sheetViewUrl('skus')} target="_blank" rel="noopener noreferrer">open the SKU table</a>. The reading for investors and buyers is in <a className="pd-link" href={url('/portfolio/brief')}>the brief</a>.</p>
+        <p className="pd-source sk-prov" data-live={prov.live ? 'true' : 'false'}>{prov.live ? `Live from the team's tables, read ${prov.readAt}.` : prov.pending ? "Reading the team's live tables; until then, the copy checked at the last site build." : 'From the copy checked at the last site build; the live tables could not be read.'} The tables are public: <a className="pd-link" href={sheetViewUrl('skus')} target="_blank" rel="noopener noreferrer">open the SKU table</a>. The reading for investors and buyers is in <a className="pd-link" href={url('/portfolio/brief')}>the brief</a>.</p>
       </header>
 
-      <ul className="pd-kpis" aria-label="Headline figures">
-        <li><span className="pd-kpi-label">On the December 2026 shuttle</span><strong className="pd-kpi-value">{onShuttle.length} of {planned.length}</strong><span className="pd-kpi-context">not on it: {notShuttle.map(s => s.sku).join(', ')}</span><span className="pd-def">Chips with a prototype slot on the ChipFoundry shuttle.</span></li>
-        <li><span className="pd-kpi-label">Plan lines, all chips</span><strong className="pd-kpi-value">{cr(planTotal)}</strong><span className="pd-kpi-context">largest: {short(byFy31[0])}</span><span className="pd-def">Sum of the revenue each chip can carry at full rate.</span></li>
-        <li><span className="pd-kpi-label">Revenue ramp, FY31</span><strong className="pd-kpi-value">{cr(d.total[yi31])}</strong><span className="pd-kpi-context">{cr(d.total[last])} in {d.years[last]}</span><span className="pd-def">The Blueprint's stated total for the year, all chip groups.</span></li>
-        <li><span className="pd-kpi-label">Development cost, all chips</span><strong className="pd-kpi-value">{cr1(total('devLowCr'))}–{cr1(total('devHighCr')).replace('₹', '')}</strong><span className="pd-kpi-context">low to high estimate</span><span className="pd-def">Per chip: a prototype run, a production mask set and qualification for its markets; summed.</span></li>
-      </ul>
+      <Insights items={[
+        {value: pct(top3rSum / fy31Sum), finding: `${Say(top3r.length)} chips carry the FY31 ramp`, text: `${top3r.map(c => c.sku).join(', ')}: ${cr(top3rSum)} of the chips' ${cr(fy31Sum)} in FY31. The other eight share the rest.`, source: 'SKU Blueprint, Oct 2026 · plan targets'},
+        {value: pct(d.total[yi31] / planTotal), finding: 'FY31 reaches part of the plan', text: `${cr(d.total[yi31])} in FY31 against ${cr(planTotal)} of plan lines at full rate; ${cr(planTotal)} in FY31 is the Blueprint's stretch target.`, source: 'SKU Blueprint, Oct 2026 · plan targets'},
+        {value: `${onShuttle.length} of ${planned.length}`, finding: 'First silicon this year', text: `On the ChipFoundry December 2026 shuttle. Not on it: ${notShuttle.map(s => s.sku).join(', ')}.`, source: 'SKU Blueprint, Oct 2026 · schedule'},
+        {value: `${apLo}–${apHi} mo`, finding: 'Approval sets the pace', text: `${slowMarkets.join(', ').replace(/^./, c => c.toUpperCase())} take up to ${apHi} months after silicon; ${fastest.market.toLowerCase()} ${fastest.low}–${fastest.high}.`, source: 'SKU Blueprint, Oct 2026 · estimates'},
+      ]}/>
 
+      <Chapter id="ch-revenue" title="Where the revenue comes from">
       <section className="pd-panel" aria-labelledby="sk-lines-h">
-        <h3 id="sk-lines-h">{top2.map(short).join(' and ')} carry {pct(top2Share)} of the FY31 ramp; most other chips are still far from their plan line that year.</h3>
+        <h3 id="sk-lines-h">Only {say(near.length)} chips reach {pct(0.7)} of their plan line by FY31 ({near.map(c => c.sku).join(', ')}); the other {say(planned.length - near.length)} are at {pct(farMax)} or less.</h3>
         <HBars label="Plan line and FY31 ramp per chip, ₹ Cr, horizontal bars. The same figures are in the table below." max={Math.max(...planned.map(s => s.planCr!))}
           legend={[{name: 'Plan line', slot: 0}, {name: 'FY31 ramp', slot: 1}]}
           rows={byFy31.map(s => ({key: s.sku, label: short(s), bars: [{value: s.planCr!, slot: 0}, {value: s.fy31Cr!, slot: 1}], end: `${s.fy31Cr} / ${s.planCr}`,
@@ -141,14 +147,18 @@ export function PortfolioDashboard() {
         </table></div>
         <Source files={['ramp.csv']} note="Column labels are the Blueprint's stated totals; where the groups sum one away from a total, that is rounding in the source."/>
       </section>
+      </Chapter>
 
+      <Chapter id="ch-pace" title="What slows it">
       <section className="pd-panel" aria-labelledby="sk-appr-h">
         <h3 id="sk-appr-h">Revenue waits on approvals of {apLo} to {apHi} months; {longest.join(', ').toLowerCase()} take longest.</h3>
         <HBars label="Approval time by market, months, low to high. The same figures are listed beside each bar." max={apHi}
           rows={d.approvals.map(a => ({key: a.market, label: a.market, range: [a.low, a.high] as [number, number], end: `${a.low}–${a.high} months`, tip: [a.market, a.approval, `${a.low}–${a.high} months`]}))}/>
         <Source files={['approvals.csv']} note="What each market requires before it buys in volume, and how long that takes."/>
       </section>
+      </Chapter>
 
+      <Chapter id="ch-cost" title="What it costs">
       <section className="pd-panel" aria-labelledby="sk-money-h">
         <h3 id="sk-money-h">{top3.map(t => t.use.split(',')[0]).join(', ')} take {pct(top3Share)} of the {cr(tTotal)} first tranche.</h3>
         <HBars label="Proposed use of the first tranche, ₹ Cr. The same figures are in the table below." max={tranche[0].cr}
@@ -180,7 +190,9 @@ export function PortfolioDashboard() {
         </table></div>
         <Source files={['unit-cost.csv']} note="Cost to make at volume, and the gross margin at the price point the Blueprint names. Prototype costs are quoted; mask and qualification costs are planning estimates."/>
       </section>
+      </Chapter>
 
+      <Chapter id="ch-exists" title="What exists today">
       <section className="pd-panel" aria-labelledby="sk-spec-h">
         <h3 id="sk-spec-h">The two DG32 dies share a package, a process and their memory; DG32-2DOM adds an attention engine on its own clock.</h3>
         <div className="table-scroll"><table className="pd-table sk-table">
@@ -190,7 +202,9 @@ export function PortfolioDashboard() {
         </table></div>
         <Source files={['dg32-specs.csv']} note={d.specs.filter(s => s.note).map(s => `${s.part}: ${s.note}.`).join(' ') + ' Preliminary datasheets; 50 MHz is the CPU-domain design target, set by the lockstep core’s measured 55–62 MHz post-route.'}/>
       </section>
+      </Chapter>
 
+      <Chapter id="ch-trust" title="Which documents to trust">
       <section className="pd-panel" aria-labelledby="sk-docs-h">
         <h3 id="sk-docs-h">{d.documents.filter(r => /^current/i.test(r.status)).length} documents are current; {d.documents.filter(r => !/^current/i.test(r.status)).length} copies are superseded, stale or duplicates.</h3>
         <div className="table-scroll"><table className="pd-table sk-table">
@@ -210,6 +224,7 @@ export function PortfolioDashboard() {
         </table></div>
         <Source files={['conflicts.csv']} note="Each row is one claim two sources state differently, and what was done about it. Figures this site withholds are not repeated."/>
       </section>
+      </Chapter>
     </div>
   );
 }

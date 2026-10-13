@@ -75,3 +75,17 @@ rect.sk-muted{fill:var(--t-fg-2);opacity:.45;background:none}
 .bf-gaps strong{color:var(--t-fg)}
 .bf-panel{display:grid;gap:40px}
 .bf-matrix th,.bf-matrix td{text-align:left}
+/* ai-analyst page structure (app/dash-charts.tsx Insights, Chapter): verdict, What the data says, chapters. */
+body .pd-head h2.dg-verdict:not(#_){max-width:30ch;font-size:clamp(1.6rem,2.6vw,2.2rem);line-height:1.2;margin:0 0 12px}
+.dg-lede{margin:0 0 12px;max-width:70ch;color:var(--t-fg);font-size:1.05rem;line-height:1.55}
+.dg-insights{display:grid;gap:14px}
+/* The site sets every h2 with body h2:not(#_) (ID-level weight); these section labels match that weight plus a class. */
+body h2.dg-ins-h:not(#_),body h2.dg-ch-h:not(#_){margin:0;line-height:1.3;font-size:.8rem;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--t-fg-2)}
+.dg-ins-grid{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,15rem),1fr));gap:2px;background:var(--t-line);border:1px solid var(--t-line);border-radius:8px;overflow:hidden}
+.dg-ins{background:var(--dgs-card);padding:20px 22px;display:grid;gap:8px;align-content:start}
+.dg-ins-v{font-size:clamp(1.8rem,2.8vw,2.4rem);font-weight:400;color:var(--t-fg);font-variant-numeric:tabular-nums;letter-spacing:-.01em;line-height:1.1}
+.dg-ins-f{font-size:1rem;font-weight:600;color:var(--t-fg);line-height:1.35}
+.dg-ins-t{margin:0;font-size:.875rem;color:var(--t-fg-2);line-height:1.5}
+.dg-ins-src{font-size:.75rem;color:var(--t-fg-2);border-top:1px solid var(--t-line);padding-top:8px}
+.dg-chapter{display:grid;gap:28px;border-top:1px solid var(--t-line);padding-top:28px}
+.dg-chapter > .pd-panel:first-of-type{border-top:0;padding-top:0}
