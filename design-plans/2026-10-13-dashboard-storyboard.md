@@ -2,7 +2,7 @@
 
 Method: ai-analyst `agents/story-architect.md` (audience journey, beats, headline read-through) and
 `agents/validation.md` (every card number re-derived from the raw CSVs by `scripts/analyst/validate_findings.py`,
-22 of 22 PASS). Pattern taken from the project's "Tranche 1 investor dashboard" (claude.ai): verdict title →
+26 of 26 PASS). Pattern taken from the project's "Tranche 1 investor dashboard" (claude.ai): verdict title →
 lede with the numbers → labels line → **What the data says** (insight cards: number, finding, one sentence,
 source and kind of number) → chapters named as questions, each chart titled with its finding → full table.
 
