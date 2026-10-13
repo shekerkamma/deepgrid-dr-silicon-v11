@@ -70,7 +70,7 @@ for (const w of [1440, 390]) {
   const errs = []; page.on('pageerror', e => errs.push(e.message));
   await page.goto(base.replace(/\/?$/, '/') + 'portfolio/brief', {waitUntil: 'networkidle'});
   const tabs = page.getByRole('tab');
-  check(await tabs.count() === 2, `brief ${w}: expected two tabs`);
+  check(await tabs.count() === 3, `brief ${w}: expected investor, buyer and implementation tabs`);
   // A dashboard, not text: headline tiles, charts and cards on each tab.
   const panel = page.locator('[role=tabpanel]');
   check(/925/.test(await panel.innerText()), `brief ${w}: the tranche-1 tab does not show the nine chips' plan lines`);
