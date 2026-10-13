@@ -1,9 +1,19 @@
 'use client';
-/** Investor and buyer brief (/portfolio/brief): the two tabs of app/brief-content.ts, rendered with the dashboard
- *  styles (plan-dashboard.css). Content only; every figure was checked against the portfolio and plan tables. */
-import {useState} from 'react';
-import {brief, type Block} from './brief-content';
+/** Investor and buyer brief (/portfolio/brief) as a dashboard. Data: briefVisual and the brief text in
+ *  app/brief-content.ts (13 Oct 2026, every figure checked against data/portfolio and data/plan).
+ *
+ *  Forms (dataviz): KPI tiles for the headline figures; emphasis bars for plan line vs FY31 ramp (the ramp is the
+ *  point, the line is grey context); range bars for approval months and per-chip margins against the model's 84 %
+ *  reference line; grouped columns for the two plans by year, the model's total in grey; a stacked part-to-whole bar
+ *  for each capital structure; cards for the questions, with the full answer one click away; a status matrix for
+ *  what a buyer can have today (icon + word, never colour alone). The full brief text stays at the foot of each tab. */
+import {useEffect, useState} from 'react';
+import {brief, briefVisual as v, type Block, type Status} from './brief-content';
+import {HBars, GroupedColumns} from './dash-charts';
 import {url} from './routes';
+
+const NB = ' ';
+const cr = (x: number) => `₹${x.toLocaleString('en-IN', {maximumFractionDigits: 1})}${NB}Cr`;
 
 function Render({b}: {b: Block}) {
   if ('h2' in b) return <h3 className="bf-h2">{b.h2}</h3>;
@@ -25,18 +35,157 @@ function Render({b}: {b: Block}) {
   </>;
 }
 
+/** The text under the h3 that starts with "n." in a tab: the full answer behind a card. */
+function answer(tabId: string, n: number): Block[] {
+  const blocks = brief.find(t => t.id === tabId)!.blocks, out: Block[] = [];
+  let on = false;
+  for (const b of blocks) {
+    if ('h2' in b || 'h3' in b) { if (on) break; on = 'h3' in b && b.h3.startsWith(n + '.'); continue; }
+    if (on) out.push(b);
+  }
+  return out;
+}
+
+function Kpis({items}: {items: {label: string; value: string; context: string; def: string}[]}) {
+  return <ul className="pd-kpis" aria-label="Headline figures">{items.map(k =>
+    <li key={k.label}><span className="pd-kpi-label">{k.label}</span><strong className="pd-kpi-value">{k.value}</strong><span className="pd-kpi-context">{k.context}</span><span className="pd-def">{k.def}</span></li>)}</ul>;
+}
+
+const STATUS: Record<Status, [string, string]> = {yes: ['✓', 'Yes'], no: ['✕', 'No'], partial: ['◐', 'Partly']};
+
+function TrancheTab() {
+  const [days, setDays] = useState<number | null>(null);
+  useEffect(() => { setDays(Math.max(0, Math.ceil((Date.parse(v.shuttleDeadline + 'T23:59:59+05:30') - Date.now()) / 86400000))); }, []);
+  const kpis = v.kpis.map((k, i) => i === 1 && days != null ? {...k, context: `${days} days to the 26 Dec 2026 deadline`} : k);
+  const chips = v.chips, top3 = [...chips].sort((a, b) => b.ramp - a.ramp).slice(0, 3);
+  const top3Ramp = top3.reduce((a, c) => a + c.ramp, 0), ramp9 = chips.reduce((a, c) => a + c.ramp, 0);
+  const y31 = v.compare.periods.indexOf('FY31');
+  const fullText = brief.find(t => t.id === 'tranche-1')!.blocks;
+  return <>
+    <Kpis items={kpis}/>
+
+    <section className="pd-panel" aria-labelledby="bf-chips-h">
+      <h3 id="bf-chips-h">Three of the nine carry {cr(top3Ramp)} of their {cr(ramp9)} FY31 ramp: {top3.map(c => c.sku).join(', ')}.</h3>
+      <div className="bf-two">
+        <HBars label="Plan line and FY31 ramp for the nine shuttle chips, ₹ Cr" max={Math.max(...chips.map(c => c.plan))}
+          legend={[{name: 'Plan line (full rate)', slot: 0}, {name: 'FY31 ramp', slot: 1}]}
+          rows={chips.map(c => ({key: c.sku, label: `${c.sku} ${c.name}`, bars: [{value: c.plan, slot: 0}, {value: c.ramp, slot: 1}], end: `${c.ramp} / ${c.plan}`,
+            tip: [`${c.sku} ${c.name}`, `FY31 ramp ${cr(c.ramp)}`, `Plan line ${cr(c.plan)}`, `First market: ${c.market}`]}))}/>
+        <HBars label="Approval time before volume revenue for each shuttle chip, months, estimate" max={36}
+          rows={chips.map(c => ({key: c.sku, label: `${c.sku} · ${c.market}`, range: c.approval as [number, number], end: `${c.approval[0]}–${c.approval[1]} mo`,
+            tip: [`${c.sku} ${c.name}`, `${c.market}: ${c.approval[0]}–${c.approval[1]} months (estimate)`]}))}/>
+      </div>
+      <p className="pd-source">Left: plan targets, SKU Blueprint (Oct 2026). Right: approval months by first market, the Blueprint's approval table; which market each chip enters first is an estimate.</p>
+    </section>
+
+    <section className="pd-panel" aria-labelledby="bf-plans-h">
+      <h3 id="bf-plans-h">The two plans meet in FY31 only by coincidence: {cr(v.compare.blueprintChips[y31])} of chips in the Blueprint, {cr(v.compare.modelTotal[y31])} for the whole company in the model, of which chips are {cr(v.compare.modelChips[y31])}.</h3>
+      <GroupedColumns label="Chip revenue in the SKU Blueprint and in the financial model, with the model's whole-company total, FY29 to FY32, ₹ Cr" unit={cr}
+        periods={v.compare.periods} series={[
+          {name: 'Blueprint: chips', slot: 1, values: v.compare.blueprintChips},
+          {name: 'Model: chips (Semiconductors)', slot: 2, values: v.compare.modelChips},
+          {name: 'Model: whole company', slot: 0, values: v.compare.modelTotal},
+        ]}/>
+      <p className="pd-source">SKU Blueprint ramp table (Oct 2026); financial model corrected v3 (Sep 2026), revenue by segment. Plan targets. The model's chip line predates the Blueprint; a model v4 with the Blueprint ramp is due before tranche 2.</p>
+    </section>
+
+    <section className="pd-panel" aria-labelledby="bf-cap-h">
+      <h3 id="bf-cap-h">The Blueprint raises {cr(50)} of equity in two tranches; the model raises {cr(55)}, {cr(10)} of it as a loan. Per-chip margins sit below the model's {v.margins.modelFy31}{NB}%.</h3>
+      <div className="bf-two">
+        <HBars label="Capital raised in each plan, parts, ₹ Cr" max={55}
+          legend={v.capital.flatMap(c => c.parts.map(p => ({name: p.name, slot: p.slot})))}
+          rows={v.capital.map(c => ({key: c.plan, label: c.plan, stack: c.parts, end: cr(c.parts.reduce((a, p) => a + p.value, 0)), tip: [`Total ${cr(c.parts.reduce((a, p) => a + p.value, 0))}`]}))}/>
+        <HBars label="Gross margin at volume per costed chip, per cent, estimate, against the model's FY31 margin" max={100}
+          refLine={{value: v.margins.modelFy31, label: `Model's FY31 gross margin, ${v.margins.modelFy31}${NB}% (Sep 2026)`}}
+          rows={v.margins.chips.map(m => ({key: m.chip, label: m.chip, range: [m.low, m.high] as [number, number], end: `${m.low}–${m.high}${NB}%`,
+            tip: [m.chip, `${m.low}–${m.high}% gross margin at ${m.at} (estimate)`]}))}/>
+      </div>
+      <p className="pd-source">Capital: SKU Blueprint equity table and financial model sources of funds. Margins: SKU Blueprint unit-cost table (estimates, no silicon yet); the model's FY31 gross profit ₹501.0 Cr on revenue ₹594.3 Cr.</p>
+    </section>
+
+    <section className="pd-panel" aria-labelledby="bf-q-h">
+      <h3 id="bf-q-h">Five investor questions: what is shown so far, and what is still a target.</h3>
+      <ol className="bf-cards">{v.investor.map((q, i) => <li className="bf-card" key={q.q}>
+        <span className="bf-num">{i + 1}</span>
+        <p className="bf-ask">{q.q}</p>
+        <p className="bf-verdict">{q.verdict}</p>
+        <dl className="bf-kv"><dt>Shown so far</dt><dd>{q.proven}</dd><dt>Target or estimate</dt><dd>{q.target}</dd></dl>
+        <details className="bf-more"><summary>Full answer</summary>{answer('tranche-1', i + 1).map((b, k) => <Render key={k} b={b}/>)}</details>
+      </li>)}</ol>
+    </section>
+
+    <aside className="bf-callout"><strong>Recommendation.</strong> Present the Blueprint as the chip plan and the ₹10 Cr table as the ask; describe the September model as the company-wide plan written before it, and commit to a model v4 with the Blueprint ramp before tranche 2.</aside>
+
+    <details className="bf-text"><summary>Read the full tranche-1 brief as text</summary>{fullText.map((b, i) => <Render key={i} b={b}/>)}</details>
+  </>;
+}
+
+function BuyerTab() {
+  const noSheet = v.buyers.filter(b => b.status && b.status[0] === 'no');
+  const planBehind = v.chips.filter(c => noSheet.some(b => b.chip === c.sku)).reduce((a, c) => a + c.plan, 0);
+  const withApproval = v.buyers.filter(b => b.approval);
+  const fullText = brief.find(t => t.id === 'buyers')!.blocks;
+  const gaps = (fullText.find(b => 'list' in b) as Extract<Block, {list: unknown}>).list;
+  return <>
+    <Kpis items={[
+      {label: 'Buyer questions answered', value: String(v.buyers.length), context: 'every answer names its source', def: "As an equipment maker's engineering or programme lead would ask them."},
+      {label: 'With a sample date', value: '0', context: 'after first silicon', def: 'No source states when the December 2026 shuttle silicon returns.'},
+      {label: 'Chips asked about with no datasheet', value: String(noSheet.length), context: noSheet.map(b => b.chip).join(', '), def: 'Only DG32-LITE and DG32-2DOM have preliminary datasheets.'},
+      {label: 'Plan lines behind them', value: cr(planBehind), context: 'SKU Blueprint, Oct 2026', def: 'The undocumented chips carry most of the plan.'},
+    ]}/>
+
+    <section className="pd-panel" aria-labelledby="bf-ready-h">
+      <h3 id="bf-ready-h">What a buyer can have today: two datasheets, no sample dates, no approvals, nothing measured on silicon.</h3>
+      <div className="table-scroll"><table className="pd-table bf-matrix">
+        <caption className="sr-only">Buyer readiness by question</caption>
+        <thead><tr><th scope="col">Buyer</th><th scope="col">Chip</th><th scope="col">Answer</th>{v.readinessColumns.map(c => <th scope="col" key={c}>{c}</th>)}</tr></thead>
+        <tbody>{v.buyers.map(b => <tr key={b.ask}>
+          <th scope="row">{b.who}</th><td>{b.chip}</td><td className="sk-wrap">{b.verdict}</td>
+          {v.readinessColumns.map((c, i) => { const s = b.status?.[i]; return <td key={c} className={'bf-st' + (s ? ' bf-' + s : '')}>{s ? <><span aria-hidden="true">{STATUS[s][0]}</span> {STATUS[s][1]}</> : '–'}</td>; })}
+        </tr>)}</tbody>
+      </table></div>
+      <p className="pd-source">From the six buyer answers (13 Oct 2026). "Approval held" means the market approval the buyer needs; none is held yet.</p>
+    </section>
+
+    <section className="pd-panel" aria-labelledby="bf-wait-h">
+      <h3 id="bf-wait-h">After first silicon, these buyers wait another 6 to 36 months for the approval their market needs.</h3>
+      <HBars label="Approval months for the chips buyers asked about, estimate" max={36}
+        rows={withApproval.map(b => ({key: b.chip, label: `${b.chip} · ${b.who}`, range: b.approval as [number, number], end: `${b.approval![0]}–${b.approval![1]} mo`, tip: [b.chip, `${b.approval![0]}–${b.approval![1]} months (estimate)`, b.who]}))}/>
+      <p className="pd-source">SKU Blueprint approval table by market (estimates).</p>
+    </section>
+
+    <section className="pd-panel" aria-labelledby="bf-bq-h">
+      <h3 id="bf-bq-h">Six questions, six honest answers.</h3>
+      <ol className="bf-cards">{v.buyers.map((b, i) => <li className="bf-card" key={b.ask}>
+        <span className="bf-num">{i + 1}</span>
+        <p className="bf-who">{b.chip === '–' ? b.who : `${b.who} · ${b.chip}`}</p>
+        <p className="bf-ask">“{b.ask}”</p>
+        <p className="bf-verdict">{b.verdict}</p>
+        <dl className="bf-kv"><dt>Missing for the buyer</dt><dd>{b.missing}</dd></dl>
+        <details className="bf-more"><summary>Full answer</summary>{answer('buyers', i + 1).map((x, k) => <Render key={k} b={x}/>)}</details>
+      </li>)}</ol>
+    </section>
+
+    <section className="pd-panel" aria-labelledby="bf-gap-h">
+      <h3 id="bf-gap-h">Four gaps to close before buyer conversations start.</h3>
+      <ol className="bf-gaps">{gaps.map((g, i) => <li key={i}><span className="bf-num">{i + 1}</span><p><strong>{g.lead}</strong> {g.text}</p></li>)}</ol>
+    </section>
+
+    <details className="bf-text"><summary>Read the buyer answers as text</summary>{fullText.map((b, i) => <Render key={i} b={b}/>)}</details>
+  </>;
+}
+
 export function BriefView() {
   const [tab, setTab] = useState(brief[0].id);
-  const t = brief.find(x => x.id === tab)!;
   return (
     <div className="pd-root">
-      <p className="pd-flag"><strong>Plan targets and estimates, not results.</strong> Written {t.dated} from the SKU Blueprint (October 2026), the financial model (corrected v3, September 2026) and the DG32 preliminary datasheets. The live figures are on <a className="pd-link" href={url('/portfolio')}>the SKU portfolio page</a> and <a className="pd-link" href={url('/plan')}>the business plan</a>.</p>
+      <p className="pd-flag"><strong>Plan targets and estimates, not results.</strong> Written {v.dated} from the SKU Blueprint (October 2026), the financial model (corrected v3, September 2026) and the DG32 preliminary datasheets. The live figures are on <a className="pd-link" href={url('/portfolio')}>the SKU portfolio page</a> and <a className="pd-link" href={url('/plan')}>the business plan</a>.</p>
       <div className="bf-tabs" role="tablist" aria-label="Brief sections">
         {brief.map(x => <button key={x.id} role="tab" id={'bf-tab-' + x.id} aria-controls={'bf-panel-' + x.id} aria-selected={x.id === tab} className="bf-tab" onClick={() => setTab(x.id)}>{x.title}</button>)}
       </div>
-      <section className="pd-panel bf-panel" role="tabpanel" id={'bf-panel-' + t.id} aria-labelledby={'bf-tab-' + t.id}>
-        {t.blocks.map((b, i) => <Render key={t.id + i} b={b}/>)}
-      </section>
+      <div className="bf-panel" role="tabpanel" id={'bf-panel-' + tab} aria-labelledby={'bf-tab-' + tab}>
+        {tab === 'tranche-1' ? <TrancheTab/> : <BuyerTab/>}
+      </div>
     </div>
   );
 }

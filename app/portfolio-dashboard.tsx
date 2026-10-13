@@ -14,6 +14,7 @@
 import {useEffect, useState} from 'react';
 import raw from './portfolio-data.json';
 import {asset, url} from './routes';
+import {HBars, TipBox, type Tip} from './dash-charts';
 import {loadLiveTables, toPortfolio, sheetViewUrl, type PortfolioData, type Provenance, type Sku} from './data/portfolio-facts';
 
 const built = raw as unknown as PortfolioData;
@@ -27,52 +28,8 @@ const words = ['zero', 'one', 'two', 'three', 'four', 'five', 'six', 'seven', 'e
 const say = (k: number) => words[k] ?? String(k);
 const Say = (k: number) => say(k).charAt(0).toUpperCase() + say(k).slice(1);
 
-/** Tooltips wrap at a fixed width (at most 240px, never wider than the chart) and are clamped inside the chart, so
- *  a long line (a chip name, what a tranche line delivers) can neither push one off a phone screen nor out of its
- *  chart. Above the mark, or below it when the mark is too near the top. */
-type Tip = {x: number; y: number; w: number; lines: string[]} | null;
-function TipBox({tip}: {tip: Tip}) {
-  if (!tip) return null;
-  const width = Math.min(240, tip.w - 8), left = Math.max(4, Math.min(tip.x - width / 2, tip.w - width - 4));
-  return <div className="pd-tip sk-tip" role="status" style={{left, top: tip.y, width, transform: tip.y < 96 ? 'translate(0, 12px)' : 'translate(0, calc(-100% - 10px))'}}>
-    {tip.lines.map((l, i) => <span key={i} className={i === 0 ? 'pd-tip-head' : undefined}>{l}</span>)}</div>;
-}
-/** Tooltip for an HTML mark, positioned in its figure's plot box. */
-const tipAt = (e: React.SyntheticEvent<HTMLElement>, lines: string[]): Tip => {
-  const plot = e.currentTarget.closest('.pd-plot') as HTMLElement, p = plot.getBoundingClientRect(), m = e.currentTarget.getBoundingClientRect();
-  return {x: m.left - p.left + m.width / 2, y: m.top - p.top, w: p.width, lines};
-};
 function Source({files, note}: {files: string[]; note: string}) {
   return <p className="pd-source">{note} Source: {files.map((f, i) => <span key={f}>{i > 0 && ', '}<a className="pd-link" href={asset('/portfolio-data/' + f)} download>{f}</a></span>)}.</p>;
-}
-
-/** Horizontal bars in HTML, so labels stay readable at any width. A row is one or two bars (plan line and FY31),
- *  or one low–high range. */
-type BarRow = {key: string; label: string; bars?: {value: number; slot: number}[]; range?: [number, number]; end: string; tip: string[]};
-function HBars({rows, max, legend, label}: {rows: BarRow[]; max: number; legend?: {name: string; slot: number}[]; label: string}) {
-  const [tip, setTip] = useState<Tip>(null);
-  const w = (v: number) => `${Math.max(0, v / max * 100)}%`;
-  return (
-    <figure className="pd-figure" aria-label={label}>
-      {legend && <ul className="pd-legend" aria-label="Bars">{legend.map(l => <li key={l.name}><span className={'pd-swatch ' + (l.slot ? 'pd-s' + l.slot : 'sk-muted')} aria-hidden="true"/>{l.name}</li>)}</ul>}
-      <div className="pd-plot sk-bars" onMouseLeave={() => setTip(null)}>
-        {rows.map(r => {
-          const show = (e: React.SyntheticEvent<HTMLElement>) => setTip(tipAt(e, r.tip));
-          return <div className="sk-row" key={r.key}>
-            <span className="sk-label">{r.label}</span>
-            <span className="sk-track">
-              {r.bars && r.bars.map((b, i) => <span key={i} className={'sk-bar ' + (b.slot ? 'pd-s' + b.slot : 'sk-muted') + (r.bars!.length > 1 ? ' sk-thin' : '')} style={{width: w(b.value)}}
-                tabIndex={i === 0 ? 0 : -1} onMouseEnter={show} onMouseMove={show} onFocus={show} onClick={show}/>)}
-              {r.range && <span className="sk-bar sk-range pd-s1" style={{marginLeft: w(r.range[0]), width: w(r.range[1] - r.range[0])}}
-                tabIndex={0} onMouseEnter={show} onMouseMove={show} onFocus={show} onClick={show}/>}
-            </span>
-            <span className="sk-end">{r.end}</span>
-          </div>;
-        })}
-        <TipBox tip={tip}/>
-      </div>
-    </figure>
-  );
 }
 
 /** FY29–FY33 ramp as stacked columns (the /plan segment chart's geometry). */

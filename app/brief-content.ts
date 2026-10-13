@@ -117,3 +117,60 @@ export const brief: BriefTab[] = [
     ],
   },
 ];
+
+/** The brief as a dashboard (app/brief-view.tsx): every figure below is one the text above states, as of 13 Oct 2026;
+ *  the full text stays one click away under each card. ₹ Cr unless named. */
+export type Status = 'yes' | 'no' | 'partial';
+export const briefVisual = {
+  dated: '13 Oct 2026',
+  shuttleDeadline: '2026-12-26',
+  kpis: [
+    {label: 'The ask', value: '₹10 Cr', context: 'tranche 1 of ₹50 Cr in two tranches', def: 'Equity raised in tranche 1, SKU Blueprint (Oct 2026). A proposal, not committed funding.'},
+    {label: 'Chips on the shuttle', value: '9 of 11', context: 'ChipFoundry, deadline 26 Dec 2026', def: 'SKU-7 and SKU-11 are not on it; D100 is Track B.'},
+    {label: 'Their plan lines', value: '₹925 Cr', context: '₹601 Cr of the FY31 ramp', def: 'Plan targets at full run-rate and in FY31, the nine shuttle chips only.'},
+    {label: 'Their development cost', value: '₹31.9–70.6 Cr', context: '₹41.7–91.2 Cr for all eleven', def: 'Prototype, mask set and qualification, low to high estimate.'},
+  ],
+  chips: [
+    {sku: 'SKU-1', name: 'BLDC Motor Controller', plan: 320, ramp: 256, market: 'Industrial', approval: [6, 12], dev: [5.2, 11.1]},
+    {sku: 'SKU-2', name: 'Smart-Meter SoC', plan: 250, ramp: 175, market: 'Smart meters', approval: [12, 18], dev: [2.2, 4.6]},
+    {sku: 'SKU-10', name: 'DG32-Max Secure MCU', plan: 110, ramp: 110, market: 'Industrial', approval: [6, 12], dev: [2.1, 4.3]},
+    {sku: 'SKU-9', name: 'SDV Zonal Gateway', plan: 60, ramp: 6, market: 'Automotive', approval: [18, 36], dev: [3.8, 8.8]},
+    {sku: 'SKU-5', name: 'Interface Transceiver', plan: 45, ramp: 14, market: 'Meters, industrial', approval: [6, 18], dev: [3.9, 9.3]},
+    {sku: 'SKU-3', name: 'Hi-Rel PMIC', plan: 40, ramp: 12, market: 'Defence first', approval: [18, 36], dev: [5.0, 11.1]},
+    {sku: 'SKU-4', name: 'Lockstep MCU', plan: 40, ramp: 4, market: 'Automotive', approval: [18, 36], dev: [3.4, 7.8]},
+    {sku: 'SKU-6', name: 'Voltage Supervisor', plan: 40, ramp: 16, market: 'Defence first', approval: [18, 36], dev: [3.9, 8.3]},
+    {sku: 'SKU-8', name: 'Display Driver', plan: 20, ramp: 8, market: 'Meters, industrial', approval: [6, 18], dev: [2.4, 5.3]},
+  ],
+  compare: {
+    periods: ['FY29', 'FY30', 'FY31', 'FY32'],
+    blueprintChips: [70, 296, 608, 844],
+    modelChips: [5.15, 16.8, 45.0, 104.0],
+    modelTotal: [115.4, 284.7, 594.3, 1128.5],
+  },
+  capital: [
+    {plan: 'SKU Blueprint (Oct 2026)', parts: [{name: 'Tranche 1, equity', value: 10, slot: 1}, {name: 'Tranche 2, equity (May 2027)', value: 40, slot: 2}]},
+    {plan: 'Financial model v3 (Sep 2026)', parts: [{name: 'Equity', value: 45, slot: 3}, {name: 'CGTMSE-backed loan', value: 10, slot: 4}]},
+  ],
+  margins: {chips: [
+    {chip: 'Voltage supervisor', low: 66, high: 82, at: '$0.50'},
+    {chip: 'Interface transceiver', low: 68, high: 82, at: '$0.95'},
+    {chip: 'Motor controller, fan cut', low: 53, high: 73, at: '$1.00'},
+    {chip: 'DG32-Max', low: 58, high: 76, at: '$5.50'},
+  ], modelFy31: 84},
+  investor: [
+    {q: 'What exists today: any silicon, any customers?', verdict: 'No silicon and no customers yet', proven: 'Two DG32 dies taped out and hardened; lockstep core closes at 55–62 MHz post-route', target: 'SKU-10 at 100 MHz; demand from buyers obliged to buy domestic (a thesis)'},
+    {q: 'What does ₹10 Cr buy, and how will I know it worked?', verdict: 'Nine prototypes, respins, the team and first approvals', proven: 'Line-by-line uses summing to ₹10.0 Cr', target: 'Nine designs on the 26 Dec 2026 shuttle; first silicon on boards; SKU-6 and meter approvals started'},
+    {q: 'The Blueprint says ₹608 Cr in FY31 and the model says ₹594 Cr. Which is it?', verdict: 'Different scopes: chips alone vs the whole company', proven: 'The model\'s chip line is ₹45.0 Cr in FY31; Systems is ₹501.9 Cr', target: 'A model v4 with the Blueprint ramp as its chip line, before tranche 2'},
+    {q: 'When does chip revenue start, and what slows it?', verdict: 'FY29, ₹70 Cr, then approval times set the pace', proven: 'Approval routes and their time ranges are named per market', target: '6–12 months industrial, 12–18 meters, 18–36 automotive and defence (estimates)'},
+    {q: 'How much capital does this take, and do the margins hold?', verdict: '₹41.7–91.2 Cr to develop; ₹50 Cr covers the low case', proven: 'Unit cost estimated for four chips', target: '53–82 % gross margin per chip; the model assumes 84 % in FY31'},
+  ],
+  readinessColumns: ['Datasheet', 'Sample date', 'Approval held', 'Measured on silicon'],
+  buyers: [
+    {who: 'Ceiling-fan maker', chip: 'SKU-1', ask: 'Can SKU-1 drop into our board, and when are samples?', verdict: 'Not yet', status: ['no', 'no', 'no', 'no'] as Status[], approval: [6, 12], missing: 'Datasheet: pinout, supply range, drive features; sample date'},
+    {who: 'Smart-meter OEM', chip: 'SKU-2', ask: 'Can we bid the next IS 16444 utility tender with SKU-2?', verdict: 'Not for current tenders', status: ['no', 'no', 'no', 'no'] as Status[], approval: [12, 18], missing: 'Spec sheet; certification partner and date'},
+    {who: 'Defence integrator', chip: 'SKU-6', ask: 'An Indian-made, MIL-screened supervisor for a 2028 programme?', verdict: 'Intended part; 2028 is tight', status: ['no', 'no', 'no', 'no'] as Status[], approval: [18, 36], missing: 'Screening standard; when production moves to 180 nm'},
+    {who: 'Automotive tier-1', chip: 'SKU-4 (DG32-LITE)', ask: 'Can the lockstep MCU go into an ASIL-B body controller?', verdict: 'Not on current evidence', status: ['yes', 'no', 'no', 'no'] as Status[], approval: [18, 36], missing: 'Safety plan; ECC roadmap'},
+    {who: 'Drone maker', chip: 'DG32-2DOM', ask: 'Can it run our obstacle-detection model, and how fast?', verdict: 'No measured throughput to give', status: ['yes', 'no', 'no', 'no'] as Status[], approval: null, missing: 'Measured performance; a product commitment'},
+    {who: 'Any buyer', chip: '–', ask: 'Your whitepaper says you already have orders. Can we see them?', verdict: 'No purchase orders or letters of intent today', status: null, approval: null, missing: 'Re-issue of the whitepaper'},
+  ],
+};

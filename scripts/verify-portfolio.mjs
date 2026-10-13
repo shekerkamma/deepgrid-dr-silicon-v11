@@ -69,9 +69,21 @@ for (const w of [1440, 390]) {
   await page.goto(base.replace(/\/?$/, '/') + 'portfolio/brief', {waitUntil: 'networkidle'});
   const tabs = page.getByRole('tab');
   check(await tabs.count() === 2, `brief ${w}: expected two tabs`);
-  check(/925/.test(await page.locator('[role=tabpanel]').innerText()), `brief ${w}: the tranche-1 tab does not show the nine chips' plan lines`);
+  // A dashboard, not text: headline tiles, charts and cards on each tab.
+  const panel = page.locator('[role=tabpanel]');
+  check(/925/.test(await panel.innerText()), `brief ${w}: the tranche-1 tab does not show the nine chips' plan lines`);
+  check(await panel.locator('.pd-kpis > li').count() === 4, `brief ${w}: tranche tab needs four headline tiles`);
+  check(await panel.locator('figure').count() >= 5, `brief ${w}: tranche tab needs at least five charts`);
+  check(await panel.locator('.bf-card').count() === 5, `brief ${w}: tranche tab needs five question cards`);
+  const col = panel.locator('figure rect.sk-col').nth(2);
+  await col.scrollIntoViewIfNeeded(); await col.hover({force: true}); await page.waitForTimeout(120);
+  const fig = panel.locator('figure', {has: page.locator('rect.sk-col')}).first(), tip = fig.locator('.pd-tip');
+  if (await tip.count()) { const [t, f] = [await tip.boundingBox(), await fig.boundingBox()]; check(t.x >= f.x - 1 && t.x + t.width <= f.x + f.width + 1, `brief ${w}: column tooltip outside its chart`); }
+  else fails.push(`brief ${w}: hovering a column shows no tooltip`);
   await tabs.nth(1).click();
-  check(await tabs.nth(1).getAttribute('aria-selected') === 'true' && /ceiling fans/.test(await page.locator('[role=tabpanel]').innerText()), `brief ${w}: the buyer tab did not open`);
+  check(await tabs.nth(1).getAttribute('aria-selected') === 'true', `brief ${w}: the buyer tab did not open`);
+  check(await panel.locator('.bf-matrix tbody tr').count() === 6, `brief ${w}: buyer tab needs the six-row readiness matrix`);
+  check(await panel.locator('figure').count() >= 1 && await panel.locator('.bf-card').count() === 6, `brief ${w}: buyer tab needs a chart and six cards`);
   const sw = await page.evaluate(() => [document.documentElement.scrollWidth, innerWidth]);
   check(sw[0] <= sw[1] + 1, `brief ${w}: page scrolls sideways`);
   check(!errs.length, `brief ${w}: page errors: ${errs.join(' | ')}`);
