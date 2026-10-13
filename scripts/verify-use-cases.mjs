@@ -59,6 +59,7 @@ for (const width of [1440,768,390]) {
   check(await dashboard.locator('.uc-case').count()===9,`${width}: shuttle filter`);
   await page.getByLabel('Show',{exact:true}).selectOption('all');
   await page.getByRole('button',{name:'Smart electricity meters SKU-2 · Smart-Meter SoC',exact:true}).click();
+  await page.waitForFunction(()=>document.activeElement?.id==='uc-detail-title',null,{timeout:3000}).catch(()=>{});
   check(await page.locator('#uc-detail-title').evaluate(e=>e===document.activeElement),`${width}: matrix selection focuses detail`);
   await page.locator('#uc-implementation').screenshot({path:path.join(out,`implementation-${width}.png`)});
   await page.getByRole('button',{name:'Show sources'}).click();
