@@ -1,7 +1,7 @@
 topic,source_a,a_says,source_b,b_says,status
-ADC trim (DG32-2DOM),2DOM datasheet 08:34 (was published),per-die trim is a bring-up step,"2DOM datasheet 09:07, system architecture, LITE datasheet",trim has no effect on this silicon; the ADC runs untrimmed,fixed 2026-10-12
-ADC trim inside one document,"QFN-64 combined, DG32-LITE half",untrimmed,"QFN-64 combined, DG32-2DOM half",per-die trim is a bring-up step,fixed 2026-10-12 (rebuilt)
-Page count,detail-content.ts document list,28 pages,deepgrid-datasheets-qfn64.pdf,24 pages,fixed 2026-10-12
+ADC trim (DG32-2DOM),2DOM datasheet 08:34 (was published),per-die trim is a bring-up step,"2DOM datasheet 09:07, system architecture, LITE datasheet",trim has no effect on this silicon; the ADC runs untrimmed,fixed 12 Oct 2026
+ADC trim inside one document,"QFN-64 combined, DG32-LITE half",untrimmed,"QFN-64 combined, DG32-2DOM half",per-die trim is a bring-up step,fixed 12 Oct 2026 (rebuilt)
+Page count,detail-content.ts document list,28 pages,deepgrid-datasheets-qfn64.pdf,24 pages,fixed 12 Oct 2026
 Processor clock,Whitepaper v3 (Sep),200 MHz target; timing analysis not yet published,Blueprint (Oct) / DG32-LITE datasheet,100 MHz product / 50 MHz die (lockstep core 55-62 MHz post-route),fixed 12 Oct 2026: every whitepaper listing now says the October Blueprint is newer on the clock
 SKU-10 clock,Site SKU-10 page,a 100 MHz lockstep pair on SKY130,DG32-LITE post-route timing,lockstep core reaches 55-62 MHz on sky130,fixed 12 Oct 2026: the SKU-10 page labels 100 MHz a design target and states the measured 55-62 MHz
 Chip count,Whitepaper v3,ten chips,Blueprint,eleven SKUs plus the D100 Track B,fixed 12 Oct 2026: every whitepaper listing now says the Blueprint is newer on chip count

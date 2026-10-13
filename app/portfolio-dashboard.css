@@ -23,3 +23,16 @@
   .sk-label{grid-column:1 / -1}
 }
 .pd-tip.sk-tip{white-space:normal}
+/* Where the figures came from: the live public tables, or the copy checked at build. */
+.sk-prov{margin-top:6px}
+.sk-prov[data-live=false]{color:var(--t-fg-2)}
+/* Investor and buyer brief (app/brief-view.tsx): tabs, section headings and lists on the dashboard styles. */
+.bf-tabs{display:flex;flex-wrap:wrap;gap:4px;border-bottom:1px solid var(--t-line)}
+.bf-tab{font:inherit;background:none;border:0;border-bottom:2px solid transparent;color:var(--t-fg-2);padding:10px 14px;cursor:pointer;min-height:44px}
+.bf-tab[aria-selected=true]{color:var(--t-fg);border-bottom-color:var(--t-fg)}
+.bf-tab:focus-visible{outline:2px solid var(--t-fg);outline-offset:-2px}
+.bf-panel{border-top:0;padding-top:12px}
+.bf-h2{margin:18px 0 0;max-width:52ch;font-size:clamp(1.15rem,1.6vw,1.4rem);line-height:1.35}
+.bf-h3{margin:12px 0 0;max-width:70ch;font-size:1.05rem;line-height:1.4}
+.bf-list{margin:0;padding-left:1.25rem;display:grid;gap:8px;max-width:70ch;color:var(--t-fg-2)}
+.bf-list strong{color:var(--t-fg)}

@@ -238,7 +238,7 @@ export function executiveAnswer(query: string, r: Retrieval): ExecutiveAnswer {
     return {
       title: 'D100 follows mature-node revenue; it has a separate funding plan.',
       answer:
-        'The October 2026 Blueprint proposes a separate ₹50 Cr round for D100 after the eleven mature-node products generate revenue. D100 is outside the FY31 ₹1,000 Cr portfolio plan, with the intention of keeping advanced-node mask costs separate from mature-node funding.',
+        'The October 2026 Blueprint proposes a separate ₹50 Cr round for D100 after the eleven mature-node products generate revenue. D100 is outside the ₹1,000 Cr run-rate plan for the eleven chips, with the intention of keeping advanced-node mask costs separate from mature-node funding.',
       answerRefs: planRefs,
       beats: [
         {

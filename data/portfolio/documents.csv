@@ -1,12 +1,12 @@
 document,file,where,version,pages,status,note
-"SKU Blueprint, October 2026",deepgrid-sku-blueprint-oct2026.pdf,published,2026-10,46,current,Text-identical to the Downloads copy. Pages are marked CONFIDENTIAL.
-Master whitepaper v3,deepgrid-mature-node-silicon-master-whitepaper-v3.pdf,published,2026-09-05,71,superseded in part,"The Blueprint is newer on chip count, clock, orders, plan and funding. Marked ""CONFIDENTIAL · Not for distribution""; prints personal contact details on page 2."
-DG32-LITE preliminary datasheet,deepgrid-dg32-lite-preliminary-datasheet.pdf,published,2026-09-12,12,current,States the ADC runs untrimmed on this silicon.
-DG32-2DOM preliminary datasheet,deepgrid-dg32-2dom-preliminary-datasheet.pdf,published,2026-09-12 09:07,12,current (replaced 2026-10-12),"The published copy was the 08:34 version, which said per-die ADC trim is a bring-up step. Replaced with the 09:07 version (ADC untrimmed). Only page 10 differs."
-"DG32 QFN-64 datasheets, both parts",deepgrid-datasheets-qfn64.pdf,published,rebuilt 2026-10-12,24,current (rebuilt 2026-10-12),DG32-LITE (pages 1-12) plus the current DG32-2DOM (pages 13-24). Its 2DOM half had contradicted its LITE half on ADC trim.
-DG32-2DOM system architecture,deepgrid-dg32-2dom-system-architecture.pdf,published,2026-09-12 18:xx,24,current,The newer 24-page version: adds the measured block-area breakdown and the AVIP bearing-fault application.
-DG32-AI 30 use cases,deepgrid-dg32-ai-30-use-cases.pdf,published,2026-09-11,12,current,Byte-identical to Downloads DG32-LITE_Base_Variant_Use_Cases.pdf.
-DShot RX block spec,deepgrid-dshot-rx-block-spec.pdf,published,2026-09-13,8,current,Byte-identical to Downloads DG32_dgrid_dshot_rx_spec_draft1.pdf (a draft).
-Downloads: DG32-2DOM_Datasheet.pdf,(Downloads),local,2026-09-12 08:34,12,stale,Superseded by DG32-2DOM_Datasheet-1.pdf (ADC note).
-Downloads: DG32-2DOM_Block_Architecture.pdf,(Downloads),local,2026-09-12 08:xx,22,stale,"Superseded by the 24-page -1/-2 copies, which are identical to each other."
-"Downloads: DG32-LITE_Datasheet-2/-3, DG32-2DOM_vs_STM32 (+ -2)",(Downloads),local,2026-09-12,,duplicates,Byte-identical pairs.
+"SKU Blueprint, October 2026",deepgrid-sku-blueprint-oct2026.pdf,published,Oct 2026,46,current,Text-identical to the Downloads copy. Pages are marked CONFIDENTIAL.
+Master whitepaper v3,deepgrid-mature-node-silicon-master-whitepaper-v3.pdf,published,5 Sep 2026,71,superseded in part,"The Blueprint is newer on chip count, clock, orders, plan and funding. Marked ""CONFIDENTIAL · Not for distribution""; prints personal contact details on page 2."
+DG32-LITE preliminary datasheet,deepgrid-dg32-lite-preliminary-datasheet.pdf,published,12 Sep 2026,12,current,States the ADC runs untrimmed on this silicon.
+DG32-2DOM preliminary datasheet,deepgrid-dg32-2dom-preliminary-datasheet.pdf,published,12 Sep 2026 9:07,12,current (replaced 12 Oct 2026),"The published copy was the 08:34 version, which said per-die ADC trim is a bring-up step. Replaced with the 09:07 version (ADC untrimmed). Only page 10 differs."
+"DG32 QFN-64 datasheets, both parts",deepgrid-datasheets-qfn64.pdf,published,rebuilt 12 Oct 2026,24,current (rebuilt 12 Oct 2026),DG32-LITE (pages 1-12) plus the current DG32-2DOM (pages 13-24). Its 2DOM half had contradicted its LITE half on ADC trim.
+DG32-2DOM system architecture,deepgrid-dg32-2dom-system-architecture.pdf,published,12 Sep 2026 evening,24,current,The newer 24-page version: adds the measured block-area breakdown and the AVIP bearing-fault application.
+DG32-AI 30 use cases,deepgrid-dg32-ai-30-use-cases.pdf,published,11 Sep 2026,12,current,Byte-identical to Downloads DG32-LITE_Base_Variant_Use_Cases.pdf.
+DShot RX block spec,deepgrid-dshot-rx-block-spec.pdf,published,13 Sep 2026,8,current,Byte-identical to Downloads DG32_dgrid_dshot_rx_spec_draft1.pdf (a draft).
+Downloads: DG32-2DOM_Datasheet.pdf,(Downloads),local,12 Sep 2026 8:34,12,stale,Superseded by DG32-2DOM_Datasheet-1.pdf (ADC note).
+Downloads: DG32-2DOM_Block_Architecture.pdf,(Downloads),local,12 Sep 2026 morning,22,stale,"Superseded by the 24-page -1/-2 copies, which are identical to each other."
+"Downloads: DG32-LITE_Datasheet-2/-3, DG32-2DOM_vs_STM32 (+ -2)",(Downloads),local,12 Sep 2026,,duplicates,Byte-identical pairs.

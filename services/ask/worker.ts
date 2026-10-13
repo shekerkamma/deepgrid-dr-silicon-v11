@@ -2,14 +2,31 @@ import legacy from './legacy-rerank.js';
 import raw from '../../app/data/graphrag-unified-index.json';
 import primary from '../../app/data/primary-answer-evidence.json';
 import { collectEvidence, namedGuides, mentionsGuide, COMPOSITION_INSTRUCTIONS, answerSchema, validateAnswer, type EvidencePacket } from '../../app/data/answer-evidence';
+import builtPortfolio from '../../app/portfolio-data.json';
+import { loadLiveTables, toPortfolio, portfolioFacts, selectFacts, type PortfolioData, type Provenance } from '../../app/data/portfolio-facts';
+import { selectBrief } from '../../app/data/brief-facts';
 
 export const MODEL = 'gemini-3.8-flash';
-const PUBLICATION_POLICY = `Primary architecture guide passages (docNum primary) are the publication authority for their named product. Keep variant identities separate: facts about another part or an older master whitepaper do not override the named product guide. Distinguish simulation, post-route analysis, design targets and measured silicon; absence of physical silicon does not erase simulation or post-route results. A watchdog reset signal and a hardware fault-to-gate-driver path are different mechanisms. Do not infer absence of one from incomplete wiring of the other. Publication status takes priority over promotional wording in older passages: DeepGrid is pre-silicon. Planned customer relationships, anchor buyers, product approvals, qualification, future production and sales are plans or targets, not secured or achieved results. A named company in a planning document is not evidence of a signed order, design win or current customer. Gross margins, revenue, market size and profitability in the business plan are estimates or targets; never describe them as demonstrated economics. Describe the single-approval/two-markets concept as an intended qualification strategy, not a current approval. Preserve optional features as optional. For both composition and audit, enforce these distinctions even when an older passage uses confident present tense.`;
+const PUBLICATION_POLICY = `The investor and buyer brief (docNum portfolio-brief) is the company's published reading of the same figures; cite it for how the two plans relate and what a buyer can expect, and keep its labels. SKU portfolio data passages (docNum portfolio-data) are computed from the team's current tables: for totals, rankings, schedules, tranche uses, costs, margins, approval times and which document is current they outrank older prose, including the master whitepaper; cite them and keep their labels (plan target, estimate, schedule). The FY31 chip revenue expected on approval times is the ramp figure in those passages; ₹1,000 Cr is the full run-rate plan and the FY31 stretch target, never the FY31 expectation. Primary architecture guide passages (docNum primary) are the publication authority for their named product. Keep variant identities separate: facts about another part or an older master whitepaper do not override the named product guide. Distinguish simulation, post-route analysis, design targets and measured silicon; absence of physical silicon does not erase simulation or post-route results. A watchdog reset signal and a hardware fault-to-gate-driver path are different mechanisms. Do not infer absence of one from incomplete wiring of the other. Publication status takes priority over promotional wording in older passages: DeepGrid is pre-silicon. Planned customer relationships, anchor buyers, product approvals, qualification, future production and sales are plans or targets, not secured or achieved results. A named company in a planning document is not evidence of a signed order, design win or current customer. Gross margins, revenue, market size and profitability in the business plan are estimates or targets; never describe them as demonstrated economics. Describe the single-approval/two-markets concept as an intended qualification strategy, not a current approval. Preserve optional features as optional. For both composition and audit, enforce these distinctions even when an older passage uses confident present tense.`;
 
 const origins = new Set(['https://shekerkamma.github.io', 'http://127.0.0.1:8894', 'http://localhost:8894', 'http://127.0.0.1:8768']);
 type Env = { GEMINI_API_KEY: string; ANSWER_RATE: {limit(options: {key:string}):Promise<{success:boolean}>} };
 const corpus = new Map([...raw.chunks,...primary].map(c=>[c.id,c]));
 const normalize = (s:string)=>s.replace(/\s+/g,' ').trim();
+
+// The portfolio tables, read live from the team's public sheets at most every five minutes. A sheet that cannot be read
+// or fails the structure checks leaves the bundled copy in use (checked at build time), so Ask never goes without them.
+let portfolio:{data:PortfolioData;prov:Provenance;at:number}={data:builtPortfolio as unknown as PortfolioData,prov:{live:false},at:0};
+async function currentPortfolio():Promise<{data:PortfolioData;prov:Provenance}> {
+  if(Date.now()-portfolio.at<300000) return portfolio;
+  const live=await loadLiveTables(fetch,AbortSignal.timeout(4000));
+  const readAt=new Date().toISOString().slice(0,16).replace('T',' ')+' UTC';
+  portfolio=live&&!live.failures.length
+    ?{data:toPortfolio(live.tables,(builtPortfolio as unknown as PortfolioData).model),prov:{live:true,readAt},at:Date.now()}
+    :{data:builtPortfolio as unknown as PortfolioData,prov:{live:false},at:Date.now()};
+  if(live?.failures.length) console.warn('Live portfolio sheets rejected, using the built copy:',live.failures.slice(0,5).join('; '));
+  return portfolio;
+}
 class ServiceError extends Error { constructor(public status:number, message:string) { super(message); } }
 
 async function generate(env:Env, system:string, data:unknown, schema:object, signal:AbortSignal) {
@@ -64,7 +81,9 @@ export default {
     const pinned=packet.sources.filter(c=>c.docNum==='primary'||c.docNum==='applications');
     const selected=requested.filter((id:unknown)=>typeof id==='string'&&corpus.has(id as string)).map((id:string)=>corpus.get(id)!)
       .filter(c=>c.docNum==='primary'||c.docNum==='applications'||mentionsGuide(c.docTitle+' '+c.section+' '+c.text,guides));
-    const sources=[...new Map([...pinned,...selected,...packet.sources].map(c=>[c.id,c])).values()];
+    const {data:pd,prov}=await currentPortfolio();
+    const facts=[...selectFacts(question,portfolioFacts(pd,prov)),...selectBrief(question)];
+    const sources=[...new Map([...facts,...pinned,...selected,...packet.sources].map(c=>[c.id,c])).values()];
     let chars=0; packet.sources=sources.filter(c=>{if(chars+c.text.length>26000)return false;chars+=c.text.length;return true;}).slice(0,18);
     if(!packet.sources.length) return json({model:MODEL,answer:{answerable:false,title:question,lead:{text:'The indexed DeepGrid documents do not establish an answer to this question.',kind:'evidence',support:[]},sections:[],gaps:['No relevant source evidence was found.']},sources:[]});
     const signal=AbortSignal.timeout(110000);

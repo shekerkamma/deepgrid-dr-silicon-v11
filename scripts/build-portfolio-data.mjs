@@ -1,89 +1,61 @@
-// SKU portfolio dashboard data (/portfolio), published by every build.
+// SKU portfolio data (/portfolio and Ask DeepGrid), published by every build.
 //
-// data/portfolio/*.csv are extracted from the public SKU Blueprint (October 2026) and the DG32 datasheets by
-// scripts/portfolio/extract_portfolio.py; both PDFs are already public downloads, so nothing here needs a gate.
-// This re-checks the totals the Blueprint itself states, writes app/portfolio-data.json and copies the CSVs a
-// reader can download to public/portfolio-data/. The document-conflict and document-version tables stay out:
-// they are a review worklist, kept in the private live dashboard, not a page for buyers or investors.
+// The live tables are eight public Google Sheets (data/portfolio/sheets.json); the site and the Ask service read them
+// at request time. data/portfolio/*.csv is the checked copy every build bundles, used whenever a sheet cannot be read or
+// fails app/data/portfolio-facts.ts checkTables(). The extracted tables come from scripts/portfolio/extract_portfolio.py
+// (the public SKU Blueprint and DG32 datasheets); documents.csv and conflicts.csv are snapshots of their sheets.
 //
-// The one exception is the comparison with the financial model on /plan: its figures are added only by builds
-// that publish /plan (DGS_PLAN=1 or DGS_INTERNAL=1), so a build without the plan never prints plan numbers.
+// This parses and shapes the copy with the same code the site uses (portfolio-facts.ts), then adds the checks only a
+// build can make: the Blueprint's own stated totals (plan lines ₹1,000 Cr, development cost ₹41.7–91.2 Cr, tranche 1
+// ₹10 Cr). A break stops the build. The comparison with the financial model on /plan is added only by builds that
+// publish /plan (DGS_PLAN=1 or DGS_INTERNAL=1), so a build without the plan never prints plan numbers.
 import fs from 'node:fs';
 import path from 'node:path';
-import {fileURLToPath} from 'node:url';
+import {fileURLToPath, pathToFileURL} from 'node:url';
+import * as esbuild from 'esbuild';
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const out = path.join(root, 'app/portfolio-data.json');
 const pub = path.join(root, 'public/portfolio-data');
-const FILES = ['skus.csv', 'ramp.csv', 'approvals.csv', 'unit-cost.csv', 'tranche1-uses.csv', 'dg32-specs.csv'];
+const bundle = path.join(root, 'node_modules/.cache/portfolio-facts.mjs');
+await esbuild.build({entryPoints: [path.join(root, 'app/data/portfolio-facts.ts')], bundle: true, platform: 'node', format: 'esm', outfile: bundle, logLevel: 'error'});
+const {TABLES, parseCsv, checkTables, toPortfolio, portfolioFacts} = await import(pathToFileURL(bundle).href + '?t=' + Date.now());
 
-function parse(file, dir = 'data/portfolio') {
-  const text = fs.readFileSync(path.join(root, dir, file), 'utf8').replace(/\r\n/g, '\n').trim();
-  return text.split('\n').map(line => {
-    const cells = []; let cur = '', q = false;
-    for (let i = 0; i < line.length; i++) {
-      const c = line[i];
-      if (q) { if (c === '"' && line[i + 1] === '"') { cur += '"'; i++; } else if (c === '"') q = false; else cur += c; }
-      else if (c === '"') q = true; else if (c === ',') { cells.push(cur); cur = ''; } else cur += c;
-    }
-    cells.push(cur); return cells;
-  });
-}
-const rows = file => {
-  const [head, ...body] = parse(file);
-  return body.map(r => Object.fromEntries(head.map((h, i) => [h, r[i] ?? ''])));
-};
-const n = v => (v === '' || v == null ? null : Number(v));
-const fail = [];
+const tables = Object.fromEntries(TABLES.map(t => [t, parseCsv(fs.readFileSync(path.join(root, 'data/portfolio', t + '.csv'), 'utf8'))]));
+const fail = [...checkTables(tables)];
 const check = (ok, msg) => { if (!ok) fail.push(msg); };
-
-const skus = rows('skus.csv').map(r => ({
-  sku: r.sku, name: r.name, process: r.process, clockMhz: n(r.clock_mhz), readiness: r.readiness, mpw: r.mpw,
-  shuttle: r.dec2026_shuttle === 'yes', planCr: n(r.plan_line_cr), fy31Cr: n(r.fy31_ramp_cr), units: r.addressable_units,
-  marketLowCr: n(r.market_low_cr), marketHighCr: n(r.market_high_cr), verdict: r.verdict,
-  devLowCr: n(r.dev_cost_low_cr), devHighCr: n(r.dev_cost_high_cr),
-}));
-const planned = skus.filter(s => s.planCr != null);
-const sum = (xs, k) => Math.round(xs.reduce((a, x) => a + (x[k] || 0), 0) * 10) / 10;
-check(planned.length === 11, `expected 11 SKUs with a plan line, found ${planned.length}`);
-check(sum(planned, 'planCr') === 1000, `plan lines sum to ${sum(planned, 'planCr')}, the Blueprint states ₹1,000 Cr`);
-check(sum(planned, 'devLowCr') === 41.7 && sum(planned, 'devHighCr') === 91.2, 'development cost does not sum to the stated ₹41.7–91.2 Cr');
-for (const s of planned) check(s.planCr > 0 && s.fy31Cr != null && s.fy31Cr <= s.planCr, `${s.sku}: FY31 ramp missing or above its plan line`);
-
-const [rh, ...rb] = parse('ramp.csv');
-const years = rh.slice(1);
-const groups = rb.filter(r => r[0] !== 'Total').map(r => ({name: r[0], values: r.slice(1).map(v => n(v) ?? 0)}));
-const totalRow = rb.find(r => r[0] === 'Total');
-check(!!totalRow && groups.length === 4, 'ramp: four groups and a Total row expected');
-const total = totalRow ? totalRow.slice(1).map(Number) : [];
-years.forEach((y, i) => { const s = groups.reduce((a, g) => a + g.values[i], 0); check(Math.abs(s - total[i]) <= 2, `ramp ${y}: groups sum to ${s}, stated total ${total[i]}`); });
-
-const approvals = rows('approvals.csv').map(r => ({market: r.market, approval: r.approval, low: n(r.months_low), high: n(r.months_high)}));
-check(approvals.length === 6 && approvals.every(a => a.low > 0 && a.high >= a.low), 'approvals: six markets with low ≤ high expected');
-const unitCost = rows('unit-cost.csv').map(r => ({chip: r.chip, dieMm2: n(r.die_mm2), pkg: r.package, costLow: n(r.cost_low_usd), costHigh: n(r.cost_high_usd),
-  priceLow: n(r.price_low_usd), priceHigh: n(r.price_high_usd), marginLow: n(r.margin_low_pct), marginHigh: n(r.margin_high_pct), marginAt: n(r.margin_at_price_usd)}));
-check(unitCost.length === 4, 'unit cost: four chips expected');
-const tranche = rows('tranche1-uses.csv').map(r => ({use: r.use, cr: n(r.cr), delivers: r.delivers}));
-check(Math.abs(sum(tranche, 'cr') - 10) < 0.01, `tranche-1 uses sum to ${sum(tranche, 'cr')}, the Blueprint states ₹10 Cr`);
-const specs = rows('dg32-specs.csv');
-check(specs.length === 2, 'two DG32 parts expected');
 
 // Comparison with /plan, only where /plan is published by this build.
 let model = null;
 if (process.env.DGS_PLAN === '1' || process.env.DGS_INTERNAL === '1') {
-  const pl = parse('pl.csv', 'data/plan'), head = pl[0], rev = pl.find(r => r[0] === 'Revenue');
-  const funds = parse('use-of-funds.csv', 'data/plan').slice(1).filter(r => r[0] === 'source').map(([, item, v]) => ({item, cr: Number(v)}));
-  const fy31 = head.indexOf('FY2031');
-  if (rev && fy31 > 0 && funds.length) model = {fy31RevenueCr: Number(rev[fy31]), sources: funds};
+  const rd = f => parseCsv(fs.readFileSync(path.join(root, 'data/plan', f), 'utf8'));
+  const rev = rd('pl.csv').find(r => r.line_item === 'Revenue');
+  const sources = rd('use-of-funds.csv').filter(r => r.kind === 'source').map(r => ({item: r.item, cr: Number(r.rs_cr)}));
+  if (rev && rev.FY2031 && sources.length) model = {fy31RevenueCr: Number(rev.FY2031), sources};
 }
 
+const d = fail.length ? null : toPortfolio(tables, model);
+if (d) {
+  const planned = d.skus.filter(s => s.planCr != null);
+  const sum = k => Math.round(planned.reduce((a, s) => a + (s[k] || 0), 0) * 10) / 10;
+  check(planned.length === 11, `expected 11 SKUs with a plan line, found ${planned.length}`);
+  check(sum('planCr') === 1000, `plan lines sum to ${sum('planCr')}, the Blueprint states ₹1,000 Cr`);
+  check(sum('devLowCr') === 41.7 && sum('devHighCr') === 91.2, `development cost ${sum('devLowCr')}–${sum('devHighCr')}, the Blueprint states ₹41.7–91.2 Cr`);
+  check(Math.abs(d.tranche.reduce((a, t) => a + t.cr, 0) - 10) < 0.01, 'tranche-1 uses do not sum to the stated ₹10 Cr');
+  check(d.approvals.length === 6 && d.unitCost.length === 4 && d.specs.length === 2, 'approvals, unit cost or specs row count changed');
+  // A withheld claim must not survive into published text, even in a conflict row.
+  const text = JSON.stringify([d.documents, d.conflicts, portfolioFacts(d, {live: false}).map(f => f.text)]);
+  check(!/2\.88\s?Cr|1\.01\s?Cr|MCEME|39\.3\s?TOPS|12\.9\s?[x×]/i.test(text), 'a withheld claim survives in the published portfolio text');
+}
 if (fail.length) { console.error('portfolio data: not published:\n  ' + fail.join('\n  ')); process.exit(1); }
 
-fs.writeFileSync(out, JSON.stringify({
-  source: 'SKU Blueprint, October 2026', sourceFile: 'deepgrid-sku-blueprint-oct2026.pdf',
-  skus, years, groups, total, approvals, unitCost, tranche, specs, model,
-}, null, 1) + '\n');
+fs.writeFileSync(out, JSON.stringify(d, null, 1) + '\n');
 fs.rmSync(pub, {recursive: true, force: true});
 fs.mkdirSync(pub, {recursive: true});
-for (const f of FILES) fs.copyFileSync(path.join(root, 'data/portfolio', f), path.join(pub, f));
-console.log(`portfolio data: ${skus.length} SKUs, ${years.length} ramp years, ${FILES.length} CSVs published${model ? ', with the /plan comparison' : ''}`);
+// documents.csv and conflicts.csv are published as shaped (withheld figures replaced), not as the raw snapshot.
+const csv = rows => { const h = Object.keys(rows[0]); const q = v => /[",\n]/.test(v) ? '"' + v.replace(/"/g, '""') + '"' : v; return [h.join(','), ...rows.map(r => h.map(k => q(r[k] ?? '')).join(','))].join('\n') + '\n'; };
+for (const t of TABLES) {
+  if (t === 'documents' || t === 'conflicts') fs.writeFileSync(path.join(pub, t + '.csv'), csv(d[t]));
+  else fs.copyFileSync(path.join(root, 'data/portfolio', t + '.csv'), path.join(pub, t + '.csv'));
+}
+console.log(`portfolio data: ${d.skus.length} SKUs, ${d.conflicts.length} conflicts, ${d.documents.length} documents, ${TABLES.length} CSVs published${model ? ', with the /plan comparison' : ''}`);

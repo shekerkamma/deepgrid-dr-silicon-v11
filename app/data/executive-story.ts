@@ -398,7 +398,7 @@ export const productStories: Record<string, Story> = {
   d100: {
     headline: 'D100 Drone SoC is sequenced as a separate ₹50 Cr growth round, completely ring-fenced from mature-node revenues.',
     short:
-      'The October 2026 SKU Blueprint isolates the Track B D100 drone chip from the FY31 ₹1,000 Cr portfolio plan, funding it through a separate ₹50 Cr round only after the eleven mature-node products generate proven commercial revenue. This prevents advanced-node mask costs from jeopardizing cash-flow self-sufficiency.',
+      'The October 2026 SKU Blueprint isolates the Track B D100 drone chip from the ₹1,000 Cr run-rate plan for the eleven chips, funding it through a separate ₹50 Cr round only after the eleven mature-node products generate proven commercial revenue. This prevents advanced-node mask costs from jeopardizing cash-flow self-sufficiency.',
     whyNow:
       'Indian drone manufacturers (such as ideaForge, guiding 340–450 units in Q4 FY26) currently rely on imported Qualcomm QRB5165 or Chinese flight computers. Statutory country-of-origin rules barring land-border components create an urgent sovereign wedge for an indigenous SoC combining optical navigation, DShot motor telemetry, and autonomous return-to-home logic.',
     brings:
@@ -466,7 +466,7 @@ export const topicStories: { test: RegExp; story: Story }[] = [
     story: {
       headline: 'The plan is staged: mature-node revenue first, D100 as a separately funded growth bet.',
       short:
-        'The October 2026 SKU Blueprint establishes a FY31 ₹1,000 Cr portfolio revenue plan anchored entirely by eleven mature-node chips on 130 nm and 180 nm. The Track B D100 drone SoC is strictly excluded from this revenue target, funded via a separate ₹50 Cr growth round only after mature-node products prove commercial traction.',
+        'The October 2026 SKU Blueprint sets a ₹1,000 Cr plan at full run-rate for eleven mature-node chips on 130 nm and 180 nm. On its approval times FY31 revenue is about ₹610 Cr, reaching about ₹950 Cr by FY33; ₹1,000 Cr in FY31 is its stretch target, and all of these are plan targets. The Track B D100 drone SoC is strictly excluded from this revenue target, funded via a separate ₹50 Cr growth round only after mature-node products prove commercial traction.',
       whyNow:
         'Semiconductor startups frequently fail by over-allocating capital to expensive advanced-node tape-outs before core products generate revenue. Investors and equipment partners require strict capital discipline to ensure wafer runway.',
       brings:
@@ -484,7 +484,7 @@ export const topicStories: { test: RegExp; story: Story }[] = [
       beatTitles: {
         whyNow: 'Capital Discipline: Preventing Premature Advanced-Node Cash Burn',
         brings: 'Mature-Node Economics: High-Volume Commodity Sockets on Low-Cost Tooling',
-        value: 'Revenue Portfolio: FY31 ₹1,000 Cr Plan Across Eleven Core Products',
+        value: 'Revenue Portfolio: ₹1,000 Cr Run-Rate Plan Across Eleven Core Products, About ₹610 Cr in FY31',
         proven: 'Documented Waterfall: Seed Runway and December Shuttle Commitments',
         tradeoff: 'Sequencing Trade-Off: Capital Insulation vs Aggressive Expansion',
         recommendation: 'Investment Milestone: Gating Capital Tranches on Physical Silicon Bring-Up',
@@ -574,7 +574,7 @@ export const topicStories: { test: RegExp; story: Story }[] = [
     beatTitles: {
       whyNow: 'The Unmet Need: Addressing the $9B Mature-Node Import Deficit',
       brings: 'Portfolio Breadth: Eleven Specialized Silicon Architectures',
-      value: 'Economic Engine: The FY31 ₹1,000 Cr Revenue Ramp',
+      value: 'Economic Engine: A ₹1,000 Cr Run-Rate Plan, About ₹610 Cr in FY31',
       proven: 'Proof Point Strategy: DG32-LITE as the Complete Architectural Model',
       tradeoff: 'Portfolio Balance: Broad Socket Coverage vs Staged Market Rollout',
       recommendation: 'Next Step: Identify Your System Bottleneck and Request Architectural Handouts',

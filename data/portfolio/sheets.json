@@ -1,0 +1,11 @@
+{
+  "_note": "Public Google Sheets (anyone with the link: viewer, since 13 Oct 2026) that hold the live portfolio tables. The site and the Ask service read them as CSV; data/portfolio/*.csv is the checked fallback copy.",
+  "skus": "1txkv88Y-btvWKFAH3n5X3a7xmAMHFrjDTF_nn2203k0",
+  "ramp": "1A4JT16uV6Ngz4yjEtLrzKF1dEQQDRtajsJLBvTDF_W0",
+  "approvals": "1Ytft9vCqUZhpsosCA-5tmVGjegO8oQ2rbB6S0J9kZuU",
+  "unit-cost": "1jNf847r3-0iGrCL_jEX_0mpLKJzBV4NamVq7WgWej8g",
+  "tranche1-uses": "1lCiT41VPkMaoZr7MlnJUDImWks_JmoSYuL0t6BSZXLs",
+  "dg32-specs": "1rQObouL20SL7cGGTbM4Bd1l4zZdoMbc_JQzBQ658nRs",
+  "documents": "16q330wAwCLdnp6Bhe2wLn1Vc66YW0rJV_LGBiTrCP3Y",
+  "conflicts": "1Jztg1vFpn74mfFCg6aPzmqgfzLZ6U16H2ovoGMid_WM"
+}

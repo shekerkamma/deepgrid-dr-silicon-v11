@@ -3,7 +3,7 @@ import { useEffect, useState } from 'react';
 import { collectEvidence, type Claim } from './data/answer-evidence';
 import { composeAnswer, type AnswerResult } from './data/answer-generator';
 import { getSemantic } from './data/semantic';
-import { asset } from './routes';
+import { asset, url } from './routes';
 import { readHref } from './doc-links';
 import './executive-story.css';
 interface GroundedAnswerViewProps { query: string; onSelectQuery: (q: string) => void; go: (hash: string) => void; }
@@ -61,8 +61,10 @@ export default function GroundedAnswerView({query}: GroundedAnswerViewProps) {
           <ol>{result.sources.map((c,i)=><li key={c.id} id={'answer-source-'+(i+1)}>
             <strong>{c.docTitle} · {c.section} · {c.pageLabel}</strong>
             <blockquote>{c.text}</blockquote>
-            <a href={asset(c.pdfPath.replace(/^\./,''))+(c.pdfPath.endsWith('.pdf')?'#page='+(c.pageLabel.match(/\d+/)?.[0]||1):'')}>Open source document</a>{' · '}
-            <a href={readHref(c.specPath.replace(/^\./,''),c.docNum==='primary'?c.section:undefined)}>Read in site</a>
+            {c.docNum==='portfolio-data'||c.docNum==='portfolio-brief'
+              ? <><a href={url(c.pdfPath)}>{c.docNum==='portfolio-brief'?'Read the brief':'See it on the SKU portfolio page'}</a>{c.specPath&&<>{' · '}<a href={c.specPath} target="_blank" rel="noopener noreferrer">Open the live table</a></>}</>
+              : <><a href={asset(c.pdfPath.replace(/^\./,''))+(c.pdfPath.endsWith('.pdf')?'#page='+(c.pageLabel.match(/\d+/)?.[0]||1):'')}>Open source document</a>{' · '}
+            <a href={readHref(c.specPath.replace(/^\./,''),c.docNum==='primary'?c.section:undefined)}>Read in site</a></>}
           </li>)}</ol>
         </details>}
       </>}

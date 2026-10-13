@@ -332,8 +332,18 @@ export const related: Record<RouteId, Related> = {
     ],
     docs: [],
   },
+  brief: {
+    sections: [
+      {id: 'portfolio', why: 'The live tables behind every figure in the brief, chip by chip.'},
+      {id: 'plan', why: 'The September financial model the brief reconciles with the Blueprint.'},
+      {id: 'evidence', why: 'How every figure on the site is graded, and which claims are withheld.'},
+      {id: 'contact', why: 'Ask for the data room, or for a datasheet the brief says is missing.'},
+    ],
+    docs: [],
+  },
   portfolio: {
     sections: [
+      {id: 'brief', why: 'The tranche-1 reading of these figures, and six buyer questions answered.'},
       {id: 'plan', why: 'The September financial model: the whole company by segment and year, with cash and use of funds.'},
       {id: 'products', why: 'The datasheet-level page for each chip in this table.'},
       {id: 'applications', why: 'Where each chip goes, and what it replaces.'},

@@ -61,6 +61,23 @@ for (const [w, touch] of [[1440, false], [390, true]]) {
   console.log(`${w}: ${nf} charts, tooltips${touch ? ' (tap)' : ', download, keyboard'} checked`);
   await ctx.close();
 }
+// The brief (/portfolio/brief): both tabs switch and carry their content; no sideways scroll on a phone.
+for (const w of [1440, 390]) {
+  const ctx = await browser.newContext({viewport: {width: w, height: 900}});
+  const page = await ctx.newPage();
+  const errs = []; page.on('pageerror', e => errs.push(e.message));
+  await page.goto(base.replace(/\/?$/, '/') + 'portfolio/brief', {waitUntil: 'networkidle'});
+  const tabs = page.getByRole('tab');
+  check(await tabs.count() === 2, `brief ${w}: expected two tabs`);
+  check(/925/.test(await page.locator('[role=tabpanel]').innerText()), `brief ${w}: the tranche-1 tab does not show the nine chips' plan lines`);
+  await tabs.nth(1).click();
+  check(await tabs.nth(1).getAttribute('aria-selected') === 'true' && /ceiling fans/.test(await page.locator('[role=tabpanel]').innerText()), `brief ${w}: the buyer tab did not open`);
+  const sw = await page.evaluate(() => [document.documentElement.scrollWidth, innerWidth]);
+  check(sw[0] <= sw[1] + 1, `brief ${w}: page scrolls sideways`);
+  check(!errs.length, `brief ${w}: page errors: ${errs.join(' | ')}`);
+  console.log(`brief ${w}: tabs and content checked`);
+  await ctx.close();
+}
 await browser.close();
 if (fails.length) { console.error(fails.join('\n')); console.error(`${fails.length} /portfolio check(s) failed.`); process.exit(1); }
 console.log('/portfolio: all interaction checks pass');

@@ -232,5 +232,11 @@
     "context": "Eleven chips from the October SKU Blueprint: readiness, prototype slot, plan line, revenue ramp, approval time, development and unit cost, each panel linked to the data behind it. Plan targets, not results.",
     "decision": "Pick the chips an evaluation or an investment rests on, and check each against its approval time and ramp.",
     "next": "/contact"
+  },
+  "brief": {
+    "headline": "The investor and buyer brief.",
+    "context": "What tranche 1 buys, how the SKU Blueprint and the September financial model relate, and six buyer questions answered with what is proven and what is a target.",
+    "decision": "Use the Blueprint as the chip plan and the ₹10 Cr table as the ask; ask for the datasheet or approval date a decision needs.",
+    "next": "/contact"
   }
 }

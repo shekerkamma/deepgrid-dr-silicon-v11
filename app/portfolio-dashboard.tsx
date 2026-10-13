@@ -1,29 +1,22 @@
 'use client';
 /** SKU portfolio dashboard (/portfolio): public on every build.
  *
- *  Data: app/portfolio-data.json, written per build by scripts/build-portfolio-data.mjs from data/portfolio/*.csv,
- *  which scripts/portfolio/extract_portfolio.py extracts from the public SKU Blueprint (October 2026) and the DG32
- *  datasheets. The build re-checks the Blueprint's own totals (plan lines ₹1,000 Cr, development cost
- *  ₹41.7–91.2 Cr, ramp groups against the stated totals, tranche 1 ₹10 Cr) and stops on a break.
+ *  Data: the team's eight public Google Sheets, read in the browser and checked by app/data/portfolio-facts.ts; until
+ *  then, and whenever a sheet cannot be read or fails the checks, the copy bundled by scripts/build-portfolio-data.mjs
+ *  (which also checks the Blueprint's own totals). The header says which one is shown. Ask DeepGrid answers from the
+ *  same tables (services/ask/worker.ts).
  *
  *  Same method as /plan (plan-dashboard.css): a KPI row, then one panel per question whose heading is the finding,
- *  computed from the data so it cannot drift from it; every chart has a hover/tap tooltip and a table or list
- *  holding the same numbers; every panel links the CSV it is drawn from. A private live version of this dashboard,
- *  reading Google Sheets, also carries the document-conflict worklist; that list is deliberately not published.
+ *  computed from the data so it cannot drift from it; every chart has a hover/tap tooltip and a table or list holding
+ *  the same numbers; every panel links the CSV it is drawn from. The document-version and document-conflict tables are
+ *  public (owner, 2026-10-13); figures of withheld claims are replaced before they reach the page.
  */
-import {useState} from 'react';
+import {useEffect, useState} from 'react';
 import raw from './portfolio-data.json';
 import {asset, url} from './routes';
+import {loadLiveTables, toPortfolio, sheetViewUrl, type PortfolioData, type Provenance, type Sku} from './data/portfolio-facts';
 
-type Sku = {sku: string; name: string; process: string; clockMhz: number | null; readiness: string; mpw: string; shuttle: boolean;
-  planCr: number | null; fy31Cr: number | null; units: string; marketLowCr: number | null; marketHighCr: number | null; verdict: string;
-  devLowCr: number | null; devHighCr: number | null};
-type Data = {source: string; sourceFile: string; skus: Sku[]; years: string[]; groups: {name: string; values: number[]}[]; total: number[];
-  approvals: {market: string; approval: string; low: number; high: number}[];
-  unitCost: {chip: string; dieMm2: number; pkg: string; costLow: number; costHigh: number; priceLow: number; priceHigh: number; marginLow: number; marginHigh: number; marginAt: number}[];
-  tranche: {use: string; cr: number; delivers: string}[]; specs: Record<string, string>[];
-  model: {fy31RevenueCr: number; sources: {item: string; cr: number}[]} | null};
-const d = raw as unknown as Data;
+const built = raw as unknown as PortfolioData;
 
 const NB = ' ';
 const cr = (v: number, dp = 0) => `₹${v.toLocaleString('en-IN', {minimumFractionDigits: dp, maximumFractionDigits: dp})}${NB}Cr`;
@@ -83,7 +76,7 @@ function HBars({rows, max, legend, label}: {rows: BarRow[]; max: number; legend?
 }
 
 /** FY29–FY33 ramp as stacked columns (the /plan segment chart's geometry). */
-function RampBars() {
+function RampBars({d}: {d: PortfolioData}) {
   const [tip, setTip] = useState<Tip>(null);
   const W = 720, H = 320, L = 52, R = 16, T = 28, B = 32, step = 200;
   const sums = d.years.map((_, i) => d.groups.reduce((a, g) => a + g.values[i], 0));
@@ -117,6 +110,16 @@ function RampBars() {
 }
 
 export function PortfolioDashboard() {
+  // The built copy renders first (and is what a crawler sees); the team's public sheets replace it once read and
+  // checked. A sheet that cannot be read or fails the checks leaves the built copy, and the header says which is shown.
+  const [{d, prov}, setLive] = useState<{d: PortfolioData; prov: Provenance}>({d: built, prov: {live: false}});
+  useEffect(() => {
+    const ac = new AbortController();
+    void loadLiveTables(fetch, ac.signal).then(r => {
+      if (r && !r.failures.length) setLive({d: toPortfolio(r.tables, built.model), prov: {live: true, readAt: new Date().toLocaleString('en-IN', {dateStyle: 'medium', timeStyle: 'short'})}});
+    });
+    return () => ac.abort();
+  }, []);
   const planned = d.skus.filter(s => s.planCr != null);
   const onShuttle = planned.filter(s => s.shuttle);
   const total = (k: keyof Sku) => Math.round(planned.reduce((a, s) => a + ((s[k] as number) || 0), 0) * 10) / 10;
@@ -143,6 +146,7 @@ export function PortfolioDashboard() {
       <header className="pd-head">
         <h2>{Say(onShuttle.length)} of {say(planned.length)} chips go on the December 2026 shuttle. Their plan lines total {cr(planTotal)}; the ramp reaches {cr(d.total[yi31])} in FY31.</h2>
         <p className="pd-flag"><strong>Plan targets, not results.</strong> Every figure is from the {d.source} (<a className="pd-link" href={asset('/downloads/docs/' + d.sourceFile)}>PDF</a>) or the DG32 preliminary datasheets. A plan line is what a chip can carry at full rate; the ramp is what the Blueprint expects year by year. Nothing here is a purchase order.</p>
+        <p className="pd-source sk-prov" data-live={prov.live ? 'true' : 'false'}>{prov.live ? `Live from the team's tables, read ${prov.readAt}.` : 'From the copy checked at the last site build; the live tables could not be read.'} The tables are public: <a className="pd-link" href={sheetViewUrl('skus')} target="_blank" rel="noopener noreferrer">open the SKU table</a>. The reading for investors and buyers is in <a className="pd-link" href={url('/portfolio/brief')}>the brief</a>.</p>
       </header>
 
       <ul className="pd-kpis" aria-label="Headline figures">
@@ -169,7 +173,7 @@ export function PortfolioDashboard() {
 
       <section className="pd-panel" aria-labelledby="sk-ramp-h">
         <h3 id="sk-ramp-h">The ramp grows from {cr(d.total[0])} in {d.years[0]} to {cr(d.total[last])} in {d.years[last]}; {lead.name} is the largest group.</h3>
-        <RampBars/>
+        <RampBars d={d}/>
         <div className="table-scroll"><table className="pd-table">
           <caption className="sr-only">Revenue ramp by chip group, ₹ Cr</caption>
           <thead><tr><th scope="col">Chip group</th>{d.years.map(y => <th scope="col" key={y}>{y}</th>)}</tr></thead>
@@ -228,6 +232,26 @@ export function PortfolioDashboard() {
           <tbody>{specRows.map(([lab, k]) => <tr key={k}><th scope="row">{lab}</th>{d.specs.map(s => <td key={s.part} className="sk-wrap">{s[k]}</td>)}</tr>)}</tbody>
         </table></div>
         <Source files={['dg32-specs.csv']} note={d.specs.filter(s => s.note).map(s => `${s.part}: ${s.note}.`).join(' ') + ' Preliminary datasheets; 50 MHz is the CPU-domain design target, set by the lockstep core’s measured 55–62 MHz post-route.'}/>
+      </section>
+
+      <section className="pd-panel" aria-labelledby="sk-docs-h">
+        <h3 id="sk-docs-h">{d.documents.filter(r => /^current/i.test(r.status)).length} documents are current; {d.documents.filter(r => !/^current/i.test(r.status)).length} copies are superseded, stale or duplicates.</h3>
+        <div className="table-scroll"><table className="pd-table sk-table">
+          <caption className="sr-only">Document versions</caption>
+          <thead><tr><th scope="col">Document</th><th scope="col">Where</th><th scope="col">Version</th><th scope="col">Pages</th><th scope="col">Status</th><th scope="col">Note</th></tr></thead>
+          <tbody>{d.documents.map(r => <tr key={r.document}><th scope="row">{r.document}</th><td>{r.where}</td><td>{r.version}</td><td>{r.pages || '–'}</td><td>{r.status}</td><td className="sk-wrap">{r.note}</td></tr>)}</tbody>
+        </table></div>
+        <Source files={['documents.csv']} note="Which copy of each document is current: the published downloads, and the local copies they were checked against."/>
+      </section>
+
+      <section className="pd-panel" aria-labelledby="sk-conf-h">
+        <h3 id="sk-conf-h">Where the published documents disagree: {d.conflicts.filter(c => /^open/i.test(c.status)).length} open, {d.conflicts.filter(c => /^fixed/i.test(c.status)).length} fixed, {d.conflicts.filter(c => /^decided/i.test(c.status)).length} decided by the owner.</h3>
+        <div className="table-scroll"><table className="pd-table sk-table">
+          <caption className="sr-only">Document disagreements and their status</caption>
+          <thead><tr><th scope="col">Topic</th><th scope="col">One source says</th><th scope="col">Another says</th><th scope="col">Status</th></tr></thead>
+          <tbody>{d.conflicts.map(c => <tr key={c.topic}><th scope="row">{c.topic}</th><td className="sk-wrap">{c.source_a}: {c.a_says}</td><td className="sk-wrap">{c.source_b}: {c.b_says}</td><td className="sk-wrap">{c.status}</td></tr>)}</tbody>
+        </table></div>
+        <Source files={['conflicts.csv']} note="Each row is one claim two sources state differently, and what was done about it. Figures this site withholds are not repeated."/>
       </section>
     </div>
   );
