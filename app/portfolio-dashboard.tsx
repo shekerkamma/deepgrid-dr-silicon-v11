@@ -11,13 +11,11 @@
  *  the same numbers; every panel links the CSV it is drawn from. The document-version and document-conflict tables are
  *  public (owner, 2026-10-13); figures of withheld claims are replaced before they reach the page.
  */
-import {useEffect, useState} from 'react';
-import raw from './portfolio-data.json';
+import {useState} from 'react';
 import {asset, url} from './routes';
 import {HBars, TipBox, Insights, Chapter, type Tip} from './dash-charts';
-import {loadLiveTables, toPortfolio, sheetViewUrl, type PortfolioData, type Provenance, type Sku} from './data/portfolio-facts';
-
-const built = raw as unknown as PortfolioData;
+import {sheetViewUrl, type PortfolioData, type Sku} from './data/portfolio-facts';
+import {usePortfolio} from './data/use-portfolio';
 
 const NB = ' ';
 const cr = (v: number, dp = 0) => `₹${v.toLocaleString('en-IN', {minimumFractionDigits: dp, maximumFractionDigits: dp})}${NB}Cr`;
@@ -69,15 +67,7 @@ function RampBars({d}: {d: PortfolioData}) {
 export function PortfolioDashboard() {
   // The built copy renders first (and is what a crawler sees); the team's public sheets replace it once read and
   // checked. A sheet that cannot be read or fails the checks leaves the built copy, and the header says which is shown.
-  const [{d, prov}, setLive] = useState<{d: PortfolioData; prov: Provenance & {pending?: boolean}}>({d: built, prov: {live: false, pending: true}});
-  useEffect(() => {
-    const ac = new AbortController();
-    void loadLiveTables(fetch, ac.signal).then(r => {
-      if (r && !r.failures.length) setLive({d: toPortfolio(r.tables, built.model), prov: {live: true, readAt: new Date().toLocaleString('en-IN', {dateStyle: 'medium', timeStyle: 'short'})}});
-      else if (!ac.signal.aborted) setLive({d: built, prov: {live: false}});
-    });
-    return () => ac.abort();
-  }, []);
+  const {d, prov} = usePortfolio();
   const planned = d.skus.filter(s => s.planCr != null);
   const onShuttle = planned.filter(s => s.shuttle);
   const total = (k: keyof Sku) => Math.round(planned.reduce((a, s) => a + ((s[k] as number) || 0), 0) * 10) / 10;

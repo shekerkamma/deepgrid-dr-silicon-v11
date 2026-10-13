@@ -35,6 +35,16 @@ if (process.env.DGS_PLAN === '1' || process.env.DGS_INTERNAL === '1') {
 }
 
 const d = fail.length ? null : toPortfolio(tables, model);
+const mapping = JSON.parse(fs.readFileSync(path.join(root, 'data/portfolio/use-cases.json'), 'utf8'));
+if (d) {
+  check(mapping.cases.length === d.skus.length && new Set(mapping.cases.map(c => c.sku)).size === d.skus.length, 'use-case mapping must cover every SKU exactly once');
+  for (const c of mapping.cases) {
+    check(d.skus.some(s => s.sku === c.sku), `use-case ${c.sku}: unknown chip`);
+    check(d.approvals.some(a => a.market === c.market), `use-case ${c.sku}: unknown approval market`);
+    check(!c.cost || d.unitCost.some(u => u.chip === c.cost), `use-case ${c.sku}: unknown cost row`);
+    check(!c.datasheet || fs.existsSync(path.join(root, 'public', c.datasheet)), `use-case ${c.sku}: missing datasheet`);
+  }
+}
 if (d) {
   const planned = d.skus.filter(s => s.planCr != null);
   const sum = k => Math.round(planned.reduce((a, s) => a + (s[k] || 0), 0) * 10) / 10;
@@ -59,3 +69,4 @@ for (const t of TABLES) {
   else fs.copyFileSync(path.join(root, 'data/portfolio', t + '.csv'), path.join(pub, t + '.csv'));
 }
 console.log(`portfolio data: ${d.skus.length} SKUs, ${d.conflicts.length} conflicts, ${d.documents.length} documents, ${TABLES.length} CSVs published${model ? ', with the /plan comparison' : ''}`);
+fs.copyFileSync(path.join(root, 'data/portfolio/use-cases.json'), path.join(pub, 'use-cases.json'));

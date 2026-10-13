@@ -156,6 +156,10 @@ Retired after measurement: the live home used seven grounds from two families (n
 
 ## Typography
 
+### Dashboard operating surfaces
+
+The complete use-case dashboard and compact dashboard route headers use a fixed 2rem heading/figure step, 1.25rem chart titles and 1rem card titles. These denser steps serve comparison and selection at desktop, tablet and phone widths. They retain the existing Inter/Source Sans typography and navy surfaces; chart series keep the validated dashboard palette. The readiness score bar conveys six-criterion document coverage, not product qualification. Implementation-step numbers denote the actual design-to-volume sequence.
+
 **Headings:** Inter Variable, **light**: 300 for the home hero, 400 for h1 and h2, 600 for h3 and h4; tracking -0.025em (-0.03em on the hero). Changed from 700 on 2026-10-10. Every Awwwards deep-tech winner and silicon peer in `ai-graphics/assets/references/` sets display type at 300 to 400.
 **Body:** Source Sans 3 Variable (the maintained Source Sans Pro), 1rem / 1.65, held to a 64ch measure.
 **Code and measurements:** JetBrains Mono Variable, only for part codes (SKU-4, D100), measured values (39 cycles, 198 days) and diagram internals.

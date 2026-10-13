@@ -26,7 +26,7 @@ const fill = (slot: number) => (slot ? 'pd-s' + slot : 'sk-muted');
 
 /** Horizontal bars in HTML, so labels stay readable at any width. A row is one or two bars (e.g. plan line and FY31),
  *  one low–high range, or one stacked bar of parts (part-to-whole). An optional reference line marks one value. */
-export type BarRow = {key: string; label: string; bars?: {value: number; slot: number}[]; range?: [number, number];
+export type BarRow = {key: string; label: string; bars?: {value: number; slot: number}[]; range?: [number, number]; slot?: number; dot?: number;
   stack?: {value: number; slot: number; name: string}[]; end: string; tip: string[]};
 export function HBars({rows, max, legend, label, refLine}: {rows: BarRow[]; max: number; legend?: {name: string; slot: number}[]; label: string;
   refLine?: {value: number; label: string}}) {
@@ -43,9 +43,10 @@ export function HBars({rows, max, legend, label, refLine}: {rows: BarRow[]; max:
             <span className="sk-track">
               {refLine && <span className="sk-ref" style={{left: w(refLine.value)}} aria-hidden="true"/>}
               {r.bars && r.bars.map((b, i) => <span key={i} className={'sk-bar ' + fill(b.slot) + (r.bars!.length > 1 ? ' sk-thin' : '')} style={{width: w(b.value)}}
-                tabIndex={i === 0 ? 0 : -1} onMouseEnter={show(r.tip)} onMouseMove={show(r.tip)} onFocus={show(r.tip)} onClick={show(r.tip)}/>)}
-              {r.range && <span className="sk-bar sk-range pd-s1" style={{marginLeft: w(r.range[0]), width: w(r.range[1] - r.range[0])}}
-                tabIndex={0} onMouseEnter={show(r.tip)} onMouseMove={show(r.tip)} onFocus={show(r.tip)} onClick={show(r.tip)}/>}
+                tabIndex={i === 0 ? 0 : -1} role="img" aria-label={r.tip.join('. ')} onMouseEnter={show(r.tip)} onMouseMove={show(r.tip)} onFocus={show(r.tip)} onClick={show(r.tip)}/>)}
+              {r.range && <span className={'sk-bar sk-range ' + fill(r.slot ?? 1)} style={{marginLeft: w(r.range[0]), width: w(r.range[1] - r.range[0])}}
+                tabIndex={0} role="img" aria-label={r.tip.join('. ')} onMouseEnter={show(r.tip)} onMouseMove={show(r.tip)} onFocus={show(r.tip)} onClick={show(r.tip)}/>}
+              {r.dot != null && <span className={'uc-range-dot ' + fill(r.slot ?? 1)} style={{left:w(r.dot)}} aria-hidden="true"/>}
               {r.stack && <span className="sk-stack">{r.stack.map((s, i) => <span key={i} className={'sk-bar sk-seg ' + fill(s.slot)} style={{width: w(s.value)}}
                 tabIndex={i === 0 ? 0 : -1} onMouseEnter={show([r.label, `${s.name}: ${s.value}`, ...r.tip])} onMouseMove={show([r.label, `${s.name}: ${s.value}`, ...r.tip])}
                 onFocus={show([r.label, `${s.name}: ${s.value}`, ...r.tip])} onClick={show([r.label, `${s.name}: ${s.value}`, ...r.tip])}>{s.value / max >= 0.3 && <span className="sk-seg-label">{s.name}</span>}</span>)}</span>}
@@ -81,10 +82,10 @@ export function GroupedColumns({periods, series, label, unit}: {periods: string[
             return <g key={p}>
               {series.map((s, si) => {
                 const v = s.values[pi], x = x0 + si * (bw + gap);
-                const show = (e: React.MouseEvent<SVGElement>) => { const b = (e.currentTarget as SVGElement).ownerSVGElement!.getBoundingClientRect();
+                const show = (e: React.SyntheticEvent<SVGElement>) => { const b = (e.currentTarget as SVGElement).ownerSVGElement!.getBoundingClientRect();
                   setTip({x: (x + bw / 2) / W * b.width, y: y(v) / H * b.height, w: b.width, lines: [`${s.name} · ${p}`, unit(v)]}); };
                 return <g key={s.name}>
-                  <rect className={'sk-col ' + fill(s.slot)} x={x} y={y(v)} width={bw} height={Math.max(1, y(0) - y(v))} rx={3} onMouseEnter={show} onMouseMove={show}/>
+                  <rect className={'sk-col ' + fill(s.slot)} x={x} y={y(v)} width={bw} height={Math.max(1, y(0) - y(v))} rx={3} onMouseEnter={show} onMouseMove={show} onClick={show}/>
                   <text className="pd-value" x={x + bw / 2} y={y(v) - 6} textAnchor="middle">{v >= 10 ? Math.round(v).toLocaleString('en-IN') : v.toFixed(1)}</text>
                 </g>;
               })}

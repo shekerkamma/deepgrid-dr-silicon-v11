@@ -8,6 +8,8 @@ if (process.platform === 'win32') {
     setTimeout(() => exit(process.exitCode ?? 0), 1500);
   };
 }
-process.argv = [process.argv[0], 'vinext', 'build', ...process.argv.slice(2)];
+// Render the static route catalogue serially. Concurrent prerender workers intermittently omitted
+// fixed routes or failed their internal fetches on this host; the Pages route gate correctly blocks that export.
+process.argv = [process.argv[0], 'vinext', 'build', '--prerender-concurrency', '1', ...process.argv.slice(2)];
 await import('../node_modules/vinext/dist/cli.js');
 

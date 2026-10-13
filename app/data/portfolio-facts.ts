@@ -19,7 +19,7 @@ export type Tables = Record<TableName, Row[]>;
 
 export type Sku = {sku: string; name: string; process: string; clockMhz: number | null; readiness: string; mpw: string; shuttle: boolean;
   planCr: number | null; fy31Cr: number | null; units: string; priceLowUsd: number | null; priceHighUsd: number | null;
-  marketLowCr: number | null; marketHighCr: number | null; verdict: string; devLowCr: number | null; devHighCr: number | null};
+  marketLowCr: number | null; marketHighCr: number | null; shareMidPct: number | null; shareTopPct: number | null; verdict: string; devLowCr: number | null; devHighCr: number | null};
 export type PortfolioData = {source: string; sourceFile: string; skus: Sku[]; years: string[]; groups: {name: string; values: number[]}[]; total: number[];
   approvals: {market: string; approval: string; low: number; high: number}[];
   unitCost: {chip: string; dieMm2: number; pkg: string; costLow: number; costHigh: number; priceLow: number; priceHigh: number; marginLow: number; marginHigh: number; marginAt: number}[];
@@ -81,6 +81,8 @@ export function checkTables(t: Tables): string[] {
     if (isNum(r.fy31_ramp_cr) && isNum(r.plan_line_cr) && num(r.fy31_ramp_cr)! > num(r.plan_line_cr)!) bad.push(`skus ${r.sku}: FY31 ramp above its plan line`);
     if (isNum(r.dev_cost_low_cr) && isNum(r.dev_cost_high_cr) && num(r.dev_cost_low_cr)! > num(r.dev_cost_high_cr)!) bad.push(`skus ${r.sku}: development cost low above high`);
     if (!/^(yes|no)$/i.test(r.dec2026_shuttle)) bad.push(`skus ${r.sku}: shuttle is not yes or no`);
+    for (const k of ['share_mid_pct', 'share_top_pct']) if (r[k] != null && r[k] !== '' && (!isNum(r[k]) || num(r[k])! < 0 || num(r[k])! > 100)) bad.push(`skus ${r.sku}: ${k} is not a percentage`);
+    if (isNum(r.share_mid_pct) && isNum(r.share_top_pct) && num(r.share_top_pct)! > num(r.share_mid_pct)!) bad.push(`skus ${r.sku}: market-share range is reversed`);
   }
   const years = Object.keys(t.ramp[0]).filter(k => /^FY\d\d$/.test(k));
   const total = t.ramp.find(r => r.group === 'Total');
@@ -110,7 +112,7 @@ export function toPortfolio(t: Tables, model: PortfolioData['model'] = null): Po
   const skus: Sku[] = t.skus.map(r => ({
     sku: r.sku, name: r.name, process: r.process, clockMhz: num(r.clock_mhz), readiness: r.readiness, mpw: r.mpw, shuttle: /^yes$/i.test(r.dec2026_shuttle),
     planCr: num(r.plan_line_cr), fy31Cr: num(r.fy31_ramp_cr), units: r.addressable_units, priceLowUsd: num(r.price_low_usd), priceHighUsd: num(r.price_high_usd),
-    marketLowCr: num(r.market_low_cr), marketHighCr: num(r.market_high_cr), verdict: r.verdict, devLowCr: num(r.dev_cost_low_cr), devHighCr: num(r.dev_cost_high_cr),
+    marketLowCr: num(r.market_low_cr), marketHighCr: num(r.market_high_cr), shareMidPct: num(r.share_mid_pct), shareTopPct: num(r.share_top_pct), verdict: r.verdict, devLowCr: num(r.dev_cost_low_cr), devHighCr: num(r.dev_cost_high_cr),
   }));
   const years = Object.keys(t.ramp[0]).filter(k => /^FY\d\d$/.test(k));
   const total = t.ramp.find(r => r.group === 'Total')!;

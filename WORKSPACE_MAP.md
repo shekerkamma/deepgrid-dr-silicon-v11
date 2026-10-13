@@ -1,5 +1,9 @@
 # Workspace map
 
+- `app/use-case-dashboard.tsx`, `app/use-case-dashboard.css`, `app/data/use-case-model.ts`: complete twelve-use-case dashboard in `/portfolio/brief?view=use-cases`, charts, coverage matrix and implementation drill-downs.
+- `data/portfolio/use-cases.json`: sourced use-case/first-market mapping; financial figures remain in the existing CSVs. `app/data/use-portfolio.ts` owns bounded, validated live refresh and checked-snapshot fallback.
+- `scripts/verify-use-cases.mjs`, `scripts/analyst/validate_use_cases.py`: responsive interactions, live-data acceptance/rejection, accessibility, and independent mapping/score/financial checks.
+
 - `app/routes.ts`, `app/shell.tsx`, `app/mega-nav.tsx`: 37-route map, navigation and shared page shell.
 - `app/home-refined.tsx`, `app/portfolio-v6.css`: portfolio-first homepage storyboard and presentation.
 - `app/portfolio-story-data.ts`, `app/portfolio-story.tsx`: source-backed portfolio, qualification, strategy and evaluation register.

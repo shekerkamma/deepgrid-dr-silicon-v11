@@ -17,6 +17,7 @@ import './site-refinement.css';
 import './plan-dashboard.css';
 import './portfolio-dashboard.css';
 import './theme-dgs.css';
+import './use-case-dashboard.css';
 import {url} from './routes';
 export const metadata:Metadata={title:'DeepGrid Semi: Silicon for Physical Systems',description:'Motion, power, sensing, interfaces and safety: explore DeepGrid’s mature-node silicon portfolio, strategy and DG32 engineering evidence.',icons:{icon:url('/brand/deepgrid-d-64.png'),apple:url('/brand/deepgrid-d-192.png')}};
 export default function RootLayout({children}:Readonly<{children:React.ReactNode}>){

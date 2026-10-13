@@ -11,6 +11,7 @@ import {useEffect, useState} from 'react';
 import {brief, briefVisual as v, type Block, type Status} from './brief-content';
 import {HBars, GroupedColumns, Insights, Chapter} from './dash-charts';
 import {url} from './routes';
+import {UseCaseDashboard} from './use-case-dashboard';
 
 const NB = ' ';
 const cr = (x: number) => `₹${x.toLocaleString('en-IN', {maximumFractionDigits: 1})}${NB}Cr`;
@@ -199,14 +200,25 @@ function BuyerTab() {
 
 export function BriefView() {
   const [tab, setTab] = useState(brief[0].id);
+  const tabs = [...brief.map(x => ({id:x.id,title:x.title})), {id:'use-cases',title:'Use cases & implementation'}];
+  useEffect(() => {
+    const read = () => { const view = new URLSearchParams(location.search).get('view'); setTab(view && ['tranche-1','buyers','use-cases'].includes(view) ? view : brief[0].id); };
+    read(); window.addEventListener('popstate',read); return () => window.removeEventListener('popstate',read);
+  }, []);
+  const select = (id: string) => {
+    setTab(id); const target = new URL(location.href); target.searchParams.set('view',id); if (id !== 'use-cases') target.searchParams.delete('sku'); history.pushState(null,'',target);
+  };
   return (
     <div className="pd-root">
-      <p className="pd-flag"><strong>Plan targets and estimates, not results.</strong> Written {v.dated} from the SKU Blueprint (October 2026), the financial model (corrected v3, September 2026) and the DG32 preliminary datasheets. The live figures are on <a className="pd-link" href={url('/portfolio')}>the SKU portfolio page</a> and <a className="pd-link" href={url('/plan')}>the business plan</a>.</p>
+      {tab !== 'use-cases' && <p className="pd-flag"><strong>Plan targets and estimates, not results.</strong> Written {v.dated} from the SKU Blueprint (October 2026), the financial model (corrected v3, September 2026) and the DG32 preliminary datasheets. The live figures are on <a className="pd-link" href={url('/portfolio')}>the SKU portfolio page</a> and <a className="pd-link" href={url('/plan')}>the business plan</a>.</p>}
       <div className="bf-tabs" role="tablist" aria-label="Brief sections">
-        {brief.map(x => <button key={x.id} role="tab" id={'bf-tab-' + x.id} aria-controls={'bf-panel-' + x.id} aria-selected={x.id === tab} className="bf-tab" onClick={() => setTab(x.id)}>{x.title}</button>)}
+        {tabs.map((x,i) => <button key={x.id} role="tab" id={'bf-tab-' + x.id} aria-controls={'bf-panel-' + x.id} aria-selected={x.id === tab} tabIndex={x.id === tab ? 0 : -1} className="bf-tab" onClick={() => select(x.id)} onKeyDown={e => {
+          const next = e.key === 'ArrowRight' ? (i+1)%tabs.length : e.key === 'ArrowLeft' ? (i+tabs.length-1)%tabs.length : e.key === 'Home' ? 0 : e.key === 'End' ? tabs.length-1 : -1;
+          if (next < 0) return; e.preventDefault(); select(tabs[next].id); document.getElementById('bf-tab-'+tabs[next].id)?.focus();
+        }}>{x.title}</button>)}
       </div>
       <div className="bf-panel" role="tabpanel" id={'bf-panel-' + tab} aria-labelledby={'bf-tab-' + tab}>
-        {tab === 'tranche-1' ? <TrancheTab/> : <BuyerTab/>}
+        {tab === 'tranche-1' ? <TrancheTab/> : tab === 'buyers' ? <BuyerTab/> : <UseCaseDashboard/>}
       </div>
     </div>
   );
