@@ -38,6 +38,12 @@ globalThis.fetch=async(_url,options)=>{
  return Response.json({candidates:[{finishReason:'STOP',content:{parts:[{text:JSON.stringify({answerable:true,title:'Supported finding',lead:{text:s.text.slice(0,160),kind:'evidence',support:[{sourceId:s.id,quote:s.text.slice(0,80)}]},sections:[],gaps:[]})}]}}]});
 };
 try{
+ const previewOrigin='http://127.0.0.1:8795';
+ const preflight=await worker.fetch(new Request('https://test/answer',{method:'OPTIONS',headers:{Origin:previewOrigin,'Access-Control-Request-Method':'POST','Access-Control-Request-Headers':'content-type'}}),env);
+ assert.equal(preflight.headers.get('Access-Control-Allow-Origin'),previewOrigin);
+ assert.match(preflight.headers.get('Access-Control-Allow-Methods'),/POST/);
+ const deniedPreflight=await worker.fetch(new Request('https://test/answer',{method:'OPTIONS',headers:{Origin:'http://127.0.0.1:8795.evil.example'}}),env);
+ assert.equal(deniedPreflight.headers.get('Access-Control-Allow-Origin'),'null');
  assert.equal((await worker.fetch(request({question:'D100 funding'},{Origin:'https://evil.example'}),env)).status,403);
  assert.equal((await worker.fetch(request({question:'x'.repeat(1201)}),env)).status,400);
  assert.equal((await worker.fetch(request({question:'D100',padding:'x'.repeat(25000)}),env)).status,413);
@@ -55,6 +61,9 @@ try{
  const recon=await (await worker.fetch(request({question:'The Blueprint says ₹608 Cr in FY31 and the model says ₹594 Cr. Which is it?'}),env)).json();
  assert(briefSent.some(q=>/608/.test(q)),'A plan-reconciliation question must reach the published brief');
  assert(portfolioQuestions.length>=3);
+ const previewAnswer=await worker.fetch(request({question:'How is D100 funded?'},{Origin:previewOrigin}),env);
+ assert.equal(previewAnswer.status,200);
+ assert.equal(previewAnswer.headers.get('Access-Control-Allow-Origin'),previewOrigin);
  const denied={...env,ANSWER_RATE:{limit:async()=>({success:false})}};
  assert.equal((await worker.fetch(request({question:'D100 funding'}),denied)).status,429);
  globalThis.fetch=async()=>new Response('{}',{status:429});
