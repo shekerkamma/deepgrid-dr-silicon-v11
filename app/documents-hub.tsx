@@ -98,8 +98,8 @@ export default function GroundedDocumentsHub({go}: {go?: (hash: string) => void}
     <section className="dr-docs-hub" aria-label="Source documents and specifications">
       <header className="dr-docs-hub-header">
         <div>
-          <p className="dr-lib-kicker">SOURCE DOCUMENTS · {groundedDocuments.length} PDFS AND SPECIFICATIONS</p>
-          <h2>Every figure on this site traces to one of these {NUMW[groundedDocuments.length] ?? groundedDocuments.length} documents</h2>
+          <p className="dr-lib-kicker">PRODUCT SPECIFICATIONS · {groundedDocuments.length} PDFS AND SPECIFICATIONS</p>
+          <h2>Product architectures, electrical specifications and qualification strategy</h2>
           <p className="dr-docs-lead">
             Simulation results, timing budgets, clock partitions and pin assignments all come from these
             documents. Download a PDF, read its specification, or check a figure against its section in{' '}

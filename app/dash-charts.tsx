@@ -106,7 +106,7 @@ export type Insight = {value: string; finding: string; text: string; source: str
 export function Insights({items, id = 'what-the-data-says'}: {items: Insight[]; id?: string}) {
   return (
     <section className="dg-insights" aria-labelledby={id}>
-      <h2 id={id} className="dg-ins-h">What the data says</h2>
+      <h2 id={id} className="dg-ins-h">Revenue, capital and qualification priorities</h2>
       <ul className="dg-ins-grid">{items.map(i => <li className="dg-ins" key={i.finding}>
         <strong className="dg-ins-v">{i.value}</strong>
         <span className="dg-ins-f">{i.finding}</span>

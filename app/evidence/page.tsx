@@ -64,10 +64,10 @@ const beats: {kind: EvidenceKind; id: string; title: string; after: string}[] = 
     title: 'Post-route timing is checked on the laid-out design, which is still not silicon.',
     after: 'It accounts for real wire lengths, but it is still a layout result: the silicon numbers come with bring-up.'},
   {kind: 'Analytic', id: 'ev-analytic',
-    title: 'Analytic figures are arithmetic on the architecture, and a bench measurement replaces them.',
+    title: 'Design and development estimates require validation.',
     after: 'Where a cost is plain arithmetic, it can be worked out before silicon. Nothing has run it yet.'},
   {kind: 'Tool estimate', id: 'ev-tool',
-    title: 'The power figure is a tool estimate, not a measurement.',
+    title: 'Power consumption awaits first-silicon measurement.',
     after: 'The implementation tools estimate power without a recorded switching pattern behind it. It is not a measured figure.'},
   {kind: 'Process nominal', id: 'ev-process',
     title: 'Electrical limits are process nominals until first-silicon characterisation replaces them.',
@@ -111,7 +111,7 @@ export default function Page() {
         <div className="st-story">
           <section className="st-beat st-answer" id="ev-answer" aria-labelledby="ev-answer-h">
             <div className="st-beat-text">
-              <h2 id="ev-answer-h">Nothing here is measured on silicon yet. Every figure says what it rests on instead.</h2>
+              <h2 id="ev-answer-h">DG32 performance remains pre-silicon; measured operating limits are pending.</h2>
               <p>{notClaimed[0]}</p>
               <p>
                 Until then, each of the {all.length} load-bearing figures on this site is one of five kinds
@@ -146,7 +146,7 @@ export default function Page() {
 
           <section className="st-beat" id="ev-withheld" aria-labelledby="ev-withheld-h">
             <div className="st-beat-text">
-              <h2 id="ev-withheld-h">Three claims in our own sources failed verification. This site does not make them.</h2>
+              <h2 id="ev-withheld-h">Three unsupported performance claims are excluded from product evaluation.</h2>
               <p>
                 The source documents carry figures this site leaves out. Each was checked and found
                 wrong in a way that matters, so it is printed here with the reason rather than quietly
@@ -174,7 +174,7 @@ export default function Page() {
                   <FilmMoment clip={clips[b.kind]} label={b.kind}/>
                 </div>
                 <div className="st-beat-wide">
-                  <Figures rows={rows} caption={`${rows.length} ${rows.length === 1 ? 'figure rests' : 'figures rest'} on ${b.kind.toLowerCase()} evidence`}/>
+                  <Figures rows={rows} caption={b.title}/>
                 </div>
               </section>
             );
@@ -182,14 +182,14 @@ export default function Page() {
 
           <section className="st-beat" id="ev-constants" aria-labelledby="ev-constants-h">
             <div className="st-beat-text">
-              <h2 id="ev-constants-h">Some figures are design decisions, not measurements of anything.</h2>
+              <h2 id="ev-constants-h">Pin count, memory capacity and clock targets define the architecture.</h2>
               <p>
                 A pin count or a memory size is chosen, not measured, so it carries no evidence kind.
                 Labelling it &ldquo;Simulated&rdquo; would cheapen the word.
               </p>
             </div>
             <div className="st-beat-wide">
-              <Figures rows={constants} caption={`${constants.length} design constants`}/>
+              <Figures rows={constants} caption="Architectural resources and interface capacity"/>
             </div>
           </section>
 
@@ -210,7 +210,7 @@ export default function Page() {
             <div className="st-beat-wide">
               <div className="st-table-scroll">
                 <table className="st-models">
-                  <caption>What each chip rests on today. Chip names open the chip on the applications page.</caption>
+                  <caption>Product validation status and next qualification milestone.</caption>
                   <thead>
                     <tr><th scope="col">Chip</th><th scope="col">Strongest evidence today</th><th scope="col">Next step</th><th scope="col">Source</th></tr>
                   </thead>
@@ -235,7 +235,7 @@ export default function Page() {
 
           <section className="st-beat st-close" id="ev-next" aria-labelledby="ev-next-h">
             <div className="st-beat-text">
-              <h2 id="ev-next-h">What this site does not claim, and where to check what it does.</h2>
+              <h2 id="ev-next-h">Product maturity, qualification limits and evaluation requirements.</h2>
               <ul className="st-tiers">
                 {notClaimed.slice(1).map(n => <li key={n}><span>{n}</span></li>)}
               </ul>

@@ -80,13 +80,13 @@ export function DiagramNotes({notes}:{notes:DiagramNotesData}){
   <section aria-label="How to read this diagram">
    <p className="dr-kicker">THE NUMBERED MARKERS</p>
    <ol className="dr-dnotes-marks">{notes.markers.map(m=><li key={m.mark}><b aria-hidden="true">{m.mark}</b><span><span className="sr-only">Marker {m.mark}: </span>{nb(m.text)}</span></li>)}</ol>
-   <p className="dr-kicker dr-dnotes-gap">HOW TO READ THIS DIAGRAM</p>
+   <p className="dr-kicker dr-dnotes-gap">SIGNAL FLOW AND BLOCK RESPONSIBILITIES</p>
    <dl className="dr-dnotes-zones">{notes.zones.map(z=><div key={z.name}><dt>{z.name}</dt><dd><p>{nb(z.what)}</p>{z.why&&<p className="dr-dnotes-why"><b>Why</b> {nb(z.why)}</p>}<a className="dr-dnotes-cite" href={readHref(notes.guide,z.section)}>Guide: {z.section.replace(/^Component: /,'')}</a></dd></div>)}</dl>
   </section>
   <section aria-label="Sources and further reading" className="dr-dnotes-refs">
    <p className="dr-kicker">PRIMARY SOURCES</p>
    {refs(notes.primary,false)}
-   <details className="dr-dnotes-more"><summary className="dr-kicker">BACKGROUND READING · {notes.background.length}</summary>
+   <details className="dr-dnotes-more"><summary className="dr-kicker">INTEGRATION AND VALIDATION REFERENCES · {notes.background.length}</summary>
     {refs(notes.background,true)}
     <p className="disclaimer">Background reading explains the general technique each block uses. None of it describes this part or implies its certification.</p>
    </details>

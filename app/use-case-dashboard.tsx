@@ -48,8 +48,8 @@ function Implementation({c}: {c: UseCase}) {
         <span className="uc-step-number" aria-hidden="true">{i + 1}</span><div><strong>{label}</strong><p>{value}</p></div>
       </li>)}</ol>
       <div className="uc-evidence-grid">
-        <section><h4>Can check today</h4><ul>{c.ready.map(r => <li key={r}>{r}</li>)}{c.funded && <li>First approval work is allocated in tranche 1; approval is not held yet.</li>}</ul></section>
-        <section><h4>Still missing</h4><ul>{c.missing.map(m => <li key={m}>{m}</li>)}</ul></section>
+        <section><h4>Current product evaluation basis</h4><ul>{c.ready.map(r => <li key={r}>{r}</li>)}{c.funded && <li>First approval work is allocated in tranche 1; approval is not held yet.</li>}</ul></section>
+        <section><h4>Outstanding qualification requirements</h4><ul>{c.missing.map(m => <li key={m}>{m}</li>)}</ul></section>
       </div>
       <div className="uc-detail-actions">
         <a className="pd-link" href={url('/contact') + '?intent=partner&sku=' + encodeURIComponent(chip.sku)}>Discuss this opportunity <ArrowRight size={16} aria-hidden="true"/></a>
@@ -58,7 +58,7 @@ function Implementation({c}: {c: UseCase}) {
         {c.datasheet && <a className="pd-link" href={asset(c.datasheet)}><FileText size={16} aria-hidden="true"/> Preliminary datasheet</a>}
       </div>
     </article>
-    <aside className="uc-facts" aria-label="Fit facts"><h4>Fit facts</h4><p className="pd-source">Published estimates and design targets, before silicon.</p>
+    <aside className="uc-facts" aria-label="Operating requirements and commercial estimates"><h4>Operating requirements and commercial estimates</h4><p className="pd-source">Published estimates and design targets, before silicon.</p>
       <dl>{facts.map(([label, value]) => <div key={label}><dt>{label}</dt><dd>{value}</dd></div>)}</dl>
     </aside>
   </div>;
@@ -125,9 +125,9 @@ export function UseCaseDashboard() {
       {value: shares.length ? `${Math.min(...shares)}–${Math.max(...shares)}%` : 'Not stated', finding: 'How much of the market the plan needs', text: `Declared midpoint shares in the Blueprint: ${planned.filter(c => c.chip.verdict === 'PLAUSIBLE').length} plausible and ${planned.filter(c => c.chip.verdict === 'CONSERVATIVE').length} conservative.`, source: 'SKU Blueprint, Oct 2026 · estimates, not won market share'},
       {value: `${sheetCount} of ${cases.length}`, finding: 'Datasheets are the evaluation gap', text: 'Only the lockstep MCU use case maps to a published preliminary DG32 datasheet. Sample dates remain unconfirmed.', source: 'DG32 preliminary datasheets, Sep 2026 · mapped document coverage'},
     ]}/>
-    <nav className="uc-jump" aria-label="Use-case dashboard sections"><a href="#uc-revenue">Revenue</a><a href="#uc-timeline">Approval windows</a><a href="#uc-market">Market assumptions</a><a href="#uc-readiness">Readiness</a><a href="#uc-explore">Implementation paths</a></nav>
+    <nav className="uc-jump" aria-label="Use-case dashboard sections"><a href="#uc-revenue">Revenue</a><a href="#uc-timeline">Approval windows</a><a href="#uc-market">Market assumptions</a><a href="#uc-readiness">Readiness</a><a href="#uc-explore">Product fit & qualification</a></nav>
 
-    <Chapter id="uc-revenue" title="Where the FY31 revenue comes from">
+    <Chapter id="uc-revenue" title="FY31 revenue opportunity and qualification exposure">
       <div className="uc-chart-grid">
         <section className="uc-card"><h3>Markets qualifying within a year carry {cr(sum(planned.filter(c => c.approval.high <= 12), 'fy31Cr'))} of the FY31 chip ramp.</h3>
           <HBars label="FY31 ramp by approval window, rupees crore" max={Math.max(1, sum(planned, 'fy31Cr'))} rows={[[6,12],[12,18],[18,36]].map(([lo,hi]) => {
@@ -140,7 +140,7 @@ export function UseCaseDashboard() {
       <p className="pd-source">The eleven chip rows sum to {cr(sum(planned, 'fy31Cr'))}; the separate Blueprint ramp table states {cr(d.total[d.years.indexOf('FY31')])}. The one-crore difference is source rounding. D100 has no plan line.</p>
     </Chapter>
 
-    <Chapter id="uc-timeline" title="How long each chip takes to reach volume">
+    <Chapter id="uc-timeline" title="Qualification lead times to volume production">
       <section className="uc-card"><h3>Qualification begins after first silicon; automotive and defence can take up to three years.</h3>
         <p className="pd-lede">Approval windows by use case, in months. Silicon return dates are not confirmed. The line marks 12 months.</p>
         <HBars label="Approval window by use case, months after first silicon" max={36} refLine={{value:12,label:'12 months'}} legend={[{name:'Shuttle, qualifies within a year',slot:1},{name:'Shuttle, slower',slot:2},{name:'Later run',slot:0}]} rows={cases.map(c => ({key:c.sku,label:`${c.sku} · ${c.title}`,range:[c.approval.low,c.approval.high],slot:!c.chip.shuttle ? 0 : c.approval.high <= 12 ? 1 : 2,end:`${c.approval.low}–${c.approval.high} mo`,tip:[c.title,c.approval.approval,`${c.approval.low}–${c.approval.high} months (estimate)`,c.chip.shuttle ? 'December 2026 shuttle plan' : 'Not on the December shuttle']}))}/>
@@ -148,7 +148,7 @@ export function UseCaseDashboard() {
       </section>
     </Chapter>
 
-    <Chapter id="uc-market" title="How hard the plan leans on each market">
+    <Chapter id="uc-market" title="Market-share assumptions and commercial exposure">
       <section className="uc-card"><h3>{shares.length && Math.max(...shares) < 30 ? 'Every declared midpoint share is below 30%.' : 'Compare declared market shares with the 30% reference.'}</h3>
         <p className="pd-lede">Bar: share at the high-end market estimate to the declared midpoint share. Dot: midpoint. These are the Blueprint's stated shares, not a calculation from the two market endpoints.</p>
         <HBars label="Declared market share range per chip, percent" max={coverageMax + 5} refLine={{value:30,label:'30% planning reference'}} legend={[{name:'Plausible (Blueprint)',slot:1},{name:'Conservative (Blueprint)',slot:0}]} rows={planned.filter(c => c.chip.shareMidPct != null && c.chip.shareTopPct != null).map(c => ({key:c.sku,label:`${c.sku} · ${c.chip.name}`,range:[c.chip.shareTopPct!,c.chip.shareMidPct!],dot:c.chip.shareMidPct!,slot:c.chip.verdict === 'PLAUSIBLE' ? 1 : 0,end:`${c.chip.shareTopPct}–${c.chip.shareMidPct}% · ${c.chip.verdict.toLowerCase()}`,tip:[c.chip.name,`Declared midpoint ${c.chip.shareMidPct}%`, `At high market estimate ${c.chip.shareTopPct}%`,c.chip.verdict + ' · Blueprint estimate']}))}/>
@@ -160,17 +160,17 @@ export function UseCaseDashboard() {
       <section className="uc-card"><h3>No use case has all six evaluation documents in place.</h3>
         <p className="pd-lede">Select a use case to inspect its implementation path. Yes = documented, Partly = partial, No = absent. Funding is a planned allocation, not an approval held.</p>
         <div className="table-scroll uc-matrix-scroll" role="region" aria-label="Use-case readiness matrix; scroll horizontally for all six criteria" tabIndex={0}><table className="pd-table uc-matrix">
-          <caption className="sr-only">Six document-coverage criteria by use case, sorted by score</caption>
+          <caption className="sr-only">Product evaluation prerequisites by market</caption>
           <thead><tr><th scope="col">Use case</th>{readinessLabels.map(l => <th scope="col" key={l}>{l}</th>)}<th scope="col">Score /12</th></tr></thead>
           <tbody>{readiness.map(c => <tr key={c.sku} data-selected={c.sku === active.sku}><th scope="row"><button className="uc-row-button" onClick={() => choose(c.sku,true)} aria-pressed={c.sku === active.sku}>{c.title}<span>{c.sku} · {c.chip.name}</span></button></th>{c.criteria.map((n,i) => <td key={i}><span className="uc-status" data-level={n}><span aria-hidden="true">{['–','◐','●'][n]}</span> {STATUS[n]}</span></td>)}<td><strong>{c.score}</strong><span className="uc-score" aria-hidden="true"><span style={{width:`${c.score / 12 * 100}%`}}/></span></td></tr>)}</tbody>
         </table></div>
-        <details className="uc-mobile-readiness"><summary>Compare document coverage by use case</summary><p className="pd-source">Score out of 12. Document coverage, not silicon readiness. The complete six-criterion table remains above.</p><ul>{readiness.map(c => <li key={c.sku}><button onClick={() => choose(c.sku,true)}>{c.title}</button><span>{c.score}/12</span></li>)}</ul></details>
-        <details className="uc-method"><summary>How the score is calculated</summary><p>Each of six criteria contributes 0, 1 or 2 points. Design: RTL plus analog schematics = 2, RTL only = 1, specification or undocumented = 0. Shuttle: in the December plan = 2. Datasheet: published preliminary document = 2. Unit cost: a row in the cost table = 2. Approval funded: identified first-approval allocation in tranche 1 = 2. Plan line: a published allocation = 2. This is document coverage, not a safety, certification, sample availability or silicon-readiness rating.</p></details>
+        <details className="uc-mobile-readiness"><summary>Compare product evaluation prerequisites</summary><p className="pd-source">Score out of 12. Document coverage, not silicon readiness. The complete six-criterion table remains above.</p><ul>{readiness.map(c => <li key={c.sku}><button onClick={() => choose(c.sku,true)}>{c.title}</button><span>{c.score}/12</span></li>)}</ul></details>
+        <details className="uc-method"><summary>Qualification planning criteria and assessment limits</summary><p>Each of six criteria contributes 0, 1 or 2 points. Design: RTL plus analog schematics = 2, RTL only = 1, specification or undocumented = 0. Shuttle: in the December plan = 2. Datasheet: published preliminary document = 2. Unit cost: a row in the cost table = 2. Approval funded: identified first-approval allocation in tranche 1 = 2. Plan line: a published allocation = 2. This is document coverage, not a safety, certification, sample availability or silicon-readiness rating.</p></details>
         <Source tables={['skus','unit-cost','tranche1-uses','dg32-specs']} expanded={sources}/>
       </section>
     </Chapter>
 
-    <Chapter id="uc-explore" title="Each use case, in detail">
+    <Chapter id="uc-explore" title="Product fit and qualification route by market">
       <div className="uc-filters"><label>Find a use case<input type="search" name="q" autoComplete="off" value={search} onChange={e => updateFilter('q',e.target.value)} placeholder="Search chip, application or buyer…"/></label>
         <label>Show<select aria-label="Show" name="market" value={filter} onChange={e => updateFilter('market',e.target.value)}><option value="all">All use cases</option><option value="shuttle">December shuttle</option><option value="fast">6–12 month qualification</option><option value="later">Later runs</option></select></label>
         <p className="pd-source" role="status">{visible.length} of {cases.length} use cases</p></div>

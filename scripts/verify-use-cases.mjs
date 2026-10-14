@@ -36,7 +36,7 @@ for (const width of [1440,768,390]) {
   await page.goto(base+'portfolio/brief?view=use-cases',{waitUntil:'networkidle'});
   const dashboard = page.locator('.uc-dashboard');
   await dashboard.waitFor();
-  check((await page.getByRole('tab',{name:'Use cases & implementation'}).getAttribute('aria-selected'))==='true',`${width}: direct view URL`);
+  check((await page.getByRole('tab',{name:'Markets & qualification'}).getAttribute('aria-selected'))==='true',`${width}: direct view URL`);
   check(await dashboard.locator('figure').count()===4,`${width}: all four charts present`);
   check(await dashboard.locator('.dg-ins').count()===4,`${width}: all four findings present`);
   check(await dashboard.locator('.uc-matrix tbody tr').count()===12,`${width}: twelve readiness rows`);
@@ -73,11 +73,11 @@ for (const width of [1440,768,390]) {
   check(await tip.count()===1,`${width}: approval tooltip works`);
   if(await tip.count()) {const t=await tip.boundingBox(),f=await fig.boundingBox();check(t.x>=f.x-1&&t.x+t.width<=f.x+f.width+1,`${width}: tooltip stays within chart`);}
   await page.getByRole('button',{name:'Hide sources'}).click();
-  await page.getByRole('tab',{name:'Use cases & implementation'}).focus();
+  await page.getByRole('tab',{name:'Markets & qualification'}).focus();
   await page.keyboard.press('ArrowLeft');
   check(await page.getByRole('tab',{name:'Buyer questions'}).getAttribute('aria-selected')==='true',`${width}: keyboard tabs`);
   await page.goBack({waitUntil:'networkidle'});
-  check(await page.getByRole('tab',{name:'Use cases & implementation'}).getAttribute('aria-selected')==='true',`${width}: browser back restores dashboard`);
+  check(await page.getByRole('tab',{name:'Markets & qualification'}).getAttribute('aria-selected')==='true',`${width}: browser back restores dashboard`);
   // The router settles its popstate work asynchronously; do not race a new document load against it.
   await page.waitForTimeout(500);
   await page.goto(base+'portfolio/brief?view=use-cases&sku=SKU-6',{waitUntil:'networkidle'});

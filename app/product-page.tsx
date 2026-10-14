@@ -33,9 +33,9 @@ const SECTIONS = [
   ['pp-why', 'Why it exists'],
   ['pp-features', 'Key features'],
   ['pp-specs', 'Architecture'],
-  ['pp-readiness', 'Readiness'],
+  ['pp-readiness', 'Product maturity'],
   ['pp-fit', 'Designed for'],
-  ['pp-sources', 'Sources'],
+  ['pp-sources', 'Engineering references'],
 ] as const;
 
 export default function ProductPageView({slug}: {slug: string}) {
@@ -54,11 +54,11 @@ export default function ProductPageView({slug}: {slug: string}) {
   const explainer = explainers.find(e => e.slug === p.slug);
   const executive=executiveProducts[p.id as keyof typeof executiveProducts];
   const S = {
-   specs:{title:'Test the requirements behind the proposed benefit.',copy:'These design targets define what an evaluation must confirm. They are not measured production specifications.'},
-   questions:{title:'Close the adoption risks before committing.',copy:executive.gate},
-   evidence:{title:'Match the commitment to the current evidence.',copy:executive.gate},
-   fit:{title:'Choose the customer programme this product can serve.',copy:executive.implication},
-   sources:{title:'Check the basis for the product case.',copy:'Use the current Blueprint for scope and status, then examine the detailed engineering evidence where it affects your decision.'},
+   specs:{title:'Electrical limits and product acceptance criteria.',copy:'These design targets define what an evaluation must confirm. They are not measured production specifications.'},
+   questions:{title:'Qualification risks and design constraints.',copy:executive.gate},
+   evidence:{title:'Product maturity and validation milestones.',copy:executive.gate},
+   fit:{title:'Target applications and customer qualification.',copy:executive.implication},
+   sources:{title:'Product specifications and validation references.',copy:'Use the current Blueprint for scope and status, then examine the detailed engineering evidence where it affects your decision.'},
    close:{title:'Agree the next milestone for your product.',copy:executive.implication},
    physics:{title:'The operating environment determines the fit.',copy:executive.context},
   };
@@ -137,7 +137,7 @@ export default function ProductPageView({slug}: {slug: string}) {
       {/* 3 · Key features: one card per storyboard beat (DG-A100: a grid of six feature cards). */}
       {executive && (
         <section id="pp-features" className="pp-sec pp-reveal">
-          <Head title="Understand what must work together." copy="The following mechanisms explain the proposed customer benefit. Each still needs to be validated in the complete product."/>
+          <Head title="System architecture and interface responsibilities." copy="The following mechanisms explain the proposed customer benefit. Each still needs to be validated in the complete product."/>
           <ol className="pp-features">
             {[[executive.headline,executive.context],[executive.valueTitle,executive.implication],[executive.gateTitle,executive.gate]].map(([title,body])=><li key={title}><h3>{title}</h3><p>{body}</p></li>)}
           </ol>
@@ -165,7 +165,7 @@ export default function ProductPageView({slug}: {slug: string}) {
         </dl>
         <p className="pp-note">Standards the architecture is designed toward. No DeepGrid part holds a certification or qualification today.</p>
         {dg && story && (
-          <details id="pp-diagram" className="pp-diagram-full"><summary className="pp-ghost">Open the full diagram, its storyboard and sources</summary>
+          <details id="pp-diagram" className="pp-diagram-full"><summary className="pp-ghost">System architecture, signal flow and engineering references</summary>
             {dg.note && <p className="pp-note">{nbspUnits(dg.note)}</p>}
             <Diagram src={dg.src} title={dg.title} alt={dg.alt} width={dg.width} height={dg.height} drawio={dg.drawio} guide={dg.guide} html={`/downloads/${base}-workflow.html`} deck={`/downloads/${base}-architecture.pptx`}/>
             <Storyboard story={story} questionsHref="#pp-readiness"/>

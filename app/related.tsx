@@ -27,7 +27,7 @@ export default function Related({route}: {route: RouteId}) {
       {/* One close per route: the decision heading with its brief as the body (lead, three checks, two links).
           Routes without a brief keep the short DecisionClose. */}
       {route !== 'home' && !ownClose.has(route) && (route !== 'company' && hasBrief(route) ? <RouteJourney route={route} title={routeStories[route].decision}/> : <DecisionClose route={route}/>)}
-      <h2 className="dr-related-head" id={'related-' + route}>Where to go next</h2>
+      <h2 className="dr-related-head" id={'related-' + route}>Product selection and evaluation requirements</h2>
 
       <ul className="dr-related-sections">
         {r.sections.map(s => {

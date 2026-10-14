@@ -78,7 +78,7 @@
     "next": "/products/sku-6"
   },
   "evidence": {
-    "headline": "Sixteen figures carry this site. Each names the evidence it rests on.",
+    "headline": "DG32 validation is pre-silicon; qualification remains ahead.",
     "context": "Design studies, simulation, prototypes and measured silicon support different decisions. This register helps separate an opportunity worth evaluating from a product ready for deployment.",
     "decision": "Ask for the proof required by the next decision, not a broader claim.",
     "next": "/procurement"
@@ -90,13 +90,13 @@
     "next": "/contact"
   },
   "resources": {
-    "headline": "Find the evidence for the decision in front of you.",
+    "headline": "Assess product architecture, electrical limits and qualification.",
     "context": "Start with the portfolio for product scope, the evidence register for maturity, or the detailed documents for integration. Every source has a different role in an evaluation.",
     "decision": "Choose the question first, then the document that can answer it.",
     "next": "/resources/docs"
   },
   "docs": {
-    "headline": "Use the right source for the right question.",
+    "headline": "Technical specifications for product selection and integration.",
     "context": "The October 2026 Blueprint defines the current portfolio. Architecture and test documents explain particular designs and results; they do not establish readiness beyond their stated scope.",
     "decision": "Read the current product scope before comparing detailed figures.",
     "next": "/evidence"
@@ -108,7 +108,7 @@
     "next": "/evidence"
   },
   "read": {
-    "headline": "Read the assumptions that sit behind the claim.",
+    "headline": "Product requirements, operating limits and evaluation assumptions.",
     "context": "A source is useful when its scope, date and evidence match the decision being made. Keep design targets separate from measured results and current product status.",
     "decision": "Check the conditions and the current product record.",
     "next": "/resources/docs"

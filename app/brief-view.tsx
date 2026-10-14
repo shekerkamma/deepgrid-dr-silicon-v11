@@ -71,7 +71,7 @@ function TrancheTab() {
       {value: '₹41.7–91.2 Cr', finding: 'Full development is a later raise', text: 'Estimated development cost for all eleven chips (₹31.9–70.6 Cr for the nine on the shuttle). Tranche 1 funds prototypes, not full development.', source: 'SKU Blueprint, Oct 2026 · estimates'},
     ]}/>
 
-    <Chapter id="ch-buys" title="What tranche 1 buys">
+    <Chapter id="ch-buys" title="Tranche 1 funding and first-silicon milestones">
     <section className="pd-panel" aria-labelledby="bf-chips-h">
       <h3 id="bf-chips-h">Three of the nine carry {cr(top3Ramp)} of their {cr(ramp9)} FY31 ramp: {top3.map(c => c.sku).join(', ')}.</h3>
       <div className="bf-two">
@@ -87,7 +87,7 @@ function TrancheTab() {
     </section>
     </Chapter>
 
-    <Chapter id="ch-differ" title="Why the two plans differ">
+    <Chapter id="ch-differ" title="Company and chip revenue plans require reconciliation">
     <section className="pd-panel" aria-labelledby="bf-plans-h">
       <h3 id="bf-plans-h">The two plans meet in FY31 only by coincidence: {cr(v.compare.blueprintChips[y31])} of chips in the Blueprint, {cr(v.compare.modelTotal[y31])} for the whole company in the model, of which chips are {cr(v.compare.modelChips[y31])}.</h3>
       <GroupedColumns label="Chip revenue in the SKU Blueprint and in the financial model, with the model's whole-company total, FY29 to FY32, ₹ Cr" unit={cr}
@@ -114,22 +114,22 @@ function TrancheTab() {
     </section>
     </Chapter>
 
-    <Chapter id="ch-ask" title="What investors will ask">
+    <Chapter id="ch-ask" title="Investment risks and funding requirements">
     <section className="pd-panel" aria-labelledby="bf-q-h">
-      <h3 id="bf-q-h">Five investor questions: what is shown so far, and what is still a target.</h3>
+      <h3 id="bf-q-h">Investment diligence: funding, readiness and revenue assumptions.</h3>
       <ol className="bf-cards">{v.investor.map((q, i) => <li className="bf-card" key={q.q}>
         <span className="bf-num">{i + 1}</span>
         <p className="bf-ask">{q.q}</p>
         <p className="bf-verdict">{q.verdict}</p>
         <dl className="bf-kv"><dt>Shown so far</dt><dd>{q.proven}</dd><dt>Target or estimate</dt><dd>{q.target}</dd></dl>
-        <details className="bf-more"><summary>Full answer</summary>{answer('tranche-1', i + 1).map((b, k) => <Render key={k} b={b}/>)}</details>
+        <details className="bf-more"><summary>Evaluation requirements and assumptions</summary>{answer('tranche-1', i + 1).map((b, k) => <Render key={k} b={b}/>)}</details>
       </li>)}</ol>
     </section>
     </Chapter>
 
     <aside className="bf-callout"><strong>Recommendation.</strong> Present the Blueprint as the chip plan and the ₹10 Cr table as the ask; describe the September model as the company-wide plan written before it, and commit to a model v4 with the Blueprint ramp before tranche 2.</aside>
 
-    <details className="bf-text"><summary>Read the full tranche-1 brief as text</summary>{fullText.map((b, i) => <Render key={i} b={b}/>)}</details>
+    <details className="bf-text"><summary>Tranche 1 funding, milestones and investment assumptions</summary>{fullText.map((b, i) => <Render key={i} b={b}/>)}</details>
   </>;
 }
 
@@ -175,32 +175,32 @@ function BuyerTab() {
 
     <Chapter id="ch-buyers" title="What buyers ask">
     <section className="pd-panel" aria-labelledby="bf-bq-h">
-      <h3 id="bf-bq-h">Six questions, six honest answers.</h3>
+      <h3 id="bf-bq-h">Product availability, qualification and integration requirements.</h3>
       <ol className="bf-cards">{v.buyers.map((b, i) => <li className="bf-card" key={b.ask}>
         <span className="bf-num">{i + 1}</span>
         <p className="bf-who">{b.chip === '–' ? b.who : `${b.who} · ${b.chip}`}</p>
         <p className="bf-ask">“{b.ask}”</p>
         <p className="bf-verdict">{b.verdict}</p>
         <dl className="bf-kv"><dt>Missing for the buyer</dt><dd>{b.missing}</dd></dl>
-        <details className="bf-more"><summary>Full answer</summary>{answer('buyers', i + 1).map((x, k) => <Render key={k} b={x}/>)}</details>
+        <details className="bf-more"><summary>Evaluation requirements and assumptions</summary>{answer('buyers', i + 1).map((x, k) => <Render key={k} b={x}/>)}</details>
       </li>)}</ol>
     </section>
     </Chapter>
 
     <Chapter id="ch-close" title="What to close first">
     <section className="pd-panel" aria-labelledby="bf-gap-h">
-      <h3 id="bf-gap-h">Four gaps to close before buyer conversations start.</h3>
+      <h3 id="bf-gap-h">Four qualification and supply gaps to resolve with buyers.</h3>
       <ol className="bf-gaps">{gaps.map((g, i) => <li key={i}><span className="bf-num">{i + 1}</span><p><strong>{g.lead}</strong> {g.text}</p></li>)}</ol>
     </section>
     </Chapter>
 
-    <details className="bf-text"><summary>Read the buyer answers as text</summary>{fullText.map((b, i) => <Render key={i} b={b}/>)}</details>
+    <details className="bf-text"><summary>Product availability, qualification and integration requirements</summary>{fullText.map((b, i) => <Render key={i} b={b}/>)}</details>
   </>;
 }
 
 export function BriefView() {
   const [tab, setTab] = useState(brief[0].id);
-  const tabs = [...brief.map(x => ({id:x.id,title:x.title})), {id:'use-cases',title:'Use cases & implementation'}];
+  const tabs = [...brief.map(x => ({id:x.id,title:x.title})), {id:'use-cases',title:'Markets & qualification'}];
   useEffect(() => {
     const read = () => { const view = new URLSearchParams(location.search).get('view'); setTab(view && ['tranche-1','buyers','use-cases'].includes(view) ? view : brief[0].id); };
     read(); window.addEventListener('popstate',read); return () => window.removeEventListener('popstate',read);

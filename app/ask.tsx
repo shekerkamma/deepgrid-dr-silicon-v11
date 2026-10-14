@@ -357,7 +357,7 @@ export default function AskDeepGrid({go}: {go: (hash: string) => void}) {
       )}
 
       {/* Top View Selector Strip */}
-      <details className="executive-sources ask-library-tools"><summary>Explore the knowledge library</summary><div className="dr-ask-top-bar">
+      <details className="executive-sources ask-library-tools"><summary>Product architecture and engineering references</summary><div className="dr-ask-top-bar">
         <div className="dr-ask-view-toggle">
           <button
             className={`dr-ask-toggle-btn ${activeView === 'council' ? 'active' : ''}`}

@@ -52,10 +52,10 @@ function Lite({block,reduced,setReduced,exploded,setExploded,update,go}:Props){
 
   <Diagram src="/diagrams/dg32-lite-architecture.svg" title="DG32-LITE system architecture" alt="DG32-LITE system architecture diagram: safety core, memory and boot, supervision, on-chip bus, motor drive, sensing and math, connectivity and test, with the numbered current-control loop and the hardware fault path" width={1518} height={1045} html="/downloads/dg32-lite-workflow.html" deck="/downloads/dg32-lite-architecture.pptx" drawio="/downloads/dg32-lite-architecture.drawio" guide="/downloads/dg32-lite-architecture-guide.md"/>
   <p className="sb-caption">Numbered markers trace one current-control loop: ① the PWM fires the ADC sample, ② phase current goes to the CORDIC, ③ the transforms go to the CPU, ④ the PI output sets the PWM duty, ⑤ gate signals leave for the gate driver. F marks the fault latch, whose FAULT_N trips the bridge in hardware.</p>
-  <details className="sb-ref"><summary className="dr-kicker">HOW TO READ THIS DIAGRAM, BLOCK BY BLOCK, AND ITS SOURCES</summary><DiagramNotes notes={diagramNotes.lite}/></details>
+  <details className="sb-ref"><summary className="dr-kicker">CONTROL, CLOCK AND FAULT-PATH RESPONSIBILITIES</summary><DiagramNotes notes={diagramNotes.lite}/></details>
 
   <Sec kicker="THE BLOCK GROUPS & ROLES" title="Six block groups share one deterministic 50 MHz bus," em="and each exists because something on the die could not be left to firmware." copy="Select a group to highlight it on the illustrative die and read what every block inside it does, and why it was built that way.">
-   <div className="architecture"><div className="architecture-stage"><div className="stage-top"><span className="mono">DG32-LITE / 3D SILICON MODEL</span><button aria-pressed={reduced} onClick={()=>setReduced(!reduced)} className="small-button">Motion {reduced?'off':'on'}</button></div><Silicon variant="lite" selected={block} exploded={exploded} reduced={reduced} label={'Interactive 3D model of DG32-LITE with the '+g.name+' group highlighted. Drag to rotate; use the block list for details.'}/><div className="stage-bottom"><span>DRAG TO ROTATE · NOT A MASK LAYOUT</span><button className="small-button" onClick={()=>setExploded(!exploded)} aria-expanded={exploded} aria-label={exploded?'Seat the die':'Lift the die'}><Layers size={14} aria-hidden="true"/>{exploded?'Seat the die':'Lift the die'}</button></div></div>
+   <div className="architecture"><div className="architecture-stage"><div className="stage-top"><span className="mono">DG32-LITE / FUNCTIONAL BLOCK ARCHITECTURE</span><button aria-pressed={reduced} onClick={()=>setReduced(!reduced)} className="small-button">Motion {reduced?'off':'on'}</button></div><Silicon variant="lite" selected={block} exploded={exploded} reduced={reduced} label={'Interactive 3D model of DG32-LITE with the '+g.name+' group highlighted. Drag to rotate; use the block list for details.'}/><div className="stage-bottom"><span>DRAG TO ROTATE · NOT A MASK LAYOUT</span><button className="small-button" onClick={()=>setExploded(!exploded)} aria-expanded={exploded} aria-label={exploded?'Seat the die':'Lift the die'}><Layers size={14} aria-hidden="true"/>{exploded?'Seat the die':'Lift the die'}</button></div></div>
     <aside className="domain-panel"><Eyebrow>SIX BLOCK GROUPS</Eyebrow>{blocks.map((b,i)=>{const Icon=blockIcons[i];return <button className={block===i?'selected':''} key={b.code} onClick={()=>update({block:String(i)})} aria-pressed={block===i} aria-label={`Select ${b.name} block group`}><Icon size={18} aria-hidden="true"/><div><span>{b.code}<b>0{i+1}</b></span><strong>{b.name}</strong>{block===i&&<p>{b.short}</p>}</div><ArrowUpRight size={16} aria-hidden="true"/></button>})}</aside></div>
    <div className="dr-group" aria-live="polite"><div className="dr-group-head"><div><p className="dr-kicker">GROUP 0{block+1} / {g.code}</p><h3 className="dr-group-name">{g.name}</h3></div><p className="dr-group-why">{g.why}</p></div><ExplainedGrid items={groupMembers[block]}/></div>
    <p className="disclaimer">The 3D model is illustrative: region placement indicates grouping, not the fabricated floorplan.</p>
@@ -91,7 +91,7 @@ function Dom({go,update,reduced,setReduced,exploded,setExploded}:Props){
   <Stats items={[['114 MHz','COMPUTE CLOCK'],['50 MHz','CONTROL DOMAIN'],['Bit-exact','TO THE SOFTWARE MODEL'],['400','KEYS PER HEAD'],['~3,242','CYCLES PER ROW, ANALYTIC'],['0','PADS ADDED']]}/>
   <Diagram src="/diagrams/dg32-2dom-architecture.svg" title="DG32-2DOM system architecture" alt="DG32-2DOM system architecture diagram: the 50 MHz control domain identical to DG32-LITE, three clock-domain bridges, and the 114 MHz compute domain with the six-stage INT8 attention engine and its key, value and weight-table buffers" width={1453} height={895} html="/downloads/dg32-2dom-workflow.html" deck="/downloads/dg32-2dom-architecture.pptx" drawio="/downloads/dg32-2dom-architecture.drawio" guide="/downloads/dg32-2dom-architecture-guide.md"/>
   <p className="sb-caption">One attention kick: ① the CPU programs the shapes through the lite bridge, ② keys and values load once through the burst read bridge, ③ the INT8 output writes back through the burst write bridge, ④ a done interrupt reaches both cores. The engine reaches memory only through the bridges.</p>
-  <details className="sb-ref"><summary className="dr-kicker">HOW TO READ THIS DIAGRAM, BLOCK BY BLOCK, AND ITS SOURCES</summary><DiagramNotes notes={diagramNotes['2dom']}/></details>
+  <details className="sb-ref"><summary className="dr-kicker">CONTROL, CLOCK AND FAULT-PATH RESPONSIBILITIES</summary><DiagramNotes notes={diagramNotes['2dom']}/></details>
 
   <Sec kicker="DUAL-DOMAIN CONSTRAINTS" title="Four physical findings forced a second clock domain and a second die," em="including an INT4 output that came out identically zero." copy="Each came from hardening the design, and each one set the variant’s shape.">
    <DataTable caption="What was found and what the design does about it" head={['Finding','What it means','What the design does']} rows={domPremises} wide/>
@@ -116,7 +116,7 @@ function Dom({go,update,reduced,setReduced,exploded,setExploded}:Props){
   </Sec>
 
   <Sec kicker="3D DUAL-DOMAIN DIE & PACKAGE" title="The attention engine widens the die by 0.5 mm," em="and changes nothing about the 44-signal QFN-64 pinout." copy="The 50 MHz control core and peripherals occupy the primary die floorplan; the 114 MHz INT8 Attention Engine and its asynchronous CDC bridges take the added width.">
-   <div className="architecture"><div className="architecture-stage"><div className="stage-top"><span className="mono">DG32-2DOM / 3D DUAL-DOMAIN DIE</span><button aria-pressed={reduced} onClick={()=>setReduced(!reduced)} className="small-button">Motion {reduced?'off':'on'}</button></div><Silicon variant="2dom" selected={6} exploded={exploded} reduced={reduced} label="Interactive 3D model of DG32-2DOM with the 114 MHz attention engine and CDC isolation bridge highlighted."/><div className="stage-bottom"><span>DRAG TO ROTATE · ARROW KEYS TO PITCH/YAW</span><button className="small-button" onClick={()=>setExploded(!exploded)} aria-expanded={exploded} aria-label={exploded?'Seat the die':'Lift the die'}><Layers size={14} aria-hidden="true"/>{exploded?'Seat the die':'Lift the die'}</button></div></div>
+   <div className="architecture"><div className="architecture-stage"><div className="stage-top"><span className="mono">DG32-2DOM / DUAL-CLOCK ARCHITECTURE</span><button aria-pressed={reduced} onClick={()=>setReduced(!reduced)} className="small-button">Motion {reduced?'off':'on'}</button></div><Silicon variant="2dom" selected={6} exploded={exploded} reduced={reduced} label="Interactive 3D model of DG32-2DOM with the 114 MHz attention engine and CDC isolation bridge highlighted."/><div className="stage-bottom"><span>DRAG TO ROTATE · ARROW KEYS TO PITCH/YAW</span><button className="small-button" onClick={()=>setExploded(!exploded)} aria-expanded={exploded} aria-label={exploded?'Seat the die':'Lift the die'}><Layers size={14} aria-hidden="true"/>{exploded?'Seat the die':'Lift the die'}</button></div></div>
     <aside className="domain-panel"><Eyebrow>DUAL-DOMAIN ARCHITECTURE</Eyebrow>
      <div className="dom-panel dom-engine">
       <span className="mono dom-label">114 MHZ DOMAIN</span>
@@ -132,7 +132,7 @@ function Dom({go,update,reduced,setReduced,exploded,setExploded}:Props){
    </div>
   </Sec>
 
-  <Sec kicker="FROZEN VARIANT DECISIONS" title="DG32-2DOM is a build option and a second clock, not a fork," em="so both chips come from one design source, with the control core unchanged.">
+  <Sec kicker="FROZEN VARIANT DECISIONS" title="DG32-2DOM adds independent diagnostic compute," em="while preserving the control core and its timing boundaries.">
    <ExplainedGrid items={domDecisions} cols={2}/>
   </Sec>
 
@@ -149,7 +149,7 @@ function Dom({go,update,reduced,setReduced,exploded,setExploded}:Props){
 function TapeIn({go,update}:{go:(hash:string)=>void;update:Update}){
  const colors=['dr-c0','dr-c1','dr-c2','dr-c3'];
  return <>
-  <Intro kicker="DG32-LITE / TAPE-IN RECORD" title="The tape-in diagram records the die as fabricated," em="one 50 MHz domain, no PLL, and all 44 pads allocated.">
+  <Intro kicker="DG32-LITE / TAPE-IN RECORD" title="The first-silicon design fixes the clock and pad allocation," em="one 50 MHz domain, no PLL, and all 44 pads allocated.">
    <p>The tape-in block diagram is the most complete record of what goes to the foundry: one clock domain, a lockstep pair built to tolerate interrupts and peripheral reads, a bus where no access can hang, 44 allocated pads, production test and the gates the die must pass.</p>
    <p>It is a design record, not a measurement of silicon, and it lists the sign-off gates without claiming that they have passed.</p>
    <div className="dr-links"><button className="text-link" onClick={()=>go('library?pkg=lite-tapein')}>Tape-in deck and film <ArrowUpRight size={16}/></button></div>
@@ -170,7 +170,7 @@ function TapeIn({go,update}:{go:(hash:string)=>void;update:Update}){
   </Sec>
 
   <div className="dr-links dr-sec-gap">
-    <button className="text-link" onClick={()=>update({chip:'lite'})}>Interactive 3D architecture model <ArrowUpRight size={16}/></button>
+    <button className="text-link" onClick={()=>update({chip:'lite'})}>DG32 functional architecture <ArrowUpRight size={16}/></button>
     <button className="text-link" onClick={()=>go('library?pkg=lite-tapein')}>Download Tape-In Block Diagram (PDF) <ArrowUpRight size={16}/></button>
     <button className="text-link" onClick={()=>go('pinout')}>QFN-64 pinout & package limits <ArrowUpRight size={16}/></button>
     <button className="text-link" onClick={()=>go('ask')}>Ask DeepGrid about DRC/LVS & connectivity gates <ArrowUpRight size={16}/></button>

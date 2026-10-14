@@ -316,7 +316,7 @@ export default function ApplicationsStory() {
       </Beat>
 
       {/* 11. What the numbers rest on. */}
-      <Beat id="st-basis" title="Every figure here is derived, not measured, and the classifier never holds the trip."
+      <Beat id="st-basis" title="Diagnostic capability awaits silicon validation; hardware retains the safety trip."
         films={[
           {clip: clips.trip, label: 'How the hardware trips the drive'},
           {clip: clips.measured, label: 'What is not yet measured'},

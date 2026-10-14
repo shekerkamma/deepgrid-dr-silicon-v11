@@ -8,12 +8,12 @@ const discussion = () => url('/contact') + '?intent=investor';
 export function FundingPath() {
   const funding = brief.tranche.reduce((sum, row) => sum + row.cr, 0);
   return <section className="ij-funding" aria-labelledby="ij-funding-title">
-    <div className="ij-introduction"><h2 id="ij-funding-title">Fund the next evidence.<br/>Then decide the next stage.</h2>
+    <div className="ij-introduction"><h2 id="ij-funding-title">Stage the investment.<br/>Fund first-silicon milestones.</h2>
       <p>The Blueprint allocates {money(funding)} in tranche 1 to first-silicon work. Its December shuttle plan includes {brief.chips.length} designs. This is a prototype milestone, with qualification and full development still ahead.</p>
       <a className="ij-link" href={url('/portfolio/brief')}>Review the funding brief <ArrowRight size={18} aria-hidden="true"/></a>
       <p className="ij-source">SKU Blueprint, October 2026 · planned allocations, not capital received or silicon results.</p>
     </div>
-    <div className="ij-ledger"><h3>Where tranche 1 goes</h3><dl>{brief.tranche.map(row => <div key={row.use}><dt>{row.use}</dt><dd>{money(row.cr)}</dd></div>)}</dl>
+    <div className="ij-ledger"><h3>Tranche 1 capital allocation</h3><dl>{brief.tranche.map(row => <div key={row.use}><dt>{row.use}</dt><dd>{money(row.cr)}</dd></div>)}</dl>
       <p>The September model and October Blueprint use different revenue scopes. Read their reconciliation before comparing headline totals.</p>
       <a className="ij-link" href={url('/portfolio/brief') + '#ch-differ'}>Compare the two plans <ArrowRight size={16} aria-hidden="true"/></a>
     </div>
@@ -30,17 +30,17 @@ export function ReviewPaths() {
 
 export function EvidenceAgenda() {
   return <section className="ij-evidence" aria-labelledby="ij-evidence-title">
-    <div><h2 id="ij-evidence-title">Read the evidence.<br/>Keep the gaps in view.</h2><p>Architecture breadth, engineering work and commercial readiness answer different questions. Evaluate each on its own evidence.</p>
+    <div><h2 id="ij-evidence-title">Pre-silicon validation.<br/>Qualification still ahead.</h2><p>Architecture breadth, engineering work and commercial readiness answer different questions. Evaluate each on its own evidence.</p>
       <a className="ij-link" href={url('/evidence')}>Review evidence & withheld claims <ArrowRight size={18} aria-hidden="true"/></a></div>
-    <div className="ij-evidence-register"><section><h3>Available for review</h3><ul><li>Portfolio architectures and dated SKU Blueprint tables</li><li>DG32 simulation, implementation and post-route records</li><li>Named approval routes and estimated unit costs</li></ul></section>
-      <section><h3>Still to establish</h3><ul><li>Returned-silicon measurements and confirmed sample dates</li><li>Qualification and application-specific validation</li><li>Purchase orders, letters of intent and reconciled financial assumptions</li></ul></section>
+    <div className="ij-evidence-register"><section><h3>Current engineering and commercial basis</h3><ul><li>Portfolio architectures and dated SKU Blueprint tables</li><li>DG32 simulation, implementation and post-route records</li><li>Named approval routes and estimated unit costs</li></ul></section>
+      <section><h3>Silicon, qualification and customer milestones</h3><ul><li>Returned-silicon measurements and confirmed sample dates</li><li>Qualification and application-specific validation</li><li>Purchase orders, letters of intent and reconciled financial assumptions</li></ul></section>
     </div>
   </section>;
 }
 
 export function DiscussionClose({compact = false}: {compact?: boolean}) {
   return <section className={'ij-discussion' + (compact ? ' ij-discussion-compact' : '')} aria-label="Investor and partner discussion">
-    <div><h2>Decide what you need<br/>for the next discussion.</h2><p>Request a portfolio discussion, strategic-partner evaluation or data-room access. Tell us which assumptions and evidence you want to examine.</p></div>
+    <div><h2>Align funding and partnership<br/>with the next product milestone.</h2><p>Request a portfolio discussion, strategic-partner evaluation or data-room access. Tell us which assumptions and evidence you want to examine.</p></div>
     <a className="ij-primary" href={discussion()}>Request a discussion <ArrowUpRight size={18} aria-hidden="true"/></a>
   </section>;
 }
@@ -59,9 +59,9 @@ export function InvestorGuide({route}: {route: RouteId}) {
 export function SiteDirectory() {
   const groups = [
     ['Investors', [['/portfolio/brief','Investment brief'],['/company','Portfolio strategy'],['/plan','Business plan']]],
-    ['Explore', [['/portfolio','SKU comparison'],['/products','Architectures'],['/portfolio/brief?view=use-cases','Use cases & implementation']]],
-    ['Diligence', [['/evidence','Evidence & gaps'],['/resources/docs','Source library'],['/ask','Ask DeepGrid']]],
-    ['Company', [['/about','Our story'],['/about/team','Leadership & team'],['/contact?intent=investor','Request a discussion']]],
+    ['Products', [['/portfolio','SKU comparison'],['/products','Architectures'],['/portfolio/brief?view=use-cases','Markets & qualification']]],
+    ['Diligence', [['/evidence','Evidence & gaps'],['/resources/docs','Technical specifications'],['/ask','Ask DeepGrid']]],
+    ['Company', [['/about','Company profile'],['/about/team','Leadership & team'],['/contact?intent=investor','Request a discussion']]],
   ] as const;
   return <nav className="ij-directory" aria-label="Site directory">{groups.map(([title,links]) => <div key={title}><p>{title}</p>{links.map(([href,label]) => <a key={href} href={url(href)}>{label}</a>)}</div>)}</nav>;
 }

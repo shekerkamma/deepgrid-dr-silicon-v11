@@ -108,7 +108,7 @@ export function PortfolioDashboard() {
         {value: `${apLo}–${apHi} mo`, finding: 'Approval sets the pace', text: `${slowMarkets.join(', ').replace(/^./, c => c.toUpperCase())} take up to ${apHi} months after silicon; ${fastest.market.toLowerCase()} ${fastest.low}–${fastest.high}.`, source: 'SKU Blueprint, Oct 2026 · estimates'},
       ]}/>
 
-      <Chapter id="ch-revenue" title="Where the revenue comes from">
+      <Chapter id="ch-revenue" title="Revenue opportunity by product">
       <section className="pd-panel" aria-labelledby="sk-lines-h">
         <h3 id="sk-lines-h">Only {say(near.length)} chips reach {pct(0.7)} of their plan line by FY31 ({near.map(c => c.sku).join(', ')}); the other {say(planned.length - near.length)} are at {pct(farMax)} or less.</h3>
         <HBars label="Plan line and FY31 ramp per chip, ₹ Cr, horizontal bars. The same figures are in the table below." max={Math.max(...planned.map(s => s.planCr!))}
@@ -139,7 +139,7 @@ export function PortfolioDashboard() {
       </section>
       </Chapter>
 
-      <Chapter id="ch-pace" title="What slows it">
+      <Chapter id="ch-pace" title="Qualification lead times govern revenue timing">
       <section className="pd-panel" aria-labelledby="sk-appr-h">
         <h3 id="sk-appr-h">Revenue waits on approvals of {apLo} to {apHi} months; {longest.join(', ').toLowerCase()} take longest.</h3>
         <HBars label="Approval time by market, months, low to high. The same figures are listed beside each bar." max={apHi}
@@ -148,7 +148,7 @@ export function PortfolioDashboard() {
       </section>
       </Chapter>
 
-      <Chapter id="ch-cost" title="What it costs">
+      <Chapter id="ch-cost" title="Development capital and unit economics">
       <section className="pd-panel" aria-labelledby="sk-money-h">
         <h3 id="sk-money-h">{top3.map(t => t.use.split(',')[0]).join(', ')} take {pct(top3Share)} of the {cr(tTotal)} first tranche.</h3>
         <HBars label="Proposed use of the first tranche, ₹ Cr. The same figures are in the table below." max={tranche[0].cr}
@@ -182,7 +182,7 @@ export function PortfolioDashboard() {
       </section>
       </Chapter>
 
-      <Chapter id="ch-exists" title="What exists today">
+      <Chapter id="ch-exists" title="DG32 specifications and product maturity">
       <section className="pd-panel" aria-labelledby="sk-spec-h">
         <h3 id="sk-spec-h">The two DG32 dies share a package, a process and their memory; DG32-2DOM adds an attention engine on its own clock.</h3>
         <div className="table-scroll"><table className="pd-table sk-table">
@@ -194,11 +194,11 @@ export function PortfolioDashboard() {
       </section>
       </Chapter>
 
-      <Chapter id="ch-trust" title="Which documents to trust">
+      <Chapter id="ch-trust" title="Investment assumptions and product-scope reconciliation">
       <section className="pd-panel" aria-labelledby="sk-docs-h">
-        <h3 id="sk-docs-h">{d.documents.filter(r => /^current/i.test(r.status)).length} documents are current; {d.documents.filter(r => !/^current/i.test(r.status)).length} copies are superseded, stale or duplicates.</h3>
+        <h3 id="sk-docs-h">Current product scope and financial assumptions need dated approval.</h3>
         <div className="table-scroll"><table className="pd-table sk-table">
-          <caption className="sr-only">Document versions</caption>
+          <caption className="sr-only">Product scope and planning assumptions by publication</caption>
           <thead><tr><th scope="col">Document</th><th scope="col">Where</th><th scope="col">Version</th><th scope="col">Pages</th><th scope="col">Status</th><th scope="col">Note</th></tr></thead>
           <tbody>{d.documents.map(r => <tr key={r.document}><th scope="row">{r.document}</th><td>{r.where}</td><td>{r.version}</td><td>{r.pages || '–'}</td><td>{r.status}</td><td className="sk-wrap">{r.note}</td></tr>)}</tbody>
         </table></div>
@@ -206,9 +206,9 @@ export function PortfolioDashboard() {
       </section>
 
       <section className="pd-panel" aria-labelledby="sk-conf-h">
-        <h3 id="sk-conf-h">Where the published documents disagree: {d.conflicts.filter(c => /^open/i.test(c.status)).length} open, {d.conflicts.filter(c => /^fixed/i.test(c.status)).length} fixed, {d.conflicts.filter(c => /^decided/i.test(c.status)).length} decided by the owner.</h3>
+        <h3 id="sk-conf-h">Unresolved product and investment assumptions: {d.conflicts.filter(c => /^open/i.test(c.status)).length} open, {d.conflicts.filter(c => /^fixed/i.test(c.status)).length} fixed, {d.conflicts.filter(c => /^decided/i.test(c.status)).length} decided by the owner.</h3>
         <div className="table-scroll"><table className="pd-table sk-table">
-          <caption className="sr-only">Document disagreements and their status</caption>
+          <caption className="sr-only">Product and funding assumption reconciliation</caption>
           <thead><tr><th scope="col">Topic</th><th scope="col">One source says</th><th scope="col">Another says</th><th scope="col">Status</th></tr></thead>
           <tbody>{d.conflicts.map(c => <tr key={c.topic}><th scope="row">{c.topic}</th><td className="sk-wrap">{c.source_a}: {c.a_says}</td><td className="sk-wrap">{c.source_b}: {c.b_says}</td><td className="sk-wrap">{c.status}</td></tr>)}</tbody>
         </table></div>

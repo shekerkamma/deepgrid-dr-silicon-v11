@@ -156,7 +156,7 @@ function CashBars({d}: {d: PlanData}) {
 export function PlanDashboard() {
   if (!data.available) return (
     <section className="pd-unavailable">
-      <h2>The business-plan dashboard is not published on this build.</h2>
+      <h2>Discuss the business plan and funding requirements.</h2>
       <p>Plan figures are not built here. Ask the DeepGrid team for the business plan, or for the data room.</p>
       <a className="pd-link" href={url('/contact')}>Contact the team</a>
     </section>
@@ -174,7 +174,7 @@ export function PlanDashboard() {
   return (
     <div className="pd-root">
       <header className="pd-head">
-        <h2 className="dg-verdict">The model turns profitable in {fy(d.periods[firstProfit])}, but cash bottoms at {cr(close[trough])} in {fy(d.periods[trough])}, and {pct(segs[0].values[last] / segTotal(last), 0)} of {FL} revenue is {segs[0].name}.</h2>
+        <h2 className="dg-verdict">The financial plan targets profitability in {fy(d.periods[firstProfit])}, but cash bottoms at {cr(close[trough])} in {fy(d.periods[trough])}, and {pct(segs[0].values[last] / segTotal(last), 0)} of {FL} revenue is {segs[0].name}.</h2>
         <p className="dg-lede">Revenue grows from {cr(rev[0])} in {F0} to {cr(rev[last])} in {FL}. {segs[0].name} carries most of it{recon && recon !== segs[0] ? `; ${recon.name} is ${pct(recon.values[last] / segTotal(last), 0)} of ${FL} revenue` : ''}. The raise has to carry the company through the {fy(d.periods[trough])} cash low before revenue catches up.</p>
         <p className="pd-flag"><strong>Plan targets, not results.</strong> {d.model}, {F0}–{FL}, base scenario, ₹{NB}Cr. Nothing here is audited or contracted. {d.checks.length} accounting identities are re-checked on every build; they show the model adds up, not that its assumptions hold.</p>
       </header>
@@ -186,7 +186,7 @@ export function PlanDashboard() {
         {value: cr(close[trough]), finding: `Cash is tightest in ${fy(d.periods[trough])}`, text: `Lowest year-end cash, down from ${cr(open0)} at the start of ${F0}, before revenue catches up.`, source: `${d.model} · plan target · year-end balances only`},
       ]}/>
 
-      <Chapter id="ch-sells" title="What the company sells">
+      <Chapter id="ch-sells" title="Revenue mix and business segments">
       <section className="pd-panel" aria-labelledby="pd-seg-h">
         <h3 id="pd-seg-h">{segs[0].name} carries {pct(segs[0].values[last] / segTotal(last), 0)} of {FL} revenue; {segs[1].name} follows with {pct(segs[1].values[last] / segTotal(last), 0)}.</h3>
         <StackedBars d={d}/>
@@ -204,7 +204,7 @@ export function PlanDashboard() {
       </section>
       </Chapter>
 
-      <Chapter id="ch-margins" title="How margins build">
+      <Chapter id="ch-margins" title="Gross and net profitability targets">
       <section className="pd-panel" aria-labelledby="pd-margin-h">
         <h3 id="pd-margin-h">Gross margin rises from {pct(gp[0] / rev[0])} to {pct(gp[last] / rev[last])}; net margin turns positive in {fy(d.periods[firstProfit])} and reaches {pct(ni[last] / rev[last])}.</h3>
         <Lines d={d} label="Gross, EBITDA and net margin by year, per cent of revenue. The same figures follow from the P&L table below." series={[
@@ -216,7 +216,7 @@ export function PlanDashboard() {
       </section>
       </Chapter>
 
-      <Chapter id="ch-cash" title="Where cash gets tight">
+      <Chapter id="ch-cash" title="Liquidity requirements and capital expenditure">
       <section className="pd-panel" aria-labelledby="pd-cash-h">
         <h3 id="pd-cash-h">Cash falls from {cr(open0)} to {cr(close[trough])} by the end of {fy(d.periods[trough])}, with {cr(-d.series.capex.slice(0, trough + 1).reduce((a, v) => a + v, 0), 0)} of {d.capexLabel} in {F0}–{fy(d.periods[trough])}, then rebuilds to {cr(close[last])} by {FL}.</h3>
         <CashBars d={d}/>
@@ -229,7 +229,7 @@ export function PlanDashboard() {
       </section>
       </Chapter>
 
-      <Chapter id="ch-raise" title="What the raise buys">
+      <Chapter id="ch-raise" title="Funding sources and capital allocation">
       <section className="pd-panel" aria-labelledby="pd-funds-h">
         <h3 id="pd-funds-h">The plan raises {cr(sources.reduce((a, f) => a + f.value, 0), 0)}; the largest use takes {pct(uses[0].value / usesTotal, 0)} of it.</h3>
         <p className="pd-lede">{'Sources: ' + sources.map(f => `${f.label} (${cr(f.value, 0)})`).join(' and ') + '.'}</p>
@@ -245,9 +245,9 @@ export function PlanDashboard() {
       </section>
       </Chapter>
 
-      <Chapter id="ch-pl" title="The P&L line by line">
+      <Chapter id="ch-pl" title="Revenue, operating costs and profitability">
       <section className="pd-panel" aria-labelledby="pd-pl-h">
-        <h3 id="pd-pl-h">The P&L, line by line, as the model states it.</h3>
+        <h3 id="pd-pl-h">Planned revenue, operating costs and net income.</h3>
         <div className="table-scroll"><table className="pd-table">
           <caption className="sr-only">Company P&L, ₹ Cr</caption>
           <thead><tr><th scope="col">₹{NB}Cr</th>{d.periods.map(p => <th scope="col" key={p}>{fy(p)}</th>)}</tr></thead>
@@ -257,7 +257,7 @@ export function PlanDashboard() {
       </section>
       </Chapter>
 
-      <Chapter id="ch-compare" title="How it compares with the Blueprint">
+      <Chapter id="ch-compare" title="Reconcile company revenue with the chip portfolio plan">
       <section className="pd-panel" aria-labelledby="pd-rec-h">
         <h3 id="pd-rec-h">This model and the plan on the Portfolio strategy page are different plans, and their revenue does not reconcile.</h3>
         <p className="pd-lede">{d.reconcileLede}</p>

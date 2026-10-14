@@ -181,7 +181,7 @@ export const companyPages: CompanyPage[] = [
     kicker: 'Technical documentation & resources', title: 'Resources',
     lede: 'Access technical documentation, datasheets, whitepapers, and development resources',
     sections: [
-      { kind: 'cards', title: 'Choose the source that supports your next decision', lede: 'The documents every figure on this site traces to. Each opens inside the site with its contents and sections; the PDF is the edition of record.', cols: 3,
+      { kind: 'cards', title: 'Technical specifications and product evaluation guides', lede: 'The documents every figure on this site traces to. Each opens inside the site with its contents and sections; the PDF is the edition of record.', cols: 3,
         items: groundedDocuments.map((d) => ({ title: d.title, meta: `PDF · ${d.pdfPageCount}`, text: d.summary.split(/(?<=\.)\s/)[0], href: d.specFile, go: 'Read on this site' })),
         from: 'app/documents-data.ts (grounded document registry)' },
       { kind: 'docs', groups: docGroups, from: 'deepgridsemi.com/resources/docs + the site’s own PDFs' },
