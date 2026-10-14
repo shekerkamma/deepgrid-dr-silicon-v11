@@ -8,7 +8,7 @@ import {PRE_SILICON} from '../copy';
 import Architecture from '../architecture';
 import {FmaxChart} from '../fmax-chart';
 import Related from '../related';
-import {DeepGridVisual} from '../deepgrid-visual';
+import {BrandImage} from '../brand-imagery';
 
 export default function Page() {
   const reduced = useReduced();
@@ -23,8 +23,8 @@ export default function Page() {
         <SectionHead
           title="Two chips, one frozen safety core"
           copy="DG32-LITE is the lockstep motor-control SoC; DG32-2DOM adds an INT8 attention engine on its own clock. Choose one for its diagram, every block and why it exists, the constraints that shaped it and how data moves through it, or see the die as recorded for tape-in."
+          visual={<BrandImage kind="dg32" priority/>}
         />
-        <DeepGridVisual kind="technology" priority/>
         <Architecture
           chip={params.get('chip') || 'lite'}
           block={block}

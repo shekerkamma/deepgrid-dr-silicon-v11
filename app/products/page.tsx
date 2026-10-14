@@ -1,4 +1,5 @@
 'use client';
+import {BrandImage} from '../brand-imagery';
 
 import {PortfolioV6Style} from '../portfolio-v6-style';
 import {Shell, useNav} from '../shell';
@@ -20,7 +21,8 @@ export default function Page() {
     <Shell route="products"><PortfolioV6Style/>
       <section className="page-wrap">
   <SectionHead kicker="Products" title="Twelve parts, each for one physical job." copy="Motion and safety, power and infrastructure, interfaces and perception, system integration: each part starts from the job it does on the board. Below the ten, DG32, the lockstep safety MCU, is shown in depth with its 2DOM variant. Pre-silicon; every figure is a design target."/>
-  <DeepGridVisual kind="products" priority/>
+  <BrandImage kind="portfolio" priority/>
+  <DeepGridVisual kind="products"/>
   {/* Storyboard 2026-10-11: the finder repeated Home; the tiles are this page's list, and their heading is a claim. */}
   <ProductTiles title="Twelve parts, each built for one physical job." lede="Pre-silicon: every figure on a tile is a design target. Open a tile for its three deciding figures and its film."/>
   <ProductsScene/>

@@ -1,4 +1,5 @@
 'use client';
+import {ProductApplicationImage} from './brand-imagery';
 /** One product page (/products/<slug>). Structure follows deepgridsemi.com's DG-A100 page, section for
  *  section: hero with the part in the middle and three figures beside it, an overview with a media
  *  carousel, a key-features grid, the architecture with its specification around it, readiness, what
@@ -99,6 +100,7 @@ export default function ProductPageView({slug}: {slug: string}) {
           ); })}
         </dl>
       </header>
+      <section className="pp-sec"><ProductApplicationImage sku={p.slug}/></section>
 
       {/* 2 · Overview: name, status line, actions; the media carousel (DG-A100: three product views). */}
       <section id="pp-inside" className="pp-sec pp-overview pp-reveal">

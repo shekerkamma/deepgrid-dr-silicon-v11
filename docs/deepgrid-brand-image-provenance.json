@@ -1,0 +1,82 @@
+[
+  {
+    "file": "public/images/deepgrid-brand/dg32-control.webp",
+    "width": 1536,
+    "height": 1024,
+    "bytes": 173582,
+    "source": "Host-native OpenAI image_gen; DG32 concept with QFN-package correction",
+    "prompt": "EDIT DESIGN SPEC: Preserve this exact DeepGrid DG32 board concept, camera angle, navy/copper materials, natural studio lighting, package engraving \"DEEPGRID\" and \"DG32\", separate power stage and connector. Correct only the central DG32 package so it is a physically plausible QFN package: flat square black moulded body with NO protruding gull-wing leads; its electrical contacts are small flush pads underneath its edges and are largely hidden by the board. Do not change the brand text, add other writing, specifications, badges or performance claims. Keep the whole package in frame. This remains an illustrative pre-silicon product concept, not a product photograph.",
+    "sourceSha256": "dbd90adf6afa4ee7f2a37a8ea57af00dfcffcedaa135c7ee9bd8c0b2be8030d3",
+    "status": "reviewed concept illustration; no manufactured-silicon or deployment claim"
+  },
+  {
+    "file": "public/images/deepgrid-brand/dg32-control-768.webp",
+    "width": 768,
+    "height": 512,
+    "bytes": 71726,
+    "source": "Host-native OpenAI image_gen; DG32 concept with QFN-package correction",
+    "prompt": "EDIT DESIGN SPEC: Preserve this exact DeepGrid DG32 board concept, camera angle, navy/copper materials, natural studio lighting, package engraving \"DEEPGRID\" and \"DG32\", separate power stage and connector. Correct only the central DG32 package so it is a physically plausible QFN package: flat square black moulded body with NO protruding gull-wing leads; its electrical contacts are small flush pads underneath its edges and are largely hidden by the board. Do not change the brand text, add other writing, specifications, badges or performance claims. Keep the whole package in frame. This remains an illustrative pre-silicon product concept, not a product photograph.",
+    "sourceSha256": "dbd90adf6afa4ee7f2a37a8ea57af00dfcffcedaa135c7ee9bd8c0b2be8030d3",
+    "status": "reviewed concept illustration; no manufactured-silicon or deployment claim"
+  },
+  {
+    "file": "public/images/deepgrid-brand/portfolio-systems.webp",
+    "width": 1536,
+    "height": 1024,
+    "bytes": 230758,
+    "source": "Host-native OpenAI image_gen; mature-node portfolio concept",
+    "prompt": "DESIGN SPEC: Landscape 3:2 editorial studio engineering concept for DeepGrid Semi's mature-node portfolio. Inherited dark navy #0b1220, restrained blue highlights, realistic copper, matte package and circuit-board materials. Exactly four physically credible application assemblies laid out as one coherent tabletop scene: a compact motor-drive board with external power stage and motor terminals, a smart-energy-meter board beside a small metering terminal, a radar module with a recognisable printed antenna array, and a zonal-interface board with harness connectors. All complete within frame, with breathing space, no floating parts. A single small flat QFN-style package in front bears exactly the engraving \"DEEPGRID\". Studio still-life detail, controlled soft lighting, strong focal hierarchy, elegant clean background; technology should look materially believable, not fantastical. No extra words, performance figures, certification marks, charts, semiconductor wafers, holograms, neon beams, watermarks, claimed customers or actual shipping products. This is an illustration of proposed product roles, never a photograph of manufactured DeepGrid products.",
+    "sourceSha256": "e50219d08c41af504c85bfb4144c771b2f007770aafb0f998af5823f4331a0a0",
+    "status": "reviewed concept illustration; no manufactured-silicon or deployment claim"
+  },
+  {
+    "file": "public/images/deepgrid-brand/portfolio-systems-768.webp",
+    "width": 768,
+    "height": 512,
+    "bytes": 73830,
+    "source": "Host-native OpenAI image_gen; mature-node portfolio concept",
+    "prompt": "DESIGN SPEC: Landscape 3:2 editorial studio engineering concept for DeepGrid Semi's mature-node portfolio. Inherited dark navy #0b1220, restrained blue highlights, realistic copper, matte package and circuit-board materials. Exactly four physically credible application assemblies laid out as one coherent tabletop scene: a compact motor-drive board with external power stage and motor terminals, a smart-energy-meter board beside a small metering terminal, a radar module with a recognisable printed antenna array, and a zonal-interface board with harness connectors. All complete within frame, with breathing space, no floating parts. A single small flat QFN-style package in front bears exactly the engraving \"DEEPGRID\". Studio still-life detail, controlled soft lighting, strong focal hierarchy, elegant clean background; technology should look materially believable, not fantastical. No extra words, performance figures, certification marks, charts, semiconductor wafers, holograms, neon beams, watermarks, claimed customers or actual shipping products. This is an illustration of proposed product roles, never a photograph of manufactured DeepGrid products.",
+    "sourceSha256": "e50219d08c41af504c85bfb4144c771b2f007770aafb0f998af5823f4331a0a0",
+    "status": "reviewed concept illustration; no manufactured-silicon or deployment claim"
+  },
+  {
+    "file": "public/images/deepgrid-brand/fleet-evaluation.webp",
+    "width": 1536,
+    "height": 864,
+    "bytes": 75974,
+    "source": "/mnt/c/Users/sheke/Downloads/DeepGrid-Semi-Automobile-3PL-Insurance-GTM-Client-Ready-ImageLed-reviewed.pptx / ppt/media/image1.png",
+    "prompt": "Existing DeepGrid source-deck artwork; unmodified full frame. Illustrative application concept, not deployment evidence.",
+    "sourceSha256": "7ea7c78072889dfa2f6a81c1e880c11db74020c24b82c9a271f8b11806a7384f",
+    "status": "reviewed concept illustration; no manufactured-silicon or deployment claim"
+  },
+  {
+    "file": "public/images/deepgrid-brand/fleet-evaluation-768.webp",
+    "width": 768,
+    "height": 432,
+    "bytes": 25342,
+    "source": "/mnt/c/Users/sheke/Downloads/DeepGrid-Semi-Automobile-3PL-Insurance-GTM-Client-Ready-ImageLed-reviewed.pptx / ppt/media/image1.png",
+    "prompt": "Existing DeepGrid source-deck artwork; unmodified full frame. Illustrative application concept, not deployment evidence.",
+    "sourceSha256": "7ea7c78072889dfa2f6a81c1e880c11db74020c24b82c9a271f8b11806a7384f",
+    "status": "reviewed concept illustration; no manufactured-silicon or deployment claim"
+  },
+  {
+    "file": "public/images/deepgrid-brand/driver-assistance.webp",
+    "width": 1536,
+    "height": 864,
+    "bytes": 98020,
+    "source": "/mnt/c/Users/sheke/Downloads/DeepGrid-Semi-Automobile-3PL-Insurance-GTM-Client-Ready-ImageLed-reviewed.pptx / ppt/media/image5.png",
+    "prompt": "Existing DeepGrid source-deck artwork; unmodified full frame. Illustrative application concept, not deployment evidence.",
+    "sourceSha256": "2b7b4d69588887e46fdfae852177d0054aec0c746b432638bc92b47854ff636f",
+    "status": "reviewed concept illustration; no manufactured-silicon or deployment claim"
+  },
+  {
+    "file": "public/images/deepgrid-brand/driver-assistance-768.webp",
+    "width": 768,
+    "height": 432,
+    "bytes": 38768,
+    "source": "/mnt/c/Users/sheke/Downloads/DeepGrid-Semi-Automobile-3PL-Insurance-GTM-Client-Ready-ImageLed-reviewed.pptx / ppt/media/image5.png",
+    "prompt": "Existing DeepGrid source-deck artwork; unmodified full frame. Illustrative application concept, not deployment evidence.",
+    "sourceSha256": "2b7b4d69588887e46fdfae852177d0054aec0c746b432638bc92b47854ff636f",
+    "status": "reviewed concept illustration; no manufactured-silicon or deployment claim"
+  }
+]

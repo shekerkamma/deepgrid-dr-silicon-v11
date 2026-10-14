@@ -1,5 +1,7 @@
 # Workspace map
 
+- `app/brand-imagery.tsx`, `app/brand-imagery.css`, `docs/deepgrid-brand-visual-direction.md`: curated product and application imagery, Downloads source selection and ai-graphics gap fills. `docs/deepgrid-brand-image-provenance.json` records original sources, prompts and image metadata.
+
 - `app/engineering-visuals.tsx`, `app/engineering-visuals.css`, `docs/deepgrid-visual-extension.md`: original DeepGrid layout and architecture images placed in investment, validation, reference and market-evaluation sections. `scripts/verify-engineering-visuals.mjs` checks loaded images, captions, links and responsive accessibility.
 
 - `docs/title-and-navigation-policy.md`, `scripts/audit-titles.mjs`: business/engineering title rules, rendered route/state inventory and responsive heading-fit checks.

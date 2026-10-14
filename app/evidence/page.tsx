@@ -8,7 +8,7 @@ import Related from '../related';
 import {FilmMoment, type Clip} from '../evidence-clip';
 import {citeDoc, products, type ProductId} from '../applications-story-data';
 import {url} from '../routes';
-import {SceneFigure} from '../scene-figure';
+import {BrandImage} from '../brand-imagery';
 import {LayoutEvidence} from '../engineering-visuals';
 import {productSlugById} from '../product-pages-data';
 
@@ -107,9 +107,7 @@ export default function Page() {
           copy="DG32 is pre-silicon as of September 2026, and it is the furthest along of DeepGrid’s twelve chips. This page takes each kind of evidence behind the site’s numbers in turn, with the moment in the narrated films where it is explained, then says what the other eleven chips rest on."
         />
         <LayoutEvidence compact/>
-        <SceneFigure name="evidence-fpga" eager
-          alt="Illustration of a validation bench: an FPGA development board wired to a small motor-drive board, with an oscilloscope out of focus behind"
-          caption="Illustration of the pre-silicon stage: before a chip exists, the evidence is simulation, static timing and logic run on an FPGA."/>
+        <BrandImage kind="dg32"/>
         <div className="st-story">
           <section className="st-beat st-answer" id="ev-answer" aria-labelledby="ev-answer-h">
             <div className="st-beat-text">

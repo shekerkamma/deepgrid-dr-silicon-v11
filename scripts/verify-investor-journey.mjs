@@ -32,6 +32,8 @@ for(const width of [1440,768,390]){
   await inspect('brief');
   await page.locator('.ij-discussion a').click();
   await page.getByRole('button',{name:'Investment & data room',exact:true}).waitFor();
+  // Pages serves HTML before the contact handlers load; let its route assets settle before submitting.
+  await page.waitForLoadState('networkidle');
   assert.equal(new URL(page.url()).searchParams.get('intent'),'investor');
   assert.equal(await page.getByLabel('Voltage range',{exact:true}).count(),0);
   await page.getByRole('button',{name:'Compose discussion request',exact:true}).click();

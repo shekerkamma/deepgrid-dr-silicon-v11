@@ -6,7 +6,7 @@ import {BriefView} from '../../brief-view';
 import Related from '../../related';
 import {DashboardNav} from '../../dashboard-nav';
 import {DiscussionClose} from '../../investor-journey';
-import {ArchitectureReferences} from '../../engineering-visuals';
+import {BrandGallery} from '../../brand-imagery';
 
 /** Investor and buyer brief: the tranche-1 reading of the Blueprint and the model, and six buyer questions answered. */
 export default function Page() {
@@ -16,7 +16,7 @@ export default function Page() {
         <SectionHead title="Investor and buyer brief" copy="What tranche 1 buys, how the two plans relate, and what a buyer can expect today."/>
         <DashboardNav current="brief"/>
         <BriefView/>
-        <ArchitectureReferences investor/>
+        <BrandGallery investor/>
         <DiscussionClose compact/>
         <Related route="brief"/>
       </section>

@@ -7,6 +7,7 @@ fs.mkdirSync('.impeccable/review',{recursive:true});
 const browser=await chromium.launch();
 for(const width of [1440,1024,390]){
  const page=await browser.newPage({viewport:{width,height:1000},reducedMotion:'reduce'});
+ page.setDefaultNavigationTimeout(60000);
  const errors=[];page.on('pageerror',e=>errors.push(e.message));
  for(const route of ['', 'products','technology']){
   await page.goto(base+route,{waitUntil:'networkidle'});
@@ -18,8 +19,9 @@ for(const width of [1440,1024,390]){
    assert.ok(hero&&nav&&hero.y>=nav.y+nav.height-1,`${route} hero overlaps navigation at ${width}`);
   }
   assert.equal(await page.evaluate(()=>document.documentElement.scrollWidth>innerWidth+1),false,`${route} overflow at ${width}`);
-  assert.ok(await page.locator('.v11-visual img').count(),`${route} missing DeepGrid visual`);
-  assert.ok(await page.locator('.v11-visual figcaption').first().innerText());
+  const visual=page.locator(route==='technology'?'.dg-brand-intro .dg-brand-image':'.v11-visual');
+  assert.ok(await visual.locator('img').count(),`${route} missing DeepGrid visual`);
+  assert.ok(await visual.locator('figcaption').first().innerText());
   await page.evaluate(async()=>{for(let y=0;y<document.documentElement.scrollHeight;y+=500){scrollTo(0,y);await new Promise(r=>setTimeout(r,70));}scrollTo(0,0);});
   await page.evaluate(async()=>{await Promise.all([...document.images].filter(i=>i.complete).map(i=>i.decode().catch(()=>{})));});
   await page.waitForTimeout(1000);

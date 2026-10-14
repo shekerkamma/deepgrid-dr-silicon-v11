@@ -14,8 +14,7 @@ for(const width of [1440,390]){
  for(const route of routes){
   await page.goto(base+route,{waitUntil:'networkidle'});
   const figures=page.locator('.dg-engineering-figure');assert.ok(await figures.count()>0,route+' has engineering visuals');
-  await figures.first().scrollIntoViewIfNeeded();
-  await page.waitForFunction(()=>[...document.querySelectorAll('.dg-engineering-figure img')].every(i=>i.complete&&i.naturalWidth>0));
+  for(const image of await figures.locator('img').all()){await image.scrollIntoViewIfNeeded();await image.evaluate(i=>i.decode());}
   const bad=await figures.evaluateAll(figs=>figs.flatMap(f=>{
    const i=f.querySelector('img'),a=f.querySelector('a');
    return (!i.alt||!i.width||!i.height||!f.querySelector('figcaption')?.textContent.includes('Pre-silicon')&&!f.querySelector('figcaption')?.textContent.includes('pre-silicon')||!a.href)?['Incomplete visual']:[];
@@ -28,7 +27,7 @@ for(const width of [1440,390]){
   await page.evaluate(()=>scrollTo({top:0,behavior:'instant'}));
   await page.waitForTimeout(150);
   await page.screenshot({path:`${out}/${route.split('?')[0].replaceAll('/','-')||'home'}-${width}.png`,fullPage:true});
-  const section=page.locator(route.includes('view=use-cases')?'.uc-path':'.dg-layout-evidence,.dg-architecture-references').first();
+  const section=page.locator(route.includes('view=use-cases')?'.uc-path':'.dg-layout-evidence,.dg-architecture-references,.dg-brand-gallery').first();
   await section.screenshot({path:`${out}/visual-${route.split('?')[0].replaceAll('/','-')||'home'}-${width}.png`});
  }
  assert.deepEqual(failures,[]);console.log(`PASS ${width}: nine visual routes, loaded images, captions, links, overflow and accessibility`);
