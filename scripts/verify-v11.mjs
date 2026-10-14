@@ -50,6 +50,8 @@ for(const width of [1440,1024,390]){
  // Every route hero stays below its breadcrumbs and section tabs, and sticky offsets use the real header height.
  for(const route of ['technology/safety','technology/control-loop','technology/package','evidence','applications','contact','resources','about','use-cases/motors']){
   await page.goto(base+route,{waitUntil:'networkidle'});
+  await page.evaluate(()=>document.fonts.ready);
+  await page.waitForFunction(()=>parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--nav-h'))===document.querySelector('.topbar')?.offsetHeight,{},{timeout:5000});
   const r=await page.evaluate(()=>{const hero=document.querySelector('.page-wrap > .section-head, .cp-band');if(!hero)return null;
    const navBottom=Math.max(0,...[...document.querySelectorAll('.breadcrumbs, .technology-nav')].map(e=>e.getBoundingClientRect().bottom));
    return {hero:hero.getBoundingClientRect().top,navBottom,navH:parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--nav-h')),header:document.querySelector('.topbar').offsetHeight};});
