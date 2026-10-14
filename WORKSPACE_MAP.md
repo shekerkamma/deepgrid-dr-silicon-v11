@@ -1,5 +1,7 @@
 # Workspace map
 
+- `app/engineering-visuals.tsx`, `app/engineering-visuals.css`, `docs/deepgrid-visual-extension.md`: original DeepGrid layout and architecture images placed in investment, validation, reference and market-evaluation sections. `scripts/verify-engineering-visuals.mjs` checks loaded images, captions, links and responsive accessibility.
+
 - `docs/title-and-navigation-policy.md`, `scripts/audit-titles.mjs`: business/engineering title rules, rendered route/state inventory and responsive heading-fit checks.
 
 - `app/use-case-dashboard.tsx`, `app/use-case-dashboard.css`, `app/data/use-case-model.ts`: complete twelve-use-case dashboard in `/portfolio/brief?view=use-cases`, charts, coverage matrix and implementation drill-downs.

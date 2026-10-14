@@ -6,6 +6,7 @@ import {usePortfolio} from './data/use-portfolio';
 import {readinessLabels, useCases, useCaseSource, type UseCase} from './data/use-case-model';
 import {sheetViewUrl, type TableName} from './data/portfolio-facts';
 import {asset, url} from './routes';
+import {ArchitectureImage} from './engineering-visuals';
 
 const cr = (v: number) => `₹${v.toLocaleString('en-IN', {maximumFractionDigits: 1})} Cr`;
 const usd = (v: number) => `$${v.toLocaleString('en-US', {maximumFractionDigits: 2})}`;
@@ -43,6 +44,7 @@ function Implementation({c}: {c: UseCase}) {
   ];
   return <div className="uc-detail-grid">
     <article className="uc-path" aria-label="Implementation path">
+      <ArchitectureImage sku={chip.sku} name={chip.name}/>
       <p className="uc-detail-lede">For {c.buyer}. {c.job}.</p>
       <ol className="uc-steps">{steps.map(([label, value], i) => <li key={label}>
         <span className="uc-step-number" aria-hidden="true">{i + 1}</span><div><strong>{label}</strong><p>{value}</p></div>

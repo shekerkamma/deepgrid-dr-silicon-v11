@@ -2,6 +2,7 @@
 import {ArrowUpRight} from 'lucide-react';
 import {PortfolioFinder} from './portfolio-finder';
 import {DeepGridVisual} from './deepgrid-visual';
+import {LayoutEvidence} from './engineering-visuals';
 import {url} from './routes';
 import {readHref} from './doc-links';
 import {Workbench,SafetyWorkbench} from './portfolio-workbench';
@@ -17,6 +18,7 @@ export function Overview({reduced}:{reduced:boolean}){return <div className="v6-
 <FundingPath/>
 <PortfolioFinder/>
 <EvidenceAgenda/>
+<LayoutEvidence compact/>
 <DiscussionClose/>
 <section className="dgs-proof-strip" aria-label="Evidence at a glance"><ul><li><a href={url('/products')}><strong>12</strong><span>architectures</span><small>Pre-silicon portfolio · SKU Blueprint</small></a></li>{([['fault-39','injected fault to protective response'],['fmax-lockstep','lockstep core, sets the 50 MHz clock'],['node-130','process, for 28 to 120 V rails']] as const).map(([id,label])=>{const c=claims[id];return <li key={id}><a href={src(c.source)} title={c.measures}><strong>{c.figure}</strong><span>{label}</span><small>{c.kind} · {c.sourceTitle}</small></a></li>})}</ul></section>
 <nav className="v11-application-strip" aria-label="Explore by application"><span>What are you building?</span>{[['Motors & drives','motors'],['Vehicles','vehicles'],['Defence & drones','defence'],['Grid & metering','grid'],['Board infrastructure','boards']].map(([name,path])=><a key={path} href={url('/use-cases/'+path)}>{name}</a>)}</nav>

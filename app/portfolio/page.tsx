@@ -5,6 +5,7 @@ import {SectionHead} from '../detail';
 import {PortfolioDashboard} from '../portfolio-dashboard';
 import Related from '../related';
 import {DashboardNav} from '../dashboard-nav';
+import {ArchitectureReferences} from '../engineering-visuals';
 
 /** SKU portfolio dashboard: every chip's readiness, plan line, ramp, approvals and cost, from the SKU Blueprint. */
 export default function Page() {
@@ -14,6 +15,7 @@ export default function Page() {
         <SectionHead title="SKU portfolio" copy="Eleven chips: where each stands, what it can earn, and what it costs to bring to market."/>
         <DashboardNav current="portfolio"/>
         <PortfolioDashboard/>
+        <ArchitectureReferences investor/>
         <Related route="portfolio"/>
       </section>
     </Shell>

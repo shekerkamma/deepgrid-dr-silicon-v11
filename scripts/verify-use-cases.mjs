@@ -37,7 +37,7 @@ for (const width of [1440,768,390]) {
   const dashboard = page.locator('.uc-dashboard');
   await dashboard.waitFor();
   check((await page.getByRole('tab',{name:'Markets & qualification'}).getAttribute('aria-selected'))==='true',`${width}: direct view URL`);
-  check(await dashboard.locator('figure').count()===4,`${width}: all four charts present`);
+  check(await dashboard.locator('figure.pd-figure').count()===4,`${width}: all four charts present`);
   check(await dashboard.locator('.dg-ins').count()===4,`${width}: all four findings present`);
   check(await dashboard.locator('.uc-matrix tbody tr').count()===12,`${width}: twelve readiness rows`);
   check(await dashboard.locator('.uc-case').count()===12,`${width}: twelve use-case selectors`);
@@ -84,10 +84,10 @@ for (const width of [1440,768,390]) {
   check(await page.locator('#uc-detail-title').innerText()==='Supply supervision for defence and industrial boards',`${width}: direct chip link`);
   mode='changed';await page.getByRole('button',{name:'Refresh data'}).click();
   await page.getByText(/Live portfolio tables ·/).waitFor();
-  check((await dashboard.locator('figure').nth(3).innerText()).includes('12–27%'),`${width}: validated live edit updates market chart`);
+  check((await dashboard.locator('figure.pd-figure').nth(3).innerText()).includes('12–27%'),`${width}: validated live edit updates market chart`);
   mode='invalid';await page.getByRole('button',{name:'Refresh data'}).click();
   await page.getByText('Live tables unavailable; showing the copy checked at build.').waitFor();
-  check((await dashboard.locator('figure').nth(3).innerText()).includes('12–26%'),`${width}: invalid live table rejected atomically`);
+  check((await dashboard.locator('figure.pd-figure').nth(3).innerText()).includes('12–26%'),`${width}: invalid live table rejected atomically`);
   const overflow=await page.evaluate(()=>document.documentElement.scrollWidth>innerWidth+1);
   check(!overflow,`${width}: no page overflow`);
   await page.addScriptTag({path:axe});

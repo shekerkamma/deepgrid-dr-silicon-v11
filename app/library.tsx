@@ -5,6 +5,7 @@ import {ArrowLeft,ArrowRight,ArrowUpRight,Download,Play} from 'lucide-react';
 import {packages,fmtTime} from './library-data';
 import {tabIndexFor, tablistKeys} from './tablist';
 import GroundedDocumentsHub from './documents-hub';
+import {ArchitectureReferences} from './engineering-visuals';
 import {DiagramNotes} from './detail';
 import {diagramNotes} from './diagram-notes';
 
@@ -35,6 +36,7 @@ export default function Library({pkgId,slide,onChange,go}:{pkgId:string;slide:nu
  const media=useRef<HTMLDivElement>(null);
  useEffect(()=>{if(new URLSearchParams(location.search).has('pkg'))media.current?.scrollIntoView({block:'start',behavior:'instant'});},[]);
  return <div className="dr-library">
+  <ArchitectureReferences/>
   <GroundedDocumentsHub go={go} />
   <div className="dr-lib-media" ref={media}>
   {groups.map(([label,kind])=><div className="dr-lib-group" key={kind}><p className="dr-lib-kicker">{label.toUpperCase()}</p>
