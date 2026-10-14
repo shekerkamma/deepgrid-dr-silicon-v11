@@ -39,3 +39,5 @@ Windows: run npm through `node 'C:/Program Files/nodejs/node_modules/npm/bin/npm
 - `app/site-refinement.css`, `app/motion.tsx`, `docs/v12-site-refinement.md`: shared reading, navigation focus, visible-default motion and sitewide refinement acceptance.
 
 - `scripts/build-primary-answer-evidence.mjs`, `app/data/primary-answer-evidence.json`: deterministic primary-guide passages supplement graph retrieval; regenerate after architecture-guide edits. Build checks source freshness.
+
+- app/investor-journey.tsx and app/investor-journey.css: investor homepage story, contextual diligence links and site directory; contact/page.tsx supports shareable investor/partner/engineering enquiry intent. Use-case dashboard query parameters persist search and market filters.

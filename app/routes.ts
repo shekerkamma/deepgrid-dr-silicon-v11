@@ -74,9 +74,9 @@ export const routes: Route[] = [
   {id: 'team',         href: '/about/team',              label: 'Leadership & team', parent: 'about'},
   {id: 'recognition',  href: '/about/recognition',       label: 'Achievements', parent: 'about'},
   {id: 'company',      href: '/company',                 label: 'Portfolio strategy', nav: true, parent: 'about'},
-  {id: 'plan',         href: '/plan',                    label: 'Business plan', parent: 'about'},
-  {id: 'portfolio',    href: '/portfolio',               label: 'SKU portfolio', parent: 'about'},
-  {id: 'brief',        href: '/portfolio/brief',         label: 'Investor and buyer brief', parent: 'about'},
+  {id: 'plan',         href: '/plan',                    label: 'Business plan', parent: 'company'},
+  {id: 'portfolio',    href: '/portfolio',               label: 'SKU portfolio', parent: 'products'},
+  {id: 'brief',        href: '/portfolio/brief',         label: 'Investment brief', parent: 'company'},
   // A plain link at the end of the menu, and the header CTA on every page.
   {id: 'contact',      href: '/contact',                 label: 'Contact'},
 ];

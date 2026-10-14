@@ -1,9 +1,9 @@
 {
   "home": {
-    "headline": "Build the systems that move, protect and connect.",
-    "context": "DeepGrid is developing a silicon portfolio for equipment makers in motion, power, sensing and communications. Start with the job your product must do, then judge each part by its evidence and readiness.",
-    "decision": "Choose a system opportunity before choosing a chip.",
-    "next": "/products"
+    "headline": "A silicon portfolio. A staged path to first silicon.",
+    "context": "Review DeepGrid’s first markets, staged funding plan and engineering evidence. Architecture breadth is distinct from returned silicon and qualification.",
+    "decision": "Review the opportunity and the evidence needed for a funding or partnership discussion.",
+    "next": "/portfolio/brief"
   },
   "products": {
     "headline": "Choose the product by the problem it removes.",
@@ -144,8 +144,8 @@
     "next": "/contact"
   },
   "contact": {
-    "headline": "Turn a business need into a defined evaluation.",
-    "context": "Tell us the product you are building, the outcome you need, your timing and what must be proven before you can proceed. Technical requirements can then be scoped with the relevant team.",
+    "headline": "Start the right discussion.",
+    "context": "Request an investment discussion, strategic partnership or engineering evaluation. Ask for the evidence and materials needed for your next decision.",
     "decision": "Leave the conversation with a clear scope and next decision.",
     "next": "/products"
   },
@@ -234,7 +234,7 @@
     "next": "/contact"
   },
   "brief": {
-    "headline": "The investor and buyer brief.",
+    "headline": "The investment brief.",
     "context": "What tranche 1 buys, how the SKU Blueprint and the September financial model relate, and six buyer questions answered with what is proven and what is a target.",
     "decision": "Use the Blueprint as the chip plan and the ₹10 Cr table as the ask; ask for the datasheet or approval date a decision needs.",
     "next": "/contact"

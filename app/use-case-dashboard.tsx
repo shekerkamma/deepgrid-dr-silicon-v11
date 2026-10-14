@@ -52,6 +52,7 @@ function Implementation({c}: {c: UseCase}) {
         <section><h4>Still missing</h4><ul>{c.missing.map(m => <li key={m}>{m}</li>)}</ul></section>
       </div>
       <div className="uc-detail-actions">
+        <a className="pd-link" href={url('/contact') + '?intent=partner&sku=' + encodeURIComponent(chip.sku)}>Discuss this opportunity <ArrowRight size={16} aria-hidden="true"/></a>
         <a className="pd-link" href={url(c.route)}>Explore this application <ArrowRight size={16} aria-hidden="true"/></a>
         <a className="pd-link" href={url(chip.sku === 'D100' ? '/products/d100' : '/products/' + chip.sku.toLowerCase())}>Chip architecture <ArrowRight size={16} aria-hidden="true"/></a>
         {c.datasheet && <a className="pd-link" href={asset(c.datasheet)}><FileText size={16} aria-hidden="true"/> Preliminary datasheet</a>}
@@ -72,7 +73,12 @@ export function UseCaseDashboard() {
   const [sources, setSources] = useState(false);
   const detail = useRef<HTMLHeadingElement>(null);
   useEffect(() => {
-    const read = () => { const sku = new URLSearchParams(location.search).get('sku'); if (useCaseSource.cases.some(c => c.sku === sku)) setSelected(sku!); };
+    const read = () => {
+      const params = new URLSearchParams(location.search), sku = params.get('sku'), market = params.get('market');
+      setSelected(useCaseSource.cases.some(c => c.sku === sku) ? sku! : 'SKU-1');
+      setSearch(params.get('q') || '');
+      setFilter(market && ['shuttle','fast','later'].includes(market) ? market : 'all');
+    };
     read(); window.addEventListener('popstate', read); return () => window.removeEventListener('popstate', read);
   }, []);
   const choose = (sku: string, jump = false) => {
@@ -81,6 +87,13 @@ export function UseCaseDashboard() {
     history.replaceState(null, '', target);
     if (jump) requestAnimationFrame(() => detail.current?.focus());
   };
+  const updateFilter = (key: 'q' | 'market', value: string) => {
+    const target = new URL(location.href); target.searchParams.set('view','use-cases');
+    if (value && (key === 'q' || value !== 'all')) target.searchParams.set(key,value); else target.searchParams.delete(key);
+    history.replaceState(null,'',target);
+    if (key === 'q') setSearch(value); else setFilter(value);
+  };
+  const clearFilters = () => {updateFilter('q',''); updateFilter('market','all');};
   const active = cases.find(c => c.sku === selected) ?? cases[0];
   if (!active) return <p className="pd-flag">No use cases match the checked portfolio tables.</p>;
   const planned = cases.filter(c => c.chip.planCr != null);
@@ -151,19 +164,21 @@ export function UseCaseDashboard() {
           <thead><tr><th scope="col">Use case</th>{readinessLabels.map(l => <th scope="col" key={l}>{l}</th>)}<th scope="col">Score /12</th></tr></thead>
           <tbody>{readiness.map(c => <tr key={c.sku} data-selected={c.sku === active.sku}><th scope="row"><button className="uc-row-button" onClick={() => choose(c.sku,true)} aria-pressed={c.sku === active.sku}>{c.title}<span>{c.sku} · {c.chip.name}</span></button></th>{c.criteria.map((n,i) => <td key={i}><span className="uc-status" data-level={n}><span aria-hidden="true">{['–','◐','●'][n]}</span> {STATUS[n]}</span></td>)}<td><strong>{c.score}</strong><span className="uc-score" aria-hidden="true"><span style={{width:`${c.score / 12 * 100}%`}}/></span></td></tr>)}</tbody>
         </table></div>
+        <details className="uc-mobile-readiness"><summary>Compare document coverage by use case</summary><p className="pd-source">Score out of 12. Document coverage, not silicon readiness. The complete six-criterion table remains above.</p><ul>{readiness.map(c => <li key={c.sku}><button onClick={() => choose(c.sku,true)}>{c.title}</button><span>{c.score}/12</span></li>)}</ul></details>
         <details className="uc-method"><summary>How the score is calculated</summary><p>Each of six criteria contributes 0, 1 or 2 points. Design: RTL plus analog schematics = 2, RTL only = 1, specification or undocumented = 0. Shuttle: in the December plan = 2. Datasheet: published preliminary document = 2. Unit cost: a row in the cost table = 2. Approval funded: identified first-approval allocation in tranche 1 = 2. Plan line: a published allocation = 2. This is document coverage, not a safety, certification, sample availability or silicon-readiness rating.</p></details>
         <Source tables={['skus','unit-cost','tranche1-uses','dg32-specs']} expanded={sources}/>
       </section>
     </Chapter>
 
     <Chapter id="uc-explore" title="Each use case, in detail">
-      <div className="uc-filters"><label>Find a use case<input type="search" value={search} onChange={e => setSearch(e.target.value)} placeholder="Search chip, application or buyer"/></label>
-        <label>Show<select aria-label="Show" value={filter} onChange={e => setFilter(e.target.value)}><option value="all">All use cases</option><option value="shuttle">December shuttle</option><option value="fast">6–12 month qualification</option><option value="later">Later runs</option></select></label>
+      <div className="uc-filters"><label>Find a use case<input type="search" name="q" autoComplete="off" value={search} onChange={e => updateFilter('q',e.target.value)} placeholder="Search chip, application or buyer…"/></label>
+        <label>Show<select aria-label="Show" name="market" value={filter} onChange={e => updateFilter('market',e.target.value)}><option value="all">All use cases</option><option value="shuttle">December shuttle</option><option value="fast">6–12 month qualification</option><option value="later">Later runs</option></select></label>
         <p className="pd-source" role="status">{visible.length} of {cases.length} use cases</p></div>
       <div className="uc-gallery" role="group" aria-label="Choose a use case">{visible.map(c => <button key={c.sku} className="uc-case" aria-pressed={c.sku === active.sku} aria-controls="uc-implementation" onClick={() => choose(c.sku)}>
         <span className="uc-case-code">{c.sku}</span><strong>{c.title}</strong><span>{c.chip.name}</span><span className="uc-case-meta">{c.chip.shuttle ? 'December shuttle' : 'Later run'} · {c.approval.low}–{c.approval.high} mo <ArrowRight size={16} aria-hidden="true"/></span>
       </button>)}</div>
-      {!visible.length && <div className="uc-empty"><p>No use cases match these filters.</p><button className="uc-control" onClick={() => {setSearch('');setFilter('all');}}>Clear filters</button></div>}
+      {!visible.length && <div className="uc-empty"><p>No use cases match these filters. The previous selection remains below.</p><button className="uc-control" onClick={clearFilters}>Clear filters</button></div>}
+      {!!visible.length && !visible.some(c => c.sku === active.sku) && <p className="uc-selection-note" role="status">The selected {active.chip.name} is outside these filter results. Its detail remains below; choose a matching use case or <button className="uc-control" onClick={clearFilters}>Clear filters</button>.</p>}
       <section id="uc-implementation" className="uc-card" aria-labelledby="uc-detail-title">
         <div className="uc-selected-heading"><h3 id="uc-detail-title" ref={detail} tabIndex={-1}>{active.title}</h3><span>{active.sku} · coverage {active.score}/12</span></div>
         <Implementation c={active}/>

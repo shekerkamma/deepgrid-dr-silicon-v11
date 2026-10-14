@@ -16,8 +16,18 @@ const a = (path: string, hash = '') => url(path) + (hash ? '#' + hash : '');
 
 export const menus: Menu[] = [
   {
-    id: 'products', label: 'Products', match: ['products'],
+    id: 'investors', label: 'Investors', match: ['brief', 'plan', 'company'],
     items: [
+      { label: 'Investment brief', href: a('/portfolio/brief'), note: 'What first-silicon funding buys, and what remains to be proven' },
+      { label: 'Portfolio strategy', href: a('/company'), note: 'First markets, product choices and stop rules' },
+      { label: 'Business plan', href: a('/plan'), note: 'Revenue, cash and use of funds; disclosed plan targets' },
+      { label: 'Request a discussion', href: url('/contact') + '?intent=investor', note: 'Investment, strategic partnership or data-room enquiry' },
+    ],
+  },
+  {
+    id: 'products', label: 'Portfolio', match: ['products', 'portfolio', 'procurement'],
+    items: [
+      { label: 'Compare the SKU portfolio', href: a('/portfolio'), note: 'Readiness, approval windows, cost and revenue assumptions' },
       { label: 'Explore all twelve architectures', href: a('/products'), note: 'Motion, power, sensing, interfaces and integration' },
       { label: 'DG32 safety MCU', href: a('/products/sku-4'), note: 'Lockstep control and the hardware fault path' },
       { label: 'BLDC motor controller', href: a('/products/sku-1'), note: 'Motor control and its power stage' },
@@ -37,8 +47,9 @@ export const menus: Menu[] = [
     ],
   },
   {
-    id: 'usecases', label: 'Applications', match: ['applications', 'uc-motors', 'uc-vehicles', 'uc-defence', 'uc-grid', 'uc-boards'],
+    id: 'usecases', label: 'Markets', match: ['applications', 'uc-motors', 'uc-vehicles', 'uc-defence', 'uc-grid', 'uc-boards'],
     items: [
+      { label: 'Use cases & implementation', href: url('/portfolio/brief') + '?view=use-cases', note: 'First markets, approval windows and evaluation gaps' },
       { label: 'Motors and drives', href: a('/use-cases/motors'), note: 'One chip runs the motor, another can stop it safely' },
       { label: 'Vehicles', href: a('/use-cases/vehicles'), note: 'The battery, the brakes, the radar, the bus and the wiring zones' },
       { label: 'Defence, avionics and drones', href: a('/use-cases/defence'), note: 'Screened parts, and a failsafe that does not depend on software' },
@@ -48,34 +59,25 @@ export const menus: Menu[] = [
     ],
   },
   {
-    id: 'evidence', label: 'Evidence', match: ['evidence'],
+    id: 'evidence', label: 'Evidence', match: ['evidence', 'resources', 'docs', 'videos', 'read', 'ask'],
     items: [
       { label: 'How every figure was obtained', href: a('/evidence'), note: 'Nothing here is measured on silicon yet' },
       { label: 'Claims withheld', href: a('/evidence', 'ev-withheld') },
       { label: 'Simulated', href: a('/evidence', 'ev-simulated') },
       { label: 'Post-route timing', href: a('/evidence', 'ev-post-route') },
       { label: 'What this site does not claim', href: a('/evidence', 'ev-next') },
+      { label: 'Source library', href: a('/resources/docs'), note: 'Datasheets, guides and the documents behind the claims' },
+      { label: 'Documents, decks & films', href: a('/resources') },
+      { label: 'Videos', href: a('/resources/videos') },
+      { label: 'Ask DeepGrid', href: a('/ask'), note: 'Query-specific answers with disclosed citations' },
     ],
   },
   {
-    id: 'resources', label: 'Resources', match: ['resources', 'docs', 'videos', 'ask'],
-    items: [
-      { label: 'Documentation', href: a('/resources/docs'), note: 'Datasheets, whitepapers and development resources' },
-      { label: 'Videos', href: a('/resources/videos'), note: 'Demos, field tests and deep dives' },
-      { label: 'Documents & decks', href: a('/resources'), note: 'The documents, decks and films behind every figure' },
-      { label: 'Ask DeepGrid', href: a('/ask'), note: 'Every answer names its source' },
-    ],
-  },
-  {
-    id: 'about', label: 'About', match: ['about', 'team', 'recognition', 'company', 'plan', 'portfolio', 'brief'],
+    id: 'about', label: 'Company', match: ['about', 'team', 'recognition'],
     items: [
       { label: 'Our story', href: a('/about'), note: 'A semiconductor company for edge AI, in Hyderabad' },
       { label: 'Leadership & team', href: a('/about/team'), note: 'Founders, board, engineers, advisors and partners' },
       { label: 'Achievements', href: a('/about/recognition'), note: 'Milestones and recognition' },
-      { label: 'DG32 in the Indian market', href: a('/company'), note: 'A market already obliged to buy domestic' },
-      { label: 'Business plan', href: a('/plan'), note: 'Revenue, margins, cash and use of funds, FY27–FY32: plan targets' },
-      { label: 'SKU portfolio', href: a('/portfolio'), note: 'Eleven chips: readiness, plan lines, ramp, approvals and cost' },
-      { label: 'Investor and buyer brief', href: a('/portfolio/brief'), note: 'What tranche 1 buys, and six buyer questions answered' },
       // One extra About link, set only by builds that pass NEXT_PUBLIC_EXTRA_MENU_URL/_LABEL/_NOTE (the internal droplet:
       // scripts/build-droplet.sh). Next inlines them at build time and every word comes from the environment, so a
       // public build carries neither the link nor any label for it.
@@ -84,7 +86,7 @@ export const menus: Menu[] = [
   },
 ];
 
-const canHover = () => typeof matchMedia !== 'undefined' && matchMedia('(hover: hover)').matches;
+const canHover = () => typeof matchMedia !== 'undefined' && matchMedia('(min-width: 1101px) and (hover: hover)').matches;
 
 export function MegaNav({ route, onNavigate, label = 'Primary navigation', compact = false }: { route: RouteId; onNavigate?: () => void; label?: string; compact?: boolean }) {
   const [open, setOpen] = useState<string | null>(null);
@@ -142,7 +144,7 @@ export function MegaNav({ route, onNavigate, label = 'Primary navigation', compa
       {menus.map((m) => {
         const isOpen = open === m.id;
         const parent = byId[route].parent;
-        const active = m.match.includes(route) || (!!parent && m.match.includes(parent));
+        const active = m.match.includes(route) || (parent === 'products' && m.id === 'products');
         return (
           <div key={m.id} className="mega-item" onMouseEnter={() => enter(m.id)} onMouseLeave={leave}>
             <button type="button" className={'mega-trigger' + (active ? ' active' : '')} aria-expanded={isOpen} aria-controls={menuId + m.id} onClick={() => setOpen(isOpen ? null : m.id)}>

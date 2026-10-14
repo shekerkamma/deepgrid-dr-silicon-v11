@@ -61,8 +61,8 @@ function TrancheTab() {
   const gap31 = v.compare.blueprintChips[y31] / v.compare.modelChips[y31];
   return <>
     <header className="pd-head">
-      <h2 className="dg-verdict">₹10 Cr buys first silicon for nine chips; lead with the Blueprint, not the September model.</h2>
-      <p className="dg-lede">Tranche 1 puts nine of eleven chips on the 26 Dec 2026 shuttle{days != null ? `, ${days} days away,` : ''} carrying {cr(chips.reduce((a, c) => a + c.plan, 0))} of the {cr(v.planTotal)} plan lines. The Blueprint's FY31 chip ramp is {gap31.toFixed(1)}× the September model's chip line, so explain the gap before an investor finds it.</p>
+      <h2 className="dg-verdict">₹10 Cr targets first silicon for nine chips.</h2>
+      <p className="dg-lede">Tranche 1 plans nine of eleven chips for the 26 Dec 2026 shuttle{days != null ? `, ${days} days away,` : ''} carrying {cr(chips.reduce((a, c) => a + c.plan, 0))} of the {cr(v.planTotal)} plan lines. The Blueprint's FY31 chip ramp is {gap31.toFixed(1)}× the September model's chip line. Review the reconciliation below; these are different plans and revenue scopes.</p>
     </header>
     <Insights items={[
       {value: `${Math.round(use3 / useTotal * 100)}${NB}%`, finding: 'Most of tranche 1 buys silicon', text: `${uses.slice(0, 3).map(u => u.use.split(',')[0].toLowerCase()).join(', ').replace(/^./, c => c.toUpperCase())}: ${cr(use3)} of the ${cr(useTotal)}. The rest is approvals, tools and contingency.`, source: 'SKU Blueprint, Oct 2026 · plan targets'},
@@ -206,7 +206,7 @@ export function BriefView() {
     read(); window.addEventListener('popstate',read); return () => window.removeEventListener('popstate',read);
   }, []);
   const select = (id: string) => {
-    setTab(id); const target = new URL(location.href); target.searchParams.set('view',id); if (id !== 'use-cases') target.searchParams.delete('sku'); history.pushState(null,'',target);
+    setTab(id); const target = new URL(location.href); target.searchParams.set('view',id); if (id !== 'use-cases') ['sku','q','market'].forEach(key=>target.searchParams.delete(key)); history.pushState(null,'',target);
   };
   return (
     <div className="pd-root">

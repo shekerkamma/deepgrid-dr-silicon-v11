@@ -1,11 +1,12 @@
 'use client';
 
 import {useEffect, useRef, useState} from 'react';
-import {ArrowUpRight, ArrowRight, ArrowLeft, Menu, X} from 'lucide-react';
-import {byId, nextRoute, prevRoute, resolveTarget, url, type RouteId} from './routes';
+import {ArrowUpRight, Menu, X} from 'lucide-react';
+import {byId, resolveTarget, url, type RouteId} from './routes';
 
 import {StoryRoute} from './executive-story';
 import {MegaNav} from './mega-nav';
+import {InvestorGuide, SiteDirectory} from './investor-journey';
 import {useReveal, useScrollVars} from './motion';
 import {useDraw, useRail} from './devices';
 
@@ -58,8 +59,6 @@ export function Shell({
   }, [menu]);
   const here = byId[route];
   const parent = here.parent ? byId[here.parent] : undefined;
-  const next = nextRoute(route);
-  const prev = prevRoute(route);
   const href = url;
 
   useScrollVars();
@@ -77,9 +76,9 @@ export function Shell({
         <a className="brand" href={href('/')} aria-label="DeepGrid Semi home"><Brand/></a>
         <div className="main-nav"><MegaNav route={route} compact/></div><div className="topline">
           <span>DG32 · LOCKSTEP RISC-V MOTOR-CONTROL SILICON</span>
-          <span className="status-dot">FIRST SILICON · SEP 2026</span>
+          <span className="status-dot">PRE-SILICON · ENGINEERING EVIDENCE</span>
         </div>
-        <a className="contact-link" href={href('/contact')}>Discuss your application <ArrowUpRight size={17}/></a>
+        <a className="contact-link" href={href('/contact') + '?intent=investor'}>Request a discussion <ArrowUpRight size={17} aria-hidden="true"/></a>
         <button ref={menuButton} className="mobile-menu" aria-label="Open navigation" aria-expanded={menu} aria-controls="mobile-navigation" onClick={() => setMenu(true)}>
           <span>{here.id === 'home' ? 'Deepgrid Semi' : here.label}</span><Menu/>
         </button>
@@ -112,27 +111,13 @@ export function Shell({
           </nav>
         )}
         <StoryRoute.Provider value={route}>{children}</StoryRoute.Provider>
+        {route !== 'home' && route !== 'contact' && <InvestorGuide route={route}/>}
 
 
-        {(prev || next) && (
-          <nav className="section-pagination" aria-label="Section navigation">
-            {prev ? (
-              <a href={href(prev.href)}>
-                <ArrowLeft size={19} aria-hidden="true"/>
-                <span><small>Previous section</small>{prev.label}</span>
-              </a>
-            ) : <span/>}
-            {next && (
-              <a href={href(next.href)}>
-                <span><small>Next section</small>{next.label}</span>
-                <ArrowRight size={19} aria-hidden="true"/>
-              </a>
-            )}
-          </nav>
-        )}
       </main>
 
       <footer className="footer">
+        <SiteDirectory/>
         <div className="footer-top">
           <a className="brand" href={href('/')} aria-label="DeepGrid Semi home"><Brand/></a>
           <p className="footer-tagline">Safety in the core.<br/>Control in silicon.</p>

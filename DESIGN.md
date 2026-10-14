@@ -116,6 +116,8 @@ design-plans/2026-10-10-deepgridsemi-look.md. The previous system is kept at doc
 
 A visitor arriving from deepgridsemi.com should recognise the same company: black header, a photographic hero with a cyan headline, one brand blue, a navy close and footer. The reading sections are navy too (owner, 2026-10-10: white bands "do not look good at all"; the navy close band was the model). Underneath that public face the site stays an evidence catalogue: every figure carries its maturity, every illustration says it is illustrative, and DG32's pre-silicon evidence never transfers to another part.
 
+The 2026-10-14 investor extension inherits this system. `app/theme-dgs.css` supplies Frame `#070b14`, Page `#0b1220`, Card `#121b2d`, Brand Blue `#0e4c7a`, Light Blue `#7fb0e6`, Inter/Source Sans font variables and the 6/8/12px radius scale. `app/investor-journey.css` consumes `--t-*`, `--font-display`, `--dgs-blue` and `--sc-radius-sm` rather than defining a new palette or type family. Existing sourced concept renders are retained. This documentation pass preserves the frontmatter tokens; their pre-existing drift and the stale `.impeccable/design.json` sidecar are not reconciled here.
+
 **Key characteristics:**
 - Two grounds only: Frame for header, hero, strips and footer; Page for every reading section, divided by hairlines.
 - Brand Blue fills primary buttons and marks links and feature-card edges; no section uses it as a ground.
@@ -150,7 +152,7 @@ Retired after measurement: the live home used seven grounds from two families (n
 
 **The One Blue Rule.** Blue marks what can be acted on. Headings and figures (39 cycles, 198 days, stat rows) are white, never blue.
 
-**The One Fill Rule.** One filled button per view: the header's "Discuss your application", the hero's primary action, the close's "Discuss a system" and a part page's "Discuss this part". Selected filters and workbench toggles take the Card ground with a Light Blue edge; secondary actions ("Inject illustrative fault", the Blueprint PDF) are outline buttons; repeated tile actions ("View details") are text links.
+**The One Fill Rule.** One filled action per action group: the shell and home hero use "Request a discussion" (investor contact intent); the hero's second action, "Read the investment brief", is outlined. The investor discussion close repeats "Request a discussion"; the later engineering close retains "Discuss a system" and part pages retain "Discuss this part". Selected filters and workbench toggles take the Card ground with a Light Blue edge; secondary actions ("Inject illustrative fault", the Blueprint PDF) are outline buttons; repeated tile actions ("View details") are text links.
 
 **The Opaque Ground Rule.** A card on a coloured band takes the opaque colour it renders as (`#1b6fa8` on Brand Blue), so alpha-blind contrast checks measure the real ground.
 
@@ -185,13 +187,14 @@ The complete use-case dashboard and compact dashboard route headers use a fixed 
 ## Layout
 
 - **Paths.** All routes are lower case; an inline head script replaces a typed `/About` with `/about` before paint (static asset folders such as `/downloads/` keep their case).
-- **Shell.** Above 1100px the sticky header holds the wordmark, the mega-navigation, Contact and the blue "Discuss your application" button in one row; below 1100px the labelled menu control opens the phone sheet. `--nav-h` is measured by `app/motion.tsx`.
-- **Home hero.** Full-bleed photograph (`public/images/dgs/home-hero.webp`) under a left-to-right scrim that covers only the copy column (`rgb(10 10 10 / .92)` to transparent at 68%); copy max 620px, left. Below 760px the scrim runs top to bottom and the caption moves under the copy.
+- **Shell.** Above 1100px the sticky header holds the wordmark, Investors, Portfolio, Technology, Markets, Evidence and Company navigation, Contact and the blue "Request a discussion" button in one row. The discussion action links to `/contact?intent=investor`. At 1100px and below the labelled menu control opens the phone sheet. `--nav-h` is measured by `app/motion.tsx`.
+- **Home hero.** Desktop retains the split composition: left-aligned copy (max 620px) over the left side of the full-bleed concept render (`public/images/dgs/home-hero.webp`), with the illustrated chip on the right. The final scrim runs from `rgb(7 11 20 / .94)` through `.8` at 34% and `.15` at 68% to transparent. "Request a discussion" is the first, filled action; "Read the investment brief" is the second, outlined action, followed by the pre-silicon note. At 760px and below the scrim is removed: copy, both actions and maturity note come first, then the full-width illustration and its caption. `app/investor-journey.css` overrides the earlier image-first ordering in `app/theme-dgs.css`; copy has 2rem top padding and the illustration a 1.5rem top margin. The final 1440px and 390px captures in `runs/2026-10-14-deepgrid-investor-ux/screens/` confirm the desktop split and both phone actions fully visible before the illustration.
 - **Inner photo heroes.** Products, Technology and Evidence use a full-viewport `::before` image (`app/assets/dgs/*`) behind the first `section-head`, with copy stacked in the dark left column (max 600px). Other routes use a plain black hero band that bleeds to the viewport edge (`box-shadow: 0 0 0 100vmax` plus `clip-path: inset(-160px -100vmax 0)`).
-- **Proof strip.** Directly under the home hero: four cells on black with hairline dividers. Each cell is a figure (Inter 300), a short label paraphrasing the claim, and its maturity plus source title, linked to the source document. The three engineering figures come from `app/claims.ts` (fault-39, fmax-lockstep, node-130) and are never typed by hand; the fourth is the 12-architecture portfolio count. Two columns below 900 px.
+- **Proof strip.** After the investor discussion close, before the application strip and technical demonstrations: four cells on Frame with hairline dividers. Each cell is a figure (Inter 300), a short label paraphrasing the claim, and its maturity plus source title, linked to the source document. The three engineering figures come from `app/claims.ts` (fault-39, fmax-lockstep, node-130) and are never typed by hand; the fourth is the 12-architecture portfolio count. Two columns below 900 px.
 - **One scroll act.** The home fault path is the page's single pinned act: `ScrollAct` (`app/scroll-act.tsx`) mounts the vendored scrollcraft engine (`public/engine/scrollcraft`, unedited, MIT). The span is 4.5 viewport heights, about 0.7 per fault step, which is reading pace. It pins only at 1100 px and wider with motion allowed; on phones and under reduced motion the stage stays click-driven. The stage declares `data-sc-verify-state` for scroll-craft's harness. Never add a second scroll device to a page.
 - **Section heads, every page.** Title left, intro paragraph right, stacked below 760px. Home uses the same grammar as the inner routes. The reference centres its section heads; this site does not (owner, 2026-10-10), so the hero, every section, the close and the footer share one left edge.
-- **Band order on home (story pack, 2026-10-11).** Hero, proof strip, application strip, then the fault-path act (the peak, third), diagnostics, product finder, system section, grid-paper stages, one close, footer. The shared-capability and growth-gates sections live on `/company` only. "Where to go next" stays after the close, because `scripts/check-crossrefs.mjs` requires every route to link two or more siblings. Plan: `design-plans/2026-10-11-story-arc-and-figures.md`.
+- **Band order on home (current, 2026-10-14).** Hero, three investor review paths, staged funding ledger, portfolio finder, evidence and gaps register, investor discussion close, proof strip, application strip, DG32 fault-path act, diagnostics, system section, qualification gates and shuttle model, engineering close, footer directory. The shared-capability and growth-gates sections live on `/company` only. The home has no appended route guide; `app/shell.tsx` adds contextual "Continue your review" links only on routes other than home and contact.
+- **Historical home order (2026-10-11).** `design-plans/2026-10-11-story-arc-and-figures.md` records the earlier proof/application-first story pack and route-list close. It is historical planning evidence, not the current home sequence.
 - **Engineering pages.** One `page-wrap` column (max 1600px, 8% gutter, 5% below 650px).
 - Tap targets are at least 24px; controls that take a press are 44px.
 
@@ -236,6 +239,9 @@ Flat at rest: cards are lifted by a lighter navy surface and a hairline, not a s
 - **Header:** black at 95% with blur, white 500 links.
 - **Footer:** navy, white links that turn Blue on Dark on hover; the tagline is a paragraph (not a heading), 1.75rem, hidden below 650px.
 - **Focus:** a 2px outline in the band's accent at 3px offset, never removed.
+- **Investor review paths:** three open, hairline-divided links immediately after the home hero; at 800px and below they stack with horizontal dividers. Each names the decision and its review destination.
+- **Funding ledger and evidence register:** paired reading columns with tabular funding figures, ruled rows and explicit available/still-to-establish lists; at 800px and below they stack. They inherit navy role tokens and heading hierarchy, with no new card or shadow language.
+- **Discussion close and directory:** the investor close pairs the decision prompt with one filled "Request a discussion" action and stacks at 800px and below. The footer directory has Investors, Explore, Diligence and Company columns, reduced to two columns at 800px and below.
 
 ## Do's and Don'ts
 
@@ -243,7 +249,7 @@ Flat at rest: cards are lifted by a lighter navy surface and a hairline, not a s
 - **Do** caption every concept render as illustrative ("not a product photograph") and record it in `docs/v11/image-provenance.json` with its prompt in `docs/v11/dgs-renders/`.
 - **Do** keep renderer materials literal: technical stages (`app/portfolio-workbench.css`, `app/die-stage.css`) are literal on purpose.
 - **Don't** reintroduce white reading bands, a saturated section ground, or a third navy; the owner rejected each on 2026-10-10.
-- **Don't** crop an image with text or a subject the caption names: scene illustrations show the whole frame, the phone hero image sits above the copy, and phone diagrams fit the width.
+- **Don't** crop an image with text or a subject the caption names: scene illustrations show the whole frame, the phone home hero illustration follows the copy, actions and maturity note, and phone diagrams fit the width.
 - **Don't** copy the reference's two-tone headings, gradient text, glow shadows, random coloured icon tiles, check icons on every bullet, rotated card labels, placeholder copy or partner-logo strip.
 - **Don't** put a kicker or eyebrow above a heading; such kickers are hidden by rule (`[class*="kicker"]:has(+ h1, h2, h3, h4)`).
 - **Don't** centre section headings, closes or link lists.
