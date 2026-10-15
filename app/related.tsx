@@ -14,7 +14,7 @@ import {RouteJourney, hasBrief} from './route-journey';
  *  page count stated so nobody opens a 71-page file expecting a summary. */
 /** Routes whose page already ends on its own close (Applications: "Bring a failure mode…"; About: the company's own
  *  call to action). A second close after it would compete, so the route close is skipped there. */
-const ownClose=new Set<RouteId>(['applications','about','plan','portfolio','brief']);
+const ownClose=new Set<RouteId>(['applications','about','plan','portfolio','brief','products','sku1','sku2','sku3','sku4','sku5','sku6','sku7','sku8','sku9','sku10','sku11','d100']);
 
 export default function Related({route}: {route: RouteId}) {
   const r = related[route];
@@ -27,7 +27,7 @@ export default function Related({route}: {route: RouteId}) {
       {/* One close per route: the decision heading with its brief as the body (lead, three checks, two links).
           Routes without a brief keep the short DecisionClose. */}
       {route !== 'home' && !ownClose.has(route) && (route !== 'company' && hasBrief(route) ? <RouteJourney route={route} title={routeStories[route].decision}/> : <DecisionClose route={route}/>)}
-      <h2 className="dr-related-head" id={'related-' + route}>Product selection and evaluation requirements</h2>
+      <h2 className="dr-related-head" id={'related-' + route}>Related products and references</h2>
 
       <ul className="dr-related-sections">
         {r.sections.map(s => {

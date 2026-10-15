@@ -17,7 +17,6 @@ export default function Page() {
     <Shell route="resources">
       <section className="page-wrap">
         <SectionHead
-          visual={<BrandImage kind="dg32" priority/>}
           title="The documents, decks and films behind every figure"
           copy="Six source documents carry every number on this site. Each one is here as the full PDF and as a readable specification, with the architecture and datasheet decks and the narrated films made from them."
         />
@@ -27,6 +26,7 @@ export default function Page() {
           onChange={update}
           go={go}
         />
+      <BrandImage kind="dg32"/>
       <Related route="resources"/>
       </section>
     </Shell>

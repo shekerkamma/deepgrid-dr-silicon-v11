@@ -62,7 +62,7 @@ export type ArchStory = {id: string; headline: string; lead: string; beats: Stor
  *  to on the image and the zones it crosses. Data: arch-stories.ts (story-architect, 2026-10-03). */
 export function Storyboard({story,questionsHref}:{story:ArchStory;questionsHref?:string}){
  return <div className="sb">
-  <p className="dr-kicker">THE STORYBOARD · FOLLOW THE NUMBERED MARKERS ON THE DIAGRAM</p>
+  <p className="dr-kicker">SIGNAL PATH · FOLLOW THE NUMBERED MARKERS ON THE DIAGRAM</p>
   <ol className="sb-beats">{story.beats.map((b,i)=><li key={i} className="sb-beat">
    <div className="sb-rail" aria-hidden="true">{b.marks.length?b.marks.map(m=><span key={m} className={'sb-mark'+(m==='F'?' is-fault':'')}>{m}</span>):<span className="sb-mark is-plain">{i+1}</span>}</div>
    <div className="sb-body"><h3>{b.marks.length?<span className="sr-only">Marker {b.marks.join(', ')}: </span>:null}{b.title}</h3><p>{nb(b.body)}</p>

@@ -17,7 +17,7 @@ for(const width of [1440,390]){
   assert.equal(await page.evaluate(()=>document.documentElement.scrollWidth>innerWidth+1),false,route+' overflow');
   const titleOverflow=await page.locator('#main h1,#main h2,#main h3').evaluateAll(xs=>xs.filter(el=>el.checkVisibility()&&el.clientWidth>1&&el.scrollWidth>el.clientWidth+2).map(el=>el.textContent));
   assert.deepEqual(titleOverflow,[],route+' title fit');
-  if(['technology','resources'].includes(route)){
+  if(route==='technology'){
    const head=page.locator('.dg-brand-intro');
    assert.equal(await head.evaluate(el=>getComputedStyle(el,'::before').display),'none',route+' single opening visual');
    assert.equal(await head.evaluate(el=>getComputedStyle(el).clipPath.startsWith('inset(0px')),true,route+' header must not paint over navigation');

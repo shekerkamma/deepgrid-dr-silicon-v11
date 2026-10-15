@@ -36,7 +36,6 @@ export default function Library({pkgId,slide,onChange,go}:{pkgId:string;slide:nu
  const media=useRef<HTMLDivElement>(null);
  useEffect(()=>{if(new URLSearchParams(location.search).has('pkg'))media.current?.scrollIntoView({block:'start',behavior:'instant'});},[]);
  return <div className="dr-library">
-  <BrandGallery/>
   <GroundedDocumentsHub go={go} />
   <div className="dr-lib-media" ref={media}>
   {groups.map(([label,kind])=><div className="dr-lib-group" key={kind}><p className="dr-lib-kicker">{label.toUpperCase()}</p>
@@ -69,14 +68,15 @@ export default function Library({pkgId,slide,onChange,go}:{pkgId:string;slide:nu
 
   {go && (
     <div className="dr-links dr-sec-gap">
-      <button className="text-link" onClick={()=>go('overview')}>01 / Overview &amp; safety thesis <ArrowUpRight size={16}/></button>
-      <button className="text-link" onClick={()=>go('family')}>02 / Product family comparison <ArrowUpRight size={16}/></button>
-      <button className="text-link" onClick={()=>go('architecture')}>03 / Block architecture &amp; 3D die <ArrowUpRight size={16}/></button>
-      <button className="text-link" onClick={()=>go('control')}>04 / 100 kHz control-loop budget <ArrowUpRight size={16}/></button>
-      <button className="text-link" onClick={()=>go('pinout')}>05 / QFN-64 pinout &amp; package <ArrowUpRight size={16}/></button>
-      <button className="text-link" onClick={()=>go('roadmap')}>06 / Multi-spin roadmap <ArrowUpRight size={16}/></button>
-      <button className="text-link" onClick={()=>go('ask')}>08 / Vector Q&amp;A in Ask DeepGrid <ArrowUpRight size={16}/></button>
+      <button className="text-link" onClick={()=>go('overview')}>Overview &amp; safety thesis <ArrowUpRight size={16}/></button>
+      <button className="text-link" onClick={()=>go('family')}>Product family comparison <ArrowUpRight size={16}/></button>
+      <button className="text-link" onClick={()=>go('architecture')}>Block architecture &amp; 3D die <ArrowUpRight size={16}/></button>
+      <button className="text-link" onClick={()=>go('control')}>100 kHz control-loop budget <ArrowUpRight size={16}/></button>
+      <button className="text-link" onClick={()=>go('pinout')}>QFN-64 pinout &amp; package <ArrowUpRight size={16}/></button>
+      <button className="text-link" onClick={()=>go('roadmap')}>Multi-spin roadmap <ArrowUpRight size={16}/></button>
+      <button className="text-link" onClick={()=>go('ask')}>Ask DeepGrid about products and applications <ArrowUpRight size={16}/></button>
     </div>
   )}
+  <BrandGallery/>
  </div>;
 }

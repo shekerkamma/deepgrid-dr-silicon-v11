@@ -21,10 +21,10 @@ export function FundingPath() {
 }
 
 export function ReviewPaths() {
-  return <nav className="ij-review-paths" aria-label="Investor review paths">
-    <a href={url('/company')}><strong>Why this portfolio?</strong><span>First markets and product strategy</span><ArrowUpRight size={18} aria-hidden="true"/></a>
-    <a href={url('/portfolio/brief')}><strong>What does funding unlock?</strong><span>Tranche 1, milestones and model differences</span><ArrowUpRight size={18} aria-hidden="true"/></a>
-    <a href={url('/evidence')}><strong>What is proven today?</strong><span>Engineering evidence and open gaps</span><ArrowUpRight size={18} aria-hidden="true"/></a>
+  return <nav className="ij-review-paths" aria-label="Explore DeepGrid">
+    <a href={url('/products')}><strong>Find a product</strong><span>Control, power, sensing and interfaces</span><ArrowUpRight size={18} aria-hidden="true"/></a>
+    <a href={url('/applications')}><strong>Explore your application</strong><span>Product roles in the complete system</span><ArrowUpRight size={18} aria-hidden="true"/></a>
+    <a href={url('/evidence')}><strong>Assess the engineering</strong><span>Validation results and qualification gaps</span><ArrowUpRight size={18} aria-hidden="true"/></a>
   </nav>;
 }
 
@@ -47,7 +47,7 @@ export function DiscussionClose({compact = false}: {compact?: boolean}) {
 
 export function InvestorGuide({route}: {route: RouteId}) {
   const technical = ['technology','safety','control','die','package','procurement'].includes(route) || /^(sku|d100)/.test(route);
-  const links = technical ? [['/evidence','Check the evidence'],['/portfolio/brief','Return to the investment brief']] :
+  const links = technical ? [['/evidence','Review validation & readiness'],['/resources/docs','Read technical specifications']] :
     route === 'brief' ? [['/plan','Examine the business plan'],['/evidence','Review evidence & gaps']] :
     [['/portfolio/brief','Read the investment brief'],['/portfolio/brief?view=use-cases','Compare first markets & approval windows']];
   return <nav className="ij-route-guide" aria-label="Continue your review"><p>Continue your review</p><div>
@@ -58,10 +58,10 @@ export function InvestorGuide({route}: {route: RouteId}) {
 
 export function SiteDirectory() {
   const groups = [
-    ['Investors', [['/portfolio/brief','Investment brief'],['/company','Portfolio strategy'],['/plan','Business plan']]],
-    ['Products', [['/portfolio','SKU comparison'],['/products','Architectures'],['/portfolio/brief?view=use-cases','Markets & qualification']]],
-    ['Diligence', [['/evidence','Evidence & gaps'],['/resources/docs','Technical specifications'],['/ask','Ask DeepGrid']]],
+    ['Products & applications', [['/products','Product architectures'],['/applications','System applications'],['/procurement','Product comparison']]],
+    ['Technology & resources', [['/technology','DG32 technology'],['/evidence','Validation & readiness'],['/resources','Documents, decks & films'],['/ask','Ask DeepGrid']]],
     ['Company', [['/about','Company profile'],['/about/team','Leadership & team'],['/contact?intent=investor','Request a discussion']]],
+    ['Investors', [['/portfolio/brief','Investment brief'],['/company','Portfolio strategy'],['/plan','Business plan']]],
   ] as const;
   return <nav className="ij-directory" aria-label="Site directory">{groups.map(([title,links]) => <div key={title}><p>{title}</p>{links.map(([href,label]) => <a key={href} href={url(href)}>{label}</a>)}</div>)}</nav>;
 }

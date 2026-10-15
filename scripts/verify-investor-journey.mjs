@@ -27,7 +27,7 @@ for(const width of [1440,768,390]){
   const box=await primary.boundingBox();
   assert.ok(box&&box.y>=0&&box.y+box.height<=900,'Primary discussion action visible in first viewport');
   await inspect('home');
-  await page.locator('.v11-hero-copy a').filter({hasText:'Read the investment brief'}).click();
+  await page.locator('.ij-funding a').filter({hasText:'Review the funding brief'}).click();
   await page.getByRole('tab',{name:'Tranche 1 brief'}).waitFor();
   await inspect('brief');
   await page.locator('.ij-discussion a').click();

@@ -80,7 +80,7 @@ export function Shell({
         </div>
         <a className="contact-link" href={href('/contact') + '?intent=investor'}>Request a discussion <ArrowUpRight size={17} aria-hidden="true"/></a>
         <button ref={menuButton} className="mobile-menu" aria-label="Open navigation" aria-expanded={menu} aria-controls="mobile-navigation" onClick={() => setMenu(true)}>
-          <span>{here.id === 'home' ? 'Deepgrid Semi' : here.label}</span><Menu/>
+          <span>Menu</span><Menu/>
         </button>
       </header>
 
@@ -111,7 +111,7 @@ export function Shell({
           </nav>
         )}
         <StoryRoute.Provider value={route}>{children}</StoryRoute.Provider>
-        {route !== 'home' && route !== 'contact' && <InvestorGuide route={route}/>}
+        {['ask','read'].includes(route) && <InvestorGuide route={route}/>}
 
 
       </main>

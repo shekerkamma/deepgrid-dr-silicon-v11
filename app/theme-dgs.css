@@ -186,7 +186,7 @@ body .footer :is(h2,h3,strong,em,.footer-tagline):not(#_){color:#fff;font-style:
 .pp-hero{padding-inline:0;overflow-x:clip}
 /* Close the gap between the header and the first dark band: extend the bleed upward. */
 html body .breadcrumbs{margin-top:0}
-html .page-wrap>.section-head:first-child,.technology-nav{clip-path:inset(-160px -100vmax 0)}
+html .page-wrap>.section-head:first-child,.technology-nav{clip-path:inset(0 -100vmax)}
 /* The fixed film-grain overlay belongs to the old dark world. */
 .site-shell::after{display:none}
 /* A heading is one weight: no lighter second line. */
@@ -217,7 +217,7 @@ body :is(.eyebrow,.v6-mono,.dr-kicker,.pp-card-kicker,.pp-group-label,.pp-status
 body .v6-home .v6-bone :is(.v6-mono):not(#_){color:var(--t-fg-2)}
 
 /* ---------- Round 5: remaining light heroes ---------- */
-.v6-company>.v6-section:first-child>header,.rd-empty{background:var(--t-bg);box-shadow:0 0 0 100vmax var(--t-bg);clip-path:inset(-160px -100vmax 0);padding-block:56px}
+.v6-company>.v6-section:first-child>header,.rd-empty{background:var(--t-bg);box-shadow:0 0 0 100vmax var(--t-bg);clip-path:inset(0 -100vmax);padding-block:56px}
 .v6-company>.v6-section:first-child{padding-top:0}
 
 /* ---------- Phase 5: photographic inner heroes (concept renders, docs/v11/image-provenance.json) ---------- */
@@ -420,3 +420,22 @@ body .dr-explained h3:not(#_){color:var(--t-fg)}
   .st-story .st-task-nums dd{display:flex;flex-wrap:wrap;gap:2px 12px}
 }
 @media (max-width:760px){.st-story .st-task{padding:14px 0}}
+
+/* Product and document selection comes before supporting imagery. */
+.v11-home>.ij-review-paths{margin-inline:clamp(20px,5vw,72px)}
+.v11-home .ij-review-paths>a{display:grid;grid-template-columns:1fr;align-content:start;align-items:start}
+html .view-products .page-wrap>.section-head:first-child,
+html .view-resources .page-wrap>.section-head:first-child{display:grid;grid-template-columns:1fr 1fr;gap:32px;align-items:start;min-height:0;padding-block:40px;background-image:none}
+html .view-products .page-wrap>.section-head:first-child::before,
+html .view-resources .page-wrap>.section-head:first-child::before{display:none}
+@media(max-width:800px){html .view-products .page-wrap>.section-head:first-child,html .view-resources .page-wrap>.section-head:first-child{grid-template-columns:1fr;gap:16px}}
+/* Brief, user-driven transitions preserve the diagram frame and reading position. */
+@keyframes dgs-diagram-change{from{opacity:.72;transform:translateY(3px)}to{opacity:1;transform:translateY(0)}}
+.v11-visual-products img,.dr-deck-stage img{animation:dgs-diagram-change 180ms ease-out}
+.ij-review-paths a svg,.v11-text-link svg{transition:transform 160ms ease-out}
+.ij-review-paths a:hover svg,.ij-review-paths a:focus-visible svg,
+.v11-text-link:hover svg,.v11-text-link:focus-visible svg{transform:translate(2px,-2px)}
+@media(prefers-reduced-motion:reduce){
+ .v11-visual-products img,.dr-deck-stage img{animation:none}
+ .ij-review-paths a svg,.v11-text-link svg{transition:none;transform:none}
+}

@@ -1,18 +1,18 @@
 {
   "home": {
-    "headline": "A silicon portfolio. A staged path to first silicon.",
-    "context": "Review DeepGrid’s first markets, staged funding plan and engineering evidence. Architecture breadth is distinct from returned silicon and qualification.",
+    "headline": "Silicon for motion, power and sensing.",
+    "context": "Explore DeepGrid product architectures, their role in your equipment, and the evidence needed before adoption. Review funding milestones and partnership opportunities.",
     "decision": "Review the opportunity and the evidence needed for a funding or partnership discussion.",
     "next": "/portfolio/brief"
   },
   "products": {
-    "headline": "Choose the product by the problem it removes.",
+    "headline": "Find the silicon for your system.",
     "context": "Eleven mature-node products and the separate D100 programme address different equipment needs. Compare the function, what it could replace and what remains to be proven before adoption.",
     "decision": "Shortlist a part, then agree the evidence needed to adopt it.",
     "next": "/evidence"
   },
   "technology": {
-    "headline": "DG32 turns a silent processor fault into a hardware signal.",
+    "headline": "DG32 control and hardware safety.",
     "context": "Two RISC-V cores run two cycles apart. A comparator checks every committed store, latches the first cause and drives FAULT_N, which can switch off the motor bridge without waiting for firmware: 39 cycles in simulation.",
     "decision": "Connect each claimed benefit to a measurable system requirement.",
     "next": "/evidence"
@@ -30,7 +30,7 @@
     "next": "/applications"
   },
   "die": {
-    "headline": "Shared foundations must not put the safety function at risk.",
+    "headline": "DG32 functional blocks and safety boundaries.",
     "context": "The design groups control, memory, sensing and communications around a defined safety core. Use the layout to understand which functions can change and which constraints remain fixed.",
     "decision": "Assess change scope before committing to a customised design.",
     "next": "/contact"
@@ -42,7 +42,7 @@
     "next": "/procurement"
   },
   "applications": {
-    "headline": "Twelve chips go into five kinds of system, and DG32-LITE can also watch the motor it drives.",
+    "headline": "Twelve architectures. Five system roles.",
     "context": "DeepGrid’s portfolio by the systems it goes into. Open a chip for what it replaces and its SKU Blueprint page; DG32-LITE, the pre-silicon proof point, opens into its diagnostic story: thirty tasks that fit its one core, and the sensor that limits them.",
     "decision": "Name the failure or product limitation you want to address.",
     "next": "/contact"
@@ -90,7 +90,7 @@
     "next": "/contact"
   },
   "resources": {
-    "headline": "Assess product architecture, electrical limits and qualification.",
+    "headline": "Technical documents, decks and films.",
     "context": "Start with the portfolio for product scope, the evidence register for maturity, or the detailed documents for integration. Every source has a different role in an evaluation.",
     "decision": "Choose the question first, then the document that can answer it.",
     "next": "/resources/docs"

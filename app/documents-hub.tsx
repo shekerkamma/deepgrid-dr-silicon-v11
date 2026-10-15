@@ -99,7 +99,7 @@ export default function GroundedDocumentsHub({go}: {go?: (hash: string) => void}
       <header className="dr-docs-hub-header">
         <div>
           <p className="dr-lib-kicker">PRODUCT SPECIFICATIONS · {groundedDocuments.length} PDFS AND SPECIFICATIONS</p>
-          <h2>Product architectures, electrical specifications and qualification strategy</h2>
+          <h2>Architecture and electrical specifications</h2>
           <p className="dr-docs-lead">
             Simulation results, timing budgets, clock partitions and pin assignments all come from these
             documents. Download a PDF, read its specification, or check a figure against its section in{' '}

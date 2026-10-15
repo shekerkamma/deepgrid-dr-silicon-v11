@@ -33,7 +33,7 @@ for(const width of [1440,390]){
   await page.goto(site+route,{waitUntil:'networkidle'});
   // Text in the reuse and gate bands must contrast with the surface it actually sits on (WCAG AA: 4.5, or 3 for large
   // text). Measured against the nearest painted ancestor, so it holds whether the band is light or dark.
-  const bad=await page.locator('.v6-bone h2,.v6-bone h3,.v6-bone strong,.v6-foundation h3,.v6-foundation p,.v6-proposed h3,.v6-proposed p').evaluateAll(nodes=>{
+  const bad=await page.locator('.v6-bone h2,.v6-bone h3,.v6-bone strong,.v6-foundation h3,.v6-foundation p,.v6-proposed h3,.v6-proposed p,.ij-evidence h2,.ij-evidence h3,.ij-evidence p,.ij-evidence li').evaluateAll(nodes=>{
    const rgb=c=>(c.match(/[\d.]+/g)||[]).map(Number);
    const lum=([r,g,b])=>[r,g,b].map(v=>{v/=255;return v<=.03928?v/12.92:((v+.055)/1.055)**2.4}).reduce((a,v,i)=>a+v*[.2126,.7152,.0722][i],0);
    const ground=el=>{for(let e=el;e;e=e.parentElement){const c=rgb(getComputedStyle(e).backgroundColor);if(c.length>=3&&(c[3]===undefined||c[3]>0))return c;}return [255,255,255];};
@@ -51,7 +51,7 @@ if(process.argv[3]){
  for(const width of [1440,390]){
   await page.setViewportSize({width,height:900});
   await page.goto(site,{waitUntil:'networkidle'});
-  await page.locator('.v6-bone').first().screenshot({path:path.join(process.argv[3],`${width}-reuse.png`)});
+  await page.locator('.ij-evidence').screenshot({path:path.join(process.argv[3],`${width}-evidence.png`)});
   await page.goto(site+'resources/read?doc=docs%2Fdeepgrid-sku-compendium-architecture',{waitUntil:'networkidle'});
   await page.screenshot({path:path.join(process.argv[3],`${width}-reader.png`)});
  }
