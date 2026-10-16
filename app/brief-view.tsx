@@ -12,6 +12,7 @@ import {brief, briefVisual as v, type Block, type Status} from './brief-content'
 import {HBars, GroupedColumns, Insights, Chapter} from './dash-charts';
 import {url} from './routes';
 import {UseCaseDashboard} from './use-case-dashboard';
+import {MotionLoop} from './motion-loop';
 
 const NB = ' ';
 const cr = (x: number) => `₹${x.toLocaleString('en-IN', {maximumFractionDigits: 1})}${NB}Cr`;
@@ -72,6 +73,9 @@ function TrancheTab() {
     ]}/>
 
     <Chapter id="ch-buys" title="Tranche 1 funding and first-silicon milestones">
+    <MotionLoop name="tranche-1"
+      label="Animation: an amber block of ₹10 crore is spent line by line on tranche 1: ₹2.6 crore on nine prototypes on the December 2026 shuttle, ₹2.5 crore respin reserve, ₹2.5 crore engineering team, then approvals, tools, contingency and boards; 76 percent goes to prototypes, respins and the team, and the money buys first silicon for nine chips"
+      caption={<><strong>What ₹10 Cr buys.</strong> Each line of the brief's tranche-1 table, in order; amber is money. Planned allocation, not spend. Concept animation; DeepGrid silicon remains pre-silicon.</>}/>
     <section className="pd-panel" aria-labelledby="bf-chips-h">
       <h3 id="bf-chips-h">Three of the nine carry {cr(top3Ramp)} of their {cr(ramp9)} FY31 ramp: {top3.map(c => c.sku).join(', ')}.</h3>
       <div className="bf-two">

@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>What ₹10 Cr buys</title>
+<style>
+  html, body { margin: 0; height: 100%; background: #070b14; overflow: hidden; }
+  body { display: flex; align-items: center; justify-content: center; }
+  canvas { width: min(100vw, calc(100vh * 16 / 9)); height: auto; aspect-ratio: 16 / 9; display: block; cursor: pointer; }
+</style>
+</head>
+<body>
+<canvas id="c" width="1920" height="1080"></canvas>
+<script>
+"use strict";
+// =====================================================================
+//  WHAT ₹10 Cr BUYS — 16:9, 20.0s @ 120 BPM, 24fps, glass3d style (Three.js on the GPU).
+//  One amber block of ₹10 Cr is spent along a row of stations, line by line from the brief's tranche-1 table
+//  (data/portfolio/tranche1-uses.csv), while a counter shows the balance left; the payoff pulls back to the
+//  nine prototype chips it buys. Continuous camera, no cuts. Every figure is the brief's own.
+// =====================================================================
+const FPS = 24, W = 1920, H = 1080;
+const BPM = 120, BEAT = 60 / BPM, E8 = BEAT / 2, E16 = BEAT / 4;
+const DURATION = 20.0;
+const NFRAMES = Math.round(DURATION * FPS);
+const LOOP_T = NFRAMES / FPS;
+const SAFE = { top: 48, bottom: 48, right: 48 };
+const CX = 960;
+const HAND = '"Segoe UI", "Helvetica Neue", Arial, sans-serif';   // board labels (kit/board.js reads HAND)
+
+// the brief's tranche-1 table, in the order the money leaves the block (₹ Cr)
+const USES = [
+  { id: 'proto',   cr: 2.6, label: 'Nine prototypes' },
+  { id: 'respin',  cr: 2.5, label: 'Respin reserve' },
+  { id: 'team',    cr: 2.5, label: 'Engineering team' },
+  { id: 'approve', cr: 1.0, label: 'First approvals' },
+  { id: 'tools',   cr: 1.0, label: 'Tools and lab' },
+  { id: 'cont',    cr: 0.3, label: 'Contingency' },
+  { id: 'boards',  cr: 0.1, label: 'Boards' },
+];
+const ERA_LIST = [[0, DURATION, () => sceneStage()]];
+const TIMELINE = {
+  width: W, height: H, fps: FPS, bpm: BPM, duration: DURATION, frames: NFRAMES, loop: LOOP_T, safe: SAFE,
+  format: 'continuous-3d', gpu: true,
+  shots: [{ id: 1, key: 'stage', era: 0, t0: 0, t1: DURATION, title: 'one continuous stage' }],
+  cuts: [], morphs: [],
+  cues: { fold: 1.0, proto: 2.5, respin: 6.0, team: 9.0, small: 12.0, silence: 14.5, payoff: 15.5 },
+  acts: [
+    { name: '1 Open',    role: 'build',   t0: 0.0,  t1: 2.5 },
+    { name: '2 Lines',   role: 'journey', t0: 2.5,  t1: 12.0 },
+    { name: '3 Small',   role: 'peak',    t0: 12.0, t1: 14.5 },
+    { name: '4 Silence', role: 'turn',    t0: 14.5, t1: 15.5 },
+    { name: '5 Payoff',  role: 'gift',    t0: 15.5, t1: 20.0 },
+  ],
+  board: [
+    { t: 0.5,  title: 'flash-forward: nine chips', sound: 'soft pad', next: 'they fold into the ₹10 Cr block' },
+    { t: 2.2,  title: 'the ₹10 Cr block', sound: 'pad', next: 'the first slab leaves' },
+    { t: 4.6,  title: 'nine prototypes, Dec 2026 shuttle', sound: 'pluck groove', next: 'glide' },
+    { t: 7.8,  title: 'respin reserve', sound: 'groove', next: 'glide' },
+    { t: 10.8, title: 'engineering team', sound: 'groove', next: 'glide' },
+    { t: 13.6, title: 'approvals, tools, boards', sound: '8ths build', next: 'silence' },
+    { t: 15.0, title: '76%: prototypes, respins, team', sound: 'silence', next: 'payoff' },
+    { t: 18.5, title: 'first silicon for nine chips', sound: 'the loudest hit', next: 'loops' },
+  ],
+  narration: [],
+};
+window.TIMELINE = TIMELINE;

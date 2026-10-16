@@ -1,0 +1,9 @@
+{
+  "name": "tranche-1",
+  "title": "What ₹10 Cr buys: tranche 1, line by line",
+  "format": { "width": 1920, "height": 1080, "fps": 24, "bpm": 120, "duration": 20.0, "frames": 480 },
+  "formats": ["16:9"],
+  "storyFormat": "one continuous 3D stage, the camera travelling between stations (closest card: F1, unproven); counter = remaining balance",
+  "style": "glass3d",
+  "review": { "safe": { "top": 48, "bottom": 48, "right": 48 }, "refs": {} }
+}
