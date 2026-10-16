@@ -22,7 +22,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import crypto from 'node:crypto';
-import {fileURLToPath} from 'node:url';
+import {fileURLToPath, pathToFileURL} from 'node:url';
 import * as esbuild from 'esbuild';
 import {pipeline, env} from '@huggingface/transformers';
 
@@ -61,7 +61,7 @@ await esbuild.build({
   stdin: {contents: `export * from './app/data/graphrag-engine.ts'; export {THEME_EXAMPLES} from './app/data/theme-examples.ts';`,
     resolveDir: ROOT, loader: 'ts'},
   bundle: true, platform: 'node', format: 'esm', outfile: bundled, logLevel: 'warning'});
-const {executiveThemes, semanticRowKey, executeGraphRAG, THEME_EXAMPLES} = await import(bundled + '?t=' + Date.now());
+const {executiveThemes, semanticRowKey, executeGraphRAG, THEME_EXAMPLES} = await import(pathToFileURL(bundled).href + '?t=' + Date.now());
 
 // Every curated answer needs example questions, and every example must belong to a real answer: a
 // renamed theme would otherwise silently lose its examples.

@@ -701,7 +701,7 @@ export const deepGridCatalog: DeepGridItem[] = [
       'Stop Rule S2: Cap layout burn rate if MPW yield drops below 85% on digital logic.',
       'Stop Rule S3: Transition to SCL Mohali only after commercial characterization passes on SkyWater/IHP.',
       'Stop Rule S4: Never compete on raw commodity wafer price against state-subsidized Chinese fabs; compete exclusively within legally protected PIL/Make-II moats.',
-      'Board orders for FPGA-based hardware exist; they show delivery capability, not chip demand. The contracted total is not carried here because the MCEME part of it failed verification (see Evidence).'
+      'Board orders for FPGA-based hardware exist; they show delivery capability, not chip demand. The contracted total is not carried here because one defence contract in it failed verification (see Evidence).'
     ],
     citation: 'DeepGrid Mature Silicon — Chapter 14: What Could Stop This (Charlie Munger Audit)',
     connectedNodeIds: ['fin-seed', 'three-factory', 'dap-2020-moats']
@@ -873,7 +873,7 @@ export const deepGridCatalog: DeepGridItem[] = [
     standards: 'UN COMTRADE HS 8542 · Open-Source Silicon Flow',
     summary: 'India imports $23.4B of chips annually, of which $9B is mature-node silicon (≥130 nm). DeepGrid targets 9 addressable chip classes ($0.46B) and cuts development costs by 10× using free open-source EDA and shared MPW runs.',
     keyFacts: [
-      'The 5-Level Funnel: $23.4B total imports → $9.0B mature-node (≥130 nm) → $0.46B across 9 DeepGrid chip classes → ₹1,000 Cr FY31 target → ₹2.88 Cr live pre-ASIC orders today.',
+      'The 5-Level Funnel: $23.4B total imports → $9.0B mature-node (≥130 nm) → $0.46B across 9 DeepGrid chip classes → ₹1,000 Cr FY31 stretch target. (The whitepaper’s pre-ASIC orders figure is withheld as misdescribed.)',
       '10x Cost Dismantling: Physical layout ($1–2M sent outside → in-house staff time on free kits); EDA licenses ($0.5–1M/yr → Yosys, OpenROAD, Magic, KLayout at ₹0).',
       'MPW Economics: Shared sky130 factory run costs $14,950 (₹14.3 Lakhs) for 100 packaged chips vs $0.5–1M full mask sets. IHP SiGe radar runs cost €5,110–7,300/mm² (₹34–80 Lakhs).',
       'All-In Development Cost: ₹0.6–1.2 Crore per finished, tested, approved chip (vs $2–5M conventional NRE), delivering 60–75% gross margins at 10,000 units/year.',

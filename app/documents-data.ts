@@ -169,7 +169,7 @@ export const groundedDocuments: GroundedDoc[] = [
       { label: 'NRE Economics', value: '₹0.6–1.2 Cr (10x NRE reduction)' },
       { label: 'Legal Framework', value: 'DAP-2020 Make-II · PIL-1..5 · SRIJAN' },
     ],
-    summary: "The foundational 71-page master whitepaper establishing India’s mature-node semiconductor doctrine. Sizes India’s roughly $9B mature-node import funnel, and shows how open-source EDA and shared MPW shuttles bring NRE to ₹0.6–1.2 Cr per chip against $2–5M for a conventional flow, creates statutory moats through 'Boxes, Not Chips' integration under DAP-2020, and models Chinese supply disruption resilience. September 2026 edition, superseded in part by the October SKU Blueprint (chip count, clock, orders, funding). Its ₹2.88 Cr orders figure includes the ₹1.01 Cr MCEME contract this site withholds as misdescribed.",
+    summary: "The foundational 71-page master whitepaper establishing India’s mature-node semiconductor doctrine. Sizes India’s roughly $9B mature-node import funnel, and shows how open-source EDA and shared MPW shuttles bring NRE to ₹0.6–1.2 Cr per chip against $2–5M for a conventional flow, creates statutory moats through 'Boxes, Not Chips' integration under DAP-2020, and models Chinese supply disruption resilience. September 2026 edition, superseded in part by the October SKU Blueprint (chip count, clock, orders, funding). Its orders figure includes a contract this site withholds as misdescribed; do not cite it.",
     highlights: [
       '$9B mature-node import funnel prioritized across 10 critical defence semiconductor SKUs',
       '198-day tapeout loop from RTL freeze to packaged silicon delivery using OpenLane EDA',
@@ -293,7 +293,7 @@ export const groundedDocuments: GroundedDoc[] = [
       { label: 'Supply Resilience', value: 'Sanction-proof multi-foundry PDKs' },
       { label: 'Economic Model', value: '₹10 Cr Capital Efficiency' },
     ],
-    summary: "Geopolitical and fab-arbitrage blueprint for Indian semiconductor sovereignty. Aligns design tooling so RTL can port seamlessly between US open-access fabs (SkyWater), Indian strategic fabs (SCL Mohali 180nm), and emerging commercial mega-fabs (Tata Dholera 28nm), guaranteeing supply continuity across international supply crunches. September 2026 edition, superseded in part by the October SKU Blueprint (chip count, clock, orders, funding). Its ₹2.88 Cr orders figure includes the ₹1.01 Cr MCEME contract this site withholds as misdescribed.",
+    summary: "Geopolitical and fab-arbitrage blueprint for Indian semiconductor sovereignty. Aligns design tooling so RTL can port seamlessly between US open-access fabs (SkyWater), Indian strategic fabs (SCL Mohali 180nm), and emerging commercial mega-fabs (Tata Dholera 28nm), guaranteeing supply continuity across international supply crunches. September 2026 edition, superseded in part by the October SKU Blueprint (chip count, clock, orders, funding). Its orders figure includes a contract this site withholds as misdescribed; do not cite it.",
     highlights: [
       'Multi-foundry PDK portability preventing vendor lock-in to single fabs',
       'Zero-NRE open-source toolchain (OpenLane/Magic/KLayout) validated on test silicon',

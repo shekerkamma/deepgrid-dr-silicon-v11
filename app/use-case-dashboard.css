@@ -95,3 +95,20 @@ html .dashboard-page>.section-head>p{max-width:75ch;font-size:1rem;margin:0}
 @media(max-width:65rem){.uc-dashboard .dg-ins-grid,.uc-gallery{grid-template-columns:repeat(2,minmax(0,1fr))}.uc-chart-grid{grid-template-columns:minmax(0,1fr)}}
 @media(max-width:45rem){.uc-detail-grid{grid-template-columns:minmax(0,1fr);gap:1.5rem}.uc-facts{padding-left:0;border-left:0;border-top:.0625rem solid var(--t-line);padding-top:1rem}.uc-card{padding:1rem}.uc-card .sk-row{grid-template-columns:minmax(0,1fr) max-content}.uc-card .sk-label{grid-column:1/-1}.uc-card .sk-end{white-space:normal;max-width:8rem}.uc-evidence-grid{grid-template-columns:minmax(0,1fr)}.uc-dashboard .pd-head h2.dg-verdict:not(#_){font-size:1.6rem}}
 @media(max-width:28rem){.uc-dashboard .dg-ins-grid,.uc-gallery{grid-template-columns:minmax(0,1fr)}.uc-case{min-height:0}.uc-toolbar>div{width:100%}.uc-control{flex:1}.db-nav a{font-size:.8rem;padding-inline:.5rem}.uc-selected-heading{align-items:start}}
+/* .uc-heat is positioned so its sr-only label stays inside the table's scroll box (it widened the page to 887px at 390).
+   Readiness heatmap: amber = in place, light amber = partly, grey = not yet (the claude.ai dashboard's key). Words in every cell, so colour is never the only signal. */
+.uc-dashboard{--uc-amber:#c98500;--uc-amber-soft:rgb(201 133 0 / .24)}
+.uc-heat{position:relative;display:inline-flex;align-items:center;justify-content:center;min-width:4.5rem;min-height:2rem;padding:.25rem .5rem;border-radius:var(--sc-radius-sm);font-size:.8rem;font-weight:600;white-space:nowrap}
+.uc-heat[data-level="2"]{background:var(--uc-amber);color:#0b1220}
+.uc-heat[data-level="1"]{background:var(--uc-amber-soft);color:#f6c768}
+.uc-heat[data-level="0"]{background:rgb(255 255 255 / .06);color:var(--t-fg-2);font-weight:500}
+.uc-heat-key{display:flex;flex-wrap:wrap;gap:1rem;list-style:none;padding:0;margin:0 0 1rem;font-size:.8rem;color:var(--t-fg-2)}
+.uc-heat-key li{display:inline-flex;align-items:center;gap:.5rem}.uc-heat-key .uc-heat{min-width:1.25rem;min-height:.875rem;padding:0}
+.uc-matrix tbody tr{cursor:pointer}
+.uc-row-link{display:block;color:var(--t-fg);text-decoration:none;line-height:1.35;padding:.25rem 0;min-height:2.75rem}
+.uc-row-link>span{display:block;color:var(--t-fg-2);font-size:.75rem;margin-top:.375rem}
+.uc-row-link:hover,.uc-matrix tbody tr:hover .uc-row-link{text-decoration:underline;text-underline-offset:.2rem}
+.uc-row-link[aria-current=true]{color:var(--uc-amber)}
+.uc-row-app{display:inline-flex;align-items:center;gap:.25rem;font-size:.75rem;color:var(--t-accent);min-height:1.5rem}
+.uc-row-link:focus-visible,.uc-row-app:focus-visible,.uc-mobile-readiness a:focus-visible{outline:.125rem solid var(--t-accent);outline-offset:.1875rem}
+.uc-mobile-readiness li a{color:var(--t-accent);min-height:2.75rem;display:inline-flex;align-items:center}

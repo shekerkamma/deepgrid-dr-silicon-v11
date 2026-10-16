@@ -83,7 +83,7 @@
   13
  ],
  "themeMin": 0.7,
- "themeGap": 0.09,
+ "themeGap": 0.1,
  "eval": {
   "positives": 15,
   "negatives": 10,
@@ -112,13 +112,13 @@
   "Three Factories, Three Countries: How the Supply Chain Is Sequenced",
   "Hardware Lockstep: How DG32 Catches a Faulty Computation"
  ],
- "indexSha256": "84ca85ac7fe6fe8826923cdd78fb99069ba59f491acaf009dd4cedfadd97c53f",
+ "indexSha256": "88ef0811cfebe733426832e11ea317f1fc3483f3a9b6ba6b309abed8075e817d",
  "rowKeySha256": "dbdb2f89992ed19a596518e2cc80055de7db20acfa7cf234e1b1fbbe603f8fce",
  "modelSha256": "6c9c6101a956d62dfb5e7190c538226c0c5bb9cb27b651234b6df063ee7dbfe4",
  "graphEval": {
   "cases": 20,
   "passed": 20,
   "graphMoved": 11,
-  "codeSha256": "c6cc5df5a5064e2ba6bbd6693867c0024c1a9dd5bc5a1b591fcbeeb2397b3a94"
+  "codeSha256": "cf303d1e1e5d70597132467c674d33b632bb41e3dd8a6750f98a572e5d9a535d"
  }
 }

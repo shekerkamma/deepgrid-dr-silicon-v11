@@ -12,6 +12,10 @@ const cr = (v: number) => `₹${v.toLocaleString('en-IN', {maximumFractionDigits
 const usd = (v: number) => `$${v.toLocaleString('en-US', {maximumFractionDigits: 2})}`;
 const sum = (cases: UseCase[], key: 'fy31Cr' | 'planCr') => cases.reduce((n, c) => n + (c.chip[key] ?? 0), 0);
 const STATUS = ['No', 'Partly', 'Yes'];
+/** A row's own address: the dashboard view with that use case selected, scrolled to its implementation path. */
+const caseHref = (sku: string) => `?view=use-cases&sku=${encodeURIComponent(sku)}#uc-implementation`;
+/** Plain clicks select in place; a modified click (new tab, copy link) keeps the browser's own behaviour. */
+const plainClick = (e: React.MouseEvent) => e.button === 0 && !e.metaKey && !e.ctrlKey && !e.shiftKey && !e.altKey;
 
 function Source({tables, expanded}: {tables: TableName[]; expanded: boolean}) {
   return <div className="uc-source">
@@ -106,6 +110,10 @@ export function UseCaseDashboard() {
   const sheetCount = cases.filter(c => c.datasheet).length;
   const ranked = [...planned].sort((a, b) => (b.chip.fy31Cr ?? 0) - (a.chip.fy31Cr ?? 0));
   const readiness = [...cases].sort((a, b) => b.score - a.score);
+  const best = readiness.filter(c => c.score === readiness[0]?.score), complete = readiness.filter(c => c.score === 12);
+  const readyHead = complete.length ? `${complete.length} of ${cases.length} use cases have all six evaluation documents in place.`
+    : `No use case is fully evaluation-ready; ${best.map(c => c.title.toLowerCase()).join(' and ')} ${best.length > 1 ? 'come' : 'comes'} closest at ${best[0]?.score}/12.`;
+  const openRow = (sku: string) => (e: React.MouseEvent) => { if (!plainClick(e)) return; e.preventDefault(); choose(sku, true); document.getElementById('uc-implementation')?.scrollIntoView({block: 'start'}); };
   const visible = cases.filter(c => (!search.trim() || `${c.title} ${c.sku} ${c.chip.name} ${c.buyer}`.toLowerCase().includes(search.trim().toLowerCase())) &&
     (filter === 'all' || (filter === 'shuttle' ? c.chip.shuttle : filter === 'fast' ? c.approval.high <= 12 : !c.chip.shuttle)));
   const coverageMax = Math.max(...shares, 30);
@@ -159,14 +167,19 @@ export function UseCaseDashboard() {
     </Chapter>
 
     <Chapter id="uc-readiness" title="What a buyer can evaluate today">
-      <section className="uc-card"><h3>No use case has all six evaluation documents in place.</h3>
-        <p className="pd-lede">Select a use case to inspect its implementation path. Yes = documented, Partly = partial, No = absent. Funding is a planned allocation, not an approval held.</p>
+      <section className="uc-card"><h3>{readyHead}</h3>
+        <p className="pd-lede">Six things an engineering lead asks for. Amber = in place, light = partly, grey = not yet. Click a row to open its path below, or follow its application link. Funding is a planned allocation, not an approval held.</p>
+        <ul className="uc-heat-key" aria-label="Cell shading"><li><span className="uc-heat" data-level="2" aria-hidden="true"/>In place</li><li><span className="uc-heat" data-level="1" aria-hidden="true"/>Partly</li><li><span className="uc-heat" data-level="0" aria-hidden="true"/>Not yet</li></ul>
         <div className="table-scroll uc-matrix-scroll" role="region" aria-label="Use-case readiness matrix; scroll horizontally for all six criteria" tabIndex={0}><table className="pd-table uc-matrix">
-          <caption className="sr-only">Product evaluation prerequisites by market</caption>
+          <caption className="sr-only">What a buyer can evaluate today, by use case. Each row links to its implementation path.</caption>
           <thead><tr><th scope="col">Use case</th>{readinessLabels.map(l => <th scope="col" key={l}>{l}</th>)}<th scope="col">Score /12</th></tr></thead>
-          <tbody>{readiness.map(c => <tr key={c.sku} data-selected={c.sku === active.sku}><th scope="row"><button className="uc-row-button" onClick={() => choose(c.sku,true)} aria-pressed={c.sku === active.sku}>{c.title}<span>{c.sku} · {c.chip.name}</span></button></th>{c.criteria.map((n,i) => <td key={i}><span className="uc-status" data-level={n}><span aria-hidden="true">{['–','◐','●'][n]}</span> {STATUS[n]}</span></td>)}<td><strong>{c.score}</strong><span className="uc-score" aria-hidden="true"><span style={{width:`${c.score / 12 * 100}%`}}/></span></td></tr>)}</tbody>
+          <tbody>{readiness.map(c => <tr key={c.sku} data-selected={c.sku === active.sku} onClick={e => { if ((e.target as Element).closest('a')) return; choose(c.sku, true); document.getElementById('uc-implementation')?.scrollIntoView({block: 'start'}); }}>
+            <th scope="row"><a className="uc-row-link" href={caseHref(c.sku)} onClick={openRow(c.sku)} aria-current={c.sku === active.sku ? 'true' : undefined}>{c.title}<span>{c.sku} · {c.chip.name}</span></a>
+              <a className="uc-row-app" href={url(c.route)}>Application <ArrowRight size={12} aria-hidden="true"/></a></th>
+            {c.criteria.map((n,i) => <td key={i}><span className="uc-heat" data-level={n}>{STATUS[n]}<span className="sr-only">: {readinessLabels[i]}</span></span></td>)}
+            <td><strong>{c.score}</strong><span className="uc-score" aria-hidden="true"><span style={{width:`${c.score / 12 * 100}%`}}/></span></td></tr>)}</tbody>
         </table></div>
-        <details className="uc-mobile-readiness"><summary>Compare product evaluation prerequisites</summary><p className="pd-source">Score out of 12. Document coverage, not silicon readiness. The complete six-criterion table remains above.</p><ul>{readiness.map(c => <li key={c.sku}><button onClick={() => choose(c.sku,true)}>{c.title}</button><span>{c.score}/12</span></li>)}</ul></details>
+        <details className="uc-mobile-readiness"><summary>Compare product evaluation prerequisites</summary><p className="pd-source">Score out of 12. Document coverage, not silicon readiness. The complete six-criterion table remains above.</p><ul>{readiness.map(c => <li key={c.sku}><a href={caseHref(c.sku)} onClick={openRow(c.sku)}>{c.title}</a><span>{c.score}/12</span></li>)}</ul></details>
         <details className="uc-method"><summary>Qualification planning criteria and assessment limits</summary><p>Each of six criteria contributes 0, 1 or 2 points. Design: RTL plus analog schematics = 2, RTL only = 1, specification or undocumented = 0. Shuttle: in the December plan = 2. Datasheet: published preliminary document = 2. Unit cost: a row in the cost table = 2. Approval funded: identified first-approval allocation in tranche 1 = 2. Plan line: a published allocation = 2. This is document coverage, not a safety, certification, sample availability or silicon-readiness rating.</p></details>
         <Source tables={['skus','unit-cost','tranche1-uses','dg32-specs']} expanded={sources}/>
       </section>

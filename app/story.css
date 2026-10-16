@@ -595,3 +595,23 @@
 .st-art { margin: 0 0 24px; max-width: 544px; }
 .st-art img { display: block; width: 100%; height: auto; border-radius: var(--sc-radius-md); }
 .st-art figcaption { margin-top: 8px; font-size: var(--text-meta); color: var(--ink-2); }
+
+/* Task families as tabs (applications-story.tsx FamilyTabs). The tab row repeats the intro's family cards: count, then
+   name, on a rule; the active tab takes the accent and a 2px underline. Panels keep the beat's text-then-table layout. */
+.st-fam-tabs { display: grid; gap: 8px; }
+.st-fam-tablist { position: relative; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); column-gap: 32px; border-bottom: 1px solid var(--rule); }
+.st-fam-tab { display: grid; align-content: start; gap: 6px; padding: 18px 0 20px; min-height: 44px; border: 0; background: none; color: var(--muted-foreground); font: inherit; text-align: left; cursor: pointer; transition: color .15s ease; }
+.st-fam-tab .st-fam-n { font-size: var(--sc-t-section); line-height: 1; color: inherit; }
+.st-fam-tab strong { font-size: var(--sc-t-body); font-weight: 600; color: inherit; }
+.st-fam-tab:hover { color: var(--foreground); }
+.st-fam-tab[data-active], .st-fam-tab[aria-selected="true"] { color: var(--t-accent, var(--foreground)); box-shadow: inset 0 -2px 0 var(--t-accent, currentColor); }
+.st-fam-tab:focus-visible { outline: 2px solid var(--t-accent, currentColor); outline-offset: 3px; }
+.st-fam-panel { display: grid; grid-template-columns: minmax(0, 1fr); gap: 28px; padding-top: 32px; scroll-margin-top: 80px; }
+.st-fam-panel[hidden] { display: none; }
+.st-fam-h { font-size: var(--sc-t-section); line-height: var(--sc-lh-section); letter-spacing: var(--sc-track-section); margin: 0 0 20px; }
+@media (max-width: 800px) { .st-fam-tablist { grid-template-columns: repeat(2, minmax(0, 1fr)); column-gap: 16px; } }
+/* A visible caption under a loop (MotionLoop caption): what the animation shows, and that it is a concept. */
+.st-loop-cap { padding: 10px 14px 12px; font-size: var(--sc-t-small, .875rem); line-height: 1.5; color: var(--muted-foreground); border-top: 1px solid var(--border); }
+.st-loop-cap strong { color: var(--foreground); font-weight: 600; }
+.st-loop:has(.st-loop-cap) .st-loop-btn { bottom: auto; top: 8px; }
+.st-fam-anchor { scroll-margin-top: 80px; }

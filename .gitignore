@@ -73,3 +73,10 @@ qa/
 # SKU portfolio dashboard: generated per build (scripts/build-portfolio-data.mjs); never committed
 /app/portfolio-data.json
 /public/portfolio-data/
+
+# Animation pieces (pieces/<name>/): commit the source, brief, log and approval boards; frames, renders and review sheets regenerate.
+pieces/*/frames/
+pieces/*/renders/
+pieces/*/review/
+pieces/*/check.png
+pieces/*/end.png

@@ -500,7 +500,7 @@ export const executiveThemes: ExecutiveTheme[] = [
     explanation: [
       'Capital Allocation Waterfall: The ₹10 Cr round is deployed with strict capital discipline: ₹3.8 Cr for factory wafer runs and shuttle reservations (SkyWater 130 nm, IHP 130 nm SiGe, SCL Mohali); ₹2.6 Cr for automated test equipment (ATE), high-reliability screening, and AEC-Q100 Grade 1 qualification; ₹2.4 Cr for core engineering payroll across RTL design, physical verification, and firmware; and ₹1.2 Cr for operational reserves and regulatory filing.',
       '10x Cost Advantage via Open-Source EDA: Conventional semiconductor startups spend $2M–$5M on commercial EDA software licenses (Synopsys, Cadence) before taping out first silicon. DeepGrid utilizes fully validated open-source toolchains (Yosys, OpenROAD, Magic, KLayout), reducing software license expenditure to ₹0 and enabling profitable operation at low volumes (10k–50k units/year).',
-      'Board orders are not chip demand: DeepGrid has sold FPGA-based boards, which shows it can specify, build and deliver a system, but a board buyer is a different customer, price and approval process from a chip buyer. The contracted figure is not carried on this site because part of it, the MCEME contract, failed verification (see Evidence).'
+      'Board orders are not chip demand: DeepGrid has sold FPGA-based boards, which shows it can specify, build and deliver a system, but a board buyer is a different customer, price and approval process from a chip buyer. The contracted figure is not carried on this site because part of it, one defence contract, failed verification (see Evidence).'
     ],
     facts: [
       'Seed Allocation: ₹3.8 Cr foundry runs, ₹2.6 Cr test/qualification, ₹2.4 Cr engineering, ₹1.2 Cr reserve.',

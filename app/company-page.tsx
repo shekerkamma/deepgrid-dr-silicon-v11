@@ -4,6 +4,7 @@ import {useRouteStory} from './executive-story';
 // look: the showcase's SectionHead, its tokens, and a small set of section shapes taken from
 // deepgridsemi.com's templates (split, card grid, steps, stats, people, figures, contact, CTA).
 import { useEffect, useState } from 'react';
+import { Accordion } from '@base-ui/react/accordion';
 import { ArrowRight, ArrowUpRight, BookOpen, Boxes, Check, CircleCheck, Cpu, Download, Film, Gauge, Hand, Layers, Library, Loader, Mail, MapPin, Mic, Play, ScanEye, SlidersHorizontal, Terminal } from 'lucide-react';
 import type { FlowStep } from './company-pages';
 import { url } from './routes';
@@ -349,22 +350,27 @@ function Block({ s }: { s: Section }) {
           {s.channel && <p className="cp-actions"><a className="primary" href={CHANNEL} target="_blank" rel="noopener noreferrer">The DeepGrid Semi channel on YouTube <ArrowUpRight size={16} aria-hidden="true" /></a></p>}
         </section>
       );
-    case 'docs':
+    case 'docs': {
+      // Published documents lead, as cards. Everything deepgridsemi.com lists but does not publish ("on request")
+      // folds into one accordion below, one row per group, so request-only titles never read as missing documents.
+      const isAsk = (d: { href?: string }) => !!d.href?.startsWith('mailto:');
+      const shown = s.groups.map((g) => ({ ...g, items: g.items.filter((d) => !isAsk(d)) })).filter((g) => g.items.length);
+      const asked = s.groups.map((g) => ({ ...g, items: g.items.filter(isAsk) })).filter((g) => g.items.length);
+      const askedN = asked.reduce((n, g) => n + g.items.length, 0);
       return (
         <section className="cp-sec">
           <div className="cp-docs">
-            {s.groups.map((g) => (
+            {shown.map((g) => (
               <article key={g.title} className="cp-card cp-docgroup">
                 <h2>{g.title}</h2>
                 <p>{g.lede}</p>
                 <ul>
                   {g.items.map((d) => {
                     const file = d.href?.endsWith('.pdf');
-                    const ask = d.href?.startsWith('mailto:');
                     return (
-                      <li key={d.title} className={ask ? 'is-ask' : ''}>
+                      <li key={d.title}>
                         <a href={link(d.href!)} {...(file ? { download: '' } : {})}>
-                          <span className="cp-doc-t">{file ? <Download size={14} aria-hidden="true" /> : ask ? <Mail size={14} aria-hidden="true" /> : <ArrowRight size={14} aria-hidden="true" />}{d.title}</span>
+                          <span className="cp-doc-t">{file ? <Download size={14} aria-hidden="true" /> : <ArrowRight size={14} aria-hidden="true" />}{d.title}</span>
                           {d.note && <small>{d.note}</small>}
                           {d.meta && <em>{d.meta}</em>}
                         </a>
@@ -375,9 +381,35 @@ function Block({ s }: { s: Section }) {
               </article>
             ))}
           </div>
-          <p className="cp-detail cp-docs-note">Documents marked “on request” are listed by deepgridsemi.com; they are shared on request rather than published.</p>
+          {askedN > 0 && (
+            <div className="cp-ask">
+              <h2 className="cp-ask-h">{askedN} more documents, shared on request</h2>
+              <p className="cp-detail">Listed by deepgridsemi.com and not published here. Open a group and choose a title to email a request.</p>
+              <Accordion.Root className="cp-acc" multiple>
+                {asked.map((g) => (
+                  <Accordion.Item key={g.title} value={g.title} className="cp-acc-item">
+                    <Accordion.Header className="cp-acc-head">
+                      <Accordion.Trigger className="cp-acc-trigger">
+                        <span>{g.title}</span><span className="cp-acc-n">{g.items.length}</span>
+                        <ArrowRight size={16} aria-hidden="true" className="cp-acc-icon" />
+                      </Accordion.Trigger>
+                    </Accordion.Header>
+                    <Accordion.Panel className="cp-acc-panel">
+                      <p className="cp-detail">{g.lede}</p>
+                      <ul className="cp-acc-list">
+                        {g.items.map((d) => (
+                          <li key={d.title}><a href={link(d.href!)}><Mail size={14} aria-hidden="true" />{d.title}</a></li>
+                        ))}
+                      </ul>
+                    </Accordion.Panel>
+                  </Accordion.Item>
+                ))}
+              </Accordion.Root>
+            </div>
+          )}
         </section>
       );
+    }
     case 'scene':
       return <SceneSection s={s} />;
     case 'bullets':

@@ -1,0 +1,9 @@
+{
+  "name": "applications-opener",
+  "title": "Applications opener: one chip, five system roles",
+  "format": { "width": 1920, "height": 1080, "fps": 24, "bpm": 120, "duration": 20.0, "frames": 480 },
+  "formats": ["16:9"],
+  "storyFormat": "F5 fixed-hero journey (beat-cut; the chip holds its screen spot while five worlds cut round it)",
+  "style": "isometric",
+  "review": { "safe": { "top": 48, "bottom": 48, "right": 48 }, "refs": {} }
+}

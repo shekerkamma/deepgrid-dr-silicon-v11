@@ -58,7 +58,15 @@ for (const width of [1440,768,390]) {
   await page.getByLabel('Show',{exact:true}).selectOption('shuttle');
   check(await dashboard.locator('.uc-case').count()===9,`${width}: shuttle filter`);
   await page.getByLabel('Show',{exact:true}).selectOption('all');
-  await page.getByRole('button',{name:'Smart electricity meters SKU-2 · Smart-Meter SoC',exact:true}).click();
+  // The readiness matrix: every row is a real hyperlink to its own path, plus a link to its application page.
+  const rowLinks = dashboard.locator('.uc-matrix a.uc-row-link');
+  check(await rowLinks.count()===12,`${width}: twelve row hyperlinks`);
+  for (const href of await rowLinks.evaluateAll(as=>as.map(a=>a.getAttribute('href')))) check(/^\?view=use-cases&sku=[^&#]+#uc-implementation$/.test(href),`${width}: row link ${href}`);
+  check(await dashboard.locator('.uc-matrix a.uc-row-app').count()===12,`${width}: twelve application links`);
+  check(/comes? closest at \d+\/12/.test(await dashboard.locator('#uc-readiness + .uc-card h3, #uc-readiness ~ .uc-card h3').first().innerText()),`${width}: readiness headline names the closest use case`);
+  check(await dashboard.locator('.uc-matrix .uc-heat[data-level="2"]').count()>0,`${width}: amber in-place cells`);
+  await page.getByRole('link',{name:'Smart electricity meters SKU-2 · Smart-Meter SoC',exact:true}).click();
+  check(new URL(page.url()).searchParams.get('sku')==='SKU-2',`${width}: row link selects its use case`);
   await page.waitForFunction(()=>document.activeElement?.id==='uc-detail-title',null,{timeout:3000}).catch(()=>{});
   check(await page.locator('#uc-detail-title').evaluate(e=>e===document.activeElement),`${width}: matrix selection focuses detail`);
   await page.locator('#uc-implementation').screenshot({path:path.join(out,`implementation-${width}.png`)});

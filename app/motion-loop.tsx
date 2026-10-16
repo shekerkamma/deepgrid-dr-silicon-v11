@@ -8,7 +8,7 @@ import {Pause, Play} from 'lucide-react';
 import {useReduced} from './shell';
 import {url} from './routes';
 
-export function MotionLoop({name, label, wide}: {name: string; label: string; wide?: boolean}) {
+export function MotionLoop({name, label, wide, caption}: {name: string; label: string; wide?: boolean; caption?: React.ReactNode}) {
   const ref = useRef<HTMLVideoElement>(null);
   const reduced = useReduced();
   const [stopped, setStopped] = useState(false);
@@ -55,6 +55,7 @@ export function MotionLoop({name, label, wide}: {name: string; label: string; wi
         aria-label={playing ? 'Pause animation' : 'Play animation'}>
         {playing ? <Pause size={14} aria-hidden="true"/> : <Play size={14} aria-hidden="true"/>}
       </button>
+      {caption && <figcaption className="st-loop-cap">{caption}</figcaption>}
     </figure>
   );
 }

@@ -67,6 +67,7 @@ jobs:
       - run: node scripts/verify-plan.mjs http://127.0.0.1:8768/${{ github.event.repository.name }}/
       - run: node scripts/verify-portfolio.mjs http://127.0.0.1:8768/${{ github.event.repository.name }}/
       - run: node scripts/verify-use-cases.mjs http://127.0.0.1:8768/${{ github.event.repository.name }}/ verify-shots/use-cases
+      - run: node scripts/verify-applications-tabs.mjs http://127.0.0.1:8768/${{ github.event.repository.name }}/
       - run: node scripts/verify-investor-journey.mjs http://127.0.0.1:8768/${{ github.event.repository.name }}/ verify-shots/investor
       - run: node scripts/verify-engineering-visuals.mjs http://127.0.0.1:8768/${{ github.event.repository.name }}/ verify-shots/engineering
       - run: node scripts/verify-brand-imagery.mjs http://127.0.0.1:8768/${{ github.event.repository.name }}/ verify-shots/brand

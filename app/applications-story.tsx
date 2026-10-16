@@ -1,5 +1,7 @@
 'use client';
 
+import {useEffect, useState} from 'react';
+import {Tabs} from '@base-ui/react/tabs';
 import {ArrowUpRight, Download} from 'lucide-react';
 import {useNav} from './shell';
 import {url} from './routes';
@@ -244,26 +246,8 @@ export default function ApplicationsStory() {
         <Source>Playbook, pages 4 to 6</Source>
       </Beat>
 
-      {/* 5 to 8. The four families, every task as problem, signal, what runs. */}
-      {families.map(f => (
-        <section key={f.id} className="st-beat" id={'fam-' + f.id} aria-labelledby={'fam-' + f.id + '-h'}>
-          <div className="st-beat-text">
-            <p className="st-fam-kicker"><span className="num">{byFamily(f.id).length}</span> {f.name}</p>
-            <h2 id={'fam-' + f.id + '-h'}>{f.headline}</h2>
-            <p>{f.lede}</p>
-            {f.standards && <p className="st-standards">{f.standards}</p>}
-            <Source>Playbook, page {f.page}{f.id === 'rotating' || f.id === 'electrical' ? ' and page 11' : ''}</Source>
-          </div>
-          <div className="st-beat-wide">
-            <div className="st-task-head" aria-hidden="true">
-              <span>What it catches</span><span>Signal</span><span>Runs</span><span>Latency · rate · memory</span>
-            </div>
-            <ol className="st-tasks" aria-label={f.name + ': ' + byFamily(f.id).length + ' tasks'}>
-              {byFamily(f.id).map(t => <Task key={t.name} t={t}/>)}
-            </ol>
-          </div>
-        </section>
-      ))}
+      {/* 5 to 8. The four families, every task as problem, signal, what runs: one family at a time. */}
+      <FamilyTabs byFamily={byFamily}/>
 
       {/* 9. The honest limit. */}
       <Beat id="st-sensors" title="Compute is not the limit. The sensors are."
@@ -353,5 +337,62 @@ export default function ApplicationsStory() {
         </div>
       </section>
     </div>
+  );
+}
+
+/** The four task families as tabs (pattern: 7ovr "Tabbed Feature Categories", MIT-0, via 21st.dev; built on the
+ *  same Base UI Tabs primitive). One family shows at a time, which takes about three family tables off the page.
+ *  Every panel stays mounted, so search and print still find all thirty tasks, and a link to #fam-… or #task-…
+ *  (the intro's family cards, the sockets list, Ask) opens the family that holds it before scrolling there. */
+function FamilyTabs({byFamily}: {byFamily: (id: string) => UseCase[]}) {
+  const [active, setActive] = useState<string>(families[0].id);
+  useEffect(() => {
+    const open = () => {
+      const id = decodeURIComponent(location.hash.slice(1));
+      const fam = id.startsWith('fam-') ? families.find(f => 'fam-' + f.id === id)
+        : id.startsWith('task-') ? families.find(f => byFamily(f.id).some(t => 'task-' + slug(t.name) === id)) : undefined;
+      if (!fam) return;
+      setActive(fam.id);
+      requestAnimationFrame(() => requestAnimationFrame(() => document.getElementById(id)?.scrollIntoView({block: 'start'})));
+    };
+    open(); addEventListener('hashchange', open); return () => removeEventListener('hashchange', open);
+  }, [byFamily]);
+  return (
+    <section className="st-beat" id="st-families" aria-labelledby="st-families-h">
+      <div className="st-beat-text">
+        <h2 id="st-families-h">The thirty tasks, one family at a time.</h2>
+        <p>Choose a family to see what each task catches, the signal it reads, the model that runs and what it costs.</p>
+      </div>
+      <Tabs.Root value={active} onValueChange={v => setActive(String(v))} className="st-fam-tabs">
+        <Tabs.List className="st-fam-tablist" aria-label="Task families">
+          {families.map(f => (
+            <Tabs.Tab key={f.id} value={f.id} className="st-fam-tab">
+              <span className="st-fam-n num">{byFamily(f.id).length}</span>
+              <strong>{f.name}</strong>
+            </Tabs.Tab>
+          ))}
+        </Tabs.List>
+        {families.map(f => (
+          <Tabs.Panel key={f.id} value={f.id} keepMounted className="st-fam-panel">
+            {/* The anchor sits inside the panel: Base UI owns the panel id that the tab's aria-controls points to. */}
+            <div className="st-beat-text st-fam-anchor" id={'fam-' + f.id}>
+              <p className="st-fam-kicker"><span className="num">{byFamily(f.id).length}</span> {f.name}</p>
+              <h3 className="st-fam-h" id={'fam-' + f.id + '-h'}>{f.headline}</h3>
+              <p>{f.lede}</p>
+              {f.standards && <p className="st-standards">{f.standards}</p>}
+              <Source>Playbook, page {f.page}{f.id === 'rotating' || f.id === 'electrical' ? ' and page 11' : ''}</Source>
+            </div>
+            <div className="st-beat-wide">
+              <div className="st-task-head" aria-hidden="true">
+                <span>What it catches</span><span>Signal</span><span>Runs</span><span>Latency · rate · memory</span>
+              </div>
+              <ol className="st-tasks" aria-label={f.name + ': ' + byFamily(f.id).length + ' tasks'}>
+                {byFamily(f.id).map(t => <Task key={t.name} t={t}/>)}
+              </ol>
+            </div>
+          </Tabs.Panel>
+        ))}
+      </Tabs.Root>
+    </section>
   );
 }
