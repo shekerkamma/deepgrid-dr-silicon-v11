@@ -17,6 +17,7 @@ import './site-refinement.css';
 import './plan-dashboard.css';
 import './portfolio-dashboard.css';
 import './theme-dgs.css';
+import './lattice.css';
 import './use-case-dashboard.css';
 import './investor-journey.css';
 import './engineering-visuals.css';

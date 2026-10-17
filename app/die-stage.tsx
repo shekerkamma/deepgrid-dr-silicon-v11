@@ -143,7 +143,7 @@ export function DieStage({reduced}: {reduced: boolean}) {
           <span className="mono">{blocks[FROZEN].code}</span>
           <span className="dg-tag dg-tag-frozen"><Lock size={11} aria-hidden="true"/> FROZEN</span>
         </p>
-        <h2>Customise the peripherals.<br/>Preserve the safety core.</h2>
+        <h2>Peripherals change per customer.<br/>The lockstep safety core does not.</h2>
         <p className="dg-collapse-copy">
           {blocks[FROZEN].why}
         </p>

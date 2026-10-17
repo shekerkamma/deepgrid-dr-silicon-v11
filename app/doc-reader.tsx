@@ -117,7 +117,7 @@ export default function DocReader() {
   return (
     <div className="rd">
       <aside className="rd-toc" aria-label="In this document">
-        <p className="dr-kicker">IN THIS DOCUMENT</p>
+        <p className="dr-kicker">In this document</p>
         <ol>{doc.headings.map(h => <li key={h.id}><a href={'#' + h.id}>{h.label}</a></li>)}</ol>
         <div className="rd-files">
           {registered && <a href={url(registered.pdfFile)}><Download size={14} aria-hidden="true"/> PDF · {registered.pdfPageCount}</a>}
@@ -125,7 +125,7 @@ export default function DocReader() {
         </div>
       </aside>
       <article className="rd-body">
-        <p className="dr-kicker">SOURCE DOCUMENT</p>
+        <p className="dr-kicker">Source document</p>
         <h1>{registered?.title || doc.title}</h1>
         {registered && registered.title !== doc.title && <p className="rd-sub">{doc.title}</p>}
         <p className="rd-banner">The source edition, unchanged. Architecture targets, proposals and dated plans are preserved as written; they do not establish measured silicon, qualification or certification. <a href={url('/evidence')}>How each figure on this site is graded</a>.</p>

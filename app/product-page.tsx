@@ -1,5 +1,6 @@
 'use client';
 import {ProductApplicationImage} from './brand-imagery';
+import {lattice} from './lattice';
 /** One product page (/products/<slug>). Structure follows deepgridsemi.com's DG-A100 page, section for
  *  section: hero with the part in the middle and three figures beside it, an overview with a media
  *  carousel, a key-features grid, the architecture with its specification around it, readiness, what
@@ -54,15 +55,7 @@ export default function ProductPageView({slug}: {slug: string}) {
   const story = archStories[p.id];
   const explainer = explainers.find(e => e.slug === p.slug);
   const executive=executiveProducts[p.id as keyof typeof executiveProducts];
-  const S = {
-   specs:{title:'Electrical limits and product acceptance criteria.',copy:'These design targets define what an evaluation must confirm. They are not measured production specifications.'},
-   questions:{title:'Qualification risks and design constraints.',copy:executive.gate},
-   evidence:{title:'Product maturity and validation milestones.',copy:executive.gate},
-   fit:{title:'Target applications and customer qualification.',copy:executive.implication},
-   sources:{title:'Product specifications and validation references.',copy:'Use the current Blueprint for scope and status, then examine the detailed engineering evidence where it affects your decision.'},
-   close:{title:'Agree the next milestone for your product.',copy:executive.implication},
-   physics:{title:'The operating environment determines the fit.',copy:executive.context},
-  };
+
   const base = p.id === 'sku4' ? 'dg32-lite' : p.slug;
   const fits = areas.flatMap(a => a.items.filter(i => i.product === p.id).map(i => ({area: a, role: i.role})));
   const sheet = `page ${bpPage}`;
@@ -128,9 +121,9 @@ export default function ProductPageView({slug}: {slug: string}) {
           behind the demand and why its process node. */}
       <section id="pp-why" className="pp-sec pp-reveal">
         <Head title={`The business case for ${part.code}`} copy={executive.implication}/>
-        <div className="pp-readiness-cards pp-why-cards">
-          {([['What it replaces', record.replaces ?? ''], ['Customer opportunity', p.fit.buyers], ['Policy and demand', p.fit.policy], ['The delivery trade-off', p.fit.node]] as const).map(([k, v]) => (
-            <article key={k}><p className="pp-card-kicker">{k}</p><p>{nbspUnits(v)}</p></article>
+        <div className="lat pp-why-lat" style={lattice(4, 3).style}>
+          {([['What it replaces', record.replaces ?? ''], ['Customer opportunity', p.fit.buyers], ['Policy and demand', p.fit.policy], ['The delivery trade-off', p.fit.node]] as const).map(([k, v], i) => (
+            <article key={k} {...lattice(4, 3).cell(i)}><h3>{k}</h3><p>{nbspUnits(v)}</p></article>
           ))}
         </div>
         <a className="text-link" href={readHref(blueprint.specFile)}>Read {part.code} in the SKU Blueprint <ArrowUpRight size={15} aria-hidden="true"/></a>
@@ -139,9 +132,9 @@ export default function ProductPageView({slug}: {slug: string}) {
       {/* 3 · Key features: one card per storyboard beat (DG-A100: a grid of six feature cards). */}
       {executive && (
         <section id="pp-features" className="pp-sec pp-reveal">
-          <Head title="System architecture and interface responsibilities." copy="The following mechanisms explain the proposed customer benefit. Each still needs to be validated in the complete product."/>
-          <ol className="pp-features">
-            {[[executive.headline,executive.context],[executive.valueTitle,executive.implication],[executive.gateTitle,executive.gate]].map(([title,body])=><li key={title}><h3>{title}</h3><p>{body}</p></li>)}
+          <Head title={`What ${part.code.replace('-', '-\u2060')} claims, what it is worth, and what gates it.`} copy="The following mechanisms explain the proposed customer benefit. Each still needs to be validated in the complete product."/>
+          <ol className="lat pp-feat-lat" style={lattice(3, 3).style}>
+            {[[executive.headline,executive.context],[executive.valueTitle,executive.implication],[executive.gateTitle,executive.gate]].map(([title,body],i)=><li key={title} {...lattice(3, 3).cell(i)}><h3>{title}</h3><p>{body}</p></li>)}
           </ol>
         </section>
       )}
@@ -149,7 +142,7 @@ export default function ProductPageView({slug}: {slug: string}) {
       {/* 4 · Architecture and technical specifications: the diagram in the middle, the targets around it,
           a row of facts beneath (DG-A100: schematic with spec cards either side, four chips below). */}
       <section id="pp-specs" className="pp-sec pp-reveal">
-        <Head title={S?.specs.title ?? 'Architecture targets, not datasheet values.'} copy={S?.specs.copy ?? `Every figure is a design target stated in the SKU Blueprint, ${sheet}. None is a measurement of manufactured silicon.`}/>
+        <Head title={'Architecture targets, not datasheet values.'} copy={`Every figure is a design target stated in the SKU Blueprint, ${sheet}. None is a measurement of manufactured silicon.`}/>
         <ul id="pp-highlights" className="pp-highlights" aria-label="The three figures that decide the fit">
           {p.highlights.map(([fig, label, row]) => { const value = p.specs.find(r => r[0] === row)![1]; return (
             <li key={label}><strong>{nbspUnits(fig)}</strong><span className="pp-hl-label">{label}</span>{tag(value)}</li>
@@ -181,24 +174,25 @@ export default function ProductPageView({slug}: {slug: string}) {
           the evidence panel where DG-A100 shows its measured prototype pipeline. */}
       <section id="pp-readiness" className="pp-sec pp-readiness pp-reveal">
         <header className="pp-readiness-head">
-          <h2 className="dr-h2">{nbspUnits(S?.questions.title ?? 'What an evaluator should ask first.')}</h2>
-          <p>{S?.questions.copy ?? `The Blueprint’s design and status notes raise these. Each is a question silicon, test or layout has to answer before ${part.code} can be relied on.`}</p>
+          <h2 className="dr-h2">{nbspUnits(`${p.physics.length + p.questions.length} questions ${part.code.replace('-', '-\u2060')} has to answer before it can be relied on.`)}</h2>
+          <p>{`The Blueprint’s design and status notes raise these. Each is a question silicon, test or layout has to answer before ${part.code} can be relied on.`}</p>
         </header>
-        <div className="pp-readiness-cards">
-          {p.physics.map((x, i) => (
-            <article key={'r' + i}><p className="pp-card-kicker">Why its own silicon</p><h3>{nbspUnits(x.requirement)}</h3><p>{nbspUnits(x.consequence)}</p></article>
-          ))}
-          {p.questions.map((q, i) => (
-            <article key={'q' + i}><p className="pp-card-kicker">Open question {String(i + 1).padStart(2, '0')}</p><h3>{q.title}</h3><p>{nbspUnits(q.question)}</p></article>
-          ))}
+        <div className="pp-readiness-body">
+          <div className="qsplit-list pp-qlist">
+            {p.physics.map((x, i) => (
+              <details key={'r' + i} className="qsplit-item" open={i === 0}><summary>{nbspUnits(x.requirement)}<span className="qsplit-tag">Physics</span></summary><div className="qsplit-body"><p>{nbspUnits(x.consequence)}</p></div></details>
+            ))}
+            {p.questions.map((q, i) => (
+              <details key={'q' + i} className="qsplit-item"><summary>{q.title}<span className="qsplit-tag">Open</span></summary><div className="qsplit-body"><p>{nbspUnits(q.question)}</p></div></details>
+            ))}
+          </div>
           <article className="pp-evidence-panel">
-            <p className="pp-card-kicker">Evidence today</p>
-            <h3>{S?.evidence.title ?? (part.maturity === 'Pre-silicon engineering evidence' ? 'Simulated and implemented, not yet measured.' : 'An architecture, with its evidence named.')}</h3>
+            <h3>{(part.maturity === 'Pre-silicon engineering evidence' ? 'Simulated and implemented, not yet measured.' : 'An architecture, with its evidence named.')}</h3>
             <dl className="pp-evidence">
               <div><dt>Strongest evidence</dt><dd>{record.evidence}</dd></div>
               {record.status && <div><dt>Development status</dt><dd>{record.status}</dd></div>}
             </dl>
-            <p className="pp-note">{S?.evidence.copy ?? part.boundary}</p>
+            <p className="pp-note">{part.boundary}</p>
             <a className="text-link" href={url('/evidence')}>How every figure on this site was obtained <ArrowUpRight size={15} aria-hidden="true"/></a>
             {p.deeper && <ul className="pp-deeper">{p.deeper.map(d => <li key={d.href}><a href={url(d.href)}>{d.label}<ArrowUpRight size={14} aria-hidden="true"/></a></li>)}</ul>}
           </article>
@@ -207,7 +201,7 @@ export default function ProductPageView({slug}: {slug: string}) {
 
       {/* 6 · Designed for: application cards (DG-A100: four application cards), then the parts beside it. */}
       <section id="pp-fit" className="pp-sec pp-designed pp-reveal">
-        <Head title={S?.fit.title ?? 'The systems it goes into, and the parts beside it.'} copy={S?.fit.copy ?? part.evaluation}/>
+        <Head title={'The systems it goes into, and the parts beside it.'} copy={part.evaluation}/>
         <ul className="pp-apps">
           {fits.map(f => { const Icon = areaIcon(f.area.id); return (
             <li key={f.area.id}><a href={url('/use-cases/' + f.area.id)}><Icon size={22} aria-hidden="true"/><span className="pp-app-name">{f.area.name}<ArrowUpRight size={14} aria-hidden="true"/></span><span>{f.role}</span></a></li>
@@ -224,7 +218,7 @@ export default function ProductPageView({slug}: {slug: string}) {
       </section>
 
       <section id="pp-sources" className="pp-sec">
-        <Head title={S?.sources.title ?? 'Read the source behind every figure.'} copy={(S?.sources.copy ?? 'Each document opens inside the site at the cited section; the PDF is the edition of record.')}/>
+        <Head title={'Read the source behind every figure.'} copy={('Each document opens inside the site at the cited section; the PDF is the edition of record.')}/>
         <ul className="pp-sources">
           <li>
             <a href={readHref(blueprint.specFile)}><FileText size={15} aria-hidden="true"/><span>{blueprint.title}</span><span className="pp-cite">{part.code}, {sheet} · source of record</span></a>
@@ -251,8 +245,8 @@ export default function ProductPageView({slug}: {slug: string}) {
       </section>
       {/* 7 · Call to action (DG-A100: talk to our team, download the whitepaper). */}
       <section className="pp-close pp-reveal">
-        <h2>{nbspUnits(S?.close.title ?? `Bring the socket. We will tell you what ${part.code} has to prove for it.`)}</h2>
-        <p>{nbspUnits(S?.close.copy ?? 'Send the platform, voltage and power environment, interfaces and qualification needs. The reply names what is architecture, what is evidence and what would have to be tested.')}</p>
+        <h2>{nbspUnits(`Bring the socket. We will tell you what ${part.code} has to prove for it.`)}</h2>
+        <p>{nbspUnits('Send the platform, voltage and power environment, interfaces and qualification needs. The reply names what is architecture, what is evidence and what would have to be tested.')}</p>
         <div className="pp-actions">
           <a className="primary" href={contact}>Discuss {part.code} <ArrowUpRight size={16} aria-hidden="true"/></a>
           {hasDesignFiles && <a className="pp-ghost" href={deck}><Download size={15} aria-hidden="true"/> Download the architecture deck</a>}

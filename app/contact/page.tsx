@@ -95,7 +95,7 @@ export default function Page() {
         <div className="dr-enq-actions"><button className="primary" type="submit"><Mail size={17} aria-hidden="true"/>Compose discussion request</button></div>
         <p id="enq-status" className="dr-enq-note" aria-live="polite">{status||'Fields marked * are required. The button opens your mail app; it does not send the request.'}</p>
       </form>
-    </div><aside className="ij-contact-aside" aria-label="Prepare for the discussion"><h2>Bring the questions<br/>that matter.</h2><ul><li>Which first market or product interests you?</li><li>Which funding assumptions need reconciliation?</li><li>What evidence would unblock your next decision?</li></ul>
+    </div><aside className="ij-contact-aside" aria-label="Prepare for the discussion"><h2>Three questions make<br/>the first call useful.</h2><ul><li>Which first market or product interests you?</li><li>Which funding assumptions need reconciliation?</li><li>What evidence would unblock your next decision?</li></ul>
       <a className="ij-link" href={url('/portfolio/brief')}>Review the investment brief <ArrowUpRight size={16} aria-hidden="true"/></a>
       <a className="ij-link" href={url('/evidence')}>Check evidence & gaps <ArrowUpRight size={16} aria-hidden="true"/></a>
       <div className="ij-contact-direct"><h3>Prefer to write directly?</h3><a className="text-link" href={'mailto:'+CONTACT_EMAIL}>{CONTACT_EMAIL}</a><button type="button" className="uc-control" onClick={copy}><Copy size={16} aria-hidden="true"/>Copy email address</button><p>No mail app configured? Copy the address into the mail service you use.</p></div>

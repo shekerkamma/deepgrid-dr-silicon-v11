@@ -89,7 +89,7 @@ export const companyPages: CompanyPage[] = [
           { title: 'Industry Collaboration', text: 'Partnering with leading manufacturers' },
           { title: 'Practical Solutions', text: 'Validate effectiveness in the intended operating environment' },
         ] },
-      { kind: 'cta', title: 'Start with a product opportunity we can evaluate together', lede: 'Whether you’re looking to partner with us, join our team, or learn more about our technology, we’d love to hear from you.', from: REF + '/about/story',
+      { kind: 'cta', title: 'Investors, partners and engineers reach the same Hyderabad team.', lede: 'Whether you’re looking to partner with us, join our team, or learn more about our technology, we’d love to hear from you.', from: REF + '/about/story',
         actions: [ { label: 'Contact Us', href: 'contact', primary: true }, { label: 'Leadership and team', href: 'about/team' } ] },
     ],
   },
@@ -98,7 +98,7 @@ export const companyPages: CompanyPage[] = [
     kicker: 'About', title: 'Leadership and team',
     lede: 'The founders, board, engineering organisation, advisors and the partners contracted for the silicon.',
     sections: [
-      { kind: 'people', title: 'Understand who leads the company', from: REF + '/about/team',
+      { kind: 'people', title: 'Aravind Prasad G founded DeepGrid and leads it as CEO.', from: REF + '/about/team',
         people: [
           { name: 'Aravind Prasad G', role: 'Founder & Chief Executive Officer', initials: 'AP', photo: img('deepgridsemi/aravind.webp'),
             detail: 'B.Tech ECE, Bangalore University · Research Associate, IISc Bangalore (speech signal processing) · Stanford SDRM, 2007',
@@ -114,14 +114,14 @@ export const companyPages: CompanyPage[] = [
           { name: 'Krishna Mohan R', role: 'Independent Director', initials: 'KM', bio: ['Twenty years in corporate governance as Senior Director at Citadel Group.'] },
         ] },
       { kind: 'stats', from: REF + '/about/team', items: [['28', 'Engineers'], ['10', 'Silicon / hardware'], ['6', 'AI / perception'], ['7', 'Firmware / software'], ['5', 'Design, test, G&A']] },
-      { kind: 'roster', title: 'Connect the programme to the people doing the work', lede: '28 engineers across four domains.', from: REF + '/about/team',
+      { kind: 'roster', title: 'Ten of the 28 engineers work on silicon and hardware.', lede: '28 engineers across four domains.', from: REF + '/about/team',
         groups: [
           { title: 'Silicon / Hardware', people: [['Arun Saathappan Sundaraam', 'Sr. Digital IC Design Engineer'], ['Koushik B', 'Sr. Digital IC Design Engineer'], ['Santu Sardar', 'Digital IC Engineer'], ['Chandana Pokala', 'Digital IC Engineer'], ['Shrivardhini Indla', 'Digital IC Engineer'], ['Siddhartha V. S. Bade', 'Digital IC Engineer'], ['Ananya Sindam', 'RTL Engineer'], ['Srikar Varma Penmetsa', 'RTL Engineer'], ['Haritha Palgunam', 'Silicon Verification'], ['Rajesh Hembram', 'Hardware Engineer']] },
           { title: 'AI / Perception', people: [['Aryaman Anil Kaprekar', 'ADAS Engineer · Perception Lead'], ['Vishista Reddy Mandala', 'AI Engineer'], ['S. Haemanth Ruban', 'AI Engineer'], ['Shankar Pathlavath', 'AI Engineer'], ['Rahul Aka', 'AI Firmware Engineer'], ['Kodali Paani Chowdary', 'Python Developer (Intern)']] },
           { title: 'Firmware / Software', people: [['Saiteja Jampula', 'Firmware Engineer'], ['Bhavagna Bathula', 'Firmware Engineer'], ['Srikar Panuganti', 'Software Dev Engineer'], ['Gopi Krishna Pulicharla', 'Software Dev Engineer'], ['Snigdha Mohapatra', 'Software Dev Engineer'], ['Govind Sarang', 'Backend Engineer'], ['Srinath Panuganti', 'Front-end Developer']] },
           { title: 'Design / Test / G&A', people: [['Rehan Ahmed Siddiqui', '3D Design & Hardware PCB'], ['Madhu Babu Mallappagari', 'UI & Graphic Designer'], ['Sai Sreekar Tirumala', 'Manual Testing'], ['R. K. Goverdhan', 'G&A / Support'], ['A. Govardhan', 'G&A / Support']] },
         ] },
-      { kind: 'people', title: 'Use specialist guidance to strengthen the programme', from: REF + '/about/team',
+      { kind: 'people', title: 'Advisers include Venkat Simhadri, former CEO of MosChip Technologies.', from: REF + '/about/team',
         people: [
           { name: 'Venkat Simhadri', role: 'Strategic advisor', initials: 'VS', detail: 'Ex-CEO, MosChip Technologies', bio: ['Semiconductor commercialisation, fabless go-to-market and listed-company governance; advises on the SoC roadmap, OEM design-in and capital-markets readiness.'] },
           { name: 'Emani Capital Advisory', role: 'Financial advisor · placement agent', initials: 'EC', detail: 'Sai Emani · Haradatta Emani', bio: ['Lead financial advisor for the pre-Series A.'] },
@@ -130,7 +130,7 @@ export const companyPages: CompanyPage[] = [
           { name: 'Prof. C. Krishna Mohan', role: 'Academic advisor · IIT Hyderabad', initials: 'CK', detail: 'Computer Science & Engineering', bio: ['Heads the VIGIL lab: intelligent transportation, autonomous-vehicle perception and real-time edge AI.'] },
           { name: 'Dr. K.T. Satyajith', role: 'Academic advisor · IMJIR', initials: 'KS', detail: 'Founder Director', bio: ['Experimental physics: atomic physics, ion trapping, precision spectroscopy and quantum computing.'] },
         ] },
-      { kind: 'cards', title: 'Understand the ecosystem supporting delivery', lede: 'Specialist firms engaged across fabrication, physical design, IP and board manufacturing for the 28 nm combo die.', cols: 3, from: REF + '/about/team',
+      { kind: 'cards', title: 'Partner firms for the 28 nm combo die: fab, physical design, IP and boards.', lede: 'Specialist firms engaged across fabrication, physical design, IP and board manufacturing for the 28 nm combo die.', cols: 3, from: REF + '/about/team',
         items: [
           { title: 'Muse Semi / GSME', meta: 'Fab / MPW', text: 'TSMC 28 nm HPC+ shuttle for the six-chiplet combo die; 79-day fab cycle.' },
           { title: 'SmartSoC', meta: 'Physical design', text: 'RTL-to-GDS partner: floorplanning, place and route, timing, DRC/LVS sign-off.' },
@@ -185,7 +185,7 @@ export const companyPages: CompanyPage[] = [
         items: groundedDocuments.map((d) => ({ title: d.title, meta: `PDF · ${d.pdfPageCount}`, text: d.summary.split(/(?<=\.)\s/)[0], href: d.specFile, go: 'Read on this site' })),
         from: 'app/documents-data.ts (grounded document registry)' },
       { kind: 'docs', groups: docGroups, from: 'deepgridsemi.com/resources/docs + the site’s own PDFs' },
-      { kind: 'cta', title: 'Resolve the question that is holding up your evaluation', lede: 'Our technical team is here to help you get the most out of our products', from: 'deepgridsemi.com/resources/docs',
+      { kind: 'cta', title: 'The technical team answers product and integration questions.', lede: 'Our technical team is here to help you get the most out of our products', from: 'deepgridsemi.com/resources/docs',
         actions: [ { label: 'Contact Support', href: 'contact', primary: true }, { label: 'Videos', href: 'resources/videos' } ] },
     ],
   },
@@ -195,8 +195,8 @@ export const companyPages: CompanyPage[] = [
     lede: 'Watch DeepGrid Semi’s silicon, autonomous driving, and mobility platforms in action.',
     sections: [
       { kind: 'videos', title: 'By platform', groups: videoGroups, shorts: shortGroups, channel: true, from: 'deepgridsemi.com/resources/videos + youtube.com DeepGrid Semi channel' },
-      { kind: 'films', kicker: 'Ten parts, one film each', title: 'See how each proposed product addresses its system job', lede: 'One short animated film per part: the problem it solves, the mechanism moving on the words that describe it, and what is still unproven. Animations illustrate; they are not simulations. Pre-silicon; every figure is a design target.', ids: EXPLAINER_IDS, from: 'part explainer films' },
-      { kind: 'cta', title: 'Move from the explanation to the evidence', lede: 'The product lines in their simulators, the silicon films, and the 104-slide portfolio narrated end to end.', from: 'showcase films',
+      { kind: 'films', title: 'Ten parts, one film each: the problem, the mechanism, what is unproven.', lede: 'One short animated film per part: the problem it solves, the mechanism moving on the words that describe it, and what is still unproven. Animations illustrate; they are not simulations. Pre-silicon; every figure is a design target.', ids: EXPLAINER_IDS, from: 'part explainer films' },
+      { kind: 'cta', title: 'The 104-slide portfolio, narrated end to end, and the silicon films.', lede: 'The product lines in their simulators, the silicon films, and the 104-slide portfolio narrated end to end.', from: 'showcase films',
         actions: [ { label: 'Narrated decks & films', href: 'resources', primary: true }, { label: 'Documentation', href: 'resources/docs' } ] },
     ],
   },
@@ -355,7 +355,7 @@ export const useCasePages: CompanyPage[] = areas.map((a) => {
   };
   if (SCENE3D[a.id]) sections.splice(1, 0, { kind: 'scene', ...SCENE3D[a.id], from: 'v3 three.js scenes' });
   if (FILMS[a.id]) sections.push({ kind: 'films', title: 'DG32 in this application, explained', lede: 'Narrated films on the DG32 safety path and architecture, with captions.', ids: FILMS[a.id], from: 'DG32 films' });
-  sections.push({ kind: 'cta', title: 'Bring the system and its constraints.', lede: a.ask, from: 'site',
+  sections.push({ kind: 'cta', title: 'Send the system and its numbers; the reply maps them to each part.', lede: a.ask, from: 'site',
     actions: [{ label: 'Discuss your application', href: '/contact', primary: true }, { label: 'All chips by application', href: '/applications' }] });
   return {
     id: 'uc-' + a.id, menu: 'usecases', path: 'use-cases/' + a.id, label: a.name, kicker: 'Use case · ' + a.name, title: a.headline, lede: a.lede,

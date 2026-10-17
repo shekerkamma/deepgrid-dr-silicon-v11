@@ -27,7 +27,7 @@ export default function Page() {
    <p className="disclaimer">Power: ~0.43 W at 50 MHz, a vectorless tool estimate at 25 °C and 1.8 V, not a measurement.</p>
   </Sec>
   <Sec kicker="DESIGN LOCK STATUS" title="What a design can lock now," em="and what waits for silicon.">
-   <div className="dr-fixed">{fixedVsPreliminary.map(f=><div key={f.state}><p className="dr-kicker">{f.state.toUpperCase()}</p><ul>{f.items.map(i=><li key={i}>{i}</li>)}</ul></div>)}</div>
+   <div className="dr-fixed">{fixedVsPreliminary.map(f=><div key={f.state}><p className="dr-kicker">{f.state}</p><ul>{f.items.map(i=><li key={i}>{i}</li>)}</ul></div>)}</div>
    <div className="dr-links dr-sec-gap">
      <button className="text-link" onClick={()=>go('library')}>Download official QFN-64 datasheets (PDF) <ArrowUpRight size={16}/></button>
      <button className="text-link" onClick={()=>navigate('control')}>100 kHz hardware control loop <ArrowUpRight size={16}/></button>

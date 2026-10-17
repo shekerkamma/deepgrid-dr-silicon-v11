@@ -20,7 +20,7 @@ export function BrandImage({kind,priority=false,className=''}: {kind:Kind;priori
 }
 export function BrandGallery({investor=false}: {investor?:boolean}){
  const kinds:Kind[]=investor?['portfolio','truck','fleet']:['robotics','truck','driver'];
- return <section className="dg-brand-gallery" aria-label="DeepGrid product and application concepts"><header><h2>{investor?'Silicon value begins with the customer system.':'Control, sensing and integration in the customer system.'}</h2><p>Explore the proposed product roles, then examine their architecture, validation and qualification requirements.</p></header><div className="dg-brand-gallery-grid">{kinds.map(kind=><BrandImage key={kind} kind={kind}/>)}</div></section>;
+ return <section className="dg-brand-gallery" aria-label="DeepGrid product and application concepts"><header><h2>{investor?'DeepGrid chips earn revenue inside equipment makers’ systems.':'Control, sensing and integration in the customer system.'}</h2><p>Explore the proposed product roles, then examine their architecture, validation and qualification requirements.</p></header><div className="dg-brand-gallery-grid">{kinds.map(kind=><BrandImage key={kind} kind={kind}/>)}</div></section>;
 }
 export function ProductApplicationImage({sku}: {sku:string}){
  const kinds:Record<string,Kind>={'sku-1':'robotics','sku-2':'grid','sku-3':'defence','sku-4':'dg32','sku-5':'truck','sku-6':'power','sku-7':'truck','sku-8':'driver','sku-9':'truck','sku-10':'robotics','sku-11':'truck','d100':'defence'};

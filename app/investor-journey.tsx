@@ -8,7 +8,7 @@ const discussion = () => url('/contact') + '?intent=investor';
 export function FundingPath() {
   const funding = brief.tranche.reduce((sum, row) => sum + row.cr, 0);
   return <section className="ij-funding" aria-labelledby="ij-funding-title">
-    <div className="ij-introduction"><h2 id="ij-funding-title">Stage the investment.<br/>Fund first-silicon milestones.</h2>
+    <div className="ij-introduction"><h2 id="ij-funding-title">₹10 Cr funds first silicon for nine chips<br/>on the December 2026 shuttle.</h2>
       <p>The Blueprint allocates {money(funding)} in tranche 1 to first-silicon work. Its December shuttle plan includes {brief.chips.length} designs. This is a prototype milestone, with qualification and full development still ahead.</p>
       <a className="ij-link" href={url('/portfolio/brief')}>Review the funding brief <ArrowRight size={18} aria-hidden="true"/></a>
       <p className="ij-source">SKU Blueprint, October 2026 · planned allocations, not capital received or silicon results.</p>
@@ -40,7 +40,7 @@ export function EvidenceAgenda() {
 
 export function DiscussionClose({compact = false}: {compact?: boolean}) {
   return <section className={'ij-discussion' + (compact ? ' ij-discussion-compact' : '')} aria-label="Investor and partner discussion">
-    <div><h2>Align funding and partnership<br/>with the next product milestone.</h2><p>Request a portfolio discussion, strategic-partner evaluation or data-room access. Tell us which assumptions and evidence you want to examine.</p></div>
+    <div><h2>Portfolio discussions, partner evaluations<br/>and data-room access start here.</h2><p>Request a portfolio discussion, strategic-partner evaluation or data-room access. Tell us which assumptions and evidence you want to examine.</p></div>
     <a className="ij-primary" href={discussion()}>Request a discussion <ArrowUpRight size={18} aria-hidden="true"/></a>
   </section>;
 }

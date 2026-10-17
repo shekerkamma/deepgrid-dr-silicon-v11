@@ -1,0 +1,67 @@
+/* Site-wide section patterns that replace same-size card grids (impeccable craft-floor).
+   .lat    hairline lattice with a full-width lead row; layout from lattice.ts.
+           Reference: 21st.dev "Feature Overview Bento" (mohammadshehadeh/feature-10).
+   .qsplit heading on the start side, single-open question list on the end side.
+           Reference: 21st.dev "FAQ Two Column" (mohammadshehadeh/faq-05).
+   .cmp    two-column comparison table with the DG32 column highlighted.
+           Reference: 21st.dev "Comparison Table" (mohammadshehadeh/comparison-02).
+   Loaded after theme-dgs.css so it wins over the older per-page card rules. */
+
+.lat{display:grid;grid-template-columns:repeat(var(--lat-cols,3),minmax(0,1fr));gap:1px;background:var(--line);border:1px solid var(--line);border-radius:var(--sc-radius-lg);overflow:hidden}
+body .lat>*{margin:0;border:0;border-radius:0;background:var(--surface);box-shadow:none;translate:none}
+.lat>.lat-lead{grid-column:1/-1;display:grid;grid-template-columns:minmax(0,5fr) minmax(0,7fr);column-gap:clamp(24px,4vw,56px);row-gap:0;align-content:start;padding:clamp(24px,3vw,36px)}
+.lat>.lat-lead>*{grid-column:2}
+.lat>.lat-lead>*+*:not(:is(h2,h3,.cp-meta,.cp-card-img)){margin-top:10px}
+.lat>.lat-lead>:is(h2,h3,.cp-meta,.cp-card-img){grid-column:1}
+.lat>.lat-lead>:is(h2,h3){grid-row:span 8;align-self:start;font-family:var(--serif);font-size:var(--sc-t-card);line-height:var(--sc-lh-card);letter-spacing:var(--sc-track-card);font-weight:500;text-wrap:balance;color:var(--t-fg)}
+.lat>.lat-lead>.cp-meta+:is(h2,h3){grid-row:auto}
+body a.lat-cell-link:hover,body .lat>a:hover{background:var(--surface-2)}
+@media (max-width:720px){
+  .lat{grid-template-columns:1fr}
+  body .lat>*{grid-column:auto!important}
+  .lat>.lat-lead{grid-template-columns:1fr}
+  .lat>.lat-lead>*,.lat>.lat-lead>:is(h2,h3,.cp-meta,.cp-card-img){grid-column:1;grid-row:auto}
+}
+
+.qsplit{display:grid;grid-template-columns:minmax(0,5fr) minmax(0,7fr);border-block:1px solid var(--line)}
+.qsplit-intro{display:grid;align-content:start;gap:14px;padding:clamp(24px,3vw,40px) clamp(20px,3vw,40px) clamp(24px,3vw,40px) 0;border-inline-end:1px solid var(--line)}
+.qsplit-intro h2{margin:0}
+.qsplit-intro p{margin:0;color:var(--ink-2);max-width:42ch}
+.qsplit-list{padding:8px 0 8px clamp(20px,3vw,40px)}
+.qsplit-item{border-bottom:1px solid var(--line)}
+.qsplit-item:last-child{border-bottom:0}
+.qsplit-item>summary{display:flex;justify-content:space-between;align-items:baseline;gap:16px;padding:18px 0;cursor:pointer;list-style:none;font-family:var(--serif);font-size:var(--sc-t-block);line-height:1.35;color:var(--t-fg)}
+.qsplit-item>summary::-webkit-details-marker{display:none}
+.qsplit-item>summary::after{content:'+';flex:none;font-family:var(--font-mono);color:var(--copper);transition:rotate .2s ease}
+.qsplit-item[open]>summary::after{rotate:45deg}
+.qsplit-item>summary:focus-visible{outline:2px solid var(--copper);outline-offset:4px}
+.qsplit-tag{flex:none;margin-inline-start:auto;font-family:var(--font-mono);font-size:var(--sc-t-meta);letter-spacing:var(--sc-track-meta);color:var(--ink-3)}
+.qsplit-body{display:grid;gap:10px;padding:0 0 20px;color:var(--ink-2);max-width:var(--sc-measure)}
+.qsplit-body p{margin:0}
+@media (max-width:720px){
+  .qsplit{grid-template-columns:1fr}
+  .qsplit-intro{padding:24px 0;border-inline-end:0;border-bottom:1px solid var(--line)}
+  .qsplit-list{padding:8px 0}
+}
+@media (prefers-reduced-motion:reduce){.qsplit-item>summary::after{transition:none}}
+
+.cmp{width:100%;border-collapse:collapse;border:1px solid var(--line);font-size:var(--sc-t-body)}
+.cmp th,.cmp td{padding:14px 18px;text-align:start;vertical-align:top;border-bottom:1px solid var(--line)}
+.cmp thead th{font-weight:600;color:var(--t-fg);border-bottom:1px solid var(--line)}
+.cmp tbody th{font-weight:500;color:var(--t-fg)}
+.cmp .cmp-hl{background:color-mix(in srgb,var(--copper) 9%,var(--surface))}
+.cmp td{color:var(--ink-2)}
+.cmp-yes{color:var(--copper);font-weight:600}
+@media (max-width:720px){.cmp th,.cmp td{padding:10px 10px}}
+
+/* Defaults for lattice cells that bring no styles of their own (zero specificity). */
+:where(.lat)>*{padding:22px 24px;list-style:none}
+:where(.lat) h3{margin:0 0 .45rem;font-size:var(--sc-t-block);line-height:1.35;font-weight:600;color:var(--t-fg)}
+:where(.lat) p{margin:0;color:var(--ink-2);font-size:var(--sc-t-control);line-height:1.55}
+.pp-why-lat{margin-bottom:1.25rem}
+.pp-feat-lat{margin:0;padding:0}
+.pp-readiness-body{display:grid;gap:1.5rem}
+.pp-qlist{padding:0;border-top:1px solid var(--line)}
+.lat>.dr-doc-card.lat-lead>.dr-doc-card-top{grid-column:1;grid-row:span 4}
+body .lat>.dr-doc-card:hover{transform:none}
+.dr-compare .cmp-hl{background:color-mix(in srgb,var(--copper) 9%,var(--surface))}

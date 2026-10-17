@@ -250,7 +250,7 @@ export default function ApplicationsStory() {
       <FamilyTabs byFamily={byFamily}/>
 
       {/* 9. The honest limit. */}
-      <Beat id="st-sensors" title="Compute is not the limit. The sensors are."
+      <Beat id="st-sensors" title="Rotor-bar faults sit 40–60 dB down; DG32-LITE’s 8-bit converter resolves 42 dB."
         films={[{clip: clips.analog, label: 'Where DG32 trails on analog'}]}>
         <p>
           Rotor-bar and eccentricity faults show up as sidebands 40 to 60&nbsp;dB below the supply

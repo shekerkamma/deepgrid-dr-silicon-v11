@@ -7,7 +7,7 @@ import {useState} from 'react';
 import {ArrowUpRight} from 'lucide-react';
 import ControlWaveform from './control-waveform';
 import {loopStages,loopRates,CLOCK_HZ,HW_FIXED_CYCLES,CYCLES_PER_INSTRUCTION,fmax} from './content';
-import {Eyebrow,SectionHead,Sec,ExplainedGrid,DataTable,Stats,Callout} from './detail';
+import {SectionHead,Sec,ExplainedGrid,DataTable,Stats,Callout} from './detail';
 import {fetchBound,controlNotes,peripheralLimits,packageSides} from './detail-content';
 import {claims} from './claims';
 
@@ -43,7 +43,7 @@ export function ControlLoop({go}:{go:(hash:string)=>void}){
    <ExplainedGrid items={controlNotes} cols={2}/>
   </Sec>
 
-  <div className="dr-budget"><div className="dr-budget-copy"><Eyebrow>LOOP TIMING & BUDGET</Eyebrow><h2>About 300 cycles are hardware,<br/>whatever the loop rate.</h2><p>One ADC sample, two CORDIC operations and a PWM write cost about 300 cycles at any loop rate. Pick a rate to see what is left for the regulators and observers.</p>
+  <div className="dr-budget"><div className="dr-budget-copy"><h2>About 300 cycles are hardware,<br/>whatever the loop rate.</h2><p>One ADC sample, two CORDIC operations and a PWM write cost about 300 cycles at any loop rate. Pick a rate to see what is left for the regulators and observers.</p>
    <div className="dr-rates" role="group" aria-label="Loop rate">{loopRates.map((x,i)=><button key={x.khz} aria-pressed={rate===i} className={rate===i?'active':''} onClick={()=>setRate(i)}>{x.khz} kHz</button>)}</div></div>
    <div className="dr-budget-viz"><div className="dr-stats"><div><strong>{period.toLocaleString('en-US')}</strong><span>CYCLES PER PERIOD</span></div><div><strong>~{HW_FIXED_CYCLES}</strong><span>HARDWARE, FIXED</span></div><div><strong>~{budget.toLocaleString('en-US')}</strong><span>CPU BUDGET</span></div><div><strong>~{Math.floor(budget/CYCLES_PER_INSTRUCTION).toLocaleString('en-US')}</strong><span>CPU INSTRUCTIONS*</span></div></div>
     <div className="dr-stack" role="img" aria-label={`At ${r.khz} kHz, hardware uses ${HW_FIXED_CYCLES} of ${period} cycles (${hwPct.toFixed(0)}%), leaving ${budget} for firmware.`}><div className="dr-seg dr-seg-hw" style={{width:hwPct+'%'}} title={`Hardware: ~${HW_FIXED_CYCLES} cycles`}/><div className="dr-seg dr-seg-cpu" style={{width:(100-hwPct)+'%'}} title={`CPU budget: ~${budget} cycles`}/></div>
@@ -64,7 +64,7 @@ export function ControlLoop({go}:{go:(hash:string)=>void}){
   </Sec>
 
   <div className="dr-sec-gap">
-    <p className="dr-kicker">WHAT THE FIGURES ON THIS PAGE REST ON</p>
+    
     <div className="table-scroll">
       <table className="dr-table">
         <caption>Evidence behind the control-loop figures</caption>

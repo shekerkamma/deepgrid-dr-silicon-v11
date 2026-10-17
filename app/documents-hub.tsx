@@ -1,6 +1,7 @@
 'use client';
 /* oxlint-disable jsx-a11y/no-noninteractive-element-interactions */
 import {useState, useEffect, useMemo} from 'react';
+import {lattice} from './lattice';
 import {tabIndexFor, tablistKeys} from './tablist';
 import {
   FileText, Download, ArrowUpRight, Search, X, Check,
@@ -98,7 +99,7 @@ export default function GroundedDocumentsHub({go}: {go?: (hash: string) => void}
     <section className="dr-docs-hub" aria-label="Source documents and specifications">
       <header className="dr-docs-hub-header">
         <div>
-          <p className="dr-lib-kicker">PRODUCT SPECIFICATIONS · {groundedDocuments.length} PDFS AND SPECIFICATIONS</p>
+          <p className="dr-lib-kicker">{groundedDocuments.length} product specifications</p>
           <h2>Architecture and electrical specifications</h2>
           <p className="dr-docs-lead">
             Simulation results, timing budgets, clock partitions and pin assignments all come from these
@@ -186,9 +187,9 @@ export default function GroundedDocumentsHub({go}: {go?: (hash: string) => void}
       </div>
 
       {/* Document Cards Grid */}
-      <div className="dr-docs-grid">
-        {filteredDocs.map(doc => (
-          <article key={doc.id} className="dr-doc-card">
+      <div className="dr-docs-grid lat" style={lattice(filteredDocs.length, 3).style}>
+        {filteredDocs.map((doc, i) => (
+          <article key={doc.id} className={'dr-doc-card' + (i === 0 ? ' lat-lead' : '')} style={lattice(filteredDocs.length, 3).cell(i).style}>
             <div className="dr-doc-card-top">
               <div className="dr-doc-badge-row">
                 <span className="dr-doc-badge">{doc.badge}</span>
@@ -212,7 +213,7 @@ export default function GroundedDocumentsHub({go}: {go?: (hash: string) => void}
 
             {/* Key Engineering Highlights */}
             <div className="dr-doc-highlights-wrap">
-              <span className="dr-doc-highlights-title">KEY ARCHITECTURAL PROOFS</span>
+              <span className="dr-doc-highlights-title">Key architectural proofs</span>
               <ul className="dr-doc-highlights">
                 {doc.highlights.map((h, i) => (
                   <li key={i}>{h}</li>

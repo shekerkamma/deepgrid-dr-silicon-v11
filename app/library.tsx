@@ -38,17 +38,17 @@ export default function Library({pkgId,slide,onChange,go}:{pkgId:string;slide:nu
  return <div className="dr-library">
   <GroundedDocumentsHub go={go} />
   <div className="dr-lib-media" ref={media}>
-  {groups.map(([label,kind])=><div className="dr-lib-group" key={kind}><p className="dr-lib-kicker">{label.toUpperCase()}</p>
+  {groups.map(([label,kind])=><div className="dr-lib-group" key={kind}><p className="dr-lib-kicker">{label}</p>
    <div className={'dr-lib-tabs dr-lib-tabs-'+kind} role="tablist" aria-label={label}>{packages.filter(p=>p.kind===kind).map(p=><button key={p.id} role="tab" aria-selected={p.id===pkg.id} tabIndex={tabIndexFor(p.id===pkg.id)} onKeyDown={tablistKeys} className={p.id===pkg.id?'active':''} onClick={()=>onChange({pkg:p.id,slide:undefined})}><span className="mono">{p.doc.toUpperCase()} · {p.slides.length} SLIDES · {fmtTime(p.duration)} FILM</span><strong>{p.name}</strong><span>{p.summary}</span></button>)}</div></div>)}
 
   <section className="dr-lib-film" aria-label={`${pkg.name} ${pkg.doc} film`}>
    <div className="dr-film-frame"><video ref={video} key={pkg.film} controls preload="metadata" poster={pkg.poster} playsInline><source src={pkg.film} type="video/mp4"/><track kind="captions" src={pkg.captions} srcLang="en" label="English" default/></video></div>
-   <aside className="dr-chapters"><p className="dr-lib-kicker">PRODUCT FUNCTIONS AND OPERATING REQUIREMENTS</p><ol>{pkg.chapters.map((c,i)=><li key={c.title}><button className={i===activeChapter?'active':''} onClick={()=>{seek(c.start);setSlide(c.slides[0]);}}><span className="mono">{fmtTime(c.start)}</span><strong>{c.title}</strong><small>Slides {c.slides[0]}–{c.slides[1]}</small></button></li>)}</ol>
+   <aside className="dr-chapters"><p className="dr-lib-kicker">Product functions and operating requirements</p><ol>{pkg.chapters.map((c,i)=><li key={c.title}><button className={i===activeChapter?'active':''} onClick={()=>{seek(c.start);setSlide(c.slides[0]);}}><span className="mono">{fmtTime(c.start)}</span><strong>{c.title}</strong><small>Slides {c.slides[0]}–{c.slides[1]}</small></button></li>)}</ol>
     <p className="dr-lib-note">Narrated walkthrough of the {pkg.name} {pkg.doc.toLowerCase()} deck, slide for slide. Captions on by default.</p></aside>
   </section>
 
   <section className="dr-lib-deck" aria-label={`${pkg.name} ${pkg.doc} deck`}>
-   <header><div><p className="dr-lib-kicker">{pkg.name} {pkg.doc.toUpperCase()} · PRODUCT ARCHITECTURE AND ENGINEERING REQUIREMENTS</p><h2>{pkg.headline}</h2></div><a className="primary" href={pkg.deck} download><Download size={17}/>Download the deck (.pptx)</a></header>
+   <header><div><h2>{pkg.headline}</h2></div><a className="primary" href={pkg.deck} download><Download size={17}/>Download the deck (.pptx)</a></header>
    <figure className="dr-deck-stage"><img key={src(n)} src={src(n)} alt={`${pkg.name} ${pkg.doc} deck, slide ${n}: ${pkg.slides[n-1]}`} width={1600} height={900} loading="lazy" decoding="async"/>
     <figcaption><span className="mono">SLIDE {String(n).padStart(2,'0')} / {count}</span><strong>{pkg.slides[n-1]}</strong></figcaption></figure>
    <div className="dr-deck-controls"><button aria-label="Previous slide" disabled={n===1} onClick={()=>setSlide(n-1)}><ArrowLeft size={18}/></button><button className="text-link" onClick={()=>playSlide(n)}><Play size={15}/>Play this slide in the film</button><button aria-label="Next slide" disabled={n===count} onClick={()=>setSlide(n+1)}><ArrowRight size={18}/></button></div>
@@ -56,7 +56,7 @@ export default function Library({pkgId,slide,onChange,go}:{pkgId:string;slide:nu
   </section>
 
   {pkg.diagram&&<section className="dr-lib-diagram" aria-label={`${pkg.name} architecture diagram`}>
-   <div><p className="dr-lib-kicker">SYSTEM ARCHITECTURE AND SIGNAL FLOW</p><h2>{pkg.name}: system architecture and functional interfaces</h2><p>Component-flow diagram behind the deck, with the numbered data path. Open the source in draw.io to edit it.</p>
+   <div><h2>{pkg.name}: system architecture and functional interfaces</h2><p>Component-flow diagram behind the deck, with the numbered data path. Open the source in draw.io to edit it.</p>
     <div className="dr-lib-links"><a className="text-link" href={pkg.diagram} target="_blank" rel="noreferrer">Open full diagram <ArrowUpRight size={16}/></a>{pkg.drawio&&<a className="text-link" href={pkg.drawio} download>Diagram source (.drawio) <Download size={15}/></a>}{pkg.guide&&<a className="text-link" href={url(pkg.guide)}>Read architecture guide <ArrowUpRight size={16}/></a>}</div></div>
    <div className="figure-scroll"><img src={pkg.diagram} alt={`${pkg.name} system architecture diagram`} loading="lazy" width={1600} height={900}/></div>
   </section>}
@@ -64,7 +64,7 @@ export default function Library({pkgId,slide,onChange,go}:{pkgId:string;slide:nu
 
   </div>
 
-  <section className="dr-lib-sources"><p className="dr-lib-kicker">ENGINEERING REFERENCES</p><ul>{pkg.sources.map(s=><li key={s}>{s}</li>)}</ul><p className="disclaimer">Investor-level content from Deepgrid Semi’s September 2026 design documents: no register maps, memory map or board-design rules. Pre-silicon: figures are design values, process nominals or analytic estimates, labelled on each slide.</p></section>
+  <section className="dr-lib-sources"><p className="dr-lib-kicker">Engineering references</p><ul>{pkg.sources.map(s=><li key={s}>{s}</li>)}</ul><p className="disclaimer">Investor-level content from Deepgrid Semi’s September 2026 design documents: no register maps, memory map or board-design rules. Pre-silicon: figures are design values, process nominals or analytic estimates, labelled on each slide.</p></section>
 
   {go && (
     <div className="dr-links dr-sec-gap">

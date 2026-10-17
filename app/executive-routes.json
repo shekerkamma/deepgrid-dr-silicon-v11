@@ -6,7 +6,7 @@
     "next": "/portfolio/brief"
   },
   "products": {
-    "headline": "Find the silicon for your system.",
+    "headline": "Eleven mature-node chips and one drone SoC, from a 120 V motor controller to a 77 GHz radar.",
     "context": "Eleven mature-node products and the separate D100 programme address different equipment needs. Compare the function, what it could replace and what remains to be proven before adoption.",
     "decision": "Shortlist a part, then agree the evidence needed to adopt it.",
     "next": "/evidence"
@@ -14,31 +14,31 @@
   "technology": {
     "headline": "DG32 control and hardware safety.",
     "context": "Two RISC-V cores run two cycles apart. A comparator checks every committed store, latches the first cause and drives FAULT_N, which can switch off the motor bridge without waiting for firmware: 39 cycles in simulation.",
-    "decision": "Connect each claimed benefit to a measurable system requirement.",
+    "decision": "The 39-cycle fault response is simulated; the evidence register shows what is measured.",
     "next": "/evidence"
   },
   "safety": {
-    "headline": "A detected fault must lead to a controlled outcome.",
+    "headline": "DG32 drives FAULT_N 39 cycles after a lockstep mismatch, in simulation, without firmware.",
     "context": "DG32’s fault path is designed to act without waiting for application software. For a buyer, the key question is whether the complete machine reaches its intended safe state under the failures that matter.",
-    "decision": "Define the safe state and test the complete response.",
+    "decision": "DG32’s response ends at the FAULT_N pin; the machine’s safe state is proven on the customer’s bench.",
     "next": "/contact"
   },
   "control": {
     "headline": "The CPU runs two regulators, not the loop.",
     "context": "A predictable control workload can leave capacity for diagnostics. That capacity depends on operating speed, signal quality and the work the product must perform.",
-    "decision": "Prioritise the core control requirement, then budget additional functions.",
+    "decision": "About 300 hardware cycles per current loop leave a fixed budget for diagnostics.",
     "next": "/applications"
   },
   "die": {
     "headline": "DG32 functional blocks and safety boundaries.",
     "context": "The design groups control, memory, sensing and communications around a defined safety core. Use the layout to understand which functions can change and which constraints remain fixed.",
-    "decision": "Assess change scope before committing to a customised design.",
+    "decision": "Peripherals change per customer; the lockstep core and fault path stay fixed.",
     "next": "/contact"
   },
   "package": {
     "headline": "44 signals in a 9 × 9 mm package.",
     "context": "The package, interfaces and supply requirements set the integration work for the equipment maker. Some choices are defined today; final electrical limits depend on silicon characterisation.",
-    "decision": "Separate board decisions that can proceed from those awaiting measurement.",
+    "decision": "Pinout and package are fixed now; electrical limits wait for first-silicon characterisation.",
     "next": "/procurement"
   },
   "applications": {
@@ -48,69 +48,69 @@
     "next": "/contact"
   },
   "uc-motors": {
-    "headline": "Keep the motor productive while retaining a way to stop it safely.",
+    "headline": "SKU-1 runs the motor; DG32-LITE can switch its bridge off without firmware.",
     "context": "The motor controller and safety supervisor address different responsibilities. Assess both against the drive, its operating conditions and the consequences of failure.",
-    "decision": "Define the drive requirements and its independent stop response.",
+    "decision": "SKU-1 closes the current loop in under 1 µs on motor supplies up to 120 V.",
     "next": "/products/sku-1"
   },
   "uc-vehicles": {
-    "headline": "Evaluate the vehicle zone, not an isolated chip feature.",
+    "headline": "Three chips for the vehicle zone: the SKU-9 gateway, the SKU-7 radar and DG32-LITE.",
     "context": "DeepGrid’s proposed parts serve sensing, displays, power and communications around the vehicle. Their value depends on how they fit the vehicle architecture and safety responsibilities.",
-    "decision": "Scope one zone or subsystem before extending the evaluation.",
+    "decision": "SKU-9 switches 16 smart fuses and eight CAN-FD buses inside one zone.",
     "next": "/products/sku-9"
   },
   "uc-defence": {
-    "headline": "Local supply is valuable only when the equipment can qualify it.",
+    "headline": "Three parts for screened platforms: 28 V power rails, a GPS-free drone SoC and a rugged display driver.",
     "context": "Defence, aviation and drone programmes need both a suitable component and the evidence required for their operating environment. Country of origin does not replace performance or qualification.",
-    "decision": "Identify the programme, screening route and acceptance evidence.",
+    "decision": "Each grade has its own screening route: MIL-STD-883, EN 50155 or radiation testing.",
     "next": "/procurement"
   },
   "uc-grid": {
-    "headline": "Metering adoption depends on trusted measurement and records.",
+    "headline": "SKU-2 meters to Class 0.5S and keeps the tamper record while mains is cut.",
     "context": "Utilities need accurate energy measurement, tamper evidence and continuity through outages. Evaluate these outcomes together before judging the proposed integration benefit.",
-    "decision": "Use the utility’s acceptance criteria to define the trial.",
+    "decision": "Class 0.5S is a design target; a utility trial against its tender is the acceptance test.",
     "next": "/products/sku-2"
   },
   "uc-boards": {
-    "headline": "Reliable startup and communication support the whole product.",
+    "headline": "Three board parts below the firmware: a four-rail supervisor, a secure MCU and a bus transceiver.",
     "context": "Power supervision and interfaces are small parts of a board with system-wide consequences. Select them against actual supply disturbances, wiring and service conditions.",
-    "decision": "Test the board’s failure conditions before approving a replacement.",
+    "decision": "SKU-6 checks four rails with an 8 µs deglitch before it releases reset.",
     "next": "/products/sku-6"
   },
   "evidence": {
     "headline": "DG32 validation is pre-silicon; qualification remains ahead.",
     "context": "Design studies, simulation, prototypes and measured silicon support different decisions. This register helps separate an opportunity worth evaluating from a product ready for deployment.",
-    "decision": "Ask for the proof required by the next decision, not a broader claim.",
+    "decision": "No DeepGrid part has measured silicon yet; first silicon is the December 2026 shuttle.",
     "next": "/procurement"
   },
   "procurement": {
     "headline": "DG32 leads the STM32G0 on lockstep, DShot and CORDIC. The G0 leads on ADC and embedded flash.",
     "context": "Compare DG32’s proposed strengths with the functions, measurements and qualification your product requires. Roadmap items should remain explicit dependencies in an adoption plan.",
-    "decision": "Agree acceptance criteria, milestones and a fallback before selection.",
+    "decision": "An evaluation fixes the acceptance tests, the silicon milestone and the fallback part.",
     "next": "/contact"
   },
   "resources": {
     "headline": "Technical documents, decks and films.",
     "context": "Start with the portfolio for product scope, the evidence register for maturity, or the detailed documents for integration. Every source has a different role in an evaluation.",
-    "decision": "Choose the question first, then the document that can answer it.",
+    "decision": "The portfolio sets scope, the evidence register sets maturity, the documents set integration detail.",
     "next": "/resources/docs"
   },
   "docs": {
-    "headline": "Technical specifications for product selection and integration.",
+    "headline": "Nine product specifications open to read; 21 more documents on request.",
     "context": "The October 2026 Blueprint defines the current portfolio. Architecture and test documents explain particular designs and results; they do not establish readiness beyond their stated scope.",
-    "decision": "Read the current product scope before comparing detailed figures.",
+    "decision": "The October 2026 SKU Blueprint is the current scope; older documents are marked superseded.",
     "next": "/evidence"
   },
   "videos": {
-    "headline": "Understand the system before examining every detail.",
+    "headline": "Ten narrated part films, plus the DG32 fault path in 1 min 26 s.",
     "context": "The films explain the proposed jobs and mechanisms across the portfolio. Use them to build context, then use the source documents and evidence register for a decision.",
-    "decision": "Treat an animation as an explanation, not a performance demonstration.",
+    "decision": "The films illustrate mechanisms; measured figures live in the evidence register.",
     "next": "/evidence"
   },
   "read": {
     "headline": "Product requirements, operating limits and evaluation assumptions.",
     "context": "A source is useful when its scope, date and evidence match the decision being made. Keep design targets separate from measured results and current product status.",
-    "decision": "Check the conditions and the current product record.",
+    "decision": "Every figure here is a design value, a process nominal or an analytic estimate.",
     "next": "/resources/docs"
   },
   "ask": {
@@ -126,25 +126,25 @@
     "next": "/company"
   },
   "team": {
-    "headline": "Match the partnership to the work that must be delivered.",
+    "headline": "28 engineers: 10 in silicon and hardware, 7 in firmware, 6 in AI.",
     "context": "Leadership and advisers provide company context. A successful programme also needs clear responsibilities for product definition, validation, manufacturing and qualification.",
-    "decision": "Agree ownership and delivery evidence for the proposed programme.",
+    "decision": "Fabrication, physical design, IP and boards run through named partner firms.",
     "next": "/contact"
   },
   "recognition": {
-    "headline": "Recognition opens a conversation; delivery evidence supports a commitment.",
+    "headline": "Top 50 Startups in Telangana (2024) and TiE50 Hyderabad.",
     "context": "Awards and ecosystem participation describe the company’s development. Assess product maturity separately through the published evidence and the requirements of your programme.",
-    "decision": "Use recognition as context, then examine the product case.",
+    "decision": "Awards describe the company; the evidence register describes the chips.",
     "next": "/evidence"
   },
   "company": {
-    "headline": "Build repeatable capability around specific customer products.",
+    "headline": "One RISC-V platform and verification flow, reused across eleven mature-node chips.",
     "context": "The mature-node portfolio shares selected foundations while retaining product-specific development and qualification. The commercial route is through equipment makers and the systems they deliver.",
-    "decision": "Select a customer programme and stage the investment against evidence.",
+    "decision": "Each chip is funded against its own first-silicon milestone.",
     "next": "/contact"
   },
   "contact": {
-    "headline": "Start the right discussion.",
+    "headline": "Request an investment discussion, a partnership or an engineering evaluation.",
     "context": "Request an investment discussion, strategic partnership or engineering evaluation. Ask for the evidence and materials needed for your next decision.",
     "decision": "Leave the conversation with a clear scope and next decision.",
     "next": "/products"

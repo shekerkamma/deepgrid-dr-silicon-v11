@@ -1,5 +1,6 @@
 'use client';
 import {useRouteStory} from './executive-story';
+import {lattice} from './lattice';
 // Renders a Software / Use case / About / Contact page from app/company-pages.ts, in the showcase's
 // look: the showcase's SectionHead, its tokens, and a small set of section shapes taken from
 // deepgridsemi.com's templates (split, card grid, steps, stats, people, figures, contact, CTA).
@@ -194,7 +195,6 @@ function Block({ s }: { s: Section }) {
       return (
         <section className={'cp-sec cp-split' + (s.image || s.flow ? '' : ' cp-split-solo')}>
           <div className="cp-split-text">
-            {s.kicker && <p className="kicker">{s.kicker}</p>}
             <h2>{s.title}</h2>
             {s.lede && <p className="cp-lede">{s.lede}</p>}
             {s.paras.map((p) => <p key={p}>{p}</p>)}
@@ -207,23 +207,23 @@ function Block({ s }: { s: Section }) {
       return (
         <section className="cp-sec">
           <header className="cp-sec-head">
-            {s.kicker && <p className="kicker">{s.kicker}</p>}
             <h2>{s.title}</h2>
             {s.lede && <p className="cp-lede">{s.lede}</p>}
           </header>
-          <div className={'cp-cards cp-cols-' + s.cols + (s.items.every((c) => c.image && !c.href) ? ' cp-tiles' : '')}>
-            {s.items.map((c) => {
+          <div className={'cp-cards lat' + (s.items.every((c) => c.image && !c.href) ? ' cp-tiles' : '')} style={lattice(s.items.length, Math.min(s.cols, 3)).style}>
+            {s.items.map((c, i) => {
+              const cell = lattice(s.items.length, Math.min(s.cols, 3)).cell(i);
               const inner = (
                 <>
                   {c.image && <img className="cp-card-img" src={c.image} alt="" width={640} height={360} loading="lazy" decoding="async" />}
-                  {c.icon && <span className={'cp-card-icon is-' + c.icon}><Icon name={c.icon} /></span>}
                   {c.meta && <p className="cp-meta">{c.meta}</p>}
                   <h3>{c.title}</h3>
                   {c.text && <p>{c.text}</p>}
                   {c.href && <span className="cp-card-go">{c.go || 'Read more'} <ArrowRight size={14} aria-hidden="true" /></span>}
                 </>
               );
-              return c.href ? <a key={c.title} className="cp-card cp-card-link" href={link(c.href)}>{inner}</a> : <article key={c.title} className="cp-card">{inner}</article>;
+              const cls = (c.href ? 'cp-card cp-card-link' : 'cp-card') + (cell.className ? ' ' + cell.className : '');
+              return c.href ? <a key={c.title} className={cls} style={cell.style} href={link(c.href)}>{inner}</a> : <article key={c.title} className={cls} style={cell.style}>{inner}</article>;
             })}
           </div>
         </section>
@@ -232,7 +232,6 @@ function Block({ s }: { s: Section }) {
       return (
         <section className="cp-sec">
           <header className="cp-sec-head">
-            {s.kicker && <p className="kicker">{s.kicker}</p>}
             <h2>{s.title}</h2>
             {s.lede && <p className="cp-lede">{s.lede}</p>}
           </header>
@@ -253,7 +252,6 @@ function Block({ s }: { s: Section }) {
       return (
         <section className="cp-sec">
           <header className="cp-sec-head">
-            {s.kicker && <p className="kicker">{s.kicker}</p>}
             <h2>{s.title}</h2>
           </header>
           <div className="cp-people">{s.people.map((p) => <PersonCard key={p.name} p={p} />)}</div>
@@ -279,7 +277,6 @@ function Block({ s }: { s: Section }) {
       return (
         <section className="cp-sec">
           <header className="cp-sec-head">
-            {s.kicker && <p className="kicker">{s.kicker}</p>}
             <h2>{s.title}</h2>
             {s.lede && <p className="cp-lede">{s.lede}</p>}
           </header>
@@ -297,7 +294,6 @@ function Block({ s }: { s: Section }) {
       return (
         <section className="cp-sec">
           <header className="cp-sec-head">
-            {s.kicker && <p className="kicker">{s.kicker}</p>}
             <h2>{s.title}</h2>
             {s.lede && <p className="cp-lede">{s.lede}</p>}
           </header>
@@ -315,7 +311,6 @@ function Block({ s }: { s: Section }) {
       return (
         <section className="cp-sec">
           <header className="cp-sec-head">
-            {s.kicker && <p className="kicker">{s.kicker}</p>}
             <h2>{s.title}</h2>
             {s.lede && <p className="cp-lede">{s.lede}</p>}
           </header>
@@ -416,7 +411,6 @@ function Block({ s }: { s: Section }) {
       return (
         <section className="cp-sec">
           <header className="cp-sec-head">
-            {s.kicker && <p className="kicker">{s.kicker}</p>}
             <h2>{s.title}</h2>
           </header>
           <ul className="cp-bullets">{s.items.map((t) => <li key={t}>{t}</li>)}</ul>
