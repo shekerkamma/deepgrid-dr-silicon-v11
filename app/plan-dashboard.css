@@ -23,8 +23,8 @@
 .pd-grid{stroke:var(--t-line);stroke-width:1}
 .pd-zero{stroke:var(--t-fg-2);stroke-width:1}
 .pd-cross{stroke:var(--t-fg-2);stroke-width:1;stroke-dasharray:3 3}
-.pd-axis{fill:var(--t-fg-2);font-size:12px;font-variant-numeric:tabular-nums}
-.pd-value{fill:var(--t-fg);font-size:12px;font-weight:600;font-variant-numeric:tabular-nums}
+.pd-axis{fill:var(--t-fg-2);font-size:14px;font-variant-numeric:tabular-nums}
+.pd-value{fill:var(--t-fg);font-size:14px;font-weight:600;font-variant-numeric:tabular-nums}
 .pd-s1{fill:var(--series-1);background:var(--series-1)}
 .pd-s2{fill:var(--series-2);background:var(--series-2)}
 .pd-s3{fill:var(--series-3);background:var(--series-3)}
@@ -37,17 +37,17 @@ rect.pd-s1,rect.pd-s2,rect.pd-s3,rect.pd-s4,rect.pd-s5,rect.pd-s6{transition:opa
 .pd-line.pd-l1{stroke:var(--series-1)}.pd-line.pd-l2{stroke:var(--series-2)}.pd-line.pd-l3{stroke:var(--series-3)}
 .pd-dot{stroke:var(--dgs-card);stroke-width:2}
 .pd-dot.pd-l1{fill:var(--series-1)}.pd-dot.pd-l2{fill:var(--series-2)}.pd-dot.pd-l3{fill:var(--series-3)}
-.pd-tip{position:absolute;transform:translate(-50%,calc(-100% - 10px));pointer-events:none;background:var(--t-bg);border:1px solid var(--t-border);border-radius:6px;padding:8px 10px;display:grid;gap:2px;font-size:.8rem;color:var(--t-fg-2);white-space:nowrap;box-shadow:0 12px 28px rgb(0 0 0 / .35);z-index:2}
+.pd-tip{position:absolute;transform:translate(-50%,calc(-100% - 10px));pointer-events:none;background:var(--t-bg);border:1px solid var(--t-border);border-radius:6px;padding:8px 10px;display:grid;gap:2px;font-size:.9375rem;color:var(--t-fg-2);white-space:nowrap;box-shadow:0 12px 28px rgb(0 0 0 / .35);z-index:2}
 .pd-tip-head{color:var(--t-fg);font-weight:600}
 .pd-table{width:100%;border-collapse:collapse;font-size:.9rem;font-variant-numeric:tabular-nums}
 .pd-table th,.pd-table td{padding:8px 12px;border-bottom:1px solid var(--t-line);text-align:right;white-space:nowrap}
 .pd-table th:first-child{text-align:left}
-.pd-table thead th{font-size:.8rem;font-weight:600;color:var(--t-fg-2)}
+.pd-table thead th{font-size:.875rem;font-weight:600;color:var(--t-fg-2)}
 .pd-table tbody th{font-weight:400;color:var(--t-fg)}
 .pd-total th,.pd-total td,.pd-strong th,.pd-strong td{font-weight:600;color:var(--t-fg)}
 .pd-inbar{display:inline-block;width:64px;height:8px;margin-right:10px;border-radius:4px;background:var(--t-line);vertical-align:1px;overflow:hidden}
 .pd-inbar-fill{display:block;height:100%;border-radius:4px}
-.pd-source{margin:0;font-size:.8rem;color:var(--t-fg-2)}
+.pd-source{margin:0;font-size:.875rem;color:var(--t-fg-2)}
 .pd-link{color:var(--dgs-blue-dark);text-decoration:underline;text-underline-offset:4px;display:inline-flex;align-items:center;min-height:24px}
 .pd-link:hover{color:var(--t-fg)}
 .pd-unavailable{border-top:1px solid var(--t-line);padding:32px 0 48px;display:grid;gap:12px;max-width:64ch}
@@ -56,11 +56,10 @@ rect.pd-s1,rect.pd-s2,rect.pd-s3,rect.pd-s4,rect.pd-s5,rect.pd-s6{transition:opa
 @media (max-width:900px){.pd-kpis{grid-template-columns:repeat(2,minmax(0,1fr))}}
 @media (max-width:520px){.pd-kpis{grid-template-columns:minmax(0,1fr)}}
 @media (prefers-reduced-motion:reduce){rect.pd-s1,rect.pd-s2,rect.pd-s3,rect.pd-s4,rect.pd-s5,rect.pd-s6{transition:none}}
-/* SVG text is in viewBox units and the charts scale to the column: below 600px the 720-unit viewBox
-   halves, so axis and value labels are drawn larger to stay at about 10-11px on screen. */
-@media (max-width:600px){.pd-axis{font-size:21px}.pd-value{font-size:22px}.pd-line{stroke-width:3}}
+/* SVG charts draw at 1:1 (useWidth in dash-charts.tsx: the viewBox is the plot's pixel width), so chart text is
+   14px on screen at every width and needs no phone override. Floor: scripts/check-dashboard-type.mjs. */
 /* Metric definitions (data/plan/metrics.md) sit visibly under each KPI; the cash chart's FY27 opening line. */
-.pd-def{font-size:.78rem;line-height:1.45;color:var(--t-fg-2);border-top:1px solid var(--t-line);padding-top:8px;margin-top:4px}
+.pd-def{font-size:.875rem;line-height:1.45;color:var(--t-fg-2);border-top:1px solid var(--t-line);padding-top:8px;margin-top:4px}
 .pd-ref{background:transparent;border:1.5px dashed var(--t-fg-2);box-sizing:border-box}
 .pd-refline{stroke:var(--t-fg-2);stroke-width:1.5;stroke-dasharray:6 4}
 .pd-funds th[scope=row]{white-space:normal;min-width:16rem;max-width:34rem}
@@ -68,8 +67,29 @@ rect.pd-s1,rect.pd-s2,rect.pd-s3,rect.pd-s4,rect.pd-s5,rect.pd-s6{transition:opa
 /* Critic pass (ai-analyst visual-design-critic, 2026-10-12): value labels carry a surface-coloured outline so a
    gridline or the reference line never strikes through them; segment names label the last bar directly. */
 .pd-value,.pd-seglabel{paint-order:stroke;stroke:var(--t-bg);stroke-width:5px;stroke-linejoin:round}
-.pd-seglabel{fill:var(--t-fg-2);font-size:12px}
-@media (max-width:600px){.pd-seglabel{font-size:20px}}
+.pd-seglabel{fill:var(--t-fg-2);font-size:14px}
 /* Live UI pass (2026-10-12): tooltip placement is computed per mark in plan-dashboard.tsx (edge-aligned near
    either end, flipped below a mark near the top, inside the plot for the margin chart); scripts/verify-plan.mjs
    asserts every tooltip stays inside its chart and the screen. */
+/* Money flow chapter (2026-10-17): a year filter for the two walk-downs, side by side from 900px. */
+.pd-years{display:flex;flex-wrap:wrap;gap:6px}
+.pd-year{font:inherit;font-size:.875rem;font-variant-numeric:tabular-nums;min-height:44px;padding:0 14px;border:1px solid var(--t-border);border-radius:6px;background:var(--dgs-card);color:var(--t-fg-2);cursor:pointer;transition:background-color .14s ease-out,color .14s ease-out,border-color .14s ease-out}
+.pd-year:hover{color:var(--t-fg);border-color:var(--t-border)}
+/* DESIGN.md Components, Filter: the selected state is a lighter card with a Light Blue edge and white text, never a fill. */
+.pd-year[aria-pressed=true]{background:#1a2740;border-color:var(--dgs-blue-dark);color:#fff;font-weight:600}
+.pd-year:focus-visible{outline:2px solid var(--t-fg);outline-offset:2px}
+.pd-flow{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,30rem),1fr));gap:28px 40px}
+.pd-flow>.pd-panel{border-top:0;padding-top:0;align-content:start}
+.wk .sk-row{grid-template-columns:minmax(9rem,14rem) minmax(0,1fr) minmax(5.5rem,max-content)}
+.wk-total .sk-label,.wk-total .sk-end{font-weight:600;color:var(--t-fg)}
+/* Walk bars are 12px tall; the hit area extends to 24px (DESIGN.md Layout tap targets). */
+.wk .sk-bar{position:relative}
+.wk .sk-bar::after{content:'';position:absolute;inset:-6px 0}
+.wk-break{font-size:.875rem;color:var(--t-fg)}
+.pd-checks{max-width:70ch;color:var(--t-fg-2);font-size:.875rem}
+.pd-checks summary{cursor:pointer;min-height:44px;display:flex;align-items:center;gap:8px;color:var(--t-fg)}
+.pd-checks summary::before{content:'+';font-family:var(--font-mono);color:var(--t-fg-2)}
+.pd-checks[open] summary::before{content:'\2212'}
+.pd-checks summary:focus-visible{outline:2px solid var(--t-fg);outline-offset:2px}
+.pd-checks ul{margin:8px 0 0;padding-left:1.25rem;display:grid;gap:4px}
+@media (prefers-reduced-motion:reduce){.pd-year{transition:none}}

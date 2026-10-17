@@ -5,7 +5,21 @@
  *  pass; amber/green sit in the 6–8 CVD band, so every chart that uses both labels its marks directly). Context series
  *  are grey (sk-muted), never a hue. Every mark has a hover/focus/tap tooltip; every chart sits beside a table or list
  *  of the same numbers. One axis per chart. */
-import {useState} from 'react';
+import {useEffect, useLayoutEffect, useRef, useState} from 'react';
+
+/** The plot's width in CSS pixels. SVG charts draw with a viewBox of exactly this width, so 14px chart text is 14px
+ *  on screen at every width (dashboard rule: nothing below 14px, text drawn at 1:1; a fixed 720-unit viewBox
+ *  shrank axis labels to 6-7px on a phone). Re-measured on resize; the fallback serves the prerender. */
+const useIso = typeof window === 'undefined' ? useEffect : useLayoutEffect;
+export function useWidth<T extends HTMLElement = HTMLDivElement>(fallback = 720) {
+  const ref = useRef<T>(null), [w, setW] = useState(fallback);
+  useIso(() => {
+    const el = ref.current; if (!el) return;
+    const set = () => setW(el.getBoundingClientRect().width || fallback);
+    set(); const ro = new ResizeObserver(set); ro.observe(el); return () => ro.disconnect();
+  }, [fallback]);
+  return [ref, w] as const;
+}
 
 /** Tooltips wrap at a fixed width (at most 240px, never wider than the chart) and are clamped inside the chart, so
  *  a long line can neither push one off a phone screen nor out of its chart. Above the mark, or below it near the top. */
@@ -27,7 +41,7 @@ const fill = (slot: number) => (slot ? 'pd-s' + slot : 'sk-muted');
 /** Horizontal bars in HTML, so labels stay readable at any width. A row is one or two bars (e.g. plan line and FY31),
  *  one low–high range, or one stacked bar of parts (part-to-whole). An optional reference line marks one value. */
 export type BarRow = {key: string; label: string; bars?: {value: number; slot: number}[]; range?: [number, number]; slot?: number; dot?: number;
-  stack?: {value: number; slot: number; name: string}[]; end: string; tip: string[]};
+  stack?: {value: number; slot: number; name: string; text?: string}[]; end: string; tip: string[]};
 export function HBars({rows, max, legend, label, refLine}: {rows: BarRow[]; max: number; legend?: {name: string; slot: number}[]; label: string;
   refLine?: {value: number; label: string}}) {
   const [tip, setTip] = useState<Tip>(null);
@@ -48,8 +62,8 @@ export function HBars({rows, max, legend, label, refLine}: {rows: BarRow[]; max:
                 tabIndex={0} role="img" aria-label={r.tip.join('. ')} onMouseEnter={show(r.tip)} onMouseMove={show(r.tip)} onFocus={show(r.tip)} onClick={show(r.tip)}/>}
               {r.dot != null && <span className={'uc-range-dot ' + fill(r.slot ?? 1)} style={{left:w(r.dot)}} aria-hidden="true"/>}
               {r.stack && <span className="sk-stack">{r.stack.map((s, i) => <span key={i} className={'sk-bar sk-seg ' + fill(s.slot)} style={{width: w(s.value)}}
-                tabIndex={i === 0 ? 0 : -1} onMouseEnter={show([r.label, `${s.name}: ${s.value}`, ...r.tip])} onMouseMove={show([r.label, `${s.name}: ${s.value}`, ...r.tip])}
-                onFocus={show([r.label, `${s.name}: ${s.value}`, ...r.tip])} onClick={show([r.label, `${s.name}: ${s.value}`, ...r.tip])}>{s.value / max >= 0.3 && <span className="sk-seg-label">{s.name}</span>}</span>)}</span>}
+                tabIndex={i === 0 ? 0 : -1} onMouseEnter={show([r.label, `${s.name}: ${s.text ?? s.value}`, ...r.tip])} onMouseMove={show([r.label, `${s.name}: ${s.text ?? s.value}`, ...r.tip])}
+                onFocus={show([r.label, `${s.name}: ${s.text ?? s.value}`, ...r.tip])} onClick={show([r.label, `${s.name}: ${s.text ?? s.value}`, ...r.tip])}>{s.value / max >= 0.3 && <span className="sk-seg-label">{s.name}</span>}</span>)}</span>}
             </span>
             <span className="sk-end">{r.end}</span>
           </div>;
@@ -64,8 +78,8 @@ export function HBars({rows, max, legend, label, refLine}: {rows: BarRow[]; max:
 /** Grouped columns over a few periods, one axis. Series in fixed slot order; slot 0 is grey context. Values above
  *  each column are direct labels, so identity is never colour alone. */
 export function GroupedColumns({periods, series, label, unit}: {periods: string[]; series: {name: string; slot: number; values: number[]}[]; label: string; unit: (v: number) => string}) {
-  const [tip, setTip] = useState<Tip>(null);
-  const W = 720, H = 300, L = 56, R = 12, T = 30, B = 32;
+  const [tip, setTip] = useState<Tip>(null), [plot, W] = useWidth();
+  const H = 300, L = 56, R = 12, T = 30, B = 32;
   const maxV = Math.max(...series.flatMap(s => s.values));
   const step = maxV > 800 ? 250 : maxV > 400 ? 200 : 100;
   const max = Math.ceil(maxV / step) * step, ticks = Array.from({length: max / step + 1}, (_, i) => i * step);
@@ -74,7 +88,7 @@ export function GroupedColumns({periods, series, label, unit}: {periods: string[
   return (
     <figure className="pd-figure" aria-label={label}>
       <ul className="pd-legend" aria-label="Series">{series.map(s => <li key={s.name}><span className={'pd-swatch ' + fill(s.slot)} aria-hidden="true"/>{s.name}</li>)}</ul>
-      <div className="pd-plot" onMouseLeave={() => setTip(null)}>
+      <div className="pd-plot" ref={plot} onMouseLeave={() => setTip(null)}>
         <svg viewBox={`0 0 ${W} ${H}`} className="pd-svg" aria-hidden="true">
           {ticks.map(t => <g key={t}><line className="pd-grid" x1={L} x2={W - R} y1={y(t)} y2={y(t)}/><text className="pd-axis" x={L - 8} y={y(t) + 4} textAnchor="end">{t.toLocaleString('en-IN')}</text></g>)}
           {periods.map((p, pi) => {
@@ -86,7 +100,7 @@ export function GroupedColumns({periods, series, label, unit}: {periods: string[
                   setTip({x: (x + bw / 2) / W * b.width, y: y(v) / H * b.height, w: b.width, lines: [`${s.name} · ${p}`, unit(v)]}); };
                 return <g key={s.name}>
                   <rect className={'sk-col ' + fill(s.slot)} x={x} y={y(v)} width={bw} height={Math.max(1, y(0) - y(v))} rx={3} onMouseEnter={show} onMouseMove={show} onClick={show}/>
-                  <text className="pd-value" x={x + bw / 2} y={y(v) - 6} textAnchor="middle">{v >= 10 ? Math.round(v).toLocaleString('en-IN') : v.toFixed(1)}</text>
+                  {bw >= 30 && <text className="pd-value" x={x + bw / 2} y={y(v) - 6} textAnchor="middle">{v >= 10 ? Math.round(v).toLocaleString('en-IN') : v.toFixed(1)}</text>}
                 </g>;
               })}
               <text className="pd-axis" x={L + band * pi + band / 2} y={H - 10} textAnchor="middle">{p}</text>
@@ -99,14 +113,54 @@ export function GroupedColumns({periods, series, label, unit}: {periods: string[
   );
 }
 
+/** A walk-down: a starting total, the steps that add to or take from it, and the subtotals they reach (revenue to
+ *  net income; opening to closing cash). Totals are drawn from zero in the accent, increases in green and decreases
+ *  in grey; the signed figure at the end of each row carries the direction, so it never rests on colour. Totals are
+ *  re-checked against the running sum here as well as at build (scripts/build-plan-data.mjs): a walk that does not
+ *  close renders its break instead of a bar. HTML bars, so 14px labels hold at any width. */
+export type WalkRow = {label: string; total?: boolean; value: number};
+export function Walk({rows, label, fmt}: {rows: WalkRow[]; label: string; fmt: (v: number, signed: boolean) => string}) {
+  const [tip, setTip] = useState<Tip>(null);
+  let run = 0;
+  const segs = rows.map((r, i) => {
+    const a = r.total ? 0 : run, b = r.total ? r.value : run + r.value, broken = r.total && i > 0 && Math.abs(r.value - run) > 0.02;
+    run = b; return {...r, a, b, broken};
+  });
+  const lo = Math.min(0, ...segs.flatMap(s => [s.a, s.b])), hi = Math.max(0, ...segs.flatMap(s => [s.a, s.b]));
+  const at = (v: number) => `${(v - lo) / ((hi - lo) || 1) * 100}%`;
+  return (
+    <figure className="pd-figure" aria-label={label}>
+      <div className="pd-plot sk-bars wk" onMouseLeave={() => setTip(null)}>
+        {segs.map(s => {
+          const lines = [s.label, fmt(s.value, !s.total), ...(s.total ? [] : [`${fmt(s.a, false)} to ${fmt(s.b, false)}`])];
+          const show = (e: React.SyntheticEvent<HTMLElement>) => setTip(tipAt(e, lines));
+          return <div className={'sk-row' + (s.total ? ' wk-total' : '')} key={s.label}>
+            <span className="sk-label">{s.label}</span>
+            <span className="sk-track">
+              {lo < 0 && <span className="sk-ref" style={{left: at(0)}} aria-hidden="true"/>}
+              {s.broken ? <span className="wk-break">does not close: running total {fmt(s.a, false)}</span>
+                : <span className={'sk-bar sk-range ' + (s.total ? 'pd-s1' : s.value > 0.005 ? 'pd-s3' : 'sk-muted')}
+                  style={{marginLeft: at(Math.min(s.a, s.b)), width: `max(2px, ${Math.abs(s.b - s.a) / ((hi - lo) || 1) * 100}%)`}}
+                  tabIndex={0} role="img" aria-label={lines.join('. ')} onMouseEnter={show} onMouseMove={show} onFocus={show} onClick={show}/>}
+            </span>
+            <span className="sk-end">{fmt(s.value, !s.total)}</span>
+          </div>;
+        })}
+        {lo < 0 && <p className="sk-ref-note"><span className="sk-ref-key" aria-hidden="true"/>Zero</p>}
+        <TipBox tip={tip}/>
+      </div>
+    </figure>
+  );
+}
+
 /** ai-analyst storytelling (agents/story-architect.md): the page opens on "What the data says", three or four
  *  findings each led by its number, then one sentence and the source with the kind of number (plan target,
  *  estimate, schedule). Every number here is re-derived from the raw tables by scripts/analyst/validate_findings.py. */
 export type Insight = {value: string; finding: string; text: string; source: string};
-export function Insights({items, id = 'what-the-data-says'}: {items: Insight[]; id?: string}) {
+export function Insights({items, id = 'what-the-data-says', title = 'Revenue, capital and qualification priorities'}: {items: Insight[]; id?: string; title?: string}) {
   return (
     <section className="dg-insights" aria-labelledby={id}>
-      <h2 id={id} className="dg-ins-h">Revenue, capital and qualification priorities</h2>
+      <h2 id={id} className="dg-ins-h">{title}</h2>
       <ul className="dg-ins-grid">{items.map(i => <li className="dg-ins" key={i.finding}>
         <strong className="dg-ins-v">{i.value}</strong>
         <span className="dg-ins-f">{i.finding}</span>

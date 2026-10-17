@@ -16,7 +16,7 @@ import {useState} from 'react';
 import raw from './plan-data.json';
 import {revenueBuild} from './company-content';
 import {asset, url} from './routes';
-import {Insights, Chapter} from './dash-charts';
+import {Insights, Chapter, Walk, HBars, useWidth, type WalkRow} from './dash-charts';
 
 /** Generic by design: every plan-specific label arrives in the data (scripts/build-plan-data.mjs), because this
  *  file's code ships in every build, public included. */
@@ -25,7 +25,9 @@ type Item = {label: string; value: number};
 type PlanData = {available: true; model: string; periods: string[];
   series: {revenue: number[]; grossProfit: number[]; ebitda: number[]; netIncome: number[]; openingCash: number[]; closingCash: number[]; netCashFlow: number[]; capex: number[]};
   capexLabel: string; segments: {name: string; values: number[]}[]; reconcileSegment: string; reconcileLede: string;
-  plRows: Row[]; cashRows: Row[]; cashNote: string; sources: Item[]; uses: Item[]; checks: string[]};
+  plRows: Row[]; cashRows: Row[]; cashNote: string; plNote: string; sources: Item[]; uses: Item[]; checks: string[];
+  plWalk: Walked[]; cashWalk: Walked[]; opexParts: {label: string; values: number[]; group?: string}[]};
+type Walked = {label: string; total: boolean; values: number[]; group?: string};
 const data = raw as unknown as PlanData | {available: false};
 
 const NB = ' ';
@@ -58,15 +60,15 @@ function Source({files, note}: {files: string[]; note: string}) {
 function Def({children}: {children: React.ReactNode}) { return <span className="pd-def">{children}</span>; }
 
 function StackedBars({d}: {d: PlanData}) {
-  const [tip, setTip] = useState<Tip>(null);
-  const W = 720, H = 340, L = 56, R = 120, T = 28, B = 32;
+  const [tip, setTip] = useState<Tip>(null), [plot, W] = useWidth();
+  const H = 340, L = 56, R = W < 560 ? 12 : 120, T = 28, B = 32;
   const segs = d.segments, totals = d.periods.map((_, i) => segs.reduce((a, s) => a + s.values[i], 0));
   const max = Math.ceil(Math.max(...totals) / 250) * 250, ticks = Array.from({length: max / 250 + 1}, (_, i) => i * 250);
   const band = (W - L - R) / d.periods.length, bw = band * 0.56, y = (v: number) => T + (H - T - B) * (1 - v / max);
   return (
     <figure className="pd-figure" aria-label="Revenue by segment by year, ₹ Cr, stacked bars. The same figures are in the table below.">
       <ul className="pd-legend" aria-label="Segments">{segs.map((s, i) => <li key={s.name}><span className={'pd-swatch pd-s' + (i + 1)} aria-hidden="true"/>{s.name}</li>)}</ul>
-      <div className="pd-plot" onMouseLeave={() => setTip(null)}>
+      <div className="pd-plot" ref={plot} onMouseLeave={() => setTip(null)}>
         <svg viewBox={`0 0 ${W} ${H}`} className="pd-svg" aria-hidden="true">
           {ticks.map(t => <g key={t}><line className="pd-grid" x1={L} x2={W - R} y1={y(t)} y2={y(t)}/><text className="pd-axis" x={L - 8} y={y(t) + 4} textAnchor="end">{t.toLocaleString('en-IN')}</text></g>)}
           {d.periods.map((p, pi) => {
@@ -79,9 +81,9 @@ function StackedBars({d}: {d: PlanData}) {
                   setTip({x: (x + bw / 2) / W * b.width, y: y1 / H * b.height, frac: (x + bw / 2) / W, w: b.width, lines: [`${s.name} · ${fy(p)}`, cr(v), `${pct(v / totals[pi])} of ${fy(p)} revenue`]}); };
                 return <rect key={s.name} className={'pd-s' + (si + 1)} x={x} y={y1} width={bw} height={Math.max(0, y0 - y1 - 2)} onMouseEnter={show} onMouseMove={show}/>;
               })}
-              <text className="pd-value" x={x + bw / 2} y={y(totals[pi]) - 8} textAnchor="middle">{totals[pi] < 10 ? totals[pi].toFixed(1) : Math.round(totals[pi]).toLocaleString('en-IN')}</text>
+              {band >= 44 && <text className="pd-value" x={x + bw / 2} y={y(totals[pi]) - 8} textAnchor="middle">{totals[pi] < 10 ? totals[pi].toFixed(1) : Math.round(totals[pi]).toLocaleString('en-IN')}</text>}
               {/* Direct labels on the last bar, only for segments tall enough to carry one; the legend names the rest. */}
-              {pi === d.periods.length - 1 && (() => { let a2 = 0; return segs.map(s => { const v = s.values[pi], top = y(a2 + v), bot = y(a2); a2 += v;
+              {pi === d.periods.length - 1 && R > 12 && (() => { let a2 = 0; return segs.map(s => { const v = s.values[pi], top = y(a2 + v), bot = y(a2); a2 += v;
                 return bot - top >= 16 ? <text key={s.name} className="pd-seglabel" x={x + bw + 8} y={(top + bot) / 2 + 4}>{s.name}</text> : null; }); })()}
               <text className="pd-axis" x={x + bw / 2} y={H - 10} textAnchor="middle">{fy(p)}</text>
             </g>;
@@ -94,8 +96,8 @@ function StackedBars({d}: {d: PlanData}) {
 }
 
 function Lines({d, series, label}: {d: PlanData; series: {name: string; values: number[]; slot: number}[]; label: string}) {
-  const [hover, setHover] = useState<number | null>(null), [pw, setPw] = useState(W0);
-  const W = 720, H = 300, L = 56, R = 16, T = 20, B = 32;
+  const [hover, setHover] = useState<number | null>(null), [plot, W] = useWidth(W0), pw = W;
+  const H = 300, L = 56, R = 16, T = 20, B = 32;
   const all = series.flatMap(s => s.values);
   const lo = Math.min(-0.4, Math.floor(Math.min(...all) * 5) / 5), hi = 1;
   const ticks: number[] = []; for (let t = lo; t <= hi + 1e-9; t += 0.2) ticks.push(+t.toFixed(1));
@@ -103,9 +105,9 @@ function Lines({d, series, label}: {d: PlanData; series: {name: string; values: 
   return (
     <figure className="pd-figure" aria-label={label}>
       <ul className="pd-legend" aria-label="Lines">{series.map(s => <li key={s.name}><span className={'pd-swatch pd-s' + s.slot} aria-hidden="true"/>{s.name}</li>)}</ul>
-      <div className="pd-plot" onMouseLeave={() => setHover(null)}>
+      <div className="pd-plot" ref={plot} onMouseLeave={() => setHover(null)}>
         <svg viewBox={`0 0 ${W} ${H}`} className="pd-svg" aria-hidden="true"
-          onMouseMove={e => { const b = e.currentTarget.getBoundingClientRect(); setPw(b.width); setHover(Math.max(0, Math.min(d.periods.length - 1, Math.round(((e.clientX - b.left) / b.width * W - L) / step)))); }}>
+          onMouseMove={e => { const b = e.currentTarget.getBoundingClientRect(); setHover(Math.max(0, Math.min(d.periods.length - 1, Math.round(((e.clientX - b.left) / b.width * W - L) / step)))); }}>
           {ticks.map(t => <g key={t}><line className={t === 0 ? 'pd-zero' : 'pd-grid'} x1={L} x2={W - R} y1={y(t)} y2={y(t)}/><text className="pd-axis" x={L - 8} y={y(t) + 4} textAnchor="end">{Math.round(t * 100)}%</text></g>)}
           {d.periods.map((p, i) => <text key={p} className="pd-axis" x={x(i)} y={H - 10} textAnchor="middle">{fy(p)}</text>)}
           {hover !== null && <line className="pd-cross" x1={x(hover)} x2={x(hover)} y1={T} y2={H - B}/>}
@@ -123,16 +125,16 @@ function Lines({d, series, label}: {d: PlanData; series: {name: string; values: 
 }
 
 function CashBars({d}: {d: PlanData}) {
-  const [tip, setTip] = useState<Tip>(null);
+  const [tip, setTip] = useState<Tip>(null), [plot, W] = useWidth();
   const close = d.series.closingCash, open0 = d.series.openingCash[0];
-  const W = 720, H = 300, L = 56, R = 12, T = 28, B = 32;
+  const H = 300, L = 56, R = 12, T = 28, B = 32;
   const max = Math.ceil(Math.max(open0, ...close) / 50) * 50, ticks = Array.from({length: max / 50 + 1}, (_, i) => i * 50).filter((t, i, a) => a.length <= 8 || i % 2 === 0);
   const trough = close.indexOf(Math.min(...close));
   const band = (W - L - R) / d.periods.length, bw = band * 0.5, y = (v: number) => T + (H - T - B) * (1 - v / max);
   return (
     <figure className="pd-figure" aria-label="Closing cash by year, ₹ Cr, with the FY27 opening balance as a reference line. The same figures are in the cash table below.">
       <ul className="pd-legend" aria-label="Marks"><li><span className="pd-swatch pd-s1" aria-hidden="true"/>Closing cash</li><li><span className="pd-swatch pd-ref" aria-hidden="true"/>Opening cash, FY27 ({cr(open0)})</li></ul>
-      <div className="pd-plot" onMouseLeave={() => setTip(null)}>
+      <div className="pd-plot" ref={plot} onMouseLeave={() => setTip(null)}>
         <svg viewBox={`0 0 ${W} ${H}`} className="pd-svg" aria-hidden="true">
           {ticks.map(t => <g key={t}><line className="pd-grid" x1={L} x2={W - R} y1={y(t)} y2={y(t)}/><text className="pd-axis" x={L - 8} y={y(t) + 4} textAnchor="end">{t}</text></g>)}
           <line className="pd-refline" x1={L} x2={W - R} y1={y(open0)} y2={y(open0)}/>
@@ -142,7 +144,7 @@ function CashBars({d}: {d: PlanData}) {
               setTip({x: (x + bw / 2) / W * b.width, y: y(v) / H * b.height, frac: (x + bw / 2) / W, w: b.width, lines: [`${fy(p)} closing cash`, cr(v), `net cash flow ${cr(d.series.netCashFlow[i])}`]}); };
             return <g key={p}>
               <rect className="pd-s1" x={x} y={y(v)} width={bw} height={y(0) - y(v)} onMouseEnter={show} onMouseMove={show}/>
-              <text className="pd-value" x={x + bw / 2} y={y(v) - 8} textAnchor="middle">{v.toFixed(1)}{i === trough ? ' (lowest)' : ''}</text>
+              {band >= 44 && <text className="pd-value" x={x + bw / 2} y={y(v) - 8} textAnchor="middle">{v.toFixed(1)}{i === trough && band >= 96 ? ' (lowest)' : ''}</text>}
               <text className="pd-axis" x={x + bw / 2} y={H - 10} textAnchor="middle">{fy(p)}</text>
             </g>;
           })}
@@ -150,6 +152,49 @@ function CashBars({d}: {d: PlanData}) {
         <TipBox tip={tip}/>
       </div>
     </figure>
+  );
+}
+
+const signed = (v: number, s: boolean) => (s && v > 0 ? '+' : '') + cr(v);
+/** Sentence case for a row label inside a heading, leaving acronyms ("R&D, run rate") alone. */
+const lower = (t: string) => /^[A-Z][a-z]/.test(t) ? t[0].toLowerCase() + t.slice(1) : t;
+/** The largest of a set of parts, joining the parts of one group (R&D is two rows) before comparing. */
+function largest(parts: {label: string; value: number; group?: string}[]) {
+  const m = new Map<string, number>();
+  for (const p of parts) m.set(p.group ?? p.label, (m.get(p.group ?? p.label) ?? 0) + p.value);
+  return [...m].map(([label, value]) => ({label, value})).reduce((a, b) => (b.value > a.value ? b : a));
+}
+const ROUNDED = 'Subtotals equal the running sum at full precision (checked at build); printed figures are rounded to ₹0.01 Cr.';
+
+/** Money flow (BenAI dashboard rules, adopted 2026-10-17): one year at a time, revenue walked down to net income
+ *  beside opening cash walked to closing cash. Opens on the cash-low year, the year the raise has to carry. The
+ *  year buttons filter one chapter; they are not tabs, and every other chapter shows all years. */
+function MoneyFlow({d, children}: {d: PlanData; children?: React.ReactNode}) {
+  const close = d.series.closingCash, [i, setI] = useState(close.indexOf(Math.min(...close)));
+  const at = (w: Walked[]): WalkRow[] => w.map(r => ({label: r.label, total: r.total, value: r.values[i]}));
+  const pl = at(d.plWalk), cash = at(d.cashWalk), F = fy(d.periods[i]);
+  const big = largest(d.plWalk.filter(r => !r.total).map(r => ({label: r.label, group: r.group, value: -r.values[i]})));
+  const outs = cash.filter(r => !r.total && r.value < 0), out = outs.length ? outs.reduce((a, r) => (r.value < a.value ? r : a)) : null;
+  const rev = pl[0].value, ni = pl[pl.length - 1].value, op = cash[0].value, cl = cash[cash.length - 1].value;
+  return (
+    <Chapter id="ch-flow" title="Where revenue and cash go, by year">
+      <div className="pd-years" role="group" aria-label="Year shown in the two walk-downs">
+        {d.periods.map((p, k) => <button key={p} type="button" className="pd-year" aria-pressed={k === i} onClick={() => setI(k)}>{fy(p)}</button>)}
+      </div>
+      <div className="pd-flow">
+        <section className="pd-panel" aria-labelledby="pd-plw-h">
+          <h3 id="pd-plw-h">In {F}, {cr(rev)} of revenue {ni >= 0 ? `leaves ${cr(ni)} of net income` : `ends in a net loss of ${cr(-ni)}`}; {lower(big.label)} is the largest cost at {cr(big.value)}.</h3>
+          <Walk rows={pl} fmt={signed} label={`Revenue to net income, ${F}, ₹ Cr: each cost taken from revenue in turn. The same figures are in the P&L table below.`}/>
+          <Source files={['pl.csv']} note={ROUNDED + ' ' + d.plNote}/>
+        </section>
+        <section className="pd-panel" aria-labelledby="pd-cashw-h">
+          <h3 id="pd-cashw-h">Cash {cl < op ? 'falls' : 'rises'} from {cr(op)} to {cr(cl)} in {F}{out ? `; ${lower(out.label)} is the largest outflow at ${cr(-out.value)}` : ''}.</h3>
+          <Walk rows={cash} fmt={signed} label={`Opening to closing cash, ${F}, ₹ Cr. The same figures are in the cash table below.`}/>
+          <Source files={['cash.csv']} note={ROUNDED + ' ' + d.cashNote}/>
+        </section>
+      </div>
+      {children}
+    </Chapter>
   );
 }
 
@@ -170,6 +215,8 @@ export function PlanDashboard() {
   const sources = d.sources, uses = [...d.uses].sort((a, b) => b.value - a.value);
   const recon = segs.find(s => s.name === d.reconcileSegment);
   const usesTotal = uses.reduce((a, f) => a + f.value, 0), useMax = Math.max(...uses.map(f => f.value));
+  const opex = (i: number) => d.opexParts.reduce((a, o) => a + o.values[i], 0);
+  const opTop = largest(d.opexParts.map(o => ({label: o.label, group: o.group, value: o.values[last]})));
   const company = revenueBuild.filter(([k]) => /^FY\d\d$/.test(k)).map(([k, v]) => ({fy: k, plan: Number(v.replace(/[^\d.]/g, ''))}));
   return (
     <div className="pd-root">
@@ -179,12 +226,29 @@ export function PlanDashboard() {
         <p className="pd-flag"><strong>Plan targets, not results.</strong> {d.model}, {F0}–{FL}, base scenario, ₹{NB}Cr. Nothing here is audited or contracted. {d.checks.length} accounting identities are re-checked on every build; they show the model adds up, not that its assumptions hold.</p>
       </header>
 
-      <Insights items={[
+      <Insights title="Revenue, profit and cash findings" items={[
         {value: cr(rev[last], 0), finding: `Revenue in ${FL}`, text: `From ${cr(rev[0])} in ${F0} and ${cr(rev[Math.min(2, last)])} in ${fy(d.periods[Math.min(2, last)])}: most of the growth comes in the last three years.`, source: `${d.model} · plan target · units × price, summed over business lines`},
         {value: pct(segs[0].values[last] / segTotal(last), 0), finding: `${segs[0].name} is most of it`, text: `${segs[0].name} is ${cr(segs[0].values[last], 0)} of ${FL} revenue${recon && recon !== segs[0] ? `; ${recon.name} is ${cr(recon.values[last], 0)} (${pct(recon.values[last] / segTotal(last), 0)})` : ''}.`, source: `${d.model} · plan target · segment ÷ total revenue, same year`},
         {value: fy(d.periods[firstProfit]), finding: 'First profitable year', text: `Net income ${cr(ni[firstProfit])}; EBITDA ${cr(ebitda[firstProfit])}. Gross margin reaches ${pct(gp[last] / rev[last])} by ${FL}.`, source: `${d.model} · plan target · tax at 25 % after loss carry-forward`},
         {value: cr(close[trough]), finding: `Cash is tightest in ${fy(d.periods[trough])}`, text: `Lowest year-end cash, down from ${cr(open0)} at the start of ${F0}, before revenue catches up.`, source: `${d.model} · plan target · year-end balances only`},
       ]}/>
+
+      <details className="pd-checks">
+        <summary>The {d.checks.length} accounting identities checked on every build</summary>
+        <ul>{d.checks.map(c => <li key={c}>{c}</li>)}</ul>
+      </details>
+
+      <MoneyFlow d={d}>
+      <section className="pd-panel" aria-labelledby="pd-pl-h">
+        <h3 id="pd-pl-h">Revenue grows from {cr(rev[0])} in {F0} to {cr(rev[last])} in {FL}; net income turns positive in {fy(d.periods[firstProfit])} and reaches {cr(ni[last])}.</h3>
+        <div className="table-scroll"><table className="pd-table">
+          <caption className="sr-only">Company P&L, ₹ Cr</caption>
+          <thead><tr><th scope="col">₹{NB}Cr</th>{d.periods.map(p => <th scope="col" key={p}>{fy(p)}</th>)}</tr></thead>
+          <tbody>{d.plRows.map(r => <tr key={r.label} className={r.strong ? 'pd-strong' : undefined}><th scope="row">{r.label}</th>{r.values.map((v, i) => <td key={i}>{num(v)}</td>)}</tr>)}</tbody>
+        </table></div>
+        <Source files={['pl.csv']} note="P&L sheet of the corrected model."/>
+      </section>
+      </MoneyFlow>
 
       <Chapter id="ch-sells" title="Revenue mix and business segments">
       <section className="pd-panel" aria-labelledby="pd-seg-h">
@@ -204,7 +268,7 @@ export function PlanDashboard() {
       </section>
       </Chapter>
 
-      <Chapter id="ch-margins" title="Gross and net profitability targets">
+      <Chapter id="ch-margins" title="Gross and net profitability targets, and operating expense">
       <section className="pd-panel" aria-labelledby="pd-margin-h">
         <h3 id="pd-margin-h">Gross margin rises from {pct(gp[0] / rev[0])} to {pct(gp[last] / rev[last])}; net margin turns positive in {fy(d.periods[firstProfit])} and reaches {pct(ni[last] / rev[last])}.</h3>
         <Lines d={d} label="Gross, EBITDA and net margin by year, per cent of revenue. The same figures follow from the P&L table below." series={[
@@ -213,6 +277,14 @@ export function PlanDashboard() {
           {name: 'Net margin', values: ni.map((v, i) => v / rev[i]), slot: 3},
         ]}/>
         <Source files={['pl.csv']} note="Gross, EBITDA and net margin = gross profit, EBITDA and net income ÷ revenue, same year."/>
+      </section>
+      <section className="pd-panel" aria-labelledby="pd-opex-h">
+        <h3 id="pd-opex-h">Operating expense grows from {cr(opex(0))} in {F0} to {cr(opex(last))} in {FL}; {lower(opTop.label)} is {pct(opTop.value / opex(last), 0)} of it.</h3>
+        <HBars label="Operating expense mix by year: each line's share of that year's operating expense, with the total at the end. The same figures are in the P&L table." max={100}
+          legend={d.opexParts.map((o, k) => ({name: o.label, slot: k + 1}))}
+          rows={d.periods.map((p, i) => ({key: p, label: fy(p), end: cr(opex(i)), tip: [`${fy(p)} operating expense: ${cr(opex(i))}`],
+            stack: d.opexParts.map((o, k) => ({value: o.values[i] / opex(i) * 100, slot: k + 1, name: o.label, text: `${cr(o.values[i])}, ${pct(o.values[i] / opex(i))}`}))}))}/>
+        <Source files={['pl.csv']} note="Operating expense = run-rate R&D + tape-out programme + sales and marketing + G&A (checked at build)."/>
       </section>
       </Chapter>
 
@@ -245,17 +317,6 @@ export function PlanDashboard() {
       </section>
       </Chapter>
 
-      <Chapter id="ch-pl" title="Revenue, operating costs and profitability">
-      <section className="pd-panel" aria-labelledby="pd-pl-h">
-        <h3 id="pd-pl-h">Planned revenue, operating costs and net income.</h3>
-        <div className="table-scroll"><table className="pd-table">
-          <caption className="sr-only">Company P&L, ₹ Cr</caption>
-          <thead><tr><th scope="col">₹{NB}Cr</th>{d.periods.map(p => <th scope="col" key={p}>{fy(p)}</th>)}</tr></thead>
-          <tbody>{d.plRows.map(r => <tr key={r.label} className={r.strong ? 'pd-strong' : undefined}><th scope="row">{r.label}</th>{r.values.map((v, i) => <td key={i}>{num(v)}</td>)}</tr>)}</tbody>
-        </table></div>
-        <Source files={['pl.csv']} note="P&L sheet of the corrected model."/>
-      </section>
-      </Chapter>
 
       <Chapter id="ch-compare" title="Reconcile company revenue with the chip portfolio plan">
       <section className="pd-panel" aria-labelledby="pd-rec-h">

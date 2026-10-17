@@ -30,8 +30,31 @@ for (const [w, touch] of [[1440, false], [390, true]]) {
     console.log(`${w}: notice only (no plan figures in this build)`); await ctx.close(); continue;
   }
   check(await page.locator('.dg-ins').count() === 4 && await page.locator('.dg-chapter').count() === 6, `${w}: expected four findings and six chapters`);
-  const figs = page.locator('.pd-root figure');
-  assert.equal(await figs.count(), 3, 'expected three charts');
+  const figs = page.locator('.pd-root figure:has(svg)');
+  assert.equal(await figs.count(), 3, 'expected three SVG charts');
+  // Money flow (2026-10-17): both walk-downs close on screen for every year, and their tooltips stay inside.
+  const walks = page.locator('.pd-root figure .wk');
+  check(await walks.count() === 2, `${w}: expected two walk-downs`);
+  check(!(await page.locator('.wk-break').count()), `${w}: a walk-down does not close`);
+  const years = page.locator('.pd-year');
+  for (let k = 0; k < await years.count(); k++) {
+    // Tap on the phone: a mouse click there leaves an emulated pointer that Chrome moves back after each later
+    // tap, firing mouseleave on the chart and clearing its tooltip (2026-10-17; a real phone has no pointer).
+    if (touch) await years.nth(k).tap(); else await years.nth(k).click();
+    await page.waitForTimeout(60);
+    check(!(await page.locator('.wk-break').count()), `${w}: walk-down does not close in year ${k}`);
+  }
+  for (let k = 0; k < 2; k++) {
+    const fig = page.locator('.pd-root figure:has(.wk)').nth(k), bar = fig.locator('.sk-bar').last();
+    await bar.scrollIntoViewIfNeeded(); if (touch) await bar.tap(); else await bar.hover(); await page.waitForTimeout(120);
+    await inside(page, fig, `${w} walk ${k}`);
+  }
+  // 14px floor at 1:1: the smallest rendered chart label, measured in the browser.
+  const minText = await page.evaluate(() => Math.min(...[...document.querySelectorAll('.pd-root svg text, .pd-root .sk-label, .pd-root .sk-end')].map(e => {
+    const px = parseFloat(getComputedStyle(e).fontSize), svg = e.ownerSVGElement;
+    return svg ? px * svg.getBoundingClientRect().width / svg.viewBox.baseVal.width : px;
+  })));
+  check(minText >= 13.5, `${w}: chart text renders at ${minText.toFixed(1)}px, below the 14px floor`);
   for (const [fi, name] of [[0, 'segments'], [2, 'cash']]) {
     // Only marks a reader can point at: a segment worth ₹0.1 Cr is 0 px tall at this scale and cannot be hovered.
     const fig = figs.nth(fi), rects = fig.locator('rect[height]:not([height="0"])');

@@ -65,6 +65,28 @@ const checks = [
 const broken = checks.filter(([, a, b]) => a.some((v, i) => Math.abs(v - b[i]) > TOL)).map(([n]) => n);
 const total = kind => funds.filter(f => f.kind === kind).reduce((a, f) => a + f.value, 0);
 if (Math.abs(total('source') - total('use')) > TOL) broken.push('Uses of funds = sources');
+// Walk-downs for the money-flow chapter. Each total must equal the running sum of everything above it, every year
+// (dashboard rule: flows have to close); the component re-checks and draws a break instead of a bar if one does not.
+const neg = xs => xs.map(v => -v);
+// A group joins rows that are one cost split in two (R&D: run rate + tape-out), so "largest cost" compares like with like.
+const walk = (...rows) => rows.map(([label, values, total = false, group]) => ({label, total, values, ...(group ? {group} : {})}));
+const plWalk = walk(
+  ['Revenue', P('Revenue'), true], ['Cost of goods sold', neg(P('COGS'))], ['Gross profit', P('Gross profit'), true],
+  ['R&D, run rate', neg(P('run-rate R&D')), false, 'R&D'], ['R&D, SoC4 5 nm tape-out programme', neg(P('SoC4 5nm tape-out program')), false, 'R&D'],
+  ['Sales and marketing', neg(P('Sales & Marketing'))], ['General and administrative', neg(P('G&A'))], ['EBITDA', P('EBITDA'), true],
+  ['Depreciation and amortisation', neg(P('D&A'))], ['Tax at 25 %, after loss carry-forward', neg(P('Tax (25%, post-carryforward)'))], ['Net income', P('Net income'), true],
+);
+const cashWalk = walk(
+  ['Opening cash', C('Opening cash'), true], ['Operating cash flow (net income + D&A)', C('Operating cash flow (NI + D&A)')], ['Tape-out capex', C('Less: tapeout capex (one-time)')],
+  ['Other capex (equipment, lab)', C('Less: other capex (equipment, lab)')], ['Fleet-debt interest', C('Less: TaaS debt interest')],
+  ['Change in working capital', C('Less: change in working capital')], ['Closing cash', C('Closing cash'), true],
+);
+for (const [name, w] of [['Revenue walks to net income', plWalk], ['Opening cash walks to closing cash', cashWalk]]) {
+  const ok = periods.every((_, i) => { let run = 0; return w.every((r, k) => { if (r.total && k > 0 && Math.abs(r.values[i] - run) > TOL) return false; run = r.total ? r.values[i] : run + r.values[i]; return true; }); });
+  checks.push([name, [0], [ok ? 0 : 1]]);
+}
+const broken2 = checks.filter(([, a, b]) => a.some((v, i) => Math.abs(v - b[i]) > TOL)).map(([n]) => n);
+for (const n of broken2) if (!broken.includes(n)) broken.push(n);
 if (broken.length) throw new Error('plan data: identity break, not published: ' + broken.join('; '));
 
 // Every plan-specific word lives here, never in app/plan-dashboard.tsx: the component's code ships in every
@@ -102,8 +124,12 @@ fs.writeFileSync(out, JSON.stringify({
     row(cash, 'Net cash flow for the year', 'Net cash flow', true), row(cash, 'Closing cash', 'Closing cash', true),
   ],
   cashNote: 'Fleet capex (about ₹60 Cr) is financed by debt against the trucks in the model, so it is not in this balance.',
+  plNote: 'The model\'s P&L has no interest line, so net income is before the fleet-debt interest the cash walk deducts.',
   sources: funds.filter(f => f.kind === 'source').map(f => ({label: fundLabel[f.item] ?? f.item, value: f.value})),
   uses: funds.filter(f => f.kind === 'use').map(f => ({label: f.item, value: f.value})),
+  plWalk, cashWalk,
+  opexParts: [['R&D, run rate', P('run-rate R&D'), 'R&D'], ['R&D, SoC4 5 nm tape-out programme', P('SoC4 5nm tape-out program'), 'R&D'], ['Sales and marketing', P('Sales & Marketing')], ['General and administrative', P('G&A')]]
+    .map(([label, values, group]) => ({label, values, ...(group ? {group} : {})})),
   checks: checks.map(([n]) => n).concat('Uses of funds = sources'),
 }, null, 1) + '\n');
 fs.mkdirSync(pub, {recursive: true});

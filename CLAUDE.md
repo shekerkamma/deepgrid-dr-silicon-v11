@@ -24,6 +24,7 @@ detailed pre-silicon proof point. Read `AGENTS.md` and `WORKSPACE_MAP.md` before
   simulation, estimates, measured silicon and qualification stay distinct; illustrations establish no
   certification, traction or production status. No em dashes in copy.
 - Titles state a fact (a part, a system or a number), never advice: `DESIGN.md` "Titles". `npm run check:titles` runs in every build. Peer items go in the Lattice (`app/lattice.ts`), never a same-size card grid.
+- Dashboards: nothing below 14px, SVG charts drawn at 1:1 with `useWidth()`, cut test and wireframe before a new metric, blind second-agent review before the owner sees one: `DESIGN.md` "Dashboards". `scripts/check-dashboard-type.mjs` runs in every build.
 
 ## Repository operations
 

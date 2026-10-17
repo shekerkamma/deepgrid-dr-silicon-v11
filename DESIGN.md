@@ -212,6 +212,21 @@ The complete use-case dashboard and compact dashboard route headers use a fixed 
   - a 2 px surface gap between stacked segments, and value labels outlined in the page colour so gridlines never strike through them;
   - a legend plus direct labels, a hover tooltip on every mark, and a table carrying the same numbers.
 - **Plan-specific wording** lives in the generated data, not the component, so a build without the flag carries none of it.
+- **Money flow** (2026-10-17): after the four findings and the list of identities, one chapter walks revenue down to net income beside opening cash to closing cash, for one year at a time. It opens on the cash-low year. The year buttons filter that chapter only. `scripts/build-plan-data.mjs` refuses to publish a walk that does not close, and `Walk` draws a break instead of a bar if one ever does.
+
+## Dashboards (/plan, /portfolio, /portfolio/brief, use cases)
+
+Adopted 2026-10-17 from BenAI's dashboard rules (`~/.claude/skills/analytics-dashboard-builder`, `references/design.md`). Their source video says what they are for: one page of numbers that someone acts on. Where those rules conflict with this file, this file wins on brand: serif headings, no icon on every heading, no uppercase card titles. Their rules win on the data.
+
+- **Nothing below 14px**, chart text included, measured on screen. SVG charts draw at 1:1: `useWidth()` in `app/dash-charts.tsx` makes the viewBox the plot's pixel width, so a phone does not shrink 14px labels to 6px. Hide a value label that will not fit (the tooltip and the table still carry it); never shrink it. `scripts/check-dashboard-type.mjs` runs in every build and fails on both. On the 17 Oct baseline it reports 36.
+- **Cut test before a metric gets a place:** would the reader act differently if it moved? Offer 15–20 candidates, recommend 5–15, and agree a monospace wireframe before writing code. Lifetime totals, counts with no comparison, and anything a table on the page already shows are cut.
+- **Mark from the question:** compare categories → sorted horizontal bars; change over time → line or columns; composition → stacked bar (a donut only for two or three well-separated parts); a total taken apart in steps → walk-down (`Walk`).
+- **Colour by direction, not by sign.** A walk draws totals in the accent, increases in green and decreases in grey, and the signed figure at the row end carries the direction. Draw missing data as a gap or a hatch, never as a zero.
+- **Flows close.** Every total is re-checked against its parts at build, and the identities are listed on the page.
+- **No tabs inside the data.** A year or a use-case filter is fine; a second set of panels behind a tab is not.
+- **House overrides of the BenAI rules** (decided 2026-10-17, after the first blind review): /plan keeps six chapters (it is read, not glanced at); spacing stays on the site's own scale, not 4/8/12/16/24/32; numerals stay tabular Source Sans, not monospace; the four finding cards keep their one-sentence explanation (ai-analyst storytelling). /portfolio reads the team's public Google Sheets at load by design (owner, 2026-10-13), so audit row 15 does not apply there. A dashboard chapter `h2` may be a navigation label ("Funding sources and capital allocation") when the panel `h3` under it states the finding. A reviewer reports these as overrides, not findings.
+- **Known exception, to convert:** /portfolio/brief still switches three audience views with tabs (Tranche 1 brief, buyer questions, markets and qualification). That predates this rule; convert it to one page of chapters in the next dashboard pass.
+- **Review:** before the owner sees a new dashboard, a fresh agent that did not build it runs the BenAI 20-point audit against the rendered page in both widths. It does not edit, and every finding cites a rule or is labelled taste. Fix, then re-review with a new agent, three rounds at most.
 
 ## Elevation & Depth
 

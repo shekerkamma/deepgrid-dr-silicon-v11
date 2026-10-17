@@ -13,7 +13,7 @@
  */
 import {useState} from 'react';
 import {asset, url} from './routes';
-import {HBars, TipBox, Insights, Chapter, type Tip} from './dash-charts';
+import {HBars, TipBox, Insights, Chapter, useWidth, type Tip} from './dash-charts';
 import {sheetViewUrl, type PortfolioData, type Sku} from './data/portfolio-facts';
 import {usePortfolio} from './data/use-portfolio';
 
@@ -32,15 +32,15 @@ function Source({files, note}: {files: string[]; note: string}) {
 
 /** FY29–FY33 ramp as stacked columns (the /plan segment chart's geometry). */
 function RampBars({d}: {d: PortfolioData}) {
-  const [tip, setTip] = useState<Tip>(null);
-  const W = 720, H = 320, L = 52, R = 16, T = 28, B = 32, step = 200;
+  const [tip, setTip] = useState<Tip>(null), [plot, W] = useWidth();
+  const H = 320, L = 52, R = 16, T = 28, B = 32, step = 200;
   const sums = d.years.map((_, i) => d.groups.reduce((a, g) => a + g.values[i], 0));
   const max = Math.ceil(Math.max(...sums, ...d.total) / step) * step, ticks = Array.from({length: max / step + 1}, (_, i) => i * step);
   const band = (W - L - R) / d.years.length, bw = band * 0.56, y = (v: number) => T + (H - T - B) * (1 - v / max);
   return (
     <figure className="pd-figure" aria-label="Revenue ramp by chip group, FY29 to FY33, ₹ Cr, stacked columns. The same figures are in the table below.">
       <ul className="pd-legend" aria-label="Chip groups">{d.groups.map((g, i) => <li key={g.name}><span className={'pd-swatch pd-s' + (i + 1)} aria-hidden="true"/>{g.name}</li>)}</ul>
-      <div className="pd-plot" onMouseLeave={() => setTip(null)}>
+      <div className="pd-plot" ref={plot} onMouseLeave={() => setTip(null)}>
         <svg viewBox={`0 0 ${W} ${H}`} className="pd-svg" aria-hidden="true">
           {ticks.map(t => <g key={t}><line className="pd-grid" x1={L} x2={W - R} y1={y(t)} y2={y(t)}/><text className="pd-axis" x={L - 8} y={y(t) + 4} textAnchor="end">{t.toLocaleString('en-IN')}</text></g>)}
           {d.years.map((yr, yi) => {
@@ -53,7 +53,7 @@ function RampBars({d}: {d: PortfolioData}) {
                   setTip({x: (x + bw / 2) / W * b.width, y: y1 / H * b.height, w: b.width, lines: [`${g.name} · ${yr}`, cr(v), `${pct(v / sums[yi])} of ${yr}`]}); };
                 return <rect key={g.name} className={'pd-s' + (gi + 1)} x={x} y={y1} width={bw} height={Math.max(0, y0 - y1 - 2)} onMouseEnter={show} onMouseMove={show}/>;
               })}
-              <text className="pd-value" x={x + bw / 2} y={y(Math.max(sums[yi], d.total[yi])) - 8} textAnchor="middle">{d.total[yi].toLocaleString('en-IN')}</text>
+              {band >= 44 && <text className="pd-value" x={x + bw / 2} y={y(Math.max(sums[yi], d.total[yi])) - 8} textAnchor="middle">{d.total[yi].toLocaleString('en-IN')}</text>}
               <text className="pd-axis" x={x + bw / 2} y={H - 10} textAnchor="middle">{yr}</text>
             </g>;
           })}
