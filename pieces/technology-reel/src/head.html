@@ -1,0 +1,61 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Two chips, one frozen safety core</title>
+<style>
+  html, body { margin: 0; height: 100%; background: #05080f; overflow: hidden; }
+  body { display: flex; align-items: center; justify-content: center; }
+  canvas { width: min(100vw, calc(100vh * 16 / 9)); height: auto; aspect-ratio: 16 / 9; display: block; cursor: pointer; }
+</style>
+</head>
+<body>
+<canvas id="c" width="1920" height="1080"></canvas>
+<script>
+"use strict";
+// =====================================================================
+//  TECHNOLOGY — narrated motion reel: two chips, one frozen safety core. 16:9, 30 fps; the voice is the clock (voice.json -> VOICE).
+//  One colour field per spoken line, cut ~0.25 s before the line; a persistent ₹10 Cr bar along the bottom empties
+//  line by line; the big moment of each scene lands on the word that names it. Every figure: the brief's tranche-1
+//  table (data/portfolio/tranche1-uses.csv).
+// =====================================================================
+const FPS = 30, W = 1920, H = 1080;
+const BPM = 120, BEAT = 60 / BPM, E8 = BEAT / 2, E16 = BEAT / 4;
+const DURATION = Math.round(VOICE.duration * FPS) / FPS;
+const NFRAMES = Math.round(DURATION * FPS);
+const LOOP_T = NFRAMES / FPS;
+const SAFE = { top: 48, bottom: 48, right: 48 };
+const CX = 960;
+const HAND = '"Segoe UI", Arial, sans-serif';
+// voice cues: VL(id) = the line {t0, t1}; VW(id, word, n) = when the n-th (1-based) occurrence of a word starts
+const VL = (id) => VOICE.lines.find((l) => l.id === id);
+const VW = (id, word, n = 1) => { const ws = VL(id).words.filter((w) => w.w.toLowerCase().replace(/[^a-z0-9-]/g, '') === word.toLowerCase()); return (ws[n - 1] || ws[0] || { t0: VL(id).t0 }).t0; };
+const LINES = ['open', 'lock', 'fault', 'clock', 'budget', 'dom', 'close'];
+const q = (t) => Math.round(t * FPS) / FPS;
+const CUT = LINES.map((id, i) => (i === 0 ? 0 : q(VL(id).t0 - 0.25)));
+// the peak: the loop-budget line cuts to a card on "ten kilohertz" and another on "eighty-two"
+const B1 = q(VW('budget', 'ten') - 0.1), B2 = q(VW('budget', 'eighty-two') - 0.1);
+const SHOT_LIST = [
+  [CUT[0], 'open', () => sceneOpen()], [CUT[1], 'lock', () => sceneLock()], [CUT[2], 'fault', () => sceneFault()],
+  [CUT[3], 'clock', () => sceneClock()], [CUT[4], 'budget', () => sceneBudget(0)], [B1, 'budget-10k', () => sceneBudget(1)],
+  [B2, 'budget-82', () => sceneBudget(2)], [CUT[5], 'dom', () => sceneDom()], [CUT[6], 'close', () => sceneClose()],
+];
+const ERA_LIST = SHOT_LIST.map(([t0, , fn], i) => [t0, i + 1 < SHOT_LIST.length ? SHOT_LIST[i + 1][0] : DURATION, fn]);
+const TIMELINE = {
+  width: W, height: H, fps: FPS, bpm: BPM, duration: DURATION, frames: NFRAMES, loop: LOOP_T, safe: SAFE,
+  format: 'voice-cuts',
+  shots: SHOT_LIST.map(([t0, key], i) => ({ id: i + 1, key, era: i, t0, t1: ERA_LIST[i][1], title: key })),
+  cuts: SHOT_LIST.slice(1).map(([t0]) => t0), morphs: [],
+  cues: { payoff: Math.round((VL('close').t0 - 0.45) * FPS) / FPS },
+  acts: [
+    { name: '1 Open',    role: 'build',   t0: 0, t1: CUT[1] },
+    { name: '2 Core',    role: 'journey', t0: CUT[1], t1: CUT[4] },
+    { name: '3 Budget',  role: 'peak',    t0: CUT[4], t1: CUT[5] },
+    { name: '4 2DOM',    role: 'turn',    t0: CUT[5], t1: CUT[6] },
+    { name: '5 Close',   role: 'gift',    t0: CUT[6], t1: DURATION },
+  ],
+  board: LINES.map((id, i) => ({ t: Math.min(VL(id).t1 - 0.2, (CUT[i + 1] ?? DURATION) - 0.1), title: id, sound: 'voice: ' + VL(id).text.slice(0, 40), next: 'cut' })),
+  narration: VOICE.lines.map((l) => ({ t0: l.t0, t1: l.t1, text: l.text })),
+};
+window.TIMELINE = TIMELINE;

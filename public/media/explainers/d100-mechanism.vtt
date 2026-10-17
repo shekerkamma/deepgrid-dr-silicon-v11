@@ -1,85 +1,85 @@
 WEBVTT
 
 1
-00:00:00.000 --> 00:00:02.640
+00:00:00.100 --> 00:00:02.900
 What happens when the flight computer itself freezes?
 
 2
-00:00:03.140 --> 00:00:05.940
+00:00:02.900 --> 00:00:06.020
 If the failsafe is software, it freezes too
 
 3
-00:00:07.140 --> 00:00:09.880
+00:00:07.220 --> 00:00:10.120
 D100 puts the rescue in hardware.
 
 4
-00:00:09.880 --> 00:00:13.517
+00:00:10.254 --> 00:00:13.934
 Inertial sensors and the radio link reach two flight cores,
 
 5
-00:00:13.517 --> 00:00:18.117
+00:00:13.934 --> 00:00:19.314
 one flying the drone and one navigating, in hard real time.
 
 6
-00:00:18.149 --> 00:00:22.729
+00:00:19.314 --> 00:00:22.782
 Cameras feed a pose engine made of geometry rather than a trained
 
 7
-00:00:22.729 --> 00:00:27.129
+00:00:22.782 --> 00:00:26.982
 network, so it keeps working with no satellite signal at all.
 
 8
-00:00:27.174 --> 00:00:31.134
+00:00:26.982 --> 00:00:30.082
 Camera features and inertial data fuse into a full pose,
 
 9
-00:00:31.134 --> 00:00:35.154
+00:00:30.082 --> 00:00:34.722
 30 times a second, delivered straight to the flight loop.
 
 10
-00:00:35.154 --> 00:00:39.373
+00:00:34.722 --> 00:00:38.383
 In normal flight, the motor commands leave on eight channels to the
 
 11
-00:00:39.373 --> 00:00:40.653
+00:00:38.383 --> 00:00:39.483
 speed controllers.
 
 12
-00:00:41.173 --> 00:00:44.053
+00:00:39.983 --> 00:00:42.803
 That path trusts the flight cores to be running.
 
 13
-00:00:44.053 --> 00:00:48.229
+00:00:42.884 --> 00:00:47.064
 The failsafe island runs on its own power and its own clock.
 
 14
-00:00:48.749 --> 00:00:53.189
+00:00:47.064 --> 00:00:50.984
 It notices a lost link, lost GPS or a sensor fault in
 
 15
-00:00:53.189 --> 00:00:56.769
+00:00:50.984 --> 00:00:54.464
 hardware, and picks return or land.
 
 16
-00:00:56.769 --> 00:01:01.062
+00:00:54.464 --> 00:00:57.944
 Then it drives the speed controllers directly, without the flight computer.
 
 17
-00:01:01.462 --> 00:01:04.242
+00:00:58.244 --> 00:01:01.864
 This is a structure, not a proven result.
 
 18
-00:01:04.242 --> 00:01:07.574
+00:01:01.864 --> 00:01:05.882
 No D100 silicon has been made or measured.
 
 19
-00:01:08.054 --> 00:01:12.854
+00:01:05.882 --> 00:01:10.242
 An FPGA validates the design, and every figure is a target
 
 20
-00:01:13.554 --> 00:01:16.454
+00:01:11.322 --> 00:01:13.982
 Bring us your mission and your failure cases.
 
 21
-00:01:16.494 --> 00:01:19.574
+00:01:13.982 --> 00:01:17.382
 We will tell you what D100 must prove.

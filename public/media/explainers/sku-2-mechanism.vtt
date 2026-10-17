@@ -1,97 +1,97 @@
 WEBVTT
 
 1
-00:00:00.000 --> 00:00:03.120
+00:00:00.040 --> 00:00:03.340
 A meter has to keep measuring, and keep its record,
 
 2
-00:00:03.120 --> 00:00:05.360
+00:00:03.340 --> 00:00:05.180
 even when the mains is gone.
 
 3
-00:00:06.180 --> 00:00:12.180
+00:00:05.880 --> 00:00:11.820
 SKU-2 puts measurement, security and an always-on clock on one die.
 
 4
-00:00:12.180 --> 00:00:15.295
+00:00:11.824 --> 00:00:15.224
 Voltage and current flow into six 24-bit converters.
 
 5
-00:00:16.035 --> 00:00:19.315
+00:00:16.264 --> 00:00:19.424
 They set billing accuracy, so they are dedicated hardware,
 
 6
-00:00:19.315 --> 00:00:20.715
+00:00:19.424 --> 00:00:21.564
 calibrated once.
 
 7
-00:00:20.731 --> 00:00:24.771
+00:00:21.564 --> 00:00:24.777
 A decimator filters each raw bit stream into clean samples,
 
 8
-00:00:24.771 --> 00:00:28.011
+00:00:24.777 --> 00:00:27.797
 so the processor never touches the measurement chain.
 
 9
-00:00:28.027 --> 00:00:31.767
+00:00:27.957 --> 00:00:31.697
 What the meter charges for is computed right beside the converters.
 
 10
-00:00:32.347 --> 00:00:37.087
+00:00:33.157 --> 00:00:38.357
 Real, reactive and apparent power, and harmonics up to the 15th.
 
 11
-00:00:37.136 --> 00:00:40.156
+00:00:38.453 --> 00:00:41.393
 Results cross the bus to be stored and signed.
 
 12
-00:00:40.616 --> 00:00:43.996
+00:00:42.413 --> 00:00:45.953
 Secure boot and tamper key wiping protect the code,
 
 13
-00:00:43.996 --> 00:00:47.216
+00:00:45.953 --> 00:00:49.493
 and the keys, every reading depends on.
 
 14
-00:00:47.245 --> 00:00:51.325
-Readings leave on the meter's own protocol, beside the display,
+00:00:49.511 --> 00:00:52.471
+Meter readings go out on the meter's own protocol,
 
 15
-00:00:51.325 --> 00:00:53.445
-the relay and the LEDs.
+00:00:52.471 --> 00:00:56.091
+beside the display, the relay and the LEDs.
 
 16
-00:00:53.685 --> 00:00:56.085
+00:00:56.251 --> 00:00:59.231
 One die covers the whole meter.
 
 17
-00:00:56.085 --> 00:01:00.410
+00:00:59.231 --> 00:01:03.031
 An always-on domain keeps the clock and the tamper log alive on
 
 18
-00:01:00.410 --> 00:01:04.030
+00:01:03.031 --> 00:01:06.311
 a backup cell, drawing under 2 microwatts.
 
 19
-00:01:04.030 --> 00:01:05.626
+00:01:06.451 --> 00:01:08.191
 SKU-2 is pre-silicon.
 
 20
-00:01:05.626 --> 00:01:08.246
+00:01:08.191 --> 00:01:10.371
 Every figure is a target.
 
 21
-00:01:08.246 --> 00:01:13.486
+00:01:10.371 --> 00:01:14.951
 Accuracy over a fifteen-year life, and leakage through a thirty-day outage,
 
 22
-00:01:13.486 --> 00:01:19.006
+00:01:14.951 --> 00:01:20.531
 must still be proven Bring us your accuracy class and your outage
 
 23
-00:01:19.006 --> 00:01:19.646
+00:01:20.531 --> 00:01:20.831
 budget.
 
 24
-00:01:20.186 --> 00:01:23.246
+00:01:20.831 --> 00:01:24.351
 We will tell you what SKU-2 must prove.

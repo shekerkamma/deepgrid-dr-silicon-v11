@@ -25,7 +25,7 @@ export default function Page() {
           title="From a wrong value to a safe bridge"
           copy="Software self-test runs periodically and cannot see a fault between runs. DG32-LITE compares delayed committed results through its checker and comparator, and the path from mismatch to a switched-off bridge never passes through firmware."
         />
-        {/* Motion explainer (HyperFrames + GSAP, rendered to MP4; narration Kokoro bm_george).
+        {/* Motion explainer (HyperFrames + GSAP, rendered to MP4; narration Founder Voice, ElevenLabs, since 2026-10-17).
             Source project: ~/hyperframes-videos/videos/dg32-fault-path-explained. */}
         <Sec title="The fault path in ninety seconds," em="from a wrong value to a switched-off bridge.">
           <figure className="st-film" id="film">

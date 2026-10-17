@@ -1,101 +1,109 @@
 WEBVTT
 
 1
-00:00:00.000 --> 00:00:03.220
+00:00:00.120 --> 00:00:03.440
 A vehicle zone today is a relay box and a loom of
 
 2
-00:00:03.220 --> 00:00:03.680
+00:00:03.440 --> 00:00:04.240
 wires.
 
 3
-00:00:04.380 --> 00:00:09.860
+00:00:04.680 --> 00:00:11.320
 Replace it with one chip and brake messages and comfort traffic now
 
 4
-00:00:09.860 --> 00:00:11.500
+00:00:11.320 --> 00:00:12.840
 share the same silicon.
 
 5
-00:00:11.535 --> 00:00:16.475
-Ethernet, CAN, LIN and FlexRay all arrive at one gateway,
+00:00:13.005 --> 00:00:15.725
+Ethernet, CAN, LIN and FlexRay.
 
 6
-00:00:16.475 --> 00:00:21.975
-which rate-limits each domain, so a flood on one bus cannot starve
+00:00:15.725 --> 00:00:18.565
+Every bus arrives at one gateway.
 
 7
-00:00:21.975 --> 00:00:22.635
-another.
+00:00:18.645 --> 00:00:23.165
+It rate-limits each domain, so a flood on one bus cannot starve
 
 8
-00:00:22.645 --> 00:00:27.245
-A switch that keeps precise time reserves slots for brake-by-wire on a
+00:00:23.165 --> 00:00:23.691
+another.
 
 9
-00:00:27.245 --> 00:00:31.245
-shared link, so its latency is bounded by hardware,
+00:00:23.771 --> 00:00:28.591
+A switch that keeps precise time reserves slots for brake-by-wire on a
 
 10
-00:00:31.245 --> 00:00:33.325
-not by software scheduling.
+00:00:28.591 --> 00:00:32.091
+shared link, so its latency is bounded by hardware,
 
 11
-00:00:33.333 --> 00:00:36.753
-A router turns each incoming message into a request,
+00:00:32.091 --> 00:00:34.284
+not by software scheduling.
 
 12
-00:00:36.753 --> 00:00:39.973
-and hands it to whichever block will act on it.
+00:00:34.304 --> 00:00:37.604
+A router turns each incoming message into a request,
 
 13
-00:00:40.653 --> 00:00:43.553
-Every message rides the same crossbar.
+00:00:37.604 --> 00:00:40.664
+and hands it to whichever block will act on it.
 
 14
-00:00:43.553 --> 00:00:48.878
-Sixteen smart fuses replace the relay box, switching 12 and 48 volt
+00:00:41.164 --> 00:00:43.918
+Every message travels the same crossbar.
 
 15
-00:00:48.878 --> 00:00:52.028
-loads right beside the logic that commands them.
+00:00:43.918 --> 00:00:48.958
+Sixteen smart fuses replace the relay box, switching 12 and 48 volt
 
 16
-00:00:52.039 --> 00:00:54.319
-Two cores run in lockstep.
+00:00:48.958 --> 00:00:52.218
+loads right beside the logic that commands them.
 
 17
-00:00:54.559 --> 00:00:57.459
-A mismatch drives the zone to its safe state,
+00:00:52.418 --> 00:00:54.178
+Two cores run in lockstep.
 
 18
-00:00:57.459 --> 00:01:01.319
-and a firewall keeps lighting away from safety registers.
+00:00:54.618 --> 00:00:57.618
+A mismatch drives the zone to its safe state,
 
 19
-00:01:01.320 --> 00:01:05.580
-Every image is checked before it runs, and a failed update rolls
+00:00:57.618 --> 00:01:01.336
+and a firewall keeps lighting away from safety registers.
 
 20
-00:01:05.580 --> 00:01:09.820
-back, so a bad update never replaces the working bank.
+00:01:01.436 --> 00:01:04.536
+Firmware is verified before it is allowed to run.
 
 21
-00:01:09.831 --> 00:01:11.831
-SKU-9 is pre-silicon.
+00:01:05.076 --> 00:01:07.716
+If an update fails, the chip falls back,
 
 22
-00:01:11.831 --> 00:01:16.531
-Its highest safety level is a design target here,
+00:01:07.716 --> 00:01:10.416
+and the working bank stays in place.
 
 23
-00:01:16.531 --> 00:01:17.331
-not a certificate
+00:01:10.419 --> 00:01:12.599
+SKU-9 is pre-silicon.
 
 24
-00:01:18.711 --> 00:01:21.031
-Bring us your zone's loads and networks.
+00:01:12.599 --> 00:01:15.979
+Its highest safety level is a design target.
 
 25
-00:01:21.031 --> 00:01:24.911
+00:01:15.979 --> 00:01:17.939
+Not a certificate
+
+26
+00:01:18.899 --> 00:01:21.959
+Bring us the loads and the networks in your zone.
+
+27
+00:01:21.959 --> 00:01:25.378
 We will tell you what SKU-9 must prove.

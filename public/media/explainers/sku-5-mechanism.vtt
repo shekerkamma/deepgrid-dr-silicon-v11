@@ -1,101 +1,113 @@
 WEBVTT
 
 1
-00:00:00.000 --> 00:00:02.700
+00:00:00.080 --> 00:00:03.380
 A transceiver sits at the very edge of the board,
 
 2
-00:00:02.700 --> 00:00:06.060
+00:00:03.380 --> 00:00:06.140
 where miswiring and static strike first
 
 3
-00:00:07.020 --> 00:00:10.440
+00:00:07.180 --> 00:00:10.560
 SKU-5 puts two bus links on one die,
 
 4
-00:00:10.440 --> 00:00:12.120
+00:00:10.560 --> 00:00:12.042
 built for that edge.
 
 5
-00:00:12.120 --> 00:00:14.975
+00:00:12.062 --> 00:00:14.362
 The core logic is only a thin skin.
 
 6
-00:00:15.415 --> 00:00:19.195
+00:00:14.842 --> 00:00:20.142
 Everything that decides how the part behaves on the wire is analog,
 
 7
-00:00:19.195 --> 00:00:21.795
+00:00:20.142 --> 00:00:22.493
 on thick-oxide devices.
 
 8
-00:00:21.795 --> 00:00:25.502
+00:00:22.533 --> 00:00:26.953
 How far a signal travels is set by how its edges rise
 
 9
-00:00:25.502 --> 00:00:26.542
+00:00:26.953 --> 00:00:27.613
 and fall.
 
 10
-00:00:27.102 --> 00:00:31.102
+00:00:28.833 --> 00:00:32.673
 So every edge is shaped, and every delay accounted for.
 
 11
-00:00:31.102 --> 00:00:36.739
+00:00:32.773 --> 00:00:36.973
 The outputs drive a half-duplex bus with up to 256 nodes.
 
 12
-00:00:36.739 --> 00:00:41.919
+00:00:37.793 --> 00:00:43.773
 Fast over a short run, or slow across 1.2 kilometres: two operating
 
 13
-00:00:41.919 --> 00:00:43.579
+00:00:43.773 --> 00:00:45.655
 points, not one.
 
 14
-00:00:43.631 --> 00:00:46.851
-The receiver reads the bus back with hysteresis,
+00:00:45.755 --> 00:00:48.215
+On the way in, the receiver adds hysteresis.
 
 15
-00:00:46.851 --> 00:00:51.271
-and a dead or open bus reads as a known state,
+00:00:49.175 --> 00:00:52.555
+If the bus is dead or open, the logic sees a defined
 
 16
-00:00:51.271 --> 00:00:54.571
-never as noise the logic could take for data.
+00:00:52.555 --> 00:00:55.770
+state, not noise it could mistake for data.
 
 17
-00:00:54.575 --> 00:00:58.175
-The second channel repeats the same path for CAN-FD,
+00:00:55.870 --> 00:00:59.830
+The second channel does the same job, for CAN-FD.
 
 18
-00:00:58.175 --> 00:01:02.395
-with its own supply and clock recovery beside it.
+00:00:59.830 --> 00:01:04.050
+It has its own supply and its own clock recovery,
 
 19
-00:01:02.596 --> 00:01:05.596
-Each pin that leaves the board brings its own protection.
+00:01:04.050 --> 00:01:06.276
+sitting right beside it.
 
 20
-00:01:06.416 --> 00:01:09.676
-A short, or overheating, shuts its channel down.
+00:01:06.296 --> 00:01:09.076
+Each pin that leaves the board brings its own protection.
 
 21
-00:01:09.898 --> 00:01:12.318
-SKU-5 is pre-silicon.
+00:01:10.036 --> 00:01:12.840
+A short, or overheating, shuts its channel down.
 
 22
-00:01:12.318 --> 00:01:17.298
-Every figure is a target, and ESD survival has no silicon data
+00:01:12.840 --> 00:01:15.080
+SKU-5 is pre-silicon.
 
 23
-00:01:17.298 --> 00:01:17.918
-yet
+00:01:15.080 --> 00:01:17.860
+Every figure is a target.
 
 24
-00:01:18.918 --> 00:01:22.938
-Bring us your cable, your node count and your fault cases.
+00:01:17.860 --> 00:01:20.440
+ESD survival has no silicon data yet
 
 25
-00:01:22.938 --> 00:01:26.638
+00:01:21.460 --> 00:01:22.780
+Bring us your cable.
+
+26
+00:01:22.780 --> 00:01:23.900
+Your node count.
+
+27
+00:01:23.900 --> 00:01:26.040
+And your fault cases.
+
+28
+00:01:26.040 --> 00:01:29.600
 We will tell you what SKU-5 must prove.

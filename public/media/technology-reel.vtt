@@ -1,0 +1,29 @@
+WEBVTT
+
+1
+00:00:00.900 --> 00:00:03.234
+Two chips. One frozen safety core.
+
+2
+00:00:03.934 --> 00:00:09.774
+DG32-LITE runs two cores in lockstep, checked against each other, continuously.
+
+3
+00:00:10.374 --> 00:00:16.402
+When they disagree, hardware shuts the motor bridge in thirty-nine cycles. No firmware in the path.
+
+4
+00:00:17.002 --> 00:00:23.642
+The placed-and-routed core closes at fifty-five to sixty-two megahertz, so it runs at a safe fifty.
+
+5
+00:00:24.242 --> 00:00:33.172
+One motor-control loop costs about three hundred cycles of hardware. At ten kilohertz, eighty-two percent is left for diagnostics.
+
+6
+00:00:33.772 --> 00:00:41.132
+DG32-2DOM adds an attention engine on its own one-hundred-fourteen megahertz clock, behind bridges.
+
+7
+00:00:42.432 --> 00:00:45.051
+Two chips. One frozen safety core.

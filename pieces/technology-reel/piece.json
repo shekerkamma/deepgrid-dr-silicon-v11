@@ -1,0 +1,10 @@
+{
+  "name": "technology-reel",
+  "title": "Technology: two chips, one frozen safety core (narrated)",
+  "format": { "width": 1920, "height": 1080, "fps": 30, "bpm": 120 },
+  "formats": ["16:9"],
+  "storyFormat": "voice-led beat cuts: one colour field per line, each figure tagged with its kind of evidence",
+  "style": "motionreel",
+  "voice": { "file": "voice/voice.wav", "music": -14 },
+  "review": { "safe": { "top": 48, "bottom": 48, "right": 48 }, "refs": {} }
+}

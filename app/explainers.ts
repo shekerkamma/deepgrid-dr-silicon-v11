@@ -9,14 +9,14 @@ const e = (slug: string, title: string, length: string, base: string, sub: strin
 });
 
 export const explainers: Explainer[] = [
-  e("sku-1", "One die runs the motor loop and drives its 120 V power stage", "1:19", "/media/explainers/sku-1-mechanism", "How it works, animated"),
-  e("sku-2", "A meter that keeps measuring and keeps its record without mains", "1:23", "/media/explainers/sku-2-mechanism", "How it works, animated"),
+  e("sku-1", "One die runs the motor loop and drives its 120 V power stage", "1:20", "/media/explainers/sku-1-mechanism", "How it works, animated"),
+  e("sku-2", "A meter that keeps measuring and keeps its record without mains", "1:24", "/media/explainers/sku-2-mechanism", "How it works, animated"),
   e("sku-3", "One die turns a 28 V bus into four sequenced, supervised rails", "1:30", "/media/explainers/sku-3-mechanism", "How it works, animated"),
-  e("sku-4", "Two cores, two cycles apart, and a fault path that skips firmware", "1:29", "/media/dg32-fault-path-explained", "How it works, animated"),
-  e("sku-5", "Two bus links on one die, built for what lands on the pins", "1:27", "/media/explainers/sku-5-mechanism", "How it works, animated"),
-  e("sku-6", "SKU-6 ignores converter ripple and latches a real rail fault", "1:01", "/media/explainers/sku-6-mechanism", "How it works, animated"),
-  e("sku-7", "SKU-7 puts 77 GHz on SiGe and the target math on CMOS", "1:18", "/media/explainers/sku-7-mechanism", "How it works, animated"),
-  e("sku-8", "SKU-8 drives a cockpit panel and flags a frozen picture in two frames", "1:27", "/media/explainers/sku-8-mechanism", "How it works, animated"),
+  e("sku-4", "Two cores, two cycles apart, and a fault path that skips firmware", "1:26", "/media/dg32-fault-path-explained", "How it works, animated"),
+  e("sku-5", "Two bus links on one die, built for what lands on the pins", "1:30", "/media/explainers/sku-5-mechanism", "How it works, animated"),
+  e("sku-6", "SKU-6 ignores converter ripple and latches a real rail fault", "1:04", "/media/explainers/sku-6-mechanism", "How it works, animated"),
+  e("sku-7", "SKU-7 puts 77 GHz on SiGe and the target math on CMOS", "1:19", "/media/explainers/sku-7-mechanism", "How it works, animated"),
+  e("sku-8", "SKU-8 drives a cockpit panel and flags a frozen picture in two frames", "1:26", "/media/explainers/sku-8-mechanism", "How it works, animated"),
   e("sku-9", "SKU-9 turns vehicle network traffic into switched power in one zone", "1:25", "/media/explainers/sku-9-mechanism", "How it works, animated"),
-  e("d100", "D100's failsafe can land the drone without its own flight computer", "1:20", "/media/explainers/d100-mechanism", "How it works, animated"),
+  e("d100", "D100's failsafe can land the drone without its own flight computer", "1:18", "/media/explainers/d100-mechanism", "How it works, animated"),
 ];

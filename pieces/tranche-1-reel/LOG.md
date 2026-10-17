@@ -1,0 +1,3 @@
+# LOG
+
+- 2026-10-17: owner judged the glass3d and isometric films "not professional"; rebuilt as a motion reel after measuring the rscb1DgJtNg reference reel. Look + script approved. Voice: 7 takes, eleven_v3, Founder Voice; 55/82 words heard by faster-whisper (digits like "9" leave number words estimated). First review FAILED: hidden words still traced (13 text overlaps), 3 dead stretches, peak not the fastest cuts. Fixed: no draw before a word rises, 3.5% push per shot, the small line split into four word-cut cards. Review then PASS: story arc 5/5, text 0, dead beats 0, -14.8 LUFS, peak -1.5 dBFS.

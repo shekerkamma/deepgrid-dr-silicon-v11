@@ -1,0 +1,1222 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>What ₹10 Cr buys</title>
+<style>
+  html, body { margin: 0; height: 100%; background: #05080f; overflow: hidden; }
+  body { display: flex; align-items: center; justify-content: center; }
+  canvas { width: min(100vw, calc(100vh * 16 / 9)); height: auto; aspect-ratio: 16 / 9; display: block; cursor: pointer; }
+</style>
+</head>
+<body>
+<canvas id="c" width="1920" height="1080"></canvas>
+<script>
+"use strict";
+// ---- voice.json (tools/voice.mjs): the voice-over's lines and word times
+const VOICE = {"duration":42.15,"lead":0.9,"tail":2.4,"lines":[{"id":"open","text":"Ten crore rupees. Here's exactly what it buys.","t0":0.9,"t1":3.783,"words":[{"w":"Ten","t0":0.9,"t1":1.1,"est":true},{"w":"crore","t0":1.1,"t1":1.34},{"w":"rupees.","t0":1.34,"t1":1.9},{"w":"Here's","t0":1.9,"t1":2.36,"est":true},{"w":"exactly","t0":2.36,"t1":2.78},{"w":"what","t0":2.78,"t1":3.02},{"w":"it","t0":3.02,"t1":3.14},{"w":"buys.","t0":3.14,"t1":3.46}]},{"id":"proto","text":"Two point six crore puts nine prototype chips on the December twenty twenty-six shuttle.","t0":4.483,"t1":10.111,"words":[{"w":"Two","t0":4.483,"t1":4.709,"est":true},{"w":"point","t0":4.709,"t1":4.934,"est":true},{"w":"six","t0":4.934,"t1":5.16,"est":true},{"w":"crore","t0":5.16,"t1":5.48},{"w":"puts","t0":5.48,"t1":5.9},{"w":"nine","t0":5.9,"t1":6.48,"est":true},{"w":"prototype","t0":6.48,"t1":7.06},{"w":"chips","t0":7.06,"t1":7.42},{"w":"on","t0":7.42,"t1":8.04},{"w":"the","t0":8.04,"t1":8.28},{"w":"December","t0":8.28,"t1":8.56},{"w":"twenty","t0":8.56,"t1":9.05,"est":true},{"w":"twenty-six","t0":9.05,"t1":9.54,"est":true},{"w":"shuttle.","t0":9.54,"t1":10}]},{"id":"respin","text":"Two point five crore is held back for respins, about eight re-runs.","t0":10.711,"t1":14.381,"words":[{"w":"Two","t0":10.711,"t1":10.927,"est":true},{"w":"point","t0":10.927,"t1":11.144,"est":true},{"w":"five","t0":11.144,"t1":11.36,"est":true},{"w":"crore","t0":11.36,"t1":11.62},{"w":"is","t0":11.62,"t1":11.8},{"w":"held","t0":11.8,"t1":12.02},{"w":"back","t0":12.02,"t1":12.26},{"w":"for","t0":12.26,"t1":12.54},{"w":"respins,","t0":12.54,"t1":13.1,"est":true},{"w":"about","t0":13.1,"t1":13.46},{"w":"eight","t0":13.46,"t1":13.78,"est":true},{"w":"re-runs.","t0":13.78,"t1":14.26}]},{"id":"team","text":"Two point five crore keeps the engineering team going, to March twenty twenty-seven, and twelve months beyond.","t0":14.981,"t1":22.103,"words":[{"w":"Two","t0":14.981,"t1":15.221,"est":true},{"w":"point","t0":15.221,"t1":15.46,"est":true},{"w":"five","t0":15.46,"t1":15.7,"est":true},{"w":"crore","t0":15.7,"t1":16.08},{"w":"keeps","t0":16.08,"t1":16.68},{"w":"the","t0":16.68,"t1":16.9},{"w":"engineering","t0":16.9,"t1":17.16},{"w":"team","t0":17.16,"t1":17.54},{"w":"going,","t0":17.54,"t1":17.96},{"w":"to","t0":17.96,"t1":18.78},{"w":"March","t0":18.78,"t1":19.04},{"w":"twenty","t0":19.04,"t1":19.62,"est":true},{"w":"twenty-seven,","t0":19.62,"t1":20.2,"est":true},{"w":"and","t0":20.2,"t1":20.9},{"w":"twelve","t0":20.9,"t1":21.14,"est":true},{"w":"months","t0":21.14,"t1":21.42},{"w":"beyond.","t0":21.42,"t1":21.88}]},{"id":"small","text":"The last two point four covers first approvals, tools and the lab, boards, and contingency.","t0":22.703,"t1":29.43,"words":[{"w":"The","t0":22.4,"t1":22.84},{"w":"last","t0":22.84,"t1":23.14},{"w":"two","t0":23.14,"t1":23.513,"est":true},{"w":"point","t0":23.513,"t1":23.887,"est":true},{"w":"four","t0":23.887,"t1":24.26,"est":true},{"w":"covers","t0":24.26,"t1":24.72},{"w":"first","t0":24.72,"t1":25.16},{"w":"approvals,","t0":25.16,"t1":25.6},{"w":"tools","t0":26.36,"t1":26.66},{"w":"and","t0":26.66,"t1":26.98},{"w":"the","t0":26.98,"t1":27.1},{"w":"lab,","t0":27.1,"t1":27.44},{"w":"boards,","t0":28.28,"t1":28.34},{"w":"and","t0":28.34,"t1":28.62},{"w":"contingency.","t0":28.62,"t1":29.2}]},{"id":"share","text":"Seventy-six percent goes to chips, respins, and people.","t0":30.63,"t1":34.95,"words":[{"w":"Seventy-six","t0":30.63,"t1":31.175,"est":true},{"w":"percent","t0":31.175,"t1":31.72,"est":true},{"w":"goes","t0":31.72,"t1":32.08},{"w":"to","t0":32.08,"t1":32.54},{"w":"chips,","t0":32.54,"t1":33.02},{"w":"respins,","t0":33.02,"t1":33.86,"est":true},{"w":"and","t0":33.86,"t1":34.38},{"w":"people.","t0":34.38,"t1":34.72}]},{"id":"close","text":"Ten crore buys first silicon for nine chips.","t0":36.05,"t1":39.75,"words":[{"w":"Ten","t0":36.05,"t1":36.32,"est":true},{"w":"crore","t0":36.32,"t1":36.62},{"w":"buys","t0":36.62,"t1":37.12},{"w":"first","t0":37.12,"t1":37.7},{"w":"silicon","t0":37.7,"t1":38.16},{"w":"for","t0":38.16,"t1":38.58},{"w":"nine","t0":38.58,"t1":38.96,"est":true},{"w":"chips.","t0":38.96,"t1":39.4}]}]};
+// =====================================================================
+//  WHAT ₹10 Cr BUYS — narrated motion reel. 16:9, 30 fps; the voice is the clock (voice.json -> VOICE).
+//  One colour field per spoken line, cut ~0.25 s before the line; a persistent ₹10 Cr bar along the bottom empties
+//  line by line; the big moment of each scene lands on the word that names it. Every figure: the brief's tranche-1
+//  table (data/portfolio/tranche1-uses.csv).
+// =====================================================================
+const FPS = 30, W = 1920, H = 1080;
+const BPM = 120, BEAT = 60 / BPM, E8 = BEAT / 2, E16 = BEAT / 4;
+const DURATION = Math.round(VOICE.duration * FPS) / FPS;
+const NFRAMES = Math.round(DURATION * FPS);
+const LOOP_T = NFRAMES / FPS;
+const SAFE = { top: 48, bottom: 48, right: 48 };
+const CX = 960;
+const HAND = '"Segoe UI", Arial, sans-serif';
+// voice cues: VL(id) = the line {t0, t1}; VW(id, word, n) = when the n-th (1-based) occurrence of a word starts
+const VL = (id) => VOICE.lines.find((l) => l.id === id);
+const VW = (id, word, n = 1) => { const ws = VL(id).words.filter((w) => w.w.toLowerCase().replace(/[^a-z0-9-]/g, '') === word.toLowerCase()); return (ws[n - 1] || ws[0] || { t0: VL(id).t0 }).t0; };
+const LINES = ['open', 'proto', 'respin', 'team', 'small', 'share', 'close'];
+const q = (t) => Math.round(t * FPS) / FPS;
+const CUT = LINES.map((id, i) => (i === 0 ? 0 : q(VL(id).t0 - 0.25)));
+// the peak: the small line cuts to a full-frame card on each word that names an item, then holds a summary
+const RUSH = [['approve', 'approvals'], ['tools', 'tools'], ['boards', 'boards'], ['cont', 'contingency']].map(([id, w]) => [id, q(VW('small', w) - 0.05)]);
+const RUSH_END = q(Math.min(RUSH[3][1] + 0.7, CUT[5] - 0.6));
+const SHOT_LIST = [
+  [CUT[0], 'open', () => sceneOpen()], [CUT[1], 'proto', () => sceneProto()], [CUT[2], 'respin', () => sceneRespin()], [CUT[3], 'team', () => sceneTeam()],
+  [CUT[4], 'small', () => sceneSmall()],
+  ...RUSH.map(([id, t], i) => [t, 'card-' + id, () => sceneCard(id, i)]),
+  [RUSH_END, 'small-sum', () => sceneSmall()],
+  [CUT[5], 'share', () => sceneShare()], [CUT[6], 'close', () => sceneClose()],
+];
+const ERA_LIST = SHOT_LIST.map(([t0, , fn], i) => [t0, i + 1 < SHOT_LIST.length ? SHOT_LIST[i + 1][0] : DURATION, fn]);
+const TIMELINE = {
+  width: W, height: H, fps: FPS, bpm: BPM, duration: DURATION, frames: NFRAMES, loop: LOOP_T, safe: SAFE,
+  format: 'voice-cuts',
+  shots: SHOT_LIST.map(([t0, key], i) => ({ id: i + 1, key, era: i, t0, t1: ERA_LIST[i][1], title: key })),
+  cuts: SHOT_LIST.slice(1).map(([t0]) => t0), morphs: [],
+  cues: { payoff: Math.round((VL('close').t0 - 0.45) * FPS) / FPS },
+  acts: [
+    { name: '1 Open',   role: 'build',   t0: 0, t1: CUT[1] },
+    { name: '2 Lines',  role: 'journey', t0: CUT[1], t1: CUT[4] },
+    { name: '3 Small',  role: 'peak',    t0: CUT[4], t1: CUT[5] },
+    { name: '4 Share',  role: 'turn',    t0: CUT[5], t1: CUT[6] },
+    { name: '5 Payoff', role: 'gift',    t0: CUT[6], t1: DURATION },
+  ],
+  board: LINES.map((id) => ({ t: id === 'small' ? q(RUSH[1][1] + 0.2) : Math.min(VL(id).t1 - 0.2, CUT[LINES.indexOf(id) + 1] ? CUT[LINES.indexOf(id) + 1] - 0.1 : DURATION - 0.1), title: id, sound: 'voice: ' + VL(id).text.slice(0, 40), next: 'cut' })),
+  narration: VOICE.lines.map((l) => ({ t0: l.t0, t1: l.t1, text: l.text })),
+};
+window.TIMELINE = TIMELINE;
+// =====================================================================
+//  kit/core.js — seeded RNG, math, easing, palette, geometry, the hand-drawn drawing kit
+//  (wobble on the boil, ink, paint, hatch, pencil, stipple, grain), cameras, mono text.
+//  Needs from the piece head: FPS, W, H. Render state: ctx, F (frame), B (boil = floor(F/2)).
+// =====================================================================
+
+// ---------------------------------------------------------------------
+//  seeded RNG
+// ---------------------------------------------------------------------
+function mulberry32(a) {
+  return function () {
+    a |= 0; a = (a + 0x6D2B79F5) | 0;
+    let t = Math.imul(a ^ (a >>> 15), 1 | a);
+    t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t;
+    return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+  };
+}
+function hash(...xs) {
+  let h = 2166136261 >>> 0;
+  for (const x of xs) {
+    const s = String(x);
+    for (let i = 0; i < s.length; i++) { h ^= s.charCodeAt(i); h = Math.imul(h, 16777619); }
+    h ^= 124; h = Math.imul(h, 16777619);
+  }
+  return h >>> 0;
+}
+function RNG(...xs) {
+  const f = mulberry32(hash(...xs));
+  return {
+    f,
+    r: (a, b) => a + (b - a) * f(),
+    n: (amt) => (f() * 2 - 1) * amt,
+    i: (a, b) => a + Math.floor(f() * (b - a + 1)),
+    pick: (arr) => arr[Math.floor(f() * arr.length)],
+  };
+}
+
+// ---------------------------------------------------------------------
+//  math
+// ---------------------------------------------------------------------
+const TAU = Math.PI * 2, DEG = Math.PI / 180;
+const clamp = (x, a = 0, b = 1) => (x < a ? a : x > b ? b : x);
+const lerp = (a, b, t) => a + (b - a) * t;
+const seg = (t, a, b) => clamp((t - a) / (b - a));
+// has absolute time t reached cut time c? (cuts snap to the nearest frame, like shot boundaries)
+const past = (t, c) => Math.round(t * FPS + 1e-6) >= Math.round(c * FPS);
+const dist = (a, b) => Math.hypot(b[0] - a[0], b[1] - a[1]);
+const EZ = {
+  o2: (t) => 1 - (1 - clamp(t)) ** 2,
+  o3: (t) => 1 - (1 - clamp(t)) ** 3,
+  i2: (t) => clamp(t) ** 2,
+  i3: (t) => clamp(t) ** 3,
+  io: (t) => { t = clamp(t); return t < 0.5 ? 4 * t * t * t : 1 - (-2 * t + 2) ** 3 / 2; },
+  back: (t) => { t = clamp(t) - 1; return 1 + 2.70158 * t * t * t + 1.70158 * t * t; },
+};
+
+// ---------------------------------------------------------------------
+//  render state
+// ---------------------------------------------------------------------
+let ctx = null;   // current 2d context
+let F = 0;        // absolute frame index
+let B = 0;        // boil index — reseeds every 2 frames (Math.floor(t*12))
+
+const C = {
+  ink: '#3a2417', cream: '#efe5cf', paper: '#f4ecd9', paperLine: 'rgba(90,130,190,0.32)',
+  orange: '#e58a4e', orangeD: '#c3622e', orangeL: '#f4b27c', terra: '#d97757',
+  rose: '#d98b8b', roseD: '#b0616a', roseL: '#efb9b0',
+  wood: '#d6a466', woodD: '#a8773f', woodL: '#e9c48f',
+  sky: '#9cc4d6', skyD: '#6f9fb8', skyL: '#c9e1ea',
+  teal: '#3d9f96', tealL: '#86c9be',
+  yellow: '#f0c55a', yellowL: '#f7dd92',
+  green: '#5f9c5c', greenL: '#a3cf92',
+  red: '#d4382c', redL: '#ea7a6c',
+  skin: '#ebb68f', skinD: '#c7815d', skinL: '#f7d4b4',
+  lav: 'rgba(104,112,214,0.7)', lavS: 'rgba(104,112,214,0.42)',
+  navy: '#0c0d1c', navy2: '#15173a', peri: '#c8d0f0', periD: '#7c86c4', periS: 'rgba(150,164,230,0.20)',
+  cyan: '#52d6c4', mag: '#e0368f', glow: '#5de37a', white: '#f4f6ff',
+};
+const RAINBOW = ['#f0d042', '#e050b8', '#46cde0', '#7ad866', '#a47ef0'];
+const MONO = 'Consolas, "Cascadia Mono", Menlo, "DejaVu Sans Mono", "Courier New", monospace';   // Windows first, then macOS / Linux
+
+// ---------------------------------------------------------------------
+//  geometry
+// ---------------------------------------------------------------------
+function ellipsePts(cx, cy, rx, ry, rot = 0, n = 64, a0 = 0, a1 = TAU) {
+  const P = [], c = Math.cos(rot), s = Math.sin(rot), full = Math.abs(a1 - a0 - TAU) < 1e-6;
+  for (let i = 0; i < n; i++) {
+    const a = a0 + (a1 - a0) * i / (full ? n : n - 1);
+    const x = Math.cos(a) * rx, y = Math.sin(a) * ry;
+    P.push([cx + x * c - y * s, cy + x * s + y * c]);
+  }
+  return P;
+}
+function rrectPts(x, y, w, h, r, n = 6) {
+  r = Math.min(r, w / 2, h / 2);
+  const P = [], cs = [[x + w - r, y + r, -Math.PI / 2], [x + w - r, y + h - r, 0], [x + r, y + h - r, Math.PI / 2], [x + r, y + r, Math.PI]];
+  for (const [cx, cy, a0] of cs) for (let i = 0; i <= n; i++) { const a = a0 + (Math.PI / 2) * i / n; P.push([cx + Math.cos(a) * r, cy + Math.sin(a) * r]); }
+  return P;
+}
+function arcPts(cx, cy, r, a0, a1, n = 18, sy = 1) {
+  const P = [];
+  for (let i = 0; i <= n; i++) { const a = a0 + (a1 - a0) * i / n; P.push([cx + Math.cos(a) * r, cy + Math.sin(a) * r * sy]); }
+  return P;
+}
+function xform(P, tx, ty, rot = 0, sx = 1, sy = sx) {
+  const c = Math.cos(rot), s = Math.sin(rot);
+  return P.map(([x, y]) => [tx + x * sx * c - y * sy * s, ty + x * sx * s + y * sy * c]);
+}
+function bbox(P, pad = 0) {
+  let x0 = 1e9, y0 = 1e9, x1 = -1e9, y1 = -1e9;
+  for (const [x, y] of P) { if (x < x0) x0 = x; if (y < y0) y0 = y; if (x > x1) x1 = x; if (y > y1) y1 = y; }
+  return { x0: x0 - pad, y0: y0 - pad, x1: x1 + pad, y1: y1 + pad };
+}
+function resample(P, closed, step) {
+  const out = [], n = P.length, m = closed ? n : n - 1;
+  for (let i = 0; i < m; i++) {
+    const a = P[i], b = P[(i + 1) % n], k = Math.max(1, Math.ceil(dist(a, b) / step));
+    for (let j = 0; j < k; j++) out.push([a[0] + (b[0] - a[0]) * j / k, a[1] + (b[1] - a[1]) * j / k]);
+  }
+  if (!closed) out.push(P[n - 1]);
+  return out;
+}
+function pathLen(P) { let L = 0; for (let i = 1; i < P.length; i++) L += dist(P[i - 1], P[i]); return L; }
+function subPath(P, frac) {
+  let want = pathLen(P) * clamp(frac);
+  const out = [P[0]];
+  for (let i = 1; i < P.length; i++) {
+    const d = dist(P[i - 1], P[i]);
+    if (want >= d) { out.push(P[i]); want -= d; }
+    else { const k = want / (d || 1); out.push([lerp(P[i - 1][0], P[i][0], k), lerp(P[i - 1][1], P[i][1], k)]); break; }
+  }
+  return out;
+}
+function pointAt(P, frac) { const S = subPath(P, frac); return S[S.length - 1]; }
+
+// ---------------------------------------------------------------------
+//  drawing kit — boil, sketchy lines, hatching, stipple, pencil, grain
+// ---------------------------------------------------------------------
+// smooth hand wobble along the normal; reseeded every boil step
+function wobble(P, closed, amt, key, step = 7) {
+  const Q = resample(P, closed, step), n = Q.length;
+  const R = RNG('wob', key, B);
+  const f1 = R.r(0.012, 0.03), f2 = R.r(0.05, 0.1), p1 = R.r(0, TAU), p2 = R.r(0, TAU);
+  const sx = R.n(amt * 0.5), sy = R.n(amt * 0.5);
+  const out = new Array(n); let s = 0;
+  for (let i = 0; i < n; i++) {
+    const a = Q[closed ? (i - 1 + n) % n : Math.max(0, i - 1)], b = Q[closed ? (i + 1) % n : Math.min(n - 1, i + 1)];
+    const nx = a[1] - b[1], ny = b[0] - a[0], l = Math.hypot(nx, ny) || 1;
+    if (i) s += dist(Q[i - 1], Q[i]);
+    const o = amt * (0.75 * Math.sin(s * f1 + p1) + 0.35 * Math.sin(s * f2 + p2));
+    out[i] = [Q[i][0] + nx / l * o + sx, Q[i][1] + ny / l * o + sy];
+  }
+  return out;
+}
+function trace(P, closed) {
+  ctx.beginPath();
+  const n = P.length; if (n < 2) return;
+  if (closed) {
+    ctx.moveTo((P[n - 1][0] + P[0][0]) / 2, (P[n - 1][1] + P[0][1]) / 2);
+    for (let i = 0; i < n; i++) { const p = P[i], q = P[(i + 1) % n]; ctx.quadraticCurveTo(p[0], p[1], (p[0] + q[0]) / 2, (p[1] + q[1]) / 2); }
+    ctx.closePath();
+  } else {
+    ctx.moveTo(P[0][0], P[0][1]);
+    for (let i = 1; i < n - 1; i++) { const p = P[i], q = P[i + 1]; ctx.quadraticCurveTo(p[0], p[1], (p[0] + q[0]) / 2, (p[1] + q[1]) / 2); }
+    ctx.lineTo(P[n - 1][0], P[n - 1][1]);
+  }
+}
+// sketchy stroke. o: closed, color, w, amt, key, alpha, frac (write-on), double
+function ink(P, o = {}) {
+  const closed = !!o.closed, key = o.key ?? 'ink';
+  let Q = o.raw ? P : wobble(P, closed, o.amt ?? 1.8, key);
+  let cl = closed;
+  if (o.frac != null && o.frac < 1) { if (o.frac <= 0) return Q; Q = subPath(closed ? [...Q, Q[0]] : Q, o.frac); cl = false; }
+  ctx.strokeStyle = o.color || C.ink; ctx.lineWidth = o.w ?? 3; ctx.lineCap = 'round'; ctx.lineJoin = 'round';
+  ctx.globalAlpha = o.alpha ?? 1;
+  trace(Q, cl); ctx.stroke();
+  if (o.double) {
+    let Q2 = wobble(P, closed, (o.amt ?? 1.8) * 1.6 + 0.8, key + '~');
+    if (!cl && closed) Q2 = subPath([...Q2, Q2[0]], o.frac ?? 1);
+    ctx.lineWidth = (o.w ?? 3) * 0.4; ctx.globalAlpha = (o.alpha ?? 1) * 0.55; trace(Q2, cl); ctx.stroke();
+  }
+  ctx.globalAlpha = 1;
+  return Q;
+}
+// filled shape + textures (clipped) + ink outline
+function paint(P, o = {}) {
+  const key = o.key || 'paint';
+  const Q = o.raw ? P : wobble(P, true, o.amt ?? 1.6, key);
+  ctx.save();
+  trace(Q, true);
+  if (o.fill) { ctx.globalAlpha = o.fillAl ?? 1; ctx.fillStyle = o.fill; ctx.fill(); ctx.globalAlpha = 1; }
+  if (o.tex) { ctx.clip(); const bb = bbox(Q, 6); o.tex.forEach((t, i) => texture(bb, { key: key + ':' + i, ...t })); }
+  ctx.restore();
+  if (o.line !== false) {
+    ctx.strokeStyle = o.line || C.ink; ctx.lineWidth = o.w ?? 3; ctx.lineJoin = 'round'; ctx.lineCap = 'round';
+    ctx.globalAlpha = o.lineAl ?? 1; trace(Q, true); ctx.stroke(); ctx.globalAlpha = 1;
+  }
+  return Q;
+}
+function texture(bb, t) {
+  if (t.k === 'hatch') hatch(bb, t);
+  else if (t.k === 'cross') { hatch(bb, t); hatch(bb, { ...t, a: (t.a ?? 0.7) + (t.a2 ?? 1.25), key: t.key + 'x' }); }
+  else if (t.k === 'pencil') pencil(bb, t);
+  else if (t.k === 'stipple') stipple(bb, t);
+  else if (t.k === 'fn') t.fn(bb);
+}
+// parallel hatching inside current clip. t: a angle, gap, c, w, al, dash [min,max], skip, dens(x,y)
+function hatch(bb, t) {
+  const a = t.a ?? 0.7, gap = t.gap ?? 7, S = RNG('hs', t.key), R = RNG('hj', t.key, B);
+  const cx = (bb.x0 + bb.x1) / 2, cy = (bb.y0 + bb.y1) / 2, rad = Math.hypot(bb.x1 - bb.x0, bb.y1 - bb.y0) / 2 + 4;
+  const ca = Math.cos(a), sa = Math.sin(a), dens = t.dens, jit = t.jit ?? 0.9, dash = t.dash;
+  ctx.beginPath();
+  for (let d = -rad; d <= rad; d += gap) {
+    const dd = d + S.n(gap * 0.3);
+    let u = -rad + (dash ? S.r(0, dash[1]) : 0);
+    while (u < rad) {
+      const len = dash ? S.r(dash[0], dash[1]) : rad * 2, u2 = Math.min(rad, u + len);
+      const mu = (u + u2) / 2, mx = cx + ca * mu - sa * dd, my = cy + sa * mu + ca * dd, p = S.f();
+      if (!dens || p < dens(mx, my)) {
+        const e1 = R.n(jit), e2 = R.n(jit);
+        ctx.moveTo(cx + ca * u - sa * (dd + e1), cy + sa * u + ca * (dd + e1));
+        ctx.lineTo(cx + ca * u2 - sa * (dd + e2), cy + sa * u2 + ca * (dd + e2));
+      }
+      u = u2 + (dash ? S.r(t.skip?.[0] ?? 3, t.skip?.[1] ?? 12) : 0);
+    }
+  }
+  ctx.strokeStyle = t.c || C.ink; ctx.lineWidth = t.w ?? 1.2; ctx.globalAlpha = t.al ?? 0.5; ctx.lineCap = 'round';
+  ctx.stroke(); ctx.globalAlpha = 1;
+}
+// colored-pencil diagonal strokes
+function pencil(bb, t) {
+  const S = RNG('ps', t.key), R = RNG('pj', t.key, B);
+  const area = (bb.x1 - bb.x0) * (bb.y1 - bb.y0);
+  const n = Math.min(t.max ?? 6000, t.n ?? Math.floor(area / (t.per ?? 700)));
+  const a = t.a ?? -0.95, L = t.len ?? 14, dens = t.dens;
+  ctx.beginPath();
+  for (let i = 0; i < n; i++) {
+    const x = S.r(bb.x0, bb.x1), y = S.r(bb.y0, bb.y1), p = S.f(), aa = a + S.n(0.22), l = L * (0.5 + S.f() * 0.7);
+    if (dens && p > dens(x, y)) continue;
+    const jx = R.n(1.1), jy = R.n(1.1), dx = Math.cos(aa) * l / 2, dy = Math.sin(aa) * l / 2;
+    ctx.moveTo(x - dx + jx, y - dy + jy); ctx.lineTo(x + dx + jx, y + dy + jy);
+  }
+  ctx.strokeStyle = t.c; ctx.lineWidth = t.w ?? 1.4; ctx.globalAlpha = t.al ?? 0.45; ctx.lineCap = 'round';
+  ctx.stroke(); ctx.globalAlpha = 1;
+}
+// square stipple dots
+function stipple(bb, t) {
+  const S = RNG('ss', t.key), R = RNG('sj', t.key, B);
+  const n = t.n ?? 400, sz = t.s ?? 2.2, dens = t.dens, jit = t.jit ?? 0.8;
+  ctx.fillStyle = t.c; ctx.globalAlpha = t.al ?? 1; ctx.beginPath();
+  for (let i = 0; i < n; i++) {
+    const x = S.r(bb.x0, bb.x1), y = S.r(bb.y0, bb.y1), p = S.f(), s = sz * (0.6 + S.f() * 0.8);
+    if (dens && p > dens(x, y)) continue;
+    ctx.rect(x + R.n(jit), y + R.n(jit), s, s);
+  }
+  ctx.fill(); ctx.globalAlpha = 1;
+}
+// screen-space paper grain, reseeded with the boil
+function grain(o = {}) {
+  ctx.save(); screen();
+  const R = RNG('grain', B), n = o.n ?? 2600;
+  ctx.fillStyle = o.dark || 'rgba(70,45,25,0.13)'; ctx.beginPath();
+  for (let i = 0; i < n; i++) ctx.rect(R.r(0, W), R.r(0, H), 1.7, 1.7);
+  ctx.fill();
+  ctx.fillStyle = o.light || 'rgba(255,250,236,0.20)'; ctx.beginPath();
+  for (let i = 0; i < n; i++) ctx.rect(R.r(0, W), R.r(0, H), 1.9, 1.9);
+  ctx.fill();
+  // a few paper fibres
+  ctx.strokeStyle = 'rgba(80,55,35,0.07)'; ctx.lineWidth = 1; ctx.beginPath();
+  for (let i = 0; i < 90; i++) { const x = R.r(0, W), y = R.r(0, H), a = R.r(0, TAU), l = R.r(6, 22); ctx.moveTo(x, y); ctx.lineTo(x + Math.cos(a) * l, y + Math.sin(a) * l); }
+  ctx.stroke();
+  ctx.restore();
+}
+
+// ---------------------------------------------------------------------
+//  construction lines, rulers, sparks, bursts, rainbow contours
+// ---------------------------------------------------------------------
+function construct(cx, cy, r, o = {}) {
+  const R = RNG('con', o.key ?? 'c', B);
+  ctx.save();
+  ctx.strokeStyle = o.c || C.lav; ctx.lineWidth = o.w ?? 1.4; ctx.globalAlpha = o.al ?? 1; ctx.lineCap = 'round';
+  const a0 = (o.a0 ?? R.r(0, TAU)), sw = o.sweep ?? 1.05;
+  ctx.beginPath(); ctx.ellipse(cx + R.n(1.2), cy + R.n(1.2), r, r * (o.sq ?? 1), o.rot ?? 0, a0, a0 + TAU * sw); ctx.stroke();
+  if (o.cross) { const k = o.cross; ctx.beginPath(); ctx.moveTo(cx - k, cy); ctx.lineTo(cx + k, cy); ctx.moveTo(cx, cy - k); ctx.lineTo(cx, cy + k); ctx.stroke(); }
+  if (o.ticks) {
+    ctx.beginPath();
+    for (let i = 0; i < o.ticks; i++) { const a = i / o.ticks * TAU + (o.rot ?? 0); ctx.moveTo(cx + Math.cos(a) * (r - 6), cy + Math.sin(a) * (r - 6)); ctx.lineTo(cx + Math.cos(a) * (r + 6), cy + Math.sin(a) * (r + 6)); }
+    ctx.stroke();
+  }
+  ctx.restore();
+}
+function cline(x1, y1, x2, y2, o = {}) {
+  const R = RNG('cl', o.key ?? 'l', B);
+  ctx.save(); ctx.strokeStyle = o.c || C.lavS; ctx.lineWidth = o.w ?? 1.2; ctx.globalAlpha = o.al ?? 1;
+  ctx.beginPath(); ctx.moveTo(x1 + R.n(1), y1 + R.n(1)); ctx.lineTo(x2 + R.n(1), y2 + R.n(1)); ctx.stroke(); ctx.restore();
+}
+function ruler(x1, y1, x2, y2, o = {}) {
+  const R = RNG('rul', o.key ?? 'r', B);
+  const L = Math.hypot(x2 - x1, y2 - y1) || 1, ux = (x2 - x1) / L, uy = (y2 - y1) / L, nx = -uy, ny = ux;
+  const frac = clamp(o.frac ?? 1), step = o.step ?? 16, tk = o.tick ?? 7, side = o.side ?? 1;
+  ctx.save(); ctx.strokeStyle = o.c || C.periD; ctx.lineWidth = o.w ?? 1.5; ctx.globalAlpha = o.al ?? 1; ctx.lineCap = 'round';
+  const jx = R.n(0.8), jy = R.n(0.8);
+  ctx.beginPath(); ctx.moveTo(x1 + jx, y1 + jy); ctx.lineTo(x1 + ux * L * frac + jx, y1 + uy * L * frac + jy);
+  const n = Math.floor(L * frac / step);
+  for (let i = 0; i <= n; i++) {
+    const k = i % 5 === 0 ? tk * 1.9 : tk, px = x1 + ux * i * step + jx, py = y1 + uy * i * step + jy;
+    ctx.moveTo(px, py); ctx.lineTo(px + nx * k * side, py + ny * k * side);
+  }
+  ctx.moveTo(x1 - nx * tk * 1.6, y1 - ny * tk * 1.6); ctx.lineTo(x1 + nx * tk * 2.2, y1 + ny * tk * 2.2);
+  if (frac >= 1) { ctx.moveTo(x2 - nx * tk * 1.6, y2 - ny * tk * 1.6); ctx.lineTo(x2 + nx * tk * 2.2, y2 + ny * tk * 2.2); }
+  ctx.stroke(); ctx.restore();
+}
+// glowing radial spark (dark world)
+function sparkBurst(cx, cy, r, o = {}) {
+  if (r <= 0.5) return;
+  const R = RNG('spk', o.key ?? 's', B), n = o.n ?? 18, rays = [];
+  for (let i = 0; i < n; i++) { const a = i / n * TAU + R.n(0.14); rays.push([a, r * R.r(0.28, 0.5), r * R.r(0.72, 1.15)]); }
+  const path = () => { ctx.beginPath(); for (const [a, r0, r1] of rays) { ctx.moveTo(cx + Math.cos(a) * r0, cy + Math.sin(a) * r0); ctx.lineTo(cx + Math.cos(a) * r1, cy + Math.sin(a) * r1); } };
+  ctx.save(); ctx.lineCap = 'round';
+  path(); ctx.strokeStyle = o.glow || 'rgba(82,214,196,0.22)'; ctx.lineWidth = (o.w ?? 2.4) * 3.4; ctx.stroke();
+  path(); ctx.strokeStyle = o.c || '#8ff5e6'; ctx.lineWidth = o.w ?? 2.4; ctx.stroke();
+  if (o.core !== false) {
+    const cr = Math.max(2.5, r * (o.coreR ?? 0.15));
+    ctx.beginPath(); ctx.arc(cx, cy, cr * 2.2, 0, TAU); ctx.fillStyle = 'rgba(190,215,255,0.16)'; ctx.fill();
+    ctx.beginPath(); ctx.arc(cx, cy, cr, 0, TAU); ctx.fillStyle = C.white; ctx.fill(); ctx.lineWidth = 2; ctx.strokeStyle = C.periD; ctx.stroke();
+  }
+  if (o.specks) { ctx.fillStyle = o.c || '#8ff5e6'; for (let i = 0; i < o.specks; i++) { const a = R.r(0, TAU), d = r * R.r(0.2, 1.4); ctx.fillRect(cx + Math.cos(a) * d, cy + Math.sin(a) * d, 2, 2); } }
+  ctx.restore();
+}
+// radial tick burst (warm world impact)
+function burst(cx, cy, r0, r1, o = {}) {
+  const R = RNG('bur', o.key ?? 'b', B), n = o.n ?? 12;
+  ctx.save(); ctx.strokeStyle = o.c || C.ink; ctx.lineWidth = o.w ?? 3; ctx.lineCap = 'round'; ctx.globalAlpha = o.al ?? 1; ctx.beginPath();
+  for (let i = 0; i < n; i++) {
+    const a = i / n * TAU + R.n(0.15) + (o.rot ?? 0), a1 = r0 * R.r(0.85, 1.1), b1 = r1 * R.r(0.75, 1.15);
+    ctx.moveTo(cx + Math.cos(a) * a1, cy + Math.sin(a) * a1); ctx.lineTo(cx + Math.cos(a) * b1, cy + Math.sin(a) * b1);
+  }
+  ctx.stroke(); ctx.restore();
+}
+function star4(x, y, s, c) {
+  ctx.save(); ctx.fillStyle = c; ctx.beginPath();
+  ctx.moveTo(x, y - s); ctx.quadraticCurveTo(x, y, x + s, y); ctx.quadraticCurveTo(x, y, x, y + s);
+  ctx.quadraticCurveTo(x, y, x - s, y); ctx.quadraticCurveTo(x, y, x, y - s); ctx.fill(); ctx.restore();
+}
+// rainbow contour strokes around a moving part
+function rainbow(P, o = {}) {
+  const bb = bbox(P), cx = o.cx ?? (bb.x0 + bb.x1) / 2, cy = o.cy ?? (bb.y0 + bb.y1) / 2, n = o.n ?? 3;
+  for (let i = 0; i < n; i++) {
+    const S = RNG('rb', o.key, i, B), sc = 1 + (o.spread ?? 0.07) * (i + 1) + S.n(0.02);
+    const Q = P.map(([x, y]) => [cx + (x - cx) * sc + S.n(o.drift ?? 3), cy + (y - cy) * sc + S.n(o.drift ?? 3)]);
+    ink(Q, { closed: o.closed ?? true, color: RAINBOW[(i + (o.off ?? 0)) % RAINBOW.length], w: o.w ?? 1.6, amt: o.amt ?? 3.5, key: o.key + 'rb' + i, alpha: o.al ?? 0.85 });
+  }
+}
+// hex cell grid inside current clip
+function hexGrid(bb, size, o = {}) {
+  const h = size * Math.sqrt(3), R = RNG('hex', o.key ?? 'h', B);
+  ctx.save(); ctx.strokeStyle = o.c || C.periS; ctx.lineWidth = o.w ?? 1.2; ctx.globalAlpha = o.al ?? 1; ctx.beginPath();
+  let row = 0;
+  for (let y = bb.y0 - h; y < bb.y1 + h; y += h * 0.5, row++) {
+    for (let x = bb.x0 - size * 3 + (row % 2) * size * 1.5; x < bb.x1 + size * 3; x += size * 3) {
+      const jx = R.n(0.6), jy = R.n(0.6);
+      for (let k = 0; k < 6; k++) {
+        const a = k / 6 * TAU, b = (k + 1) / 6 * TAU;
+        if (k === 0) ctx.moveTo(x + Math.cos(a) * size + jx, y + Math.sin(a) * size + jy);
+        ctx.lineTo(x + Math.cos(b) * size + jx, y + Math.sin(b) * size + jy);
+      }
+    }
+  }
+  ctx.stroke(); ctx.restore();
+}
+
+// ---------------------------------------------------------------------
+//  iris, camera, text
+// ---------------------------------------------------------------------
+// ragged hatched rim; dir=+1 strokes reach outward, -1 inward
+function irisRim(cx, cy, r, dir, o = {}) {
+  const R = RNG('irisR', o.key ?? 'i', B), n = Math.min(1600, Math.floor(r * TAU / 2.0));
+  ctx.strokeStyle = o.c || '#0b0c17'; ctx.lineWidth = o.w ?? 1.6; ctx.lineCap = 'round'; ctx.beginPath();
+  for (let i = 0; i < n; i++) {
+    const a = R.r(0, TAU), L = R.r(3, 11) + (R.f() < 0.28 ? R.r(10, 34) : 0), sl = R.n(0.4);
+    const r0 = r - dir * R.r(2, 6), r1 = r + dir * L, ax = Math.cos(a), ay = Math.sin(a);
+    ctx.moveTo(cx + ax * r0, cy + ay * r0); ctx.lineTo(cx + ax * r1 - ay * L * sl, cy + ay * r1 + ax * L * sl);
+  }
+  ctx.stroke();
+}
+// iris into a black hole (screen space)
+function irisHole(cx, cy, r, o = {}) {
+  if (r <= 0.5) return;
+  ctx.save(); screen();
+  const col = o.c || '#0b0c17';
+  const P = wobble(ellipsePts(cx, cy, r, r, 0, 140), true, Math.min(4, 0.6 + r * 0.02), 'ih' + (o.key ?? ''), 9);
+  trace(P, true); ctx.fillStyle = col; ctx.fill();
+  irisRim(cx, cy, r, +1, { c: col, key: o.key });
+  if (o.inner) { ctx.save(); trace(P, true); ctx.clip(); o.inner(r); ctx.restore(); }
+  ctx.restore();
+}
+// world point (cx,cy) lands at screen centre
+function camera(cx, cy, zoom = 1, rot = 0, sx = 0, sy = 0) {
+  const c = Math.cos(rot) * zoom, s = Math.sin(rot) * zoom;
+  ctx.setTransform(c, s, -s, c, W / 2 + sx - (c * cx - s * cy), H / 2 + sy - (s * cx + c * cy));
+}
+function screen() { ctx.setTransform(1, 0, 0, 1, 0, 0); }
+function toScreen(x, y) { const p = ctx.getTransform().transformPoint(new DOMPoint(x, y)); return [p.x, p.y]; }
+function fillAll(color) { ctx.save(); screen(); ctx.fillStyle = color; ctx.fillRect(0, 0, W, H); ctx.restore(); }
+
+// monospace text with per-glyph hand jitter
+function monoText(str, x, y, size, color, o = {}) {
+  ctx.save();
+  ctx.font = `${o.weight ?? 700} ${size}px ${MONO}`; ctx.fillStyle = color; ctx.textBaseline = 'alphabetic';
+  const cw = ctx.measureText('M').width, R = RNG('txt', o.key ?? str, B), jit = o.jit ?? 0.9;
+  const n = Math.min(o.count ?? str.length, str.length);
+  ctx.globalAlpha = o.al ?? 1;
+  for (let i = 0; i < n; i++) {
+    const ch = str[i]; if (ch === ' ') continue;
+    ctx.save(); ctx.translate(x + i * cw + R.n(jit), y + R.n(jit)); ctx.rotate(R.n(0.045)); ctx.fillText(ch, 0, 0); ctx.restore();
+  }
+  ctx.restore();
+  return cw;
+}
+function monoW(size) { ctx.save(); ctx.font = `700 ${size}px ${MONO}`; const w = ctx.measureText('M').width; ctx.restore(); return w; }
+
+// single-stroke hand lettering (x-height 0.5, ascender 1.0, baseline 0)
+const GLYPHS = {
+  ' ': { w: 0.26, s: [] },
+  c: { w: 0.5, s: [arcPts(0.26, -0.25, 0.25, -35 * DEG, -322 * DEG, 22)] },
+  o: { w: 0.52, s: [arcPts(0.26, -0.25, 0.25, -95 * DEG, -460 * DEG, 30)] },
+  a: { w: 0.54, s: [[...arcPts(0.25, -0.25, 0.235, -28 * DEG, -335 * DEG, 24)], [[0.49, -0.5], [0.49, -0.05], [0.55, 0.0]]] },
+  d: { w: 0.56, s: [[...arcPts(0.25, -0.25, 0.235, -28 * DEG, -335 * DEG, 24)], [[0.49, -1.0], [0.49, -0.05], [0.56, 0.0]]] },
+  l: { w: 0.24, s: [[[0.08, -1.0], [0.08, -0.1], [0.12, -0.01], [0.2, 0.0]]] },
+  u: { w: 0.54, s: [[[0.03, -0.5], [0.03, -0.22], ...arcPts(0.255, -0.22, 0.225, 180 * DEG, 0, 14), [0.48, -0.5]], [[0.48, -0.5], [0.48, -0.04], [0.54, 0.0]]] },
+  e: { w: 0.52, s: [[[0.03, -0.26], [0.5, -0.26], ...arcPts(0.265, -0.25, 0.245, -4 * DEG, -318 * DEG, 26)]] },
+};
+function handwrite(str, x, y, size, o = {}) {
+  const strokes = []; let pen = 0;
+  for (const ch of str) {
+    const g = GLYPHS[ch] || GLYPHS[' '];
+    for (const s of g.s) strokes.push(s.map(([u, v]) => [x + (pen + u) * size, y + v * size]));
+    pen += g.w + 0.1;
+  }
+  const lens = strokes.map(pathLen), total = lens.reduce((a, b) => a + b, 0);
+  let budget = clamp(o.frac ?? 1) * total;
+  for (let i = 0; i < strokes.length && budget > 0; i++) {
+    const f = Math.min(1, budget / lens[i]); budget -= lens[i];
+    if (o.glow) ink(strokes[i], { color: o.glow, w: (o.w ?? size * 0.06) * 3, amt: o.amt ?? 1.0, key: 'hw' + i + str, frac: f });
+    ink(strokes[i], { color: o.c, w: o.w ?? size * 0.06, amt: o.amt ?? 1.0, key: 'hw' + i + str, frac: f });
+  }
+  return pen * size;
+}
+
+// =====================================================================
+// ---- small props and helpers
+function drawPencil(tx, ty, ang, len, k = 1, key = 'pencil') {
+  ctx.save(); ctx.translate(tx, ty); ctx.rotate(ang); ctx.scale(k, k);
+  paint([[46, -16], [len, -16], [len, 16], [46, 16]], {
+    fill: C.yellow, key: key + 'b', w: 3,
+    tex: [{ k: 'hatch', a: 0.05, gap: 5, c: '#a8741d', al: 0.55, w: 1.1, dash: [20, 90], dens: (x, y) => (y > 5 ? 1 : 0.08) }, { k: 'pencil', c: '#fff1b8', al: 0.5, a: 0.05, len: 30, per: 120, dens: (x, y) => (y < -4 ? 1 : 0.1) }],
+  });
+  ink([[50, -5], [len, -5]], { w: 1.6, key: key + 'f1', alpha: 0.7 });
+  ink([[50, 6], [len, 6]], { w: 1.6, key: key + 'f2', alpha: 0.7 });
+  paint([[1, 0], [46, -15], [46, 15]], { fill: '#efcf9f', key: key + 'c', w: 2.6, tex: [{ k: 'hatch', a: 1.2, gap: 4, al: 0.35, dens: (x, y) => (y > 2 ? 1 : 0.1) }] });
+  paint([[0, 0], [15, -5], [15, 5]], { fill: '#3b3438', key: key + 't', w: 2 });
+  paint([[len, -17], [len + 26, -17], [len + 26, 17], [len, 17]], { fill: '#bcb7ab', key: key + 'fe', w: 2.6, tex: [{ k: 'hatch', a: Math.PI / 2, gap: 5, al: 0.5 }] });
+  paint(rrectPts(len + 24, -16, 34, 32, 10), { fill: '#e58f8c', key: key + 'e', w: 2.6, tex: [{ k: 'pencil', c: C.roseD, al: 0.5, per: 60 }] });
+  ctx.restore();
+}
+// smoothstep of x between a and b (NOT manim's `smooth` rate function — the math style calls that smoothM)
+const smooth = (a, b, x) => { const u = clamp((x - a) / (b - a)); return u * u * (3 - 2 * u); };
+const mod = (a, n) => ((a % n) + n) % n;
+function asterisk(x, y, r0, r1, n, rot, color, w) {
+  ctx.save(); ctx.strokeStyle = color; ctx.lineWidth = w; ctx.lineCap = 'round'; ctx.beginPath();
+  for (let i = 0; i < n; i++) { const a = i / n * TAU + rot; ctx.moveTo(x + Math.cos(a) * r0, y + Math.sin(a) * r0); ctx.lineTo(x + Math.cos(a) * r1, y + Math.sin(a) * r1); }
+  ctx.stroke(); ctx.restore();
+}
+
+// ---------------------------------------------------------------------
+//  time (set by the renderer): TT = absolute time on the motion step (on 2s unless STYLE.ones);
+//  E0 = the current era's start; DEFER = overlay queue (captions drawn after the camera); SPARK_AT = the hero's screen spot
+//  ev(t, d) = 0..1 progress of an event at t over d seconds; popS(t) = back-eased pop-in scale
+// ---------------------------------------------------------------------
+let TT = 0, E0 = 0, DEFER = null, SPARK_AT = null;
+const ev = (t, d = 0.25) => clamp((TT - t) / d);
+const popS = (t) => (TT < t ? 0 : EZ.back(clamp((TT - t) / 0.25)));
+
+// ---------------------------------------------------------------------
+//  springs: closed-form, so any frame can be drawn on its own (deterministic, no state)
+//  springEase(t, k, d)       0 -> 1 over time t >= 0 (stiffness k, damping d): accelerates, overshoots a hair, settles
+//  springMove(t0, a, b, p)   a value moving from a to b, starting at time t0 (p = a SPRING preset)
+//  springTrack(keys, p)      a value with many targets: keys = [[t, value], ...] sorted by t. One spring per change,
+//                            added up, so a target change mid-move stays continuous (cursors, widths, positions)
+// ---------------------------------------------------------------------
+const SPRING = {
+  snappy: { k: 320, d: 30 },    // UI: buttons, toggles, leading edges
+  smooth: { k: 170, d: 26 },    // cards, containers, the camera
+  heavy: { k: 90, d: 19 },      // big type, logos, large objects
+  playful: { k: 260, d: 14 },   // mascots, stickers: visible overshoot
+};
+function springEase(t, k = 170, d = 26) {
+  if (t <= 0) return 0;
+  const w0 = Math.sqrt(k), z = d / (2 * w0);
+  if (z < 1) { const wd = w0 * Math.sqrt(1 - z * z); return 1 - Math.exp(-z * w0 * t) * (Math.cos(wd * t) + (z * w0 / wd) * Math.sin(wd * t)); }
+  return 1 - Math.exp(-w0 * t) * (1 + w0 * t);
+}
+const springMove = (t0, a, b, p = SPRING.smooth) => a + (b - a) * springEase(TT - t0, p.k, p.d);
+function springTrack(keys, p = SPRING.smooth) {
+  let v = keys[0][1];
+  for (let i = 1; i < keys.length; i++) v += (keys[i][1] - keys[i - 1][1]) * springEase(TT - keys[i][0], p.k, p.d);
+  return v;
+}
+
+// ---------------------------------------------------------------------
+//  layout for several formats (9:16, 1:1, 16:9, 4:5 from one piece): place things by fractions of the frame,
+//  size them by UNIT (1 at 1080 on the short side). LX(0.5), LY(0.62), 120 * UNIT. PORTRAIT / WIDE pick layouts.
+// ---------------------------------------------------------------------
+const LX = (f) => f * W, LY = (f) => f * H, UNIT = Math.min(W, H) / 1080, PORTRAIT = H > W * 1.2, WIDE = W > H * 1.2;
+
+// ---------------------------------------------------------------------
+//  the user's own assets (screenshots, logos): files in <piece>/assets/ that tools/build.mjs embeds in the page.
+//  asset('logo.png') -> the Image (or null); drawAsset(name, x, y, w, h, { fit: 'contain'|'cover', r, alpha })
+//  Real product UI only: never redraw a product screen from imagination when a screenshot exists.
+// ---------------------------------------------------------------------
+const asset = (name) => (typeof ASSETS !== 'undefined' && ASSETS[name] && ASSETS[name].complete ? ASSETS[name] : null);
+function drawAsset(name, x, y, w, h, o = {}) {
+  const img = asset(name); if (!img) return false;
+  const iw = img.naturalWidth || img.width, ih = img.naturalHeight || img.height;
+  const s = (o.fit === 'cover' ? Math.max : Math.min)(w / iw, h / ih), dw = iw * s, dh = ih * s;
+  ctx.save(); ctx.globalAlpha *= o.alpha ?? 1;
+  if (o.r || o.fit === 'cover') { ctx.beginPath(); ctx.roundRect(x, y, w, h, o.r || 0); ctx.clip(); }
+  ctx.drawImage(img, x + (w - dw) / 2, y + (h - dh) / 2, dw, dh);
+  ctx.restore(); return true;
+}
+// =====================================================================
+//  styles/motionreel/kit.js — graphic motion design in the manner of a motion-designer showreel: full-bleed colour
+//  fields that cut on the beat, huge kinetic type that rises from a masked baseline, rolling slot-counter numerals,
+//  eased bars and glowing motion paths, and a crisp HUD frame (corner brackets, timecode, section counter, balance).
+//  One accent colour carries the meaning. Studied from motion-reel references (kept local, never copied).
+//  Deterministic: everything is a function of TT; no state between frames.
+// =====================================================================
+const MR = {
+  navy: '#0b1220', ink: '#0b1220', white: '#f4f6fa', amber: '#f0a020', amberDeep: '#c98500', blue: '#7fb0e6',
+  fg: '#f4f6fa', dim: '#8fa3bf', line: 'rgba(244,246,250,0.18)',
+};
+const MRSANS = '"Segoe UI", "Inter", "Helvetica Neue", Arial, sans-serif';
+const MRMONO = 'Consolas, "Cascadia Mono", Menlo, "DejaVu Sans Mono", monospace';
+// easing
+const mrOut = (t) => 1 - Math.pow(1 - clamp(t), 4);              // quart out
+const mrExpo = (t) => (t >= 1 ? 1 : 1 - Math.pow(2, -10 * clamp(t)));
+const mrInOut = (t) => { t = clamp(t); return t < 0.5 ? 8 * t * t * t * t : 1 - Math.pow(-2 * t + 2, 4) / 2; };
+const mrK = (t0, d = 0.6) => clamp((TT - t0) / d);              // progress of a move that starts at t0
+// the field: a full-bleed colour with a faint grid and a soft vignette
+function mrField(c, o = {}) {
+  ctx.save(); ctx.fillStyle = c; ctx.fillRect(0, 0, W, H);
+  const dark = c === MR.navy;
+  ctx.strokeStyle = dark ? 'rgba(127,176,230,0.06)' : 'rgba(11,18,32,0.06)'; ctx.lineWidth = 1;
+  for (let x = 0; x <= W; x += 96) { ctx.beginPath(); ctx.moveTo(x + 0.5, 0); ctx.lineTo(x + 0.5, H); ctx.stroke(); }
+  for (let y = 0; y <= H; y += 96) { ctx.beginPath(); ctx.moveTo(0, y + 0.5); ctx.lineTo(W, y + 0.5); ctx.stroke(); }
+  const g = ctx.createRadialGradient(W * 0.5, H * 0.45, H * 0.2, W * 0.5, H * 0.5, H * 0.95);
+  g.addColorStop(0, 'rgba(0,0,0,0)'); g.addColorStop(1, dark ? 'rgba(0,0,0,0.45)' : 'rgba(0,0,0,0.10)');
+  ctx.fillStyle = g; ctx.fillRect(0, 0, W, H); ctx.restore();
+}
+const mrInk = (field) => (field === MR.navy ? MR.fg : MR.ink);
+const mrDim = (field) => (field === MR.navy ? MR.dim : 'rgba(11,18,32,0.55)');
+// kinetic line: each word rises from below a mask line, staggered
+function mrWords(str, x, y, size, o = {}) {
+  const t0 = o.at ?? 0, st = o.stagger ?? 0.06, weight = o.weight ?? 800, color = o.color ?? MR.fg, track = o.track ?? 0;
+  ctx.save(); ctx.font = `${weight} ${size}px ${o.mono ? MRMONO : MRSANS}`; ctx.textBaseline = 'alphabetic'; ctx.fillStyle = color;
+  if (track) ctx.letterSpacing = track + 'px';
+  const words = str.split(' '); let cx = x;
+  const total = words.reduce((w, s, i) => w + ctx.measureText(s).width + (i ? ctx.measureText(' ').width : 0), 0);
+  if (o.align === 'center') cx = x - total / 2; else if (o.align === 'right') cx = x - total;
+  for (let i = 0; i < words.length; i++) {
+    const k = mrExpo(mrK(t0 + i * st, o.d ?? 0.7)), w = ctx.measureText(words[i]).width;
+    if (k < 0.12) { cx += w + ctx.measureText(' ').width; continue; }   // not rising yet: draw nothing (the text check traces clipped text too)
+    ctx.save(); ctx.beginPath(); ctx.rect(cx - 4, y - size * 1.05, w + 8, size * 1.32); ctx.clip();
+    ctx.fillText(words[i], cx, y + (1 - k) * size * 1.15); ctx.restore();
+    cx += w + ctx.measureText(' ').width;
+  }
+  ctx.restore(); return total;
+}
+// a rolling numeral: each digit is a reel that rolls to its target value (slot counter), with a short streak
+function mrRoll(value, decimals, x, y, size, o = {}) {
+  const t0 = o.at ?? 0, d = o.d ?? 1.0, from = o.from ?? 0, k = mrOut(mrK(t0, d)), v = from + (value - from) * k;
+  const txt = (o.prefix ?? '') + v.toFixed(decimals) + (o.suffix ?? '');
+  ctx.save(); ctx.font = `${o.weight ?? 900} ${size}px ${MRSANS}`; ctx.textBaseline = 'alphabetic'; ctx.fillStyle = o.color ?? MR.fg;
+  ctx.letterSpacing = (o.track ?? -4) + 'px';
+  const total = ctx.measureText(txt).width; let cx = o.align === 'center' ? x - total / 2 : o.align === 'right' ? x - total : x;
+  // the fractional part of the rolling value moves the last digit's reel; blur it while it moves fast
+  const speed = (1 - k) * 3;
+  for (const ch of txt) {
+    const w = ctx.measureText(ch).width;
+    if (/[0-9]/.test(ch) && speed > 0.05) { ctx.save(); ctx.globalAlpha = 0.25; ctx.fillText(ch, cx, y - size * 0.08 * speed); ctx.fillText(ch, cx, y + size * 0.08 * speed); ctx.restore(); }
+    ctx.fillText(ch, cx, y); cx += w;
+  }
+  ctx.restore(); return total;
+}
+// a bar that grows with easing from x0, height h
+function mrBar(x, y, w, h, color, t0, d = 0.8) { const k = mrOut(mrK(t0, d)); ctx.fillStyle = color; ctx.fillRect(x, y, w * k, h); return k; }
+// a glowing motion path drawn along points P up to fraction u, with a bright head
+function mrPath(P, u, color, o = {}) {
+  if (u <= 0) return; const n = Math.max(2, Math.floor(P.length * clamp(u)));
+  ctx.save(); ctx.lineCap = 'round'; ctx.lineJoin = 'round';
+  for (const [w, a] of [[o.w * 4 || 14, 0.12], [o.w * 2 || 7, 0.25], [o.w || 3.5, 1]]) {
+    ctx.strokeStyle = color; ctx.globalAlpha = a; ctx.lineWidth = w; ctx.beginPath(); P.slice(0, n).forEach(([x, y], i) => (i ? ctx.lineTo(x, y) : ctx.moveTo(x, y))); ctx.stroke();
+  }
+  const [hx, hy] = P[n - 1]; ctx.globalAlpha = 1; ctx.fillStyle = '#fff'; ctx.shadowColor = color; ctx.shadowBlur = 24;
+  ctx.beginPath(); ctx.arc(hx, hy, o.head ?? 7, 0, Math.PI * 2); ctx.fill(); ctx.restore();
+}
+// a chip glyph: rounded square with pins, filled when lit
+function mrChip(x, y, s, lit, color, field) {
+  const ink = mrInk(field); ctx.save(); ctx.translate(x, y);
+  ctx.strokeStyle = ink; ctx.globalAlpha = 0.9; ctx.lineWidth = Math.max(2, s * 0.03);
+  for (let i = 0; i < 4; i++) { const p = -s * 0.3 + i * s * 0.2; for (const [a, b, c, d] of [[p, -s / 2, p, -s / 2 - s * 0.1], [p, s / 2, p, s / 2 + s * 0.1], [-s / 2, p, -s / 2 - s * 0.1, p], [s / 2, p, s / 2 + s * 0.1, p]]) { ctx.beginPath(); ctx.moveTo(a, b); ctx.lineTo(c, d); ctx.stroke(); } }
+  ctx.globalAlpha = 1; ctx.fillStyle = lit > 0 ? color : 'transparent'; ctx.beginPath(); ctx.roundRect(-s / 2, -s / 2, s, s, s * 0.12);
+  if (lit > 0) { ctx.globalAlpha = lit; ctx.fill(); ctx.globalAlpha = 1; } ctx.stroke(); ctx.restore();
+}
+// the HUD: corner brackets, title, timecode, section counter with progress, and a right-hand readout
+function mrHudNow(o) {
+  const ink = mrInk(o.field), dim = mrDim(o.field), m = 56, L = 34;
+  ctx.save(); ctx.strokeStyle = dim; ctx.lineWidth = 2;
+  for (const [x, y, sx, sy] of [[m, m, 1, 1], [W - m, m, -1, 1], [m, H - m, 1, -1], [W - m, H - m, -1, -1]]) { ctx.beginPath(); ctx.moveTo(x, y + sy * L); ctx.lineTo(x, y); ctx.lineTo(x + sx * L, y); ctx.stroke(); }
+  ctx.font = `700 20px ${MRMONO}`; ctx.fillStyle = ink; ctx.textBaseline = 'middle'; ctx.fillText('DEEPGRID', m + 18, m + 22);
+  ctx.fillStyle = dim; ctx.font = `400 20px ${MRMONO}`; ctx.fillText(o.title, m + 18 + 112, m + 22);
+  const f = Math.floor(TT * FPS), s = Math.floor(f / FPS), tc = `TC 00:00:${String(s).padStart(2, '0')}:${String(f % FPS).padStart(2, '0')}`;
+  ctx.textAlign = 'right'; ctx.fillStyle = ink; ctx.fillText(tc, W - m - 18, m + 22);
+  ctx.textAlign = 'left'; ctx.fillStyle = ink; ctx.font = `700 20px ${MRMONO}`; ctx.fillText(o.section, m + 18, H - m - 22);
+  const px = m + 18 + 220, pw = 420; ctx.fillStyle = dim; ctx.fillRect(px, H - m - 23, pw, 2); ctx.fillStyle = MR.amber; ctx.fillRect(px, H - m - 23, pw * clamp(TT / DURATION), 2);
+  if (o.right) { ctx.textAlign = 'right'; ctx.font = `700 20px ${MRMONO}`; ctx.fillStyle = ink; ctx.fillText(o.right, W - m - 18, H - m - 22); }
+  ctx.restore();
+}
+const mrHud = (o) => { const f = () => mrHudNow(o); if (DEFER) DEFER.push(f); else f(); };
+
+const STYLE = {
+  name: 'motionreel',
+  paper: MR.navy,
+  backdrop(c) { fillAll(c); },
+  window(P, key, src) { ctx.save(); ctx.beginPath(); P.forEach(([x, y], i) => (i ? ctx.lineTo(x, y) : ctx.moveTo(x, y))); ctx.closePath(); ctx.clip(); ctx.drawImage(src, 0, 0); ctx.restore(); },
+  blob(P, c) { ctx.save(); ctx.fillStyle = c; ctx.beginPath(); P.forEach(([x, y], i) => (i ? ctx.lineTo(x, y) : ctx.moveTo(x, y))); ctx.closePath(); ctx.fill(); ctx.restore(); },
+  hero(x, y, r) { ctx.save(); ctx.fillStyle = MR.amber; ctx.fillRect(x - r, y - r, r * 2, r * 2); ctx.restore(); },
+  heroColor: '#f0a020',
+  post() {},
+  ones: true,
+};
+// =====================================================================
+//  SCENES — motion reel. Layout: content x 160..1760; the ₹10 Cr bar at y 900; HUD in the 56 px frame.
+// =====================================================================
+const USES = [
+  { id: 'proto', cr: 2.6, label: 'Prototypes' }, { id: 'respin', cr: 2.5, label: 'Respins' }, { id: 'team', cr: 2.5, label: 'Team' },
+  { id: 'approve', cr: 1.0, label: 'Approvals' }, { id: 'tools', cr: 1.0, label: 'Tools & lab' }, { id: 'cont', cr: 0.3, label: 'Contingency' },
+  { id: 'boards', cr: 0.1, label: 'Boards' },
+];
+const SMALL = ['approve', 'tools', 'cont', 'boards'];
+// when each line counts as spent: on the word that names it
+const SPENT = { proto: () => VW('proto', 'puts'), respin: () => VW('respin', 'held'), team: () => VW('team', 'keeps'),
+  approve: () => VW('small', 'approvals'), tools: () => VW('small', 'tools'), cont: () => VW('small', 'contingency'), boards: () => VW('small', 'boards') };
+const spentAt = (id) => SPENT[id]();
+const balance = () => 10 - USES.reduce((s, u) => s + (TT >= spentAt(u.id) + 0.4 ? u.cr : 0), 0);
+const BX = 160, BW = 1600, BY = 892, BH = 16;
+
+// the ₹10 Cr bar: seven segments; spent ones drain to an outline; the active ones glow
+function moneyBar(field, active = []) {
+  const ink = mrInk(field); let x = BX;
+  ctx.save(); ctx.font = `600 18px ${MRMONO}`; ctx.textBaseline = 'alphabetic';
+  for (const u of USES) {
+    const w = u.cr / 10 * BW - 6, k = mrOut(clamp((TT - spentAt(u.id)) / 0.5)), on = active.includes(u.id);
+    ctx.globalAlpha = 1; ctx.strokeStyle = on ? MR.amber : (field === MR.navy ? 'rgba(244,246,250,0.35)' : 'rgba(11,18,32,0.35)'); ctx.lineWidth = 2;
+    ctx.strokeRect(x + 1, BY + 1, w - 2, BH - 2);
+    ctx.fillStyle = on ? (field === MR.amber ? MR.ink : MR.amber) : (field === MR.navy ? 'rgba(244,246,250,0.55)' : 'rgba(11,18,32,0.55)');
+    if (!(TT >= spentAt(u.id))) ctx.fillRect(x, BY, w, BH); else if (on) ctx.fillRect(x, BY, w * (1 - 0.0 * k), BH);
+    if (on && w > 60) { ctx.fillStyle = ink; ctx.fillText(u.label.toUpperCase(), x, BY - 12); }
+    x += w + 6;
+  }
+  ctx.restore();
+}
+const bal = () => '₹ LEFT ' + Math.max(0, balance()).toFixed(1) + ' CR';
+const hud = (field, n, name) => mrHud({ field, title: 'TRANCHE 1 · WHAT ₹10 CR BUYS', section: `0${n}/07  ${name}`, right: bal() });
+
+function sceneOpen() {
+  const f = MR.navy; mrField(f);
+  const t = VL('open'), here = VW('open', "here's");
+  mrRoll(10, 1, 160, 600, 320, { at: t.t0 + 0.05, d: 1.1, prefix: '₹', color: MR.fg });
+  mrWords('CRORE', 160 + 6, 690, 64, { at: t.t0 + 0.6, weight: 700, color: MR.amber, track: 22, mono: false });
+  mrWords('Here is exactly what it buys.', 160, 800, 72, { at: here, weight: 700, color: MR.fg, stagger: 0.07 });
+  // the bar assembles segment by segment under the title
+  ctx.save(); let x = BX; USES.forEach((u, i) => { const w = u.cr / 10 * BW - 6; mrBar(x, BY, w, BH, MR.amber, t.t0 + 1.2 + i * 0.08, 0.5); x += w + 6; }); ctx.restore();
+  hud(f, 1, 'THE RAISE');
+}
+function sceneProto() {
+  const f = MR.amber, ink = MR.ink; mrField(f);
+  const t = VL('proto');
+  mrRoll(2.6, 1, 160, 470, 260, { at: t.t0, d: 0.9, prefix: '₹', color: ink });
+  mrWords('CRORE', 166, 548, 44, { at: t.t0 + 0.3, weight: 700, color: ink, track: 16 });
+  mrWords('Nine prototypes', 160, 690, 104, { at: VW('proto', 'nine'), weight: 800, color: ink });
+  mrWords('DECEMBER 2026 SHUTTLE  ·  ~₹0.29 CR EACH', 166, 770, 30, { at: VW('proto', 'december'), weight: 600, color: ink, mono: true, stagger: 0.03 });
+  // nine chips light in a 3×3 grid on "nine prototype chips"
+  const g0 = VW('proto', 'nine');
+  for (let i = 0; i < 9; i++) { const k = mrOut(clamp((TT - g0 - i * 0.08) / 0.35)); const cx = 1300 + (i % 3) * 150, cy = 260 + Math.floor(i / 3) * 150;
+    ctx.save(); ctx.globalAlpha = clamp(k * 1.4); ctx.translate(cx, cy + (1 - k) * 40); mrChip(0, 0, 96, k > 0.6 ? 1 : 0, MR.ink, f); ctx.restore(); }
+  moneyBar(f, ['proto']); hud(f, 2, 'PROTOTYPES');
+}
+function sceneRespin() {
+  const f = MR.navy; mrField(f);
+  const t = VL('respin');
+  mrRoll(2.5, 1, 160, 470, 260, { at: t.t0, d: 0.9, prefix: '₹', color: MR.fg });
+  mrWords('CRORE', 166, 548, 44, { at: t.t0 + 0.3, weight: 700, color: MR.amber, track: 16 });
+  mrWords('Held for respins', 160, 690, 104, { at: VW('respin', 'held'), weight: 800 });
+  mrWords('ABOUT EIGHT RE-RUNS', 166, 770, 30, { at: VW('respin', 'about'), weight: 600, color: MR.dim, mono: true, stagger: 0.04 });
+  // eight wafers: rings that draw on, one per re-run
+  const r0 = VW('respin', 'eight');
+  for (let i = 0; i < 8; i++) { const k = mrOut(clamp((TT - r0 - i * 0.07) / 0.5)); if (k <= 0) continue; const cx = 1180 + (i % 4) * 150, cy = 300 + Math.floor(i / 4) * 170;
+    ctx.save(); ctx.strokeStyle = MR.amber; ctx.lineWidth = 4; ctx.beginPath(); ctx.arc(cx, cy, 56, -Math.PI / 2, -Math.PI / 2 + Math.PI * 2 * k); ctx.stroke();
+    ctx.globalAlpha = 0.25 * k; ctx.lineWidth = 1.5; for (let a = -2; a <= 2; a++) { ctx.beginPath(); ctx.moveTo(cx - 40, cy + a * 16); ctx.lineTo(cx + 40, cy + a * 16); ctx.stroke(); }
+    ctx.restore(); }
+  moneyBar(f, ['respin']); hud(f, 3, 'RESPINS');
+}
+function sceneTeam() {
+  const f = MR.white, ink = MR.ink; mrField(f);
+  const t = VL('team');
+  mrRoll(2.5, 1, 160, 470, 260, { at: t.t0, d: 0.9, prefix: '₹', color: ink });
+  mrWords('CRORE', 166, 548, 44, { at: t.t0 + 0.3, weight: 700, color: MR.amberDeep, track: 16 });
+  mrWords('The engineering team', 160, 690, 96, { at: VW('team', 'engineering'), weight: 800, color: ink });
+  // a timeline: two spans, drawn by an eased glowing path with a head
+  const y = 470, x0 = 1000, x1 = 1380, x2 = 1760, a = VW('team', 'march'), b = VW('team', 'twelve');
+  ctx.save(); ctx.strokeStyle = 'rgba(11,18,32,0.25)'; ctx.lineWidth = 2; ctx.beginPath(); ctx.moveTo(x0, y); ctx.lineTo(x2, y); ctx.stroke(); ctx.restore();
+  const P = []; for (let i = 0; i <= 80; i++) { const u = i / 80; P.push([x0 + (x2 - x0) * u, y - Math.sin(u * Math.PI) * 0]); }
+  const ua = mrInOut(clamp((TT - a + 0.2) / 0.9)) * ((x1 - x0) / (x2 - x0)), ub = mrInOut(clamp((TT - b + 0.2) / 0.9)) * ((x2 - x1) / (x2 - x0));
+  mrPath(P, ua + ub, MR.amberDeep, { w: 7, head: 12 });
+  const lab = (x, top, bot, at) => { const k = mrOut(mrK(at, 0.5)); if (k <= 0) return; ctx.save(); ctx.globalAlpha = k; ctx.fillStyle = ink; ctx.font = `800 72px ${MRSANS}`; ctx.fillText(top, x, y - 44); ctx.font = `600 26px ${MRMONO}`; ctx.fillStyle = 'rgba(11,18,32,0.6)'; ctx.fillText(bot, x, y + 60); ctx.fillRect(x, y - 16, 3, 32); ctx.restore(); };
+  lab(x0, '₹1.0 Cr', 'TO MARCH 2027', a); lab(x1, '₹1.5 Cr', 'NEXT 12 MONTHS', b);
+  moneyBar(f, ['team']); hud(f, 4, 'TEAM');
+}
+function sceneSmall() {
+  const f = MR.navy; mrField(f);
+  const t = VL('small');
+  mrRoll(2.4, 1, 160, 470, 260, { at: t.t0, d: 0.9, prefix: '₹', color: MR.fg });
+  mrWords('CRORE', 166, 548, 44, { at: t.t0 + 0.3, weight: 700, color: MR.amber, track: 16 });
+  mrWords('The last four lines', 160, 690, 96, { at: t.t0 + 0.2, weight: 800 });
+  // four bars race on the words that name them
+  const rows = [['approve', 'First approvals', 1.0, 'approvals'], ['tools', 'Tools and lab', 1.0, 'tools'], ['boards', 'Boards', 0.1, 'boards'], ['cont', 'Contingency', 0.3, 'contingency']];
+  rows.forEach(([id, name, cr, w], i) => { const y = 250 + i * 110, at = VW('small', w);
+    const k = mrOut(mrK(at, 0.6)); if (k <= 0) return;
+    ctx.save(); ctx.globalAlpha = clamp(k * 2); ctx.fillStyle = MR.fg; ctx.font = `700 30px ${MRSANS}`; ctx.fillText(name, 1060, y);
+    ctx.font = `700 30px ${MRMONO}`; ctx.textAlign = 'right'; ctx.fillStyle = MR.amber; ctx.fillText('₹' + cr.toFixed(1), 1760, y); ctx.restore();
+    mrBar(1060, y + 18, 700 * cr / 1.0, 14, MR.amber, at, 0.7); });
+  moneyBar(f, SMALL); hud(f, 5, 'THE REST');
+}
+function sceneShare() {
+  const f = MR.amber, ink = MR.ink; mrField(f);
+  const t = VL('share');
+  mrRoll(76, 0, 160, 640, 440, { at: t.t0, d: 1.2, suffix: '%', color: ink, track: -14 });
+  mrWords('goes to chips, respins and people.', 172, 760, 64, { at: VW('share', 'goes'), weight: 700, color: ink });
+  mrWords('₹7.6 CR OF ₹10 CR', 178, 830, 30, { at: VW('share', 'chips'), weight: 700, color: ink, mono: true });
+  moneyBar(f, ['proto', 'respin', 'team']); hud(f, 6, 'THE SHARE');
+}
+function sceneClose() {
+  const f = MR.navy; mrField(f);
+  const t = VL('close'), p = TIMELINE.cues.payoff;
+  // nine chips in a row, lit on the payoff hit (in the pause before the line), sweeping left to right
+  for (let i = 0; i < 9; i++) { const k = mrOut(clamp((TT - p - i * 0.06) / 0.4)); const cx = 280 + i * 170, cy = 330;
+    ctx.save(); ctx.translate(cx, cy + (1 - k) * 30); ctx.globalAlpha = 0.35 + 0.65 * k; mrChip(0, 0, 104, k > 0.5 ? 1 : 0, MR.amber, f); ctx.restore(); }
+  mrWords('First silicon', 160, 610, 120, { at: VW('close', 'first'), weight: 800 });
+  mrWords('for nine chips.', 160, 740, 120, { at: VW('close', 'nine'), weight: 800, color: MR.amber });
+  if (TT > t.t1 + 0.2) { ctx.save(); ctx.globalAlpha = clamp((TT - t.t1 - 0.2) / 0.5); ctx.font = `500 22px ${MRMONO}`; ctx.fillStyle = MR.dim;
+    ctx.fillText('PLANNED ALLOCATION, NOT SPEND  ·  PRE-SILICON  ·  NO PURCHASE ORDERS TODAY', 166, 830); ctx.restore(); }
+  moneyBar(f, []); hud(f, 7, 'WHAT IT BUYS');
+}
+
+// the rush: one full-frame card per small line, cut on the word that names it; amber and navy alternate
+function sceneCard(id, i) {
+  const u = USES.find((x) => x.id === id), f = i % 2 ? MR.amber : MR.navy, ink = f === MR.navy ? MR.fg : MR.ink; mrField(f);
+  const t0 = ERA_LIST.find(([a]) => Math.abs(a - E0) < 1e-6)[0];
+  mrRoll(u.cr, 1, 160, 560, 300, { at: t0, d: 0.35, prefix: '₹', color: f === MR.navy ? MR.amber : MR.ink });
+  mrWords({ approve: 'First approvals', tools: 'Tools and lab', boards: 'Bring-up boards', cont: 'Contingency' }[id], 160, 700, 104, { at: t0, d: 0.3, stagger: 0.03, color: ink });
+  moneyBar(f, [id]); hud(f, 5, 'THE REST');
+}
+// CAMERAS AND (NO) BRIDGES — hard cuts on the voice; no camera moves.
+const ERA_BG = SHOT_LIST.map(([, key]) => ({ proto: '#f0a020', share: '#f0a020', team: '#f4f6fa', 'card-tools': '#f0a020', 'card-cont': '#f0a020' }[key] || '#0b1220'));
+// a slow push on every shot (3.5 % over the shot), so a held line never reads as a still; the HUD stays at screen size
+function pieceCam(era, t) { const [t0, t1] = ERA_LIST[era], u = clamp((t - t0) / Math.max(0.5, t1 - t0)); return camOf({ z: 1 + 0.035 * u, p: [960, 540], to: [960, 540] }); }
+const BRIDGES = [];
+
+// =====================================================================
+//  kit/morph.js — the renderer for pieces built from ERAS (scenes) joined by SHAPE MORPHS.
+//
+//  At each bridge time tc:
+//    shrink [tc-d, tc-m]      the old era is seen through a window shaped like the bridge object (STYLE.window),
+//                             shrinking onto the object while the backdrop fades to blank paper
+//    morph  [tc-m, tc+m]      on blank paper, the object's outline blends into its counterpart's
+//                             (both resampled by angle around their centroids; colour lerped). Hero-to-hero
+//                             bridges draw the hero itself with blended position, size and ray count.
+//    grow   [tc+m, tc+d]      the new era opens out of a window shaped like the counterpart
+//    d = the bridge's half-length (default 0.6s, so a bridge costs 1.2s), m = the morph's half (default 0.2s, or d/3 when d is set).
+//    Short pieces: { tc, d: 0.4 } (0.8s) or fewer bridges — see craft.md -> Transitions.
+//  Era boundaries WITHOUT a bridge are hard cuts (keep at most one: the slam).
+//
+//  The piece defines (in its head / src):
+//    ERA_LIST = [[t0, t1, () => drawScene()], ...]      scenes draw in world coords, call yearTag()/capStrip()
+//    ERA_BG   = ['#hex', ...]                          each era's dominant colour (for the fade to paper)
+//    BRIDGES  = [{ tc, A: () => shape, B: () => shape, d?, m? }]   shape = { P: points, c: '#hex' } or SP(x, y, r, rays)
+//    function pieceCam(era, t) { return null | CAM }   optional; use push() / bump() below
+//  Shapes are in each era's world coords; the bridge object must be in frame at tc (pull push-ins back first).
+//  The look comes from the style kit's STYLE hooks (paper, backdrop, window, blob, hero, post, ones):
+//  this file draws nothing itself, so the same piece structure works in any style.
+// =====================================================================
+// ---- cameras: CAM = { z, tx, ty }; camOf({ z, p, to }) puts world point p on screen point to
+const CAM0 = { z: 1, tx: 0, ty: 0 };
+const camOf = (c) => ({ z: c.z, tx: c.to[0] - c.z * c.p[0], ty: c.to[1] - c.z * c.p[1] });
+const camMix = (a, b, u) => ({ z: lerp(a.z, b.z, u), tx: lerp(a.tx, b.tx, u), ty: lerp(a.ty, b.ty, u) });
+// an eased push-in over [a, b] to cam, optionally pulled back over [oa, ob]
+function push(t, a, b, cam, oa, ob) { let u = EZ.io(seg(t, a, b)); if (oa != null) u *= 1 - EZ.io(seg(t, oa, ob)); return u > 0 ? camMix(CAM0, camOf(cam), u) : null; }
+// a zoom bump on every beat from t0, centred on point p (the hero keeps its screen spot)
+function bump(t, t0, p, amt = 0.3, every = 0.5) { return camOf({ z: 1 + amt * Math.exp(-mod(t - t0, every) * 7), p, to: p }); }
+function camAt(era, t) { return (typeof pieceCam === 'function' && pieceCam(era, t)) || CAM0; }
+const camPts = (P, c) => P.map(([x, y]) => [c.z * x + c.tx, c.z * y + c.ty]);
+// ---- bridge shapes
+function starPts(x, y, r, n, r0 = -Math.PI / 2, m = 96) {
+  const P = []; for (let i = 0; i < m; i++) { const a = i / m * TAU, k = 0.42 + 0.58 * (0.5 + 0.5 * Math.cos(n * (a - r0))) ** 3; P.push([x + Math.cos(a) * r * k, y + Math.sin(a) * r * k]); }
+  return P;
+}
+const SP = (x, y, r, n) => ({ spark: [x, y, r, n] });
+const shapeOf = (s) => (s.spark ? { P: (STYLE.heroPts || starPts)(...s.spark), c: STYLE.heroColor, spark: s.spark } : s);
+function byAngle(P, m = 96) {   // resample a closed outline to m points by angle around its centroid
+  const c = P.reduce((a, p) => [a[0] + p[0] / P.length, a[1] + p[1] / P.length], [0, 0]), Q = resample(P, true, 4), out = [];
+  for (let i = 0; i < m; i++) {
+    const a = -Math.PI + i / m * TAU; let best = null, bd = 1e9;
+    for (const q of Q) { let d = Math.atan2(q[1] - c[1], q[0] - c[0]) - a; d = Math.abs(Math.atan2(Math.sin(d), Math.cos(d))); const r = Math.hypot(q[0] - c[0], q[1] - c[1]); if (d < bd - 1e-4 || (Math.abs(d - bd) < 1e-4 && r > best[2])) { bd = d; best = [q[0], q[1], r]; } }
+    out.push([best[0], best[1]]);
+  }
+  return { P: out, c };
+}
+const mixHex = (a, b, u) => { const p = (h) => [1, 3, 5].map((i) => parseInt(h.slice(i, i + 2), 16)); const x = p(a), y = p(b); return `rgb(${x.map((v, i) => Math.round(lerp(v, y[i], u))).join(',')})`; };
+function maskK(P) {   // how far the window must scale about its centroid to cover the frame
+  const c = P.reduce((a, p) => [a[0] + p[0] / P.length, a[1] + p[1] / P.length], [0, 0]);
+  const rmin = Math.max(8, Math.min(...byAngle(P, 48).P.map((p) => Math.hypot(p[0] - c[0], p[1] - c[1]))));
+  const far = Math.max(...[[0, 0], [W, 0], [0, H], [W, H]].map((q) => Math.hypot(q[0] - c[0], q[1] - c[1])));
+  return { c, kmax: far / rmin * 1.1 };
+}
+const scaled = (P, c, k) => P.map(([x, y]) => [c[0] + (x - c[0]) * k, c[1] + (y - c[1]) * k]);
+// ---- layers and windows
+const LAYER = [];
+function layer(i) { if (!LAYER[i]) { const c = document.createElement('canvas'); c.width = W; c.height = H; LAYER[i] = c; } return LAYER[i]; }
+function renderEra(e, target) {   // draws era e into target; returns its overlay queue (year tag, caption)
+  const saved = ctx; ctx = target.getContext('2d');
+  ctx.save(); ctx.setTransform(1, 0, 0, 1, 0, 0); ctx.globalAlpha = 1; ctx.filter = 'none'; ctx.setLineDash([]);
+  ctx.fillStyle = STYLE.paper; ctx.fillRect(0, 0, W, H);   // a clean sheet every frame: nothing carries over between frames
+  const cam = camAt(e, TT); ctx.setTransform(cam.z, 0, 0, cam.z, cam.tx, cam.ty);
+  DEFER = []; ERA_LIST[e][2](); const q = DEFER; DEFER = null;
+  ctx.restore(); ctx = saved;
+  return q;
+}
+function flush(q, e) { const keep = E0; E0 = ERA_LIST[e][0]; ctx.setTransform(1, 0, 0, 1, 0, 0); q.forEach((f) => f()); E0 = keep; }
+function shotAtFrame(fr) {
+  for (const s of TIMELINE.shots) if (fr >= Math.round(s.t0 * FPS) && fr < Math.round(s.t1 * FPS)) return s;
+  return TIMELINE.shots[TIMELINE.shots.length - 1];
+}
+const eraAt = (t) => ERA_LIST.findIndex(([a, b]) => t >= a - 1e-6 && t < b - 1e-6);
+// renderFrame(t, canvas, sub): sub = true draws the exact time t between frames (motion blur sub-frames, styles on 1s)
+function renderFrame(t, canvas, sub) {
+  const cv = canvas || document.getElementById('c');
+  ctx = cv.getContext('2d');
+  F = ((Math.floor(sub ? t * FPS + 1e-6 : Math.round(t * FPS)) % NFRAMES) + NFRAMES) % NFRAMES;
+  B = Math.floor(F / 2);
+  TT = (STYLE.ones ? (sub ? F + (t * FPS - Math.floor(t * FPS + 1e-6)) : F) : B * 2) / FPS;
+  // the era is picked by the real frame, so a cut on an odd frame (a 16th at 24fps) lands on that frame;
+  // on its first frame the new era is drawn at its own start time (motion stays on 2s inside it)
+  const s = shotAtFrame(F), e = Math.max(0, eraAt(F / FPS));
+  E0 = ERA_LIST[e][0];
+  if (TT < E0 - 1e-6) TT = E0;
+  ctx.save(); ctx.setTransform(1, 0, 0, 1, 0, 0); ctx.globalAlpha = 1; ctx.globalCompositeOperation = 'source-over'; ctx.setLineDash([]); ctx.filter = 'none';
+  SPARK_AT = null;
+  const bd = (r) => r.d ?? 0.6, bm = (r) => r.m ?? (r.d != null ? r.d / 3 : 0.2);
+  const tr = BRIDGES.find((r) => TT >= r.tc - bd(r) - 1e-6 && TT < r.tc + bd(r) - 1e-6);
+  if (!tr) {
+    const q = renderEra(e, layer(0)); ctx.drawImage(layer(0), 0, 0); flush(q, e);
+  } else {
+    const ea = eraAt(tr.tc - 0.01), eb = eraAt(tr.tc + 0.01);
+    const sa = shapeOf(tr.A()), sb = shapeOf(tr.B());
+    const PA = camPts(sa.P, camAt(ea, TT)), PB = camPts(sb.P, camAt(eb, TT));
+    const D = bd(tr), M = bm(tr);
+    if (TT < tr.tc - M) {
+      const u = EZ.i2(seg(TT, tr.tc - D, tr.tc - M)), { c, kmax } = maskK(PA), k = Math.exp(lerp(Math.log(kmax), 0, u));
+      STYLE.backdrop(mixHex(ERA_BG[ea], STYLE.paper, 0.5 + u * 0.5), { eraA: ea, eraB: eb, u, phase: 'shrink' });
+      const q = renderEra(ea, layer(0));
+      STYLE.window(scaled(PA, c, k), 'mA' + tr.tc, layer(0), { c: sa.c, u, phase: 'shrink', eraA: ea, eraB: eb });
+      flush(q, ea);
+    } else if (TT < tr.tc + M) {
+      const u = EZ.io(seg(TT, tr.tc - M, tr.tc + M));
+      STYLE.backdrop(STYLE.paper, { eraA: ea, eraB: eb, u, phase: 'morph' });
+      if (sa.spark && sb.spark) {
+        const ca = camAt(ea, TT), cb = camAt(eb, TT), [ax, ay] = camPts([sa.spark.slice(0, 2)], ca)[0], [bx, by] = camPts([sb.spark.slice(0, 2)], cb)[0];
+        STYLE.hero(lerp(ax, bx, u), lerp(ay, by, u), lerp(sa.spark[2] * ca.z, sb.spark[2] * cb.z, u), { rays: Math.round(lerp(sa.spark[3], sb.spark[3], u)), mood: 'wow', key: 'morphspark' });
+      } else {
+        const A2 = byAngle(PA), B2 = byAngle(PB), M = A2.P.map((p, i) => [lerp(p[0], B2.P[i][0], u), lerp(p[1], B2.P[i][1], u)]);
+        STYLE.blob(M, mixHex(sa.c, sb.c, u), 'morph' + tr.tc, u, { eraA: ea, eraB: eb, phase: 'morph' });
+        if (sb.spark && u > 0.6) STYLE.hero(...camPts([sb.spark.slice(0, 2)], camAt(eb, TT))[0], sb.spark[2] * clamp((u - 0.6) / 0.4), { rays: sb.spark[3], mood: 'wow', key: 'morphspark2' });
+      }
+    } else {
+      const u = EZ.o2(seg(TT, tr.tc + M, tr.tc + D)), { c, kmax } = maskK(PB), k = Math.exp(lerp(0, Math.log(kmax), u));
+      STYLE.backdrop(mixHex(STYLE.paper, ERA_BG[eb], u * 0.5), { eraA: ea, eraB: eb, u, phase: 'grow' });
+      const q = renderEra(eb, layer(0));
+      STYLE.window(scaled(PB, c, k), 'mB' + tr.tc, layer(0), { c: sb.c, u, phase: 'grow', eraA: ea, eraB: eb });
+      flush(q, eb);
+    }
+  }
+  ctx.setTransform(1, 0, 0, 1, 0, 0);
+  if (STYLE.post) STYLE.post();
+  ctx.restore();
+  return s.id;
+}
+window.renderFrame = renderFrame;
+window.anchorAt = () => (SPARK_AT ? { x: SPARK_AT[0], y: SPARK_AT[1] } : null);
+
+// =====================================================================
+//  kit/board.js — the storyboard: every beat in TIMELINE.board drawn as a 9:16 key frame with its notes.
+//  The panels ARE the piece: each one is renderFrame(t) at the beat's key time, so an approved board
+//  carries straight into the video.  TIMELINE.board = [{ t, title, sound, next }]
+//  Render: node tools/storyboard.mjs <piece dir> [out.png] [panel numbers...]
+// =====================================================================
+function drawPanel(k) { renderFrame(TIMELINE.board[k].t, ctx.canvas); }
+function renderBoard() {
+  const BD = TIMELINE.board || [], COLS = 5, PW = 360, PH = Math.round(PW * H / W), GAP = 30, NOTE = 130, HEAD = 150;
+  const rows = Math.ceil(BD.length / COLS), bc = document.createElement('canvas');
+  bc.width = GAP + COLS * (PW + GAP); bc.height = HEAD + rows * (PH + NOTE + GAP);
+  const g = bc.getContext('2d'), SANS = '"Segoe UI", Arial, sans-serif';
+  g.fillStyle = '#2a211b'; g.fillRect(0, 0, bc.width, bc.height);
+  g.fillStyle = '#efe5cf'; g.font = `400 60px ${HAND}`; g.fillText(`${document.title}: storyboard`, GAP, 80);
+  g.font = `600 22px ${SANS}`; g.fillStyle = '#d9c9a8';
+  g.fillText(`${TIMELINE.duration}s · ${W}×${H} · ${TIMELINE.bpm} BPM · ${BD.length} beats. Thumbs up or down by panel number.`, GAP, 122);
+  const wrap = (str, x, y, maxW, lh) => { let line = ''; for (const w of str.split(' ')) { const t = line ? line + ' ' + w : w; if (g.measureText(t).width > maxW && line) { g.fillText(line, x, y); y += lh; line = w; } else line = t; } if (line) g.fillText(line, x, y); return y + lh; };
+  const pc = document.createElement('canvas'); pc.width = W; pc.height = H;
+  BD.forEach((b, k) => {
+    renderFrame(b.t, pc);
+    const x = GAP + (k % COLS) * (PW + GAP), y = HEAD + Math.floor(k / COLS) * (PH + NOTE + GAP);
+    g.drawImage(pc, x, y, PW, PH);
+    g.fillStyle = '#f0b27c'; g.font = `700 26px ${SANS}`; g.fillText(`${k + 1}`, x, y + PH + 32);
+    g.fillStyle = '#efe5cf'; g.font = `600 20px ${SANS}`;
+    let ttl = `${b.t.toFixed(1)}s · ${b.title || ''}`; while (ttl.length > 4 && g.measureText(ttl).width > PW - 44) ttl = ttl.slice(0, -2) + '…';   // fits the panel
+    g.fillText(ttl, x + 40, y + PH + 30);
+    g.font = `400 18px ${SANS}`; g.fillStyle = '#cdbd9c';
+    const yy = b.sound ? wrap('sound: ' + b.sound, x, y + PH + 58, PW, 22) : y + PH + 58;
+    if (b.next) { g.fillStyle = '#a8977a'; wrap('→ ' + b.next, x, yy + 2, PW, 22); }
+  });
+  return bc;
+}
+window.renderBoard = renderBoard; window.drawPanel = drawPanel;
+// =====================================================================
+//  kit/score-head.js — live preview (click to hear), noise/impulse/WAV helpers, and the synth.
+//  buildScore() opens here; the piece's score body follows (src/score.js), then kit/score-tail.js closes it.
+//  Helpers inside buildScore: pluck, noiseHit, sub, sweep, riser, chime, bass, blip, pad, drone, out, osc, env.
+//  Set `to = 'm'` (music bus) or `to = 's'` (sfx bus) before calling them. Notes: nz('D4').
+// =====================================================================
+// live preview: rAF on the 24fps grid; click to hear the score (?t=1.5 freezes a frame)
+const QS = new URLSearchParams(location.search);
+const LIVE = { audio: null, t0: 0, start: performance.now() };
+if (!QS.has('export')) {
+  const cv = document.getElementById('c');
+  if (QS.has('t')) renderFrame(parseFloat(QS.get('t')));
+  else {
+    const tick = () => {
+      const sec = LIVE.audio ? LIVE.audio.currentTime - LIVE.t0 : (performance.now() - LIVE.start) / 1000;
+      const t = ((sec % LOOP_T) + LOOP_T) % LOOP_T;
+      renderFrame(Math.floor(t * FPS) / FPS);
+      requestAnimationFrame(tick);
+    };
+    requestAnimationFrame(tick);
+  }
+  cv.addEventListener('click', async () => {
+    if (LIVE.audio || typeof buildScore !== 'function') return;
+    const ac = new AudioContext(), score = await buildScore(ac.sampleRate);
+    const buf = ac.createBuffer(2, score.left.length, score.sampleRate);
+    buf.copyToChannel(score.left, 0); buf.copyToChannel(score.right, 1);
+    const src = ac.createBufferSource(); src.buffer = buf; src.loop = true; src.connect(ac.destination);
+    LIVE.t0 = ac.currentTime + 0.05; src.start(LIVE.t0); LIVE.audio = ac;
+  });
+}
+
+const HZ = {
+  A1: 55.0, D2: 73.42, F2: 87.31, A2: 110.0, D3: 146.83, F3: 174.61, A3: 220.0, C4: 261.63, D4: 293.66, E4: 329.63, F4: 349.23,
+  Fs4: 369.99, A4: 440.0, B4: 493.88, C5: 523.25, D5: 587.33, E5: 659.25, Fs5: 739.99, A5: 880.0, D6: 1174.66, A6: 1760.0,
+};
+function makeNoise(ac, sec) {
+  const b = ac.createBuffer(1, Math.floor(sec * ac.sampleRate), ac.sampleRate), d = b.getChannelData(0), R = RNG('noise');
+  for (let i = 0; i < d.length; i++) d[i] = R.f() * 2 - 1;
+  return b;
+}
+function makeImpulse(ac, sec, decay) {
+  const n = Math.floor(sec * ac.sampleRate), b = ac.createBuffer(2, n, ac.sampleRate);
+  for (let c = 0; c < 2; c++) { const d = b.getChannelData(c), R = RNG('ir', c); for (let i = 0; i < n; i++) d[i] = (R.f() * 2 - 1) * Math.pow(1 - i / n, decay); }
+  return b;
+}
+function encodeWav(left, right, sr) {
+  const n = left.length, buf = new ArrayBuffer(44 + n * 4), v = new DataView(buf);
+  const ws = (o, s) => { for (let i = 0; i < s.length; i++) v.setUint8(o + i, s.charCodeAt(i)); };
+  ws(0, 'RIFF'); v.setUint32(4, 36 + n * 4, true); ws(8, 'WAVE'); ws(12, 'fmt ');
+  v.setUint32(16, 16, true); v.setUint16(20, 1, true); v.setUint16(22, 2, true); v.setUint32(24, sr, true);
+  v.setUint32(28, sr * 4, true); v.setUint16(32, 4, true); v.setUint16(34, 16, true);
+  ws(36, 'da' + 'ta'); v.setUint32(40, n * 4, true);
+  let o = 44;
+  for (let i = 0; i < n; i++) { v.setInt16(o, Math.round(clamp(left[i], -1, 1) * 32767), true); v.setInt16(o + 2, Math.round(clamp(right[i], -1, 1) * 32767), true); o += 4; }
+  return new Uint8Array(buf);
+}
+
+
+const MIDI = (m) => 440 * 2 ** ((m - 69) / 12);
+const NOTE = { D2: 38, A2: 45, D3: 50, E3: 52, Fs3: 54, A3: 57, D4: 62, E4: 64, Fs4: 66, G4: 67, A4: 69, B4: 71, Cs5: 73, D5: 74, E5: 76, Fs5: 78, A5: 81, B5: 83, D6: 86, E6: 88, Fs6: 90, A6: 93 };
+// any note name: 'D4', 'Fs4' / 'F#4' (sharp), 'Bb3' (flat); the table above is the fast path
+function noteNum(n) {
+  if (NOTE[n] != null) return NOTE[n];
+  const m = /^([A-G])(s|#|b)?(-?\d)$/.exec(n); if (!m) throw new Error(`unknown note "${n}"`);
+  return 12 * (Number(m[3]) + 1) + { C: 0, D: 2, E: 4, F: 5, G: 7, A: 9, B: 11 }[m[1]] + (m[2] === 'b' ? -1 : m[2] ? 1 : 0);
+}
+const nz = (n) => MIDI(noteNum(n));
+async function buildScore(sampleRate = 48000, part = 'mix', normIn = null) {
+  const TAIL = 3.0, len = Math.ceil((LOOP_T + TAIL) * sampleRate);
+  const ac = new OfflineAudioContext(2, len, sampleRate);
+  const master = ac.createGain(); master.gain.value = 0.8;
+  const comp = ac.createDynamicsCompressor();
+  comp.threshold.value = -16; comp.knee.value = 10; comp.ratio.value = 3.5; comp.attack.value = 0.004; comp.release.value = 0.2;
+  master.connect(comp); comp.connect(ac.destination);
+  const musicBus = ac.createGain(), sfxBus = ac.createGain();
+  musicBus.gain.value = part === 'sfx' ? 0 : 1; sfxBus.gain.value = part === 'music' ? 0 : 1;
+  musicBus.connect(master); sfxBus.connect(master);
+  // ducking + presence dip, driven by the narration (lines closer than 0.29s are merged)
+  const duck = ac.createGain(), dip = ac.createBiquadFilter();
+  dip.type = 'peaking'; dip.frequency.value = 2500; dip.Q.value = 1;
+  duck.connect(dip); dip.connect(musicBus);
+  const lines = [];
+  for (const n of TIMELINE.narration) { const L = lines[lines.length - 1]; if (L && n.t0 - L.t1 < 0.29) L.t1 = n.t1; else lines.push({ t0: n.t0, t1: n.t1 }); }
+  const DUCK = 10 ** (-3 / 20);
+  duck.gain.setValueAtTime(1, 0); dip.gain.setValueAtTime(0, 0);
+  for (const L of lines) {
+    duck.gain.setValueAtTime(1, Math.max(0, L.t0 - 0.1)); duck.gain.linearRampToValueAtTime(DUCK, L.t0);
+    duck.gain.setValueAtTime(DUCK, L.t1 + 0.03); duck.gain.linearRampToValueAtTime(1, L.t1 + 0.18);
+    dip.gain.setValueAtTime(0, Math.max(0, L.t0 - 0.1)); dip.gain.linearRampToValueAtTime(-6, L.t0);
+    dip.gain.setValueAtTime(-6, L.t1 + 0.03); dip.gain.linearRampToValueAtTime(0, L.t1 + 0.18);
+  }
+  const mkVerb = (dest, sec = 1.6, decay = 2.8, level = 0.3) => { const v = ac.createConvolver(); v.buffer = makeImpulse(ac, sec, decay); const g = ac.createGain(); g.gain.value = level; v.connect(g); g.connect(dest); return v; };
+  const verbs = { m: mkVerb(duck), s: mkVerb(sfxBus) }, shortVerb = verbs.m, longVerb = mkVerb(duck, 3.6, 1.6, 0.55);
+  const noise = makeNoise(ac, 3.0);
+  let to = 'm';   // which bus the helpers below write to
+
+  // the gain is silent until the envelope starts (a GainNode defaults to 1: a note whose oscillator starts first would click)
+  const env = (g, t, a, peak, d) => { g.gain.value = 0.0001; g.gain.setValueAtTime(0.0001, t); g.gain.exponentialRampToValueAtTime(Math.max(0.0002, peak), t + a); g.gain.exponentialRampToValueAtTime(0.0001, t + a + d); };
+  const out = (node, pan = 0, send = 0) => {
+    const p = ac.createStereoPanner(); p.pan.value = clamp(pan, -1, 1); node.connect(p); p.connect(to === 'm' ? duck : sfxBus);
+    if (send) { const s = ac.createGain(); s.gain.value = send; node.connect(s); s.connect(verbs[to]); }
+  };
+  const osc = (type, f, t, stop) => { const o = ac.createOscillator(); o.type = type; o.frequency.setValueAtTime(f, t); o.start(t); o.stop(stop); return o; };
+  function pluck(t, f, vel, pan = 0, dur = 0.32, bright = 3200, send = 0.25) {
+    const lp = ac.createBiquadFilter(); lp.type = 'lowpass'; lp.Q.value = 2.5;
+    lp.frequency.setValueAtTime(bright, t); lp.frequency.exponentialRampToValueAtTime(380, t + dur);
+    const g = ac.createGain(); env(g, t, 0.003, vel, dur);
+    const g2 = ac.createGain(); g2.gain.value = 0.3;
+    osc('triangle', f, t, t + dur + 0.05).connect(lp);
+    osc('sine', f * 2.004, t, t + dur + 0.05).connect(g2); g2.connect(lp);
+    lp.connect(g); out(g, pan, send);
+  }
+  function noiseHit(t, dur, type, freq, q, vel, pan = 0, send = 0, sweepTo = 0) {
+    const src = ac.createBufferSource(); src.buffer = noise;
+    const f = ac.createBiquadFilter(); f.type = type; f.Q.value = q; f.frequency.setValueAtTime(freq, t);
+    if (sweepTo) f.frequency.exponentialRampToValueAtTime(sweepTo, t + dur);
+    const g = ac.createGain(); env(g, t, Math.min(0.004, dur * 0.3), vel, dur);
+    src.connect(f); f.connect(g); out(g, pan, send);
+    src.start(t, (t * 7.31) % 2.0); src.stop(t + dur + 0.05);
+  }
+  function sub(t, vel) {
+    const o = osc('sine', 120, t, t + 0.8); o.frequency.exponentialRampToValueAtTime(36, t + 0.3);
+    const g = ac.createGain(); env(g, t, 0.004, vel, 0.6); o.connect(g); out(g);
+    noiseHit(t, 0.07, 'lowpass', 1100, 0.7, vel * 0.45);
+  }
+  function sweep(t0, t1, vel, f0, f1, pan = 0) {
+    const src = ac.createBufferSource(); src.buffer = noise; src.loop = true;
+    const f = ac.createBiquadFilter(); f.type = 'bandpass'; f.Q.value = 1.1;
+    f.frequency.setValueAtTime(f0, t0); f.frequency.exponentialRampToValueAtTime(f1, t1);
+    const g = ac.createGain(); g.gain.setValueAtTime(0.0001, t0); g.gain.exponentialRampToValueAtTime(vel, t1 - 0.03); g.gain.linearRampToValueAtTime(0.0001, t1 + 0.005);
+    src.connect(f); f.connect(g); out(g, pan, 0.2); src.start(t0, (t0 * 3.1) % 1.0); src.stop(t1 + 0.05);
+  }
+  function riser(t0, t1, vel) {
+    const o = osc('sawtooth', 110, t0, t1 + 0.02); o.frequency.exponentialRampToValueAtTime(1320, t1);
+    const lp = ac.createBiquadFilter(); lp.type = 'lowpass'; lp.Q.value = 6; lp.frequency.setValueAtTime(300, t0); lp.frequency.exponentialRampToValueAtTime(5000, t1);
+    const g = ac.createGain(); g.gain.setValueAtTime(0.0001, t0); g.gain.exponentialRampToValueAtTime(vel, t1 - 0.01); g.gain.linearRampToValueAtTime(0.0001, t1 + 0.01);
+    o.connect(lp); lp.connect(g); out(g, 0, 0.3);
+    sweep(t0, t1, vel * 0.9, 400, 7000);
+  }
+  function chime(t, freqs, vel, pan = 0) {
+    freqs.forEach((f, i) => { const g = ac.createGain(), ti = t + i * 0.012; env(g, ti, 0.002, vel / (1 + i * 0.4), 1.3); osc('sine', f, ti, ti + 1.5).connect(g); out(g, pan + (i - 1) * 0.25, 0.6); });
+  }
+  function bass(t, f, vel) { const lp = ac.createBiquadFilter(); lp.type = 'lowpass'; lp.frequency.value = 320; const g = ac.createGain(); env(g, t, 0.006, vel, 0.28); osc('triangle', f, t, t + 0.35).connect(lp); lp.connect(g); out(g); }
+  function blip(t, f0, f1, dur, vel, pan = 0) { const o = osc('sine', f0, t, t + dur + 0.05); o.frequency.exponentialRampToValueAtTime(f1, t + dur); const g = ac.createGain(); env(g, t, 0.002, vel, dur); o.connect(g); out(g, pan, 0.2); }
+
+  // ---- v2 instruments built from the helpers above
+  function pad(t0, t1, notes, peak, o = {}) {
+    const lp = ac.createBiquadFilter(); lp.type = 'lowpass'; lp.frequency.value = o.cut ?? 1200; lp.Q.value = 0.7;
+    const g = ac.createGain(), hold = o.swellTo ?? peak;
+    g.gain.setValueAtTime(0.0001, t0); g.gain.exponentialRampToValueAtTime(peak, t0 + (o.att ?? 0.4));
+    if (o.swellTo) g.gain.linearRampToValueAtTime(o.swellTo, o.swellAt);
+    g.gain.setValueAtTime(hold, t1 - (o.rel ?? 0.3)); g.gain.exponentialRampToValueAtTime(0.0001, t1);
+    notes.forEach((n, i) => { for (const det of [-7, 7]) { const oo = osc(o.type ?? 'sawtooth', nz(n), t0, t1 + 0.05); oo.detune.value = det + i; oo.connect(lp); } });
+    lp.connect(g); out(g, o.pan ?? 0, o.send ?? 0.4);
+  }
+  function drone(t0, t1, f, peak, o = {}) {
+    const g = ac.createGain(); g.gain.setValueAtTime(0.0001, t0); g.gain.exponentialRampToValueAtTime(peak, t0 + (o.att ?? 0.5));
+    g.gain.setValueAtTime(peak, t1 - (o.rel ?? 0.4)); g.gain.exponentialRampToValueAtTime(0.0001, t1);
+    osc('sine', f, t0, t1 + 0.05).connect(g); out(g, 0, 0);
+  }
+  const claudeMotif = (t, notes, vel) => notes.forEach(([n, dt], i) => pluck(t + dt, nz(n), vel, -0.15 + i * 0.1, 0.6, 1300, 0.35));
+  const childMotif = (t, notes, vel, bright = 5200, send = 0.3) => notes.forEach(([n, dt], i) => pluck(t + dt, nz(n), vel, 0.2 - i * 0.1, 0.32, bright, send));
+  // SCORE BODY — a quiet bed under the voice (music at −14 dB, ducked further while the voice speaks), a tick on each
+  // cut, a drop out under the share line, and the payoff hit in the pause before the closing line.
+  const T = TIMELINE, cu = T.cues;
+  to = 'm';
+  pad(0.0, T.cuts[4] + 0.2, ['D3', 'A3', 'Fs4'], 0.035, { type: 'triangle', cut: 1100, att: 0.4, rel: 0.4 });
+  for (let b = 0.5; b < T.cuts[4]; b += BEAT) pluck(b, nz(['D4', 'A4', 'Fs4', 'A4'][Math.round(b / BEAT) % 4]), 0.07, 0, 0.25, 2400, 0.25);
+  T.cuts.forEach((c) => noiseHit(c, 0.05, 'bandpass', 2600, 1.4, 0.22));
+  pad(T.cuts[4], cu.payoff - 0.05, ['B2', 'Fs3', 'D4'], 0.03, { cut: 900, att: 0.3, rel: 0.2 });
+  chime(cu.payoff, [nz('D5'), nz('Fs5'), nz('A5')], 0.1); sub(cu.payoff, 0.35); bass(cu.payoff, nz('D2'), 0.25);
+  pad(cu.payoff + 0.05, T.duration, ['D3', 'A3', 'D4', 'Fs4'], 0.04, { cut: 1200, att: 0.3, rel: 0.4, send: 0.4 });
+  // =====================================================================
+  //  kit/score-tail.js — render, fold the tail over the loop point, loudness stage
+  //  (RMS-normalise to -17 dBFS, look-ahead limiter at -1 dBFS; stems share the mix gain curve)
+  // =====================================================================
+  const buf = await ac.startRendering();
+  // fold the tail over the loop point so the loop is seamless
+  const N = Math.round(LOOP_T * sampleRate), L = new Float32Array(N), Rr = new Float32Array(N);
+  const c0 = buf.getChannelData(0), c1 = buf.getChannelData(1);
+  for (let i = 0; i < N; i++) { L[i] = c0[i] + (i + N < len ? c0[i + N] : 0); Rr[i] = c1[i] + (i + N < len ? c1[i + N] : 0); }
+  // loudness for a phone (subagents-short): RMS-normalise to -17 dBFS, then a look-ahead limiter at -1 dBFS.
+  // Stems reuse the mix's gain and gain curve, so they sum back to the mix.
+  let k = normIn?.k, g = normIn?.g;
+  if (!g) {
+    let sum = 0; for (let i = 0; i < N; i++) sum += (L[i] * L[i] + Rr[i] * Rr[i]) / 2;
+    k = 10 ** (-17 / 20) / Math.sqrt(sum / N || 1e-12);
+    const ceil = 0.89; g = new Float32Array(N);
+    for (let i = 0; i < N; i++) { const p = Math.max(Math.abs(L[i]), Math.abs(Rr[i])) * k; g[i] = p > ceil ? ceil / p : 1; }
+    const att = Math.exp(-1 / (0.0015 * sampleRate)), rel = Math.exp(-1 / (0.09 * sampleRate));
+    for (let i = N - 2; i >= 0; i--) g[i] = Math.min(g[i], 1 - (1 - g[i + 1]) * att);
+    let r = 1; for (let i = 0; i < N; i++) { r = Math.min(g[i], 1 - (1 - r) * rel); g[i] = r; }
+  }
+  for (let i = 0; i < N; i++) { L[i] *= k * g[i]; Rr[i] *= k * g[i]; }
+  return { left: L, right: Rr, sampleRate, norm: { k, g } };
+}
+function wavB64(s) {
+  const bytes = encodeWav(s.left, s.right, s.sampleRate);
+  let bin = '';
+  for (let i = 0; i < bytes.length; i += 0x8000) bin += String.fromCharCode.apply(null, bytes.subarray(i, i + 0x8000));
+  return btoa(bin);
+}
+async function renderAudioWav() { return wavB64(await buildScore(48000, 'mix')); }
+async function renderAudioStems() {
+  const mix = await buildScore(48000, 'mix');
+  const music = await buildScore(48000, 'music', mix.norm), sfx = await buildScore(48000, 'sfx', mix.norm);
+  return { music: wavB64(music), sfx: wavB64(sfx) };
+}
+window.renderAudioWav = renderAudioWav;
+window.renderAudioStems = renderAudioStems;
+</script>
+</body>
+</html>

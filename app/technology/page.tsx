@@ -9,6 +9,8 @@ import Architecture from '../architecture';
 import {FmaxChart} from '../fmax-chart';
 import Related from '../related';
 import {BrandImage} from '../brand-imagery';
+import {FilmPlayer} from '../film-player';
+import {url} from '../routes';
 
 export default function Page() {
   const reduced = useReduced();
@@ -25,6 +27,11 @@ export default function Page() {
           copy="DG32-LITE is the lockstep motor-control SoC; DG32-2DOM adds an INT8 attention engine on its own clock. Choose one for its diagram, every block and why it exists, the constraints that shaped it and how data moves through it, or see the die as recorded for tape-in."
           visual={<BrandImage kind="dg32" priority/>}
         />
+        <figure className="st-loop">
+          <FilmPlayer film={{id: 'technology-reel', title: 'Two chips, one frozen safety core', sub: 'The platform in seven beats, narrated', length: '0:47',
+            src: url('/media/technology-reel.mp4'), poster: url('/media/technology-reel-poster.jpg'), vtt: url('/media/technology-reel.vtt')}}/>
+          <figcaption className="st-loop-cap"><strong>Two chips, one frozen safety core · 0:47, narrated.</strong> Lockstep, the fault path, timing closure and the control-loop budget. Each figure carries its basis on screen: simulated, post-route or analytic. Concept animation; DeepGrid silicon remains pre-silicon.</figcaption>
+        </figure>
         <Architecture
           chip={params.get('chip') || 'lite'}
           block={block}

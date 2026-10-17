@@ -8,7 +8,7 @@ const f = (id: string, title: string, sub: string, length: string): Film => ({
   burned: id === 'dg32-fault-path-explained',   // built in HyperFrames with captions in the picture
 });
 export const films: Film[] = [
-  f('dg32-fault-path-explained', 'The fault path, explained', 'From a silent CPU fault to a switched-off bridge, in hardware', '1:28'),
+  f('dg32-fault-path-explained', 'The fault path, explained', 'From a silent CPU fault to a switched-off bridge, in hardware', '1:26'),
   f('dg32-lite-architecture', 'DG32-LITE system architecture', 'The lockstep motor-control chip, block by block', '7:43'),
   f('dg32-lite-datasheet', 'DG32-LITE datasheet', 'The preliminary datasheet, narrated', '5:33'),
   f('dg32-lite-tapein', 'DG32-LITE tape-in', 'From the frozen design to the shuttle', '5:30'),

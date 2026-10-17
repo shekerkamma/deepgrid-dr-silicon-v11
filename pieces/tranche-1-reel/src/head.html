@@ -1,0 +1,64 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>What ₹10 Cr buys</title>
+<style>
+  html, body { margin: 0; height: 100%; background: #05080f; overflow: hidden; }
+  body { display: flex; align-items: center; justify-content: center; }
+  canvas { width: min(100vw, calc(100vh * 16 / 9)); height: auto; aspect-ratio: 16 / 9; display: block; cursor: pointer; }
+</style>
+</head>
+<body>
+<canvas id="c" width="1920" height="1080"></canvas>
+<script>
+"use strict";
+// =====================================================================
+//  WHAT ₹10 Cr BUYS — narrated motion reel. 16:9, 30 fps; the voice is the clock (voice.json -> VOICE).
+//  One colour field per spoken line, cut ~0.25 s before the line; a persistent ₹10 Cr bar along the bottom empties
+//  line by line; the big moment of each scene lands on the word that names it. Every figure: the brief's tranche-1
+//  table (data/portfolio/tranche1-uses.csv).
+// =====================================================================
+const FPS = 30, W = 1920, H = 1080;
+const BPM = 120, BEAT = 60 / BPM, E8 = BEAT / 2, E16 = BEAT / 4;
+const DURATION = Math.round(VOICE.duration * FPS) / FPS;
+const NFRAMES = Math.round(DURATION * FPS);
+const LOOP_T = NFRAMES / FPS;
+const SAFE = { top: 48, bottom: 48, right: 48 };
+const CX = 960;
+const HAND = '"Segoe UI", Arial, sans-serif';
+// voice cues: VL(id) = the line {t0, t1}; VW(id, word, n) = when the n-th (1-based) occurrence of a word starts
+const VL = (id) => VOICE.lines.find((l) => l.id === id);
+const VW = (id, word, n = 1) => { const ws = VL(id).words.filter((w) => w.w.toLowerCase().replace(/[^a-z0-9-]/g, '') === word.toLowerCase()); return (ws[n - 1] || ws[0] || { t0: VL(id).t0 }).t0; };
+const LINES = ['open', 'proto', 'respin', 'team', 'small', 'share', 'close'];
+const q = (t) => Math.round(t * FPS) / FPS;
+const CUT = LINES.map((id, i) => (i === 0 ? 0 : q(VL(id).t0 - 0.25)));
+// the peak: the small line cuts to a full-frame card on each word that names an item, then holds a summary
+const RUSH = [['approve', 'approvals'], ['tools', 'tools'], ['boards', 'boards'], ['cont', 'contingency']].map(([id, w]) => [id, q(VW('small', w) - 0.05)]);
+const RUSH_END = q(Math.min(RUSH[3][1] + 0.7, CUT[5] - 0.6));
+const SHOT_LIST = [
+  [CUT[0], 'open', () => sceneOpen()], [CUT[1], 'proto', () => sceneProto()], [CUT[2], 'respin', () => sceneRespin()], [CUT[3], 'team', () => sceneTeam()],
+  [CUT[4], 'small', () => sceneSmall()],
+  ...RUSH.map(([id, t], i) => [t, 'card-' + id, () => sceneCard(id, i)]),
+  [RUSH_END, 'small-sum', () => sceneSmall()],
+  [CUT[5], 'share', () => sceneShare()], [CUT[6], 'close', () => sceneClose()],
+];
+const ERA_LIST = SHOT_LIST.map(([t0, , fn], i) => [t0, i + 1 < SHOT_LIST.length ? SHOT_LIST[i + 1][0] : DURATION, fn]);
+const TIMELINE = {
+  width: W, height: H, fps: FPS, bpm: BPM, duration: DURATION, frames: NFRAMES, loop: LOOP_T, safe: SAFE,
+  format: 'voice-cuts',
+  shots: SHOT_LIST.map(([t0, key], i) => ({ id: i + 1, key, era: i, t0, t1: ERA_LIST[i][1], title: key })),
+  cuts: SHOT_LIST.slice(1).map(([t0]) => t0), morphs: [],
+  cues: { payoff: Math.round((VL('close').t0 - 0.45) * FPS) / FPS },
+  acts: [
+    { name: '1 Open',   role: 'build',   t0: 0, t1: CUT[1] },
+    { name: '2 Lines',  role: 'journey', t0: CUT[1], t1: CUT[4] },
+    { name: '3 Small',  role: 'peak',    t0: CUT[4], t1: CUT[5] },
+    { name: '4 Share',  role: 'turn',    t0: CUT[5], t1: CUT[6] },
+    { name: '5 Payoff', role: 'gift',    t0: CUT[6], t1: DURATION },
+  ],
+  board: LINES.map((id) => ({ t: id === 'small' ? q(RUSH[1][1] + 0.2) : Math.min(VL(id).t1 - 0.2, CUT[LINES.indexOf(id) + 1] ? CUT[LINES.indexOf(id) + 1] - 0.1 : DURATION - 0.1), title: id, sound: 'voice: ' + VL(id).text.slice(0, 40), next: 'cut' })),
+  narration: VOICE.lines.map((l) => ({ t0: l.t0, t1: l.t1, text: l.text })),
+};
+window.TIMELINE = TIMELINE;

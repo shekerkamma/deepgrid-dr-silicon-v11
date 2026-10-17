@@ -1,93 +1,93 @@
 WEBVTT
 
 1
-00:00:00.000 --> 00:00:05.000
+00:00:00.020 --> 00:00:04.800
 A 77 gigahertz radar needs gain that plain CMOS cannot give,
 
 2
-00:00:05.000 --> 00:00:07.800
+00:00:04.800 --> 00:00:07.300
 and converters that must stay quiet
 
 3
-00:00:08.740 --> 00:00:12.680
+00:00:08.620 --> 00:00:12.500
 So SKU-7 splits the work across two dies.
 
 4
-00:00:12.682 --> 00:00:14.782
+00:00:12.500 --> 00:00:14.348
 It starts with a frequency ramp.
 
 5
-00:00:15.322 --> 00:00:18.322
+00:00:14.348 --> 00:00:18.288
 If that ramp bends anywhere across its sweep,
 
 6
-00:00:18.322 --> 00:00:21.762
+00:00:18.288 --> 00:00:22.208
 the radar starts seeing targets that are not there.
 
 7
-00:00:21.793 --> 00:00:25.593
+00:00:22.208 --> 00:00:25.442
 The oscillator runs at half the carrier, and a doubler lifts it
 
 8
-00:00:25.593 --> 00:00:27.673
+00:00:25.442 --> 00:00:27.162
 to 77 gigahertz.
 
 9
-00:00:27.673 --> 00:00:31.393
+00:00:27.342 --> 00:00:31.602
 The same chirp then serves transmit and receive.
 
 10
-00:00:31.414 --> 00:00:33.774
+00:00:31.602 --> 00:00:33.840
 Four receivers mix each echo down.
 
 11
-00:00:34.314 --> 00:00:38.374
+00:00:34.860 --> 00:00:38.960
 Frequency tells you distance, and the phase across the four tells you
 
 12
-00:00:38.374 --> 00:00:39.354
+00:00:38.960 --> 00:00:39.900
 direction.
 
 13
-00:00:39.354 --> 00:00:42.336
+00:00:39.900 --> 00:00:42.937
 The signal crosses between the dies exactly once,
 
 14
-00:00:42.336 --> 00:00:46.796
+00:00:42.937 --> 00:00:48.757
 as four channels, and becomes a map of range against speed.
 
 15
-00:00:46.796 --> 00:00:50.655
+00:00:48.757 --> 00:00:51.997
 Detection then holds a constant false-alarm rate against clutter,
 
 16
-00:00:50.655 --> 00:00:53.955
+00:00:52.477 --> 00:00:56.017
 and beamforming adds direction to every target.
 
 17
-00:00:53.955 --> 00:00:58.262
-The vehicle gets a list of up to 64 tracked targets,
+00:00:56.017 --> 00:00:59.423
+The vehicle gets a list of up to 64 tracked targets.
 
 18
-00:00:58.262 --> 00:01:01.622
-never the raw radar samples behind them.
+00:00:59.423 --> 00:01:02.783
+Never the raw radar samples behind them.
 
 19
-00:01:01.622 --> 00:01:06.486
+00:01:02.783 --> 00:01:07.160
 SKU-7 is pre-silicon, and its front end can only be proven on
 
 20
-00:01:06.486 --> 00:01:07.306
+00:01:07.160 --> 00:01:07.920
 silicon.
 
 21
-00:01:07.826 --> 00:01:10.506
-There is no FPGA stand-in
+00:01:08.440 --> 00:01:13.760
+There is no FPGA stand-in Bring us your field of view,
 
 22
-00:01:11.486 --> 00:01:13.806
-Bring us your field of view and range.
+00:01:13.760 --> 00:01:15.300
+and your range.
 
 23
-00:01:14.366 --> 00:01:17.586
+00:01:15.300 --> 00:01:18.960
 We will tell you what SKU-7 must prove.

@@ -1,0 +1,10 @@
+{
+  "name": "tranche-1-reel",
+  "title": "What ₹10 Cr buys (motion reel, narrated)",
+  "format": { "width": 1920, "height": 1080, "fps": 30, "bpm": 120 },
+  "formats": ["16:9"],
+  "storyFormat": "voice-led beat cuts: one colour field per line, a persistent ₹10 Cr bar that empties line by line",
+  "style": "motionreel",
+  "voice": { "file": "voice/voice.wav", "music": -14 },
+  "review": { "safe": { "top": 48, "bottom": 48, "right": 48 }, "refs": {} }
+}

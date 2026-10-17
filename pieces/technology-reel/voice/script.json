@@ -1,0 +1,48 @@
+{
+ "lead": 0.9,
+ "tail": 2.4,
+ "lines": [
+  {
+   "id": "open",
+   "text": "Two chips. One frozen safety core.",
+   "after": 0.7,
+   "file": "open.mp3"
+  },
+  {
+   "id": "lock",
+   "text": "DG32-LITE runs two cores in lockstep, checked against each other, continuously.",
+   "after": 0.6,
+   "file": "lock.mp3"
+  },
+  {
+   "id": "fault",
+   "text": "When they disagree, hardware shuts the motor bridge in thirty-nine cycles. No firmware in the path.",
+   "after": 0.6,
+   "file": "fault.mp3"
+  },
+  {
+   "id": "clock",
+   "text": "The placed-and-routed core closes at fifty-five to sixty-two megahertz, so it runs at a safe fifty.",
+   "after": 0.6,
+   "file": "clock.mp3"
+  },
+  {
+   "id": "budget",
+   "text": "One motor-control loop costs about three hundred cycles of hardware. At ten kilohertz, eighty-two percent is left for diagnostics.",
+   "after": 0.6,
+   "file": "budget.mp3"
+  },
+  {
+   "id": "dom",
+   "text": "DG32-2DOM adds an attention engine on its own one-hundred-fourteen megahertz clock, behind bridges.",
+   "after": 1.3,
+   "file": "dom.mp3"
+  },
+  {
+   "id": "close",
+   "text": "Two chips. One frozen safety core.",
+   "after": 0.2,
+   "file": "close.mp3"
+  }
+ ]
+}

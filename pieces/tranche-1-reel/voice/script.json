@@ -1,0 +1,48 @@
+{
+ "lead": 0.9,
+ "tail": 2.4,
+ "lines": [
+  {
+   "id": "open",
+   "text": "Ten crore rupees. Here's exactly what it buys.",
+   "after": 0.7,
+   "file": "open.mp3"
+  },
+  {
+   "id": "proto",
+   "text": "Two point six crore puts nine prototype chips on the December twenty twenty-six shuttle.",
+   "after": 0.6,
+   "file": "proto.mp3"
+  },
+  {
+   "id": "respin",
+   "text": "Two point five crore is held back for respins, about eight re-runs.",
+   "after": 0.6,
+   "file": "respin.mp3"
+  },
+  {
+   "id": "team",
+   "text": "Two point five crore keeps the engineering team going, to March twenty twenty-seven, and twelve months beyond.",
+   "after": 0.6,
+   "file": "team.mp3"
+  },
+  {
+   "id": "small",
+   "text": "The last two point four covers first approvals, tools and the lab, boards, and contingency.",
+   "after": 1.2,
+   "file": "small.mp3"
+  },
+  {
+   "id": "share",
+   "text": "Seventy-six percent goes to chips, respins, and people.",
+   "after": 1.1,
+   "file": "share.mp3"
+  },
+  {
+   "id": "close",
+   "text": "Ten crore buys first silicon for nine chips.",
+   "after": 0.2,
+   "file": "close.mp3"
+  }
+ ]
+}
