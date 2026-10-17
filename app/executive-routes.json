@@ -2,7 +2,7 @@
   "home": {
     "headline": "Silicon for motion, power and sensing.",
     "context": "Explore DeepGrid product architectures, their role in your equipment, and the evidence needed before adoption. Review funding milestones and partnership opportunities.",
-    "decision": "Review the opportunity and the evidence needed for a funding or partnership discussion.",
+    "decision": "The investment brief lists what ₹10 Cr buys and what each chip has proven.",
     "next": "/portfolio/brief"
   },
   "products": {
@@ -44,7 +44,7 @@
   "applications": {
     "headline": "Twelve architectures. Five system roles.",
     "context": "DeepGrid’s portfolio by the systems it goes into. Open a chip for what it replaces and its SKU Blueprint page; DG32-LITE, the pre-silicon proof point, opens into its diagnostic story: thirty tasks that fit its one core, and the sensor that limits them.",
-    "decision": "Name the failure or product limitation you want to address.",
+    "decision": "Each application maps a failure mode to the chip that catches it.",
     "next": "/contact"
   },
   "uc-motors": {
@@ -116,13 +116,13 @@
   "ask": {
     "headline": "Ask DeepGrid",
     "context": "Ask a question about DeepGrid. Read the answer, then open the supporting sources for further detail.",
-    "decision": "Use the answer to frame the next conversation or evaluation.",
+    "decision": "Every answer cites its sources; the evidence register shows their status.",
     "next": "/contact"
   },
   "about": {
     "headline": "A semiconductor company for edge AI, in Hyderabad.",
     "context": "DeepGrid’s portfolio connects control, power, sensing and interfaces to physical systems. The company story explains that focus; individual product evidence determines what can be adopted.",
-    "decision": "Judge the strategy through a specific customer requirement.",
+    "decision": "Each strategy claim traces to a product page and its evidence.",
     "next": "/company"
   },
   "team": {
@@ -146,97 +146,97 @@
   "contact": {
     "headline": "Request an investment discussion, a partnership or an engineering evaluation.",
     "context": "Request an investment discussion, strategic partnership or engineering evaluation. Ask for the evidence and materials needed for your next decision.",
-    "decision": "Leave the conversation with a clear scope and next decision.",
+    "decision": "Every reply names what is architecture, what is evidence and what needs testing.",
     "next": "/products"
   },
   "sku1": {
-    "headline": "Simplify the motor drive without losing control of the system.",
+    "headline": "SKU-1 puts motor control and gate drive on one 130 nm BCD chip, for motor supplies up to 120 V.",
     "context": "A controller and gate driver usually require separate parts. SKU-1 proposes to combine those roles for motors, appliances and actuators.",
-    "decision": "Choose the drive by its operating environment and required response, then assess whether integration reduces the complexity of your product.",
+    "decision": "The datapath is FPGA-validated at 81.25 MHz; the 120 V power stage waits for silicon.",
     "next": "/contact"
   },
   "sku2": {
-    "headline": "Make billing accuracy and tamper resilience part of the same product.",
+    "headline": "SKU-2 meters energy to Class 0.5S and keeps the tamper record on an always-on domain under 2 µW.",
     "context": "SKU-2 brings energy measurement, meter control and outage records together for utilities and meter makers.",
-    "decision": "The commercial test is whether the meter meets the tender’s accuracy, tamper and service requirements.",
+    "decision": "The metrology chain is FPGA-validated; Class 0.5S accuracy is not yet measured.",
     "next": "/contact"
   },
   "sku3": {
-    "headline": "Develop a domestic option for power systems with demanding reliability needs.",
+    "headline": "SKU-3 makes four sequenced rails from a 28 V bus, designed for a 100 V input spike.",
     "context": "SKU-3 targets the power supplies used in military, railway and space equipment, where qualification is part of the buying decision.",
-    "decision": "Select the required grade and equipment programme first; a general power-management claim is not enough.",
+    "decision": "The sky130 prototype tests control logic and low-voltage rails; the 28 V stage arrives on SCL 180 nm.",
     "next": "/contact"
   },
   "sku4": {
-    "headline": "Keep a control failure from becoming an uncontrolled machine.",
+    "headline": "SKU-4 runs a checker core two cycles behind and drives FAULT_N 39 cycles after a mismatch, in simulation.",
     "context": "SKU-4 uses two processors to detect disagreement and trigger a hardware fault response. It is intended to support a system safety case.",
-    "decision": "Evaluate the complete response, from detecting a failure to reaching the machine’s safe state.",
+    "decision": "39 cycles is a simulation result, not an ISO 26262 certificate.",
     "next": "/contact"
   },
   "sku5": {
-    "headline": "Keep equipment connected when interface components become a sourcing risk.",
+    "headline": "SKU-5 carries RS-485 and 8 Mbps CAN-FD on one transceiver, with a ±15 kV pin-protection target.",
     "context": "SKU-5 targets the wired interfaces used across industrial and vehicle equipment, combining bus functions on one part.",
-    "decision": "Start with the installed equipment and the replacement requirements; compatibility determines the opportunity.",
+    "decision": "±15 kV protection and 1.2 km RS-485 runs need tests on real wiring.",
     "next": "/contact"
   },
   "sku6": {
-    "headline": "Protect the equipment when its power supplies behave unexpectedly.",
+    "headline": "SKU-6 watches four supply rails and latches a fault after an 8 µs deglitch.",
     "context": "SKU-6 watches supply conditions and records a fault so the wider system can respond. It targets a function needed across many boards.",
-    "decision": "Define which power disturbances should stop the system and which should be tolerated.",
+    "decision": "The 8 µs deglitch has to be proven against the board’s own supply noise.",
     "next": "/contact"
   },
   "sku7": {
-    "headline": "Turn radar sensing into usable range and motion information.",
+    "headline": "SKU-7 sweeps 4 GHz at 77 GHz for 3.75 cm range resolution and tracks up to 64 targets.",
     "context": "SKU-7 separates radio-frequency sensing from digital processing, targeting radar functions for vehicles and other platforms.",
-    "decision": "Choose the detection task, operating environment and required range before selecting a radar architecture.",
+    "decision": "The SiGe front end has no FPGA equivalent; only silicon proves it.",
     "next": "/contact"
   },
   "sku8": {
-    "headline": "Make the display trustworthy in demanding operating conditions.",
+    "headline": "SKU-8 drives 1280 columns at up to 12 V and flags a frozen image within two frames.",
     "context": "SKU-8 targets rugged displays, combining panel-driving functions with detection of a frozen image.",
-    "decision": "Evaluate readability and failure indication as part of the operator’s task, not simply as display specifications.",
+    "decision": "Readability and the freeze alert need tests on the target panel.",
     "next": "/contact"
   },
   "sku9": {
-    "headline": "Bring vehicle power and communications closer to the loads they serve.",
+    "headline": "SKU-9 switches 16 smart fuses and routes eight CAN-FD buses inside one vehicle zone.",
     "context": "SKU-9 combines network and power-distribution functions within a vehicle zone; the central vehicle computer remains separate.",
-    "decision": "Assess the loads, network traffic and failure isolation of a specific zone before considering consolidation.",
+    "decision": "Brake-message latency and fuse trips are proven in the vehicle, not on the chip.",
     "next": "/contact"
   },
   "sku10": {
-    "headline": "Combine secure control and trusted startup in one product.",
+    "headline": "DG32-Max checks signed firmware in 309 ms from reset, on a lockstep RISC-V pair.",
     "context": "DG32-Max targets imported secure microcontrollers and the separate security chip often used to check firmware before it runs.",
-    "decision": "The opportunity is simpler secure control for industrial, drone and EV equipment, provided customer requirements can be met.",
+    "decision": "RTL is feature-complete as of 1 October 2026; no silicon result yet.",
     "next": "/contact"
   },
   "sku11": {
-    "headline": "Combine battery intelligence with protection that remains independent of software.",
+    "headline": "SKU-11 runs a 4–100 kB battery-health model beside four hardwired protection trips.",
     "context": "SKU-11 brings control, battery-health estimation and authentication together. The cell-measuring and isolation components remain external.",
-    "decision": "The adoption decision depends on the measurement partner and battery data, as well as the controller itself.",
+    "decision": "The measurement partner and field battery data are not yet chosen.",
     "next": "/contact"
   },
   "d100": {
-    "headline": "Treat D100 as a separate growth investment after the mature-node portfolio.",
+    "headline": "D100 is a 28 nm drone SoC with its own ₹50 Cr round, raised after mature-node revenue.",
     "context": "D100 proposes an Indian flight-control and navigation chip, with a failsafe function that remains separate from higher-level computing.",
-    "decision": "The Blueprint places it outside the FY31 portfolio revenue plan and proposes a separate ₹50 Cr round after mature-node revenue.",
+    "decision": "28 nm development cost and drone qualification set the D100 case.",
     "next": "/contact"
   },
   "plan": {
     "headline": "The business plan, by segment and year.",
     "context": "The company model as plan targets: revenue by segment, margins, cash and the P&L, each panel linked to the data behind it. Not results, not audited, not contracted.",
-    "decision": "Agree which plan figures an investment decision rests on, then ask for the data room.",
+    "decision": "Every plan figure links to its data; none is a result, audited or contracted.",
     "next": "/contact"
   },
   "portfolio": {
     "headline": "The SKU portfolio, chip by chip.",
     "context": "Eleven chips from the October SKU Blueprint: readiness, prototype slot, plan line, revenue ramp, approval time, development and unit cost, each panel linked to the data behind it. Plan targets, not results.",
-    "decision": "Pick the chips an evaluation or an investment rests on, and check each against its approval time and ramp.",
+    "decision": "Each chip carries its own approval time and revenue ramp.",
     "next": "/contact"
   },
   "brief": {
     "headline": "The investment brief.",
     "context": "What tranche 1 buys, how the SKU Blueprint and the September financial model relate, and six buyer questions answered with what is proven and what is a target.",
-    "decision": "Use the Blueprint as the chip plan and the ₹10 Cr table as the ask; ask for the datasheet or approval date a decision needs.",
+    "decision": "The SKU Blueprint is the chip plan; the ₹10 Cr table is the ask.",
     "next": "/contact"
   }
 }

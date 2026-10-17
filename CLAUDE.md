@@ -23,6 +23,13 @@ detailed pre-silicon proof point. Read `AGENTS.md` and `WORKSPACE_MAP.md` before
   SKU architectures plus D100 (architecture breadth, not ten shipping products); DG32 evidence is pre-silicon;
   simulation, estimates, measured silicon and qualification stay distinct; illustrations establish no
   certification, traction or production status. No em dashes in copy.
+- Titles state a fact (a part, a system or a number), never advice: `DESIGN.md` "Titles". `npm run check:titles` runs in every build. Peer items go in the Lattice (`app/lattice.ts`), never a same-size card grid.
+
+## Repository operations
+
+- This worktree is on a Windows drive: run git through Windows (`cmd.exe /c "cd /d <path> && git ..."`); WSL git reports every file as changed (CRLF).
+- `qa/dgs/gates.sh` is the full local gate run (build, sweep, align, nav, lanes, ten verify scripts); `qa/dgs/push.ps1` pushes to the v11 and v12 remotes.
+- A hung Pages run blocks the v12 deploy queue. Cancel it as the owner: Windows `gh` is `shekerkamma`; the WSL `gh` account `sheker-deepgrid` gets HTTP 403.
 
 ## Visual development
 

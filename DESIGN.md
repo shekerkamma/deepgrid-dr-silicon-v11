@@ -245,7 +245,20 @@ Flat at rest: cards are lifted by a lighter navy surface and a hairline, not a s
 - **Concept figure:** a native image link with descriptive alt text, intrinsic dimensions and contain sizing; the whole scene and named subject stay visible. New branded assets have 1536px and 768px WebP sources. Opening figures load eagerly; gallery figures load lazily. Captions name the proposed system role and source, then state "concept illustration, not a product photograph or deployment evidence. DeepGrid silicon remains pre-silicon." New hardware concepts come from host-native OpenAI image generation; fleet and driver-assistance scenes come from the reviewed DeepGrid commercial-fleet GTM deck. The corrected DG32 package is flat QFN-style without protruding gull-wing leads. Source hashes, specifications, dimensions and review status live in `docs/deepgrid-brand-image-provenance.json`; earlier asset records retain their original provenance files.
 - **Discussion close and directory:** the home has one terminal discussion close, pairing the decision prompt with a filled "Request a discussion" action and stacking at 800px and below. The directory orders Products & applications, Technology & resources, Company and Investors. Inner pages retain their own evaluation close and related references, without an additional global investor close.
 - **Task order:** product tiles and the document selector precede supporting imagery on the Products and Resources indexes. Technical hero grounds clip at their own top boundary, keeping the Technology tabs visible on phones.
+- **Lattice (`app/lattice.ts`, `app/lattice.css`):** the one container for a set of peer items (mechanisms, values, partners, documents, product business case). Cells sit on a 1px hairline lattice (`gap:1px` over the Line colour), no per-cell border, radius or shadow; the first item is a full-width lead row (title in the start column, body in the end column); the rest split into the widest column count that divides them evenly, and the last cell spans any gap. No icons in cells. Use `lattice(n, maxCols)` and spread `.cell(i)` on each child. Reference: 21st.dev Feature Overview Bento. At 720px and below it is one column.
+- **Question split (`.qsplit-*`):** heading and lede on the start side, a single-open `<details>` list on the end side, each item with a short mono tag (Physics, Open); the first item starts open. Used for product readiness questions. Reference: 21st.dev FAQ Two Column.
+- **Comparison table:** a real `<table>`; the DG32 column takes `.cmp-hl` (9% copper tint). Never two eyebrow-labelled columns for a comparison.
 - **Motion:** user-selected architecture diagrams and deck slides settle over 180 ms with a 3px translation and mild opacity change; content is visible from the first frame. Link arrows respond over 160 ms. Reduced-motion preferences disable both. These apply the animate skill's stable framing and purposeful transition principles; this work does not produce a separate animated film.
+
+## Titles
+
+Every h1, h2 and data-driven h3 states a business or technology fact: it names a part, a system or a number. "SKU-8 drives 1280 columns at up to 12 V and flags a frozen image within two frames.", not "Make the display trustworthy in demanding operating conditions." Use only figures already public on that page (never plan figures from gated data), and keep pre-silicon figures labelled ("design target", "in simulation").
+
+- **Don't** coach the reader ("Agree the next milestone…", "Use recognition as context…") or write aphorisms ("Compute is not the limit. The sensors are."). A call to action may start with a verb when it names the action and its object ("Request an investment discussion, a partnership or an engineering evaluation.").
+- **Don't** put a topic label where a finding fits ("Technical Whitepapers", "Product maturity and validation milestones."); labels are for navigation, filters and table headers.
+- The decision close names its destination in the link ("Product validation →"), never "Take the next step".
+- Most data-driven titles live in `app/executive-routes.json`, `app/executive-products.json` and `app/company-pages.ts`. `scripts/check-titles.mjs` (part of every build) fails on coaching openers in those files; on the 7 Oct overlay it reports 68. A product page must not override its own product-specific section titles with generic ones.
+- deepgridsemi.com copy carried on /about (values, mission, "Achievements") stays verbatim unless the owner changes it; flag doubts, do not rewrite.
 
 ## Do's and Don'ts
 
@@ -256,6 +269,7 @@ Flat at rest: cards are lifted by a lighter navy surface and a hairline, not a s
 - **Don't** crop an image with text or a subject the caption names: scene illustrations show the whole frame, the phone home hero illustration follows the copy, actions and maturity note, and phone diagrams fit the width.
 - **Don't** copy the reference's two-tone headings, gradient text, glow shadows, random coloured icon tiles, check icons on every bullet, rotated card labels, placeholder copy or partner-logo strip.
 - **Don't** put a kicker or eyebrow above a heading; such kickers are hidden by rule (`[class*="kicker"]:has(+ h1, h2, h3, h4)`).
+- **Don't** build a grid of same-size cards (icon, heading, text) as page structure; use the Lattice, the Question split or a table. Disclosure and group labels are sentence case, never generated uppercase.
 - **Don't** centre section headings, closes or link lists.
 - **Don't** use a text glyph (↗) as an icon; use the lucide `ArrowUpRight` component.
 - **Don't** add a scroll cue, a `01 / 06` counter used as decoration, or a film-grain overlay.
