@@ -327,8 +327,9 @@ export default function AskDeepGrid({go}: {go: (hash: string) => void}) {
             {(activeView==='council' ? [
  {id:'value',query:'What does SKU-10 DG32-Max replace?',docBadge:'CUSTOMER VALUE',label:'Why secure control?'},
  {id:'funding',query:'How is the D100 drone chip funded?',docBadge:'INVESTMENT',label:'The D100 funding decision'},
- {id:'compare',query:'What is the difference between SKU-10 and SKU-11?',docBadge:'PRODUCT CHOICE',label:'Control or battery intelligence?'},
- {id:'buyer',query:'Who buys the SKU-5 interface transceiver?',docBadge:'CUSTOMERS',label:'Who needs the interface product?'},
+ // two dashboard questions, so visitors find that Ask shows the plan and market panels (app/ask-panel.tsx)
+ {id:'cash',query:'Where does the cash go in FY30?',docBadge:'BUSINESS PLAN',label:'Where does the cash go?'},
+ {id:'markets',query:'Which markets should DeepGrid sell to first?',docBadge:'MARKETS',label:'Which markets first?'},
  ] : filteredPrompts).map(p => (
               <button
                 key={p.id}

@@ -76,6 +76,16 @@ for (const [label, opts] of [['1440', {viewport: {width: 1440, height: 1000}}], 
   await ask(page, 'Which customers come first?');
   await page.locator('.ask-panel[data-panel="uc-windows"][data-via="semantic"]').waitFor({timeout: 60000});
 
+  // the suggested-question buttons that lead to panels
+  if (plan) {
+    await press(page.getByRole('button', {name: 'Where does the cash go?', exact: true}));
+    await page.locator('[data-model="mock"]').waitFor({timeout: 60000});
+    await panel(page, 'plan-flow').waitFor();
+    assert.equal(await panel(page, 'plan-flow').locator('.pd-year[aria-pressed="true"]').innerText(), 'FY30', `${label}: the cash button opens FY30`);
+  }
+  await press(page.getByRole('button', {name: 'Which markets first?', exact: true}));
+  await page.locator('.ask-panel[data-panel="uc-windows"]').waitFor({timeout: 60000});
+
   await ask(page, 'Who founded DeepGrid?');
   await page.waitForTimeout(1500);
   assert.equal(await page.locator('.ask-panel').count(), 0, `${label}: a people question opened a dashboard panel`);
@@ -98,4 +108,4 @@ for (const [label, opts] of [['1440', {viewport: {width: 1440, height: 1000}}], 
 }
 await browser.close();
 assert.deepEqual(errors, []);
-console.log(`PASS Ask dashboard panels at 1440/390: ${plan ? 'money flow on the year asked with working year buttons, ' : 'no plan panel without the plan, '}two-chip comparison, market card, semantic routing of a reworded question, none for a people question, the model stage only after the instant stages miss and only with a listed id, dashboard links resolve.`);
+console.log(`PASS Ask dashboard panels at 1440/390: ${plan ? 'money flow on the year asked with working year buttons, ' : 'no plan panel without the plan, '}two-chip comparison, market card, the two suggested dashboard questions, semantic routing of a reworded question, none for a people question, the model stage only after the instant stages miss and only with a listed id, dashboard links resolve.`);
