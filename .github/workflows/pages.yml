@@ -59,6 +59,7 @@ jobs:
       - run: node scripts/verify-v6-interactions.mjs http://127.0.0.1:8768/${{ github.event.repository.name }}/
       - run: node scripts/verify-reading.mjs http://127.0.0.1:8768/${{ github.event.repository.name }}/
       - run: node scripts/verify-ask.mjs http://127.0.0.1:8768/${{ github.event.repository.name }}/
+      - run: node scripts/verify-ask-panels.mjs http://127.0.0.1:8768/${{ github.event.repository.name }}/
       - run: node scripts/verify-layout.mjs http://127.0.0.1:8768/${{ github.event.repository.name }}/
       - run: node scripts/verify-v11.mjs http://127.0.0.1:8768/${{ github.event.repository.name }}/
       - run: node scripts/verify-nav.mjs http://127.0.0.1:8768/${{ github.event.repository.name }}/
@@ -135,6 +136,7 @@ jobs:
       - run: node scripts/verify-v6-interactions.mjs "$SITE"
       - run: node scripts/verify-reading.mjs "$SITE"
       - run: node scripts/verify-ask.mjs "$SITE"
+      - run: node scripts/verify-ask-panels.mjs "$SITE"
       - run: node scripts/verify-layout.mjs "$SITE"
       - run: node scripts/verify-v11.mjs "$SITE"
       - run: node scripts/verify-nav.mjs "$SITE"

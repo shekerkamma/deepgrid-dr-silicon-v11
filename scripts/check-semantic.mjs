@@ -26,7 +26,7 @@ const {semanticRowKey} = await import(pathToFileURL(bundled).href + '?t=' + Date
 
 if (sha(semanticRowKey()) !== meta.rowKeySha256)
   fail('the graph, curated answers or their example questions changed since the index was built.\n  Run: npm run build:semantic');
-const rows = meta.counts.nodes + meta.counts.chunks + meta.counts.themes + (meta.counts.examples || 0);
+const rows = meta.counts.nodes + meta.counts.chunks + meta.counts.themes + (meta.counts.examples || 0) + (meta.counts.panelExamples || 0);
 if (bin.length !== rows * meta.dims) fail(`semantic.bin holds ${bin.length} bytes, expected ${rows * meta.dims}. Run: npm run build:semantic`);
 const modelFile = path.join(ROOT, 'public/models', meta.model, 'onnx/model_quantized.onnx');
 if (!fs.existsSync(modelFile)) fail(`model file missing: ${path.relative(ROOT, modelFile)}. Run: npm run build:semantic`);

@@ -1,17 +1,22 @@
 'use client';
-import { useEffect, useState } from 'react';
+import { lazy, Suspense, useEffect, useState } from 'react';
 import { collectEvidence, type Claim } from './data/answer-evidence';
 import { composeAnswer, type AnswerResult } from './data/answer-generator';
 import { getSemantic } from './data/semantic';
 import { asset, url } from './routes';
 import { readHref } from './doc-links';
+import type { PanelSemantic } from './data/dashboard-panels';
 import './executive-story.css';
+// The dashboards load only when a question is asked (app/ask-panel.tsx).
+const AskPanel = lazy(() => import('./ask-panel'));
 interface GroundedAnswerViewProps { query: string; onSelectQuery: (q: string) => void; go: (hash: string) => void; }
 export default function GroundedAnswerView({query}: GroundedAnswerViewProps) {
   const [ready,setReady]=useState(false);
   const [state,setState]=useState<{q:string;result?:AnswerResult;error?:string;pending?:boolean;semantic?:boolean}>({q:''});
   const [retry,setRetry]=useState(0);
   const [sourcesOpen,setSourcesOpen]=useState(false);
+  // the semantic stage of the dashboard-panel match, from the same embedding the answer uses
+  const [panelSem,setPanelSem]=useState<{q:string;sem:PanelSemantic|null}>({q:'',sem:null});
   useEffect(()=>{setReady(true);void getSemantic();},[]);
   useEffect(()=>{
     setSourcesOpen(false);
@@ -30,6 +35,7 @@ export default function GroundedAnswerView({query}: GroundedAnswerViewProps) {
         ]);
         if(timer)clearTimeout(timer);
         if(!active)return;
+        setPanelSem({q:query,sem:scores?.panels??null});
         const packet=collectEvidence(query,scores||null);
         const result=await composeAnswer(packet,controller.signal);
         if(active)setState({q:query,result,semantic:!!scores});
@@ -69,5 +75,6 @@ export default function GroundedAnswerView({query}: GroundedAnswerViewProps) {
         </details>}
       </>}
     </article>}
+    {query&&<Suspense fallback={null}><AskPanel query={query} sem={panelSem.q===query?panelSem.sem:null}/></Suspense>}
   </div>;
 }

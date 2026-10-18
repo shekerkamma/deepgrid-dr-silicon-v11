@@ -93,3 +93,7 @@ rect.pd-s1,rect.pd-s2,rect.pd-s3,rect.pd-s4,rect.pd-s5,rect.pd-s6{transition:opa
 .pd-checks summary:focus-visible{outline:2px solid var(--t-fg);outline-offset:2px}
 .pd-checks ul{margin:8px 0 0;padding-left:1.25rem;display:grid;gap:4px}
 @media (prefers-reduced-motion:reduce){.pd-year{transition:none}}
+/* Ask DeepGrid: one dashboard panel under the answer (app/ask-panel.tsx), same marks and tokens as the dashboard. */
+.ask-panel{gap:16px;margin:8px 0 32px}
+.ask-panel-from{margin:0;font-size:.875rem;color:var(--t-fg-2)}
+.ask-panel-open{justify-self:start;min-height:44px}

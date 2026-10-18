@@ -58,10 +58,10 @@ const raw = fs.readFileSync(INDEX, 'utf8');
 const index = JSON.parse(raw);
 const bundled = path.join(ROOT, 'node_modules/.cache/semantic-engine.mjs');
 await esbuild.build({
-  stdin: {contents: `export * from './app/data/graphrag-engine.ts'; export {THEME_EXAMPLES} from './app/data/theme-examples.ts';`,
+  stdin: {contents: `export * from './app/data/graphrag-engine.ts'; export {THEME_EXAMPLES} from './app/data/theme-examples.ts'; export {PANEL_EXAMPLES, PANEL_IDS, panelKey, matchPanel} from './app/data/dashboard-panels.ts';`,
     resolveDir: ROOT, loader: 'ts'},
   bundle: true, platform: 'node', format: 'esm', outfile: bundled, logLevel: 'warning'});
-const {executiveThemes, semanticRowKey, executeGraphRAG, THEME_EXAMPLES} = await import(pathToFileURL(bundled).href + '?t=' + Date.now());
+const {executiveThemes, semanticRowKey, executeGraphRAG, THEME_EXAMPLES, PANEL_EXAMPLES, PANEL_IDS, panelKey, matchPanel} = await import(pathToFileURL(bundled).href + '?t=' + Date.now());
 
 // Every curated answer needs example questions, and every example must belong to a real answer: a
 // renamed theme would otherwise silently lose its examples.
@@ -71,6 +71,8 @@ const thin = titles.filter(t => (THEME_EXAMPLES[t] || []).length < 3);
 if (orphans.length || thin.length) throw new Error(`theme-examples.ts out of step with executiveThemes:` +
   (orphans.length ? `\n  no such theme: ${orphans.join(' | ')}` : '') + (thin.length ? `\n  fewer than 3 examples: ${thin.join(' | ')}` : ''));
 const examples = titles.flatMap((t, i) => THEME_EXAMPLES[t].map(q => ({q, theme: i})));
+// Dashboard panels Ask shows beside an answer (app/data/dashboard-panels.ts): one row per example question, last.
+const panelRows = PANEL_IDS.flatMap((id, i) => PANEL_EXAMPLES[id].map(q => ({q, panel: i})));
 
 const cap = (s, n) => (s || '').replace(/\s+/g, ' ').trim().slice(0, n);
 const texts = [
@@ -79,6 +81,7 @@ const texts = [
   ...executiveThemes.map(t => cap(`${t.title}. ${t.lead} ${t.keywords.join(', ')}`, 2000)),
   // example questions are questions, so they get the query instruction, like a visitor's question
   ...examples.map(e => QUERY_PREFIX + e.q),
+  ...panelRows.map(e => QUERY_PREFIX + e.q),
 ];
 
 // 3. Embed, normalise, quantise.
@@ -102,7 +105,7 @@ for (let k = 0; k < 50; k++) {
 if (worst > 0.02) throw new Error(`int8 quantisation error ${worst.toFixed(4)} exceeds 0.02`);
 
 // 5. Routing eval, through the real engine, scored from the int8 rows exactly as the browser does.
-const N = index.nodes.length, C = index.chunks.length, T = executiveThemes.length, X = examples.length;
+const N = index.nodes.length, C = index.chunks.length, T = executiveThemes.length, X = examples.length, PX = panelRows.length;
 const evalSet = JSON.parse(fs.readFileSync(path.join(ROOT, 'scripts/ask-routing-eval.json'), 'utf8'));
 const unknown = evalSet.cases.filter(c => c.expect !== null && !titles.includes(c.expect)).map(c => c.expect);
 if (unknown.length) throw new Error(`ask-routing-eval.json expects themes that do not exist: ${[...new Set(unknown)].join(' | ')}`);
@@ -142,12 +145,46 @@ if (!pick) { const r = run(SAFE_FLOOR.min, SAFE_FLOOR.gap);
 if (pick.r.right / positives < evalSet.minRecall) throw new Error(`routing eval: only ${pick.r.right}/${positives} reach their curated answer ` +
   `(floor ${evalSet.minRecall}). Missed:\n  ${pick.r.missed.join('\n  ')}\nAdd example questions like these to app/data/theme-examples.ts.`);
 
+// 5b. Panel routing eval (scripts/ask-panel-eval.json): phrase rules first, then the panel rows, through the same
+// matchPanel the browser runs. The floor and lead are the most permissive setting with zero wrong and zero forced.
+const panelEval = JSON.parse(fs.readFileSync(path.join(ROOT, 'scripts/ask-panel-eval.json'), 'utf8'));
+const panelScores = [];
+for (const c of panelEval.cases) {
+  const qv = (await extract([QUERY_PREFIX + c.q], {pooling: 'mean', normalize: true})).data, best = new Float32Array(PANEL_IDS.length).fill(-1);
+  panelRows.forEach((e, k) => { let d = 0; const o = (N + C + T + X + k) * dims; for (let c2 = 0; c2 < dims; c2++) d += qv[c2] * bin[o + c2]; best[e.panel] = Math.max(best[e.panel], d / SCALE); });
+  panelScores.push(best);
+}
+const runPanels = (min, gap) => {
+  const r = {right: 0, wrong: [], forced: [], missed: []};
+  panelEval.cases.forEach((c, i) => {
+    const m = matchPanel(c.q, {plan: true, years: panelEval.years, sem: {scores: panelScores[i], min, gap}});
+    if (c.expect === null) { if (m) r.forced.push(`${c.q} -> ${m.id}`); }
+    else if (m?.id === c.expect) r.right++;
+    else if (m) r.wrong.push(`${c.q} -> ${m.id}`);
+    else r.missed.push(c.q);
+  });
+  return r;
+};
+let panelPick = null;
+for (let m = 40; m <= 95; m++) for (let g = 0; g <= 12; g++) {
+  const r = runPanels(m / 100, g / 100);
+  if (r.wrong.length || r.forced.length) continue;
+  if (!panelPick || r.right > panelPick.r.right || (r.right === panelPick.r.right && (g > panelPick.g || (g === panelPick.g && m > panelPick.m)))) panelPick = {m, g, r};
+}
+const panelPositives = panelEval.cases.filter(c => c.expect !== null).length;
+if (!panelPick) throw new Error('panel eval: no floor and lead give zero wrong and zero forced panels');
+if (panelPick.r.right / panelPositives < panelEval.minRecall) throw new Error(`panel eval: only ${panelPick.r.right}/${panelPositives} open their panel ` +
+  `(floor ${panelEval.minRecall}). Missed:\n  ${panelPick.r.missed.join('\n  ')}\nAdd example questions like these to PANEL_EXAMPLES in app/data/dashboard-panels.ts.`);
+
 fs.mkdirSync(OUT_DIR, {recursive: true});
 fs.writeFileSync(path.join(OUT_DIR, 'semantic.bin'), Buffer.from(bin.buffer));
 const meta = {
   model: MODEL, dtype: DTYPE, dims, scale: SCALE, queryPrefix: QUERY_PREFIX,
-  counts: {nodes: N, chunks: C, themes: T, examples: X},
+  counts: {nodes: N, chunks: C, themes: T, examples: X, panelExamples: PX},
   exampleTheme: examples.map(e => e.theme),
+  panelExampleOf: panelRows.map(e => e.panel),
+  panels: {ids: PANEL_IDS, min: panelPick.m / 100, gap: panelPick.g / 100, keySha256: crypto.createHash('sha256').update(panelKey()).digest('hex'),
+    eval: {positives: panelPositives, negatives: panelEval.cases.length - panelPositives, right: panelPick.r.right, wrong: [], forced: [], missed: panelPick.r.missed}},
   themeMin: pick.m / 100, themeGap: pick.g / 100,
   eval: {positives, negatives, right: pick.r.right, wrong: 0, forced: 0, missed: pick.r.missed},
   themeTitles: executiveThemes.map(t => t.title),
@@ -168,4 +205,6 @@ console.log(`semantic index: ${vectors.length} rows x ${dims} dims (${meta.count
   `${meta.counts.themes} themes, ${X} example questions), ${(bin.length / 1024).toFixed(0)} KB, int8 error <= ${worst.toFixed(4)}, ${((Date.now() - t0) / 1000).toFixed(1)} s`);
 console.log(`routing eval: ${pick.r.right}/${positives} reach their curated answer, 0 wrong, 0/${negatives} forced, at min ${meta.themeMin} / gap ${meta.themeGap}` +
   (pick.r.missed.length ? `\n  missed: ${pick.r.missed.join('\n  missed: ')}` : ''));
+console.log(`panel eval: ${panelPick.r.right}/${panelPositives} open the right dashboard panel, 0 wrong, 0 forced, at min ${panelPick.m / 100} / gap ${panelPick.g / 100}` +
+  (panelPick.r.missed.length ? `\n  missed: ${panelPick.r.missed.join('\n  missed: ')}` : ''));
 console.log(`graphrag eval: ${g.passed}/${g.cases} cases pass with embeddings and with word matching; graph spreading changes the evidence in ${g.graphMoved}/${g.cases}`);

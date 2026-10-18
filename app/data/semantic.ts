@@ -8,12 +8,16 @@
 // and the engine then ranks by TF-IDF exactly as before, so Ask always answers.
 import {semanticRowKey, type SemanticScores} from './graphrag-engine';
 import {asset} from '../routes';
+import {panelKey, PANEL_IDS, type PanelSemantic} from './dashboard-panels';
 
 type Meta = {model: string; dtype: string; dims: number; scale: number;
-  counts: {nodes: number; chunks: number; themes: number; examples?: number}; rowKeySha256: string; modelSha256: string;
-  queryPrefix?: string; exampleTheme?: number[]; themeMin?: number; themeGap?: number};
+  counts: {nodes: number; chunks: number; themes: number; examples?: number; panelExamples?: number}; rowKeySha256: string; modelSha256: string;
+  queryPrefix?: string; exampleTheme?: number[]; themeMin?: number; themeGap?: number;
+  panelExampleOf?: number[]; panels?: {ids: string[]; min: number; gap: number; keySha256: string}};
 type Extractor = (texts: string[], opts: {pooling: 'mean'; normalize: boolean}) => Promise<{data: Float32Array}>;
-export type Semantic = {scores: (question: string) => Promise<SemanticScores>};
+/** panels: the dashboard-panel stage of app/data/dashboard-panels.ts; null when the panel rows were built from other
+ *  examples or another panel list, so Ask falls back to the phrase rules rather than scoring misaligned rows. */
+export type Semantic = {scores: (question: string) => Promise<SemanticScores & {panels: PanelSemantic | null}>};
 
 let loading: Promise<Semantic | null> | null = null;
 
@@ -60,9 +64,11 @@ async function load(): Promise<Semantic | null> {
     // stale index: rows would line up with the wrong nodes, so stay on TF-IDF
     if (meta.rowKeySha256 !== await sha256(semanticRowKey())) return null;
     const rows = new Int8Array(bin);
-    const {nodes, chunks, themes} = meta.counts, examples = meta.counts.examples || 0, dims = meta.dims;
+    const {nodes, chunks, themes} = meta.counts, examples = meta.counts.examples || 0, panelRows = meta.counts.panelExamples || 0, dims = meta.dims;
     const exampleTheme = meta.exampleTheme || [];
-    if (rows.length !== (nodes + chunks + themes + examples) * dims || exampleTheme.length !== examples) return null;
+    if (rows.length !== (nodes + chunks + themes + examples + panelRows) * dims || exampleTheme.length !== examples) return null;
+    const panelOf = meta.panelExampleOf || [], pm = meta.panels;
+    const panelsOk = !!pm && panelOf.length === panelRows && pm.ids.join() === PANEL_IDS.join() && pm.keySha256 === await sha256(panelKey());
 
     const {pipeline, env} = await import('@huggingface/transformers');
     env.allowRemoteModels = false;                    // the model comes from this site, never the HF hub
@@ -97,8 +103,14 @@ async function load(): Promise<Semantic | null> {
         const themeScores = block(nodes + chunks, themes, q);
         const ex = block(nodes + chunks + themes, examples, q);
         ex.forEach((v, k) => { const t = exampleTheme[k]; if (v > themeScores[t]) themeScores[t] = v; });
+        let panels: PanelSemantic | null = null;
+        if (panelsOk) {
+          const best = new Float32Array(PANEL_IDS.length).fill(-1);
+          block(nodes + chunks + themes + examples, panelRows, q).forEach((v, k) => { if (v > best[panelOf[k]]) best[panelOf[k]] = v; });
+          panels = {scores: best, min: pm!.min, gap: pm!.gap};
+        }
         return {nodes: block(0, nodes, q), chunks: block(nodes, chunks, q), themes: themeScores,
-          themeMin: meta.themeMin, themeGap: meta.themeGap};
+          themeMin: meta.themeMin, themeGap: meta.themeGap, panels};
       },
     };
   } catch {

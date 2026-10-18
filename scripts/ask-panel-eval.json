@@ -1,0 +1,396 @@
+{
+ "about": "Ask DeepGrid dashboard-panel routing. rule:true = the phrase rules alone must route it; the rest may route by meaning (semantic index). expect:null = must open no panel. Calibrated by scripts/build-semantic-index.mjs; rule stage checked by scripts/check-ask-panels.mjs.",
+ "minRecall": 0.8,
+ "years": [
+  "FY27",
+  "FY28",
+  "FY29",
+  "FY30",
+  "FY31",
+  "FY32"
+ ],
+ "cases": [
+  {
+   "q": "Where does the cash go in FY30?",
+   "expect": "plan-flow",
+   "year": "FY30",
+   "rule": true
+  },
+  {
+   "q": "Where does the money go?",
+   "expect": "plan-flow",
+   "rule": true
+  },
+  {
+   "q": "Show me the P&L for FY31",
+   "expect": "plan-flow",
+   "year": "FY31",
+   "rule": true
+  },
+  {
+   "q": "What is net income in fiscal 2029?",
+   "expect": "plan-flow",
+   "year": "FY29",
+   "rule": true
+  },
+  {
+   "q": "Break down the costs in FY 28",
+   "expect": "plan-flow",
+   "year": "FY28",
+   "rule": true
+  },
+  {
+   "q": "What eats the revenue?",
+   "expect": "plan-flow",
+   "rule": true
+  },
+  {
+   "q": "What is the revenue mix by segment?",
+   "expect": "plan-segments",
+   "rule": true
+  },
+  {
+   "q": "Where will revenue come from?",
+   "expect": "plan-segments",
+   "rule": true
+  },
+  {
+   "q": "How does the company make money?",
+   "expect": "plan-segments",
+   "rule": true
+  },
+  {
+   "q": "When does DeepGrid break even?",
+   "expect": "plan-margins",
+   "rule": true
+  },
+  {
+   "q": "What is the gross margin trajectory?",
+   "expect": "plan-margins",
+   "rule": true
+  },
+  {
+   "q": "When does the company turn a profit?",
+   "expect": "plan-margins",
+   "rule": true
+  },
+  {
+   "q": "How fast does operating expense grow?",
+   "expect": "plan-opex",
+   "rule": true
+  },
+  {
+   "q": "What is the R&D spend?",
+   "expect": "plan-opex",
+   "rule": true
+  },
+  {
+   "q": "How much runway does the company have?",
+   "expect": "plan-cash",
+   "rule": true
+  },
+  {
+   "q": "When is cash lowest?",
+   "expect": "plan-cash",
+   "rule": true
+  },
+  {
+   "q": "Will they run out of money?",
+   "expect": "plan-cash",
+   "rule": true
+  },
+  {
+   "q": "What is the burn rate?",
+   "expect": "plan-cash",
+   "rule": true
+  },
+  {
+   "q": "What is the use of funds?",
+   "expect": "plan-funds",
+   "rule": true
+  },
+  {
+   "q": "How much is DeepGrid raising?",
+   "expect": "plan-funds",
+   "rule": true
+  },
+  {
+   "q": "Where will the investment go?",
+   "expect": "plan-funds",
+   "rule": true
+  },
+  {
+   "q": "Do the two revenue plans agree?",
+   "expect": "plan-reconcile",
+   "rule": true
+  },
+  {
+   "q": "Which chips earn the most revenue?",
+   "expect": "pf-lines",
+   "rule": true
+  },
+  {
+   "q": "Revenue by chip in FY31",
+   "expect": "pf-lines",
+   "rule": true
+  },
+  {
+   "q": "How much revenue does SKU-3 make compared with SKU-8?",
+   "expect": "pf-lines",
+   "skus": [
+    "SKU-3",
+    "SKU-8"
+   ],
+   "rule": true
+  },
+  {
+   "q": "What are the plan lines?",
+   "expect": "pf-lines",
+   "rule": true
+  },
+  {
+   "q": "Show the revenue ramp by chip group",
+   "expect": "pf-ramp",
+   "rule": true
+  },
+  {
+   "q": "How long does automotive qualification take?",
+   "expect": "pf-approvals",
+   "rule": true
+  },
+  {
+   "q": "What are the lead times to approval?",
+   "expect": "pf-approvals",
+   "rule": true
+  },
+  {
+   "q": "How is the first tranche spent?",
+   "expect": "pf-tranche",
+   "rule": true
+  },
+  {
+   "q": "What does tranche 1 pay for?",
+   "expect": "pf-tranche",
+   "rule": true
+  },
+  {
+   "q": "What does each chip cost to develop?",
+   "expect": "pf-dev",
+   "rule": true
+  },
+  {
+   "q": "What is the development cost of SKU-10?",
+   "expect": "pf-dev",
+   "skus": [
+    "SKU-10"
+   ],
+   "rule": true
+  },
+  {
+   "q": "What is the unit cost of a chip?",
+   "expect": "pf-unit",
+   "rule": true
+  },
+  {
+   "q": "What is the average selling price?",
+   "expect": "pf-unit",
+   "rule": true
+  },
+  {
+   "q": "What are the margins per chip?",
+   "expect": "pf-unit",
+   "rule": true
+  },
+  {
+   "q": "Show the DG32 specifications",
+   "expect": "pf-specs",
+   "rule": true
+  },
+  {
+   "q": "Where do the sources contradict each other?",
+   "expect": "pf-conflicts",
+   "rule": true
+  },
+  {
+   "q": "Which markets should DeepGrid sell to first?",
+   "expect": "uc-windows",
+   "rule": true
+  },
+  {
+   "q": "What is the go-to-market order?",
+   "expect": "uc-windows",
+   "rule": true
+  },
+  {
+   "q": "What market share does the plan assume?",
+   "expect": "uc-share",
+   "rule": true
+  },
+  {
+   "q": "How much of the market does each chip need?",
+   "expect": "uc-share",
+   "rule": true
+  },
+  {
+   "q": "How does revenue turn into profit in FY32?",
+   "expect": "plan-flow",
+   "year": "FY32"
+  },
+  {
+   "q": "What are the biggest expenses in FY29?",
+   "expect": "plan-flow",
+   "year": "FY29"
+  },
+  {
+   "q": "Which business segment is largest?",
+   "expect": "plan-segments"
+  },
+  {
+   "q": "What share of revenue is silicon?",
+   "expect": "plan-segments"
+  },
+  {
+   "q": "Is the company profitable by FY31?",
+   "expect": "plan-margins"
+  },
+  {
+   "q": "What is the EBITDA margin?",
+   "expect": "plan-margins"
+  },
+  {
+   "q": "How much is spent on sales and marketing?",
+   "expect": "plan-opex"
+  },
+  {
+   "q": "How much cash is left at the end of FY29?",
+   "expect": "plan-cash"
+  },
+  {
+   "q": "What is the capital expenditure plan?",
+   "expect": "plan-cash"
+  },
+  {
+   "q": "What are the sources of funding?",
+   "expect": "plan-funds"
+  },
+  {
+   "q": "Does the company revenue match the chip plan?",
+   "expect": "plan-reconcile"
+  },
+  {
+   "q": "Which SKU has the largest revenue opportunity?",
+   "expect": "pf-lines"
+  },
+  {
+   "q": "How long until automotive customers can buy?",
+   "expect": "pf-approvals"
+  },
+  {
+   "q": "What does certification take for defence?",
+   "expect": "pf-approvals"
+  },
+  {
+   "q": "How expensive is it to tape out SKU-4?",
+   "expect": "pf-dev",
+   "skus": [
+    "SKU-4"
+   ]
+  },
+  {
+   "q": "What does one chip cost to make?",
+   "expect": "pf-unit"
+  },
+  {
+   "q": "What is the DG32 clock speed?",
+   "expect": "pf-specs"
+  },
+  {
+   "q": "Which figures disagree between documents?",
+   "expect": "pf-conflicts"
+  },
+  {
+   "q": "Which customers come first?",
+   "expect": "uc-windows"
+  },
+  {
+   "q": "Are the market share assumptions realistic?",
+   "expect": "uc-share"
+  },
+  {
+   "q": "What does SKU-10 DG32-Max replace?",
+   "expect": null
+  },
+  {
+   "q": "How is the D100 drone chip funded?",
+   "expect": null
+  },
+  {
+   "q": "What is the difference between SKU-10 and SKU-11?",
+   "expect": null
+  },
+  {
+   "q": "Who buys the SKU-5 interface transceiver?",
+   "expect": null
+  },
+  {
+   "q": "Who founded DeepGrid?",
+   "expect": null
+  },
+  {
+   "q": "What is the control loop?",
+   "expect": null
+  },
+  {
+   "q": "How does the lockstep core detect faults?",
+   "expect": null
+  },
+  {
+   "q": "What does SKU-8 do?",
+   "expect": null
+  },
+  {
+   "q": "Explain the safety architecture",
+   "expect": null
+  },
+  {
+   "q": "Where is the team based?",
+   "expect": null
+  },
+  {
+   "q": "What process node does the D100 use?",
+   "expect": null
+  },
+  {
+   "q": "How do I contact the company?",
+   "expect": null
+  },
+  {
+   "q": "Tell me about the grid use case",
+   "expect": null
+  },
+  {
+   "q": "What is DeepGrid?",
+   "expect": null
+  },
+  {
+   "q": "Is the chip safe for vehicles?",
+   "expect": null
+  },
+  {
+   "q": "What does the FPGA prototype show?",
+   "expect": null
+  },
+  {
+   "q": "Who are the competitors?",
+   "expect": null
+  },
+  {
+   "q": "How big is the team?",
+   "expect": null
+  },
+  {
+   "q": "What is the patent position?",
+   "expect": null
+  }
+ ]
+}

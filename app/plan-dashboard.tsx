@@ -12,7 +12,7 @@
  *  gap, a legend with direct labels, a hover tooltip on every mark, and a table holding the same numbers.
  *  Plan targets only: no review findings (owner, 2026-10-12).
  */
-import {useState} from 'react';
+import {useEffect, useState} from 'react';
 import raw from './plan-data.json';
 import {revenueBuild} from './company-content';
 import {asset, url} from './routes';
@@ -166,36 +166,182 @@ function largest(parts: {label: string; value: number; group?: string}[]) {
 }
 const ROUNDED = 'Subtotals equal the running sum at full precision (checked at build); printed figures are rounded to ₹0.01 Cr.';
 
+
 /** Money flow (BenAI dashboard rules, adopted 2026-10-17): one year at a time, revenue walked down to net income
- *  beside opening cash walked to closing cash. Opens on the cash-low year, the year the raise has to carry. The
- *  year buttons filter one chapter; they are not tabs, and every other chapter shows all years. */
-function MoneyFlow({d, children}: {d: PlanData; children?: React.ReactNode}) {
-  const close = d.series.closingCash, [i, setI] = useState(close.indexOf(Math.min(...close)));
+ *  beside opening cash walked to closing cash. Opens on the cash-low year, the year the raise has to carry, unless
+ *  a year is asked for (Ask DeepGrid passes one; /plan?year=FY30 does too). The year buttons filter these two walks;
+ *  they are not tabs, and every other chapter shows all years. */
+function FlowWalks({d, year, fromUrl}: {d: PlanData; year?: string; fromUrl?: boolean}) {
+  const close = d.series.closingCash, pick = (y?: string | null) => { const k = d.periods.findIndex(p => fy(p) === y); return k >= 0 ? k : close.indexOf(Math.min(...close)); };
+  const [i, setI] = useState(() => pick(year));
+  // after hydration: the prerendered page has no query string, so the URL's year is read once mounted
+  useEffect(() => { if (fromUrl) setI(pick(new URLSearchParams(location.search).get('year')?.toUpperCase())); }, [fromUrl]);
   const at = (w: Walked[]): WalkRow[] => w.map(r => ({label: r.label, total: r.total, value: r.values[i]}));
   const pl = at(d.plWalk), cash = at(d.cashWalk), F = fy(d.periods[i]);
   const big = largest(d.plWalk.filter(r => !r.total).map(r => ({label: r.label, group: r.group, value: -r.values[i]})));
   const outs = cash.filter(r => !r.total && r.value < 0), out = outs.length ? outs.reduce((a, r) => (r.value < a.value ? r : a)) : null;
   const rev = pl[0].value, ni = pl[pl.length - 1].value, op = cash[0].value, cl = cash[cash.length - 1].value;
+  return <>
+    <div className="pd-years" role="group" aria-label="Year shown in the two walk-downs">
+      {d.periods.map((p, k) => <button key={p} type="button" className="pd-year" aria-pressed={k === i} onClick={() => setI(k)}>{fy(p)}</button>)}
+    </div>
+    <div className="pd-flow">
+      <section className="pd-panel" aria-labelledby="pd-plw-h">
+        <h3 id="pd-plw-h">In {F}, {cr(rev)} of revenue {ni >= 0 ? `leaves ${cr(ni)} of net income` : `ends in a net loss of ${cr(-ni)}`}; {lower(big.label)} is the largest cost at {cr(big.value)}.</h3>
+        <Walk rows={pl} fmt={signed} label={`Revenue to net income, ${F}, ₹ Cr: each cost taken from revenue in turn. The same figures are in the P&L table below.`}/>
+        <Source files={['pl.csv']} note={ROUNDED + ' ' + d.plNote}/>
+      </section>
+      <section className="pd-panel" aria-labelledby="pd-cashw-h">
+        <h3 id="pd-cashw-h">Cash {cl < op ? 'falls' : 'rises'} from {cr(op)} to {cr(cl)} in {F}{out ? `; ${lower(out.label)} is the largest outflow at ${cr(-out.value)}` : ''}.</h3>
+        <Walk rows={cash} fmt={signed} label={`Opening to closing cash, ${F}, ₹ Cr. The same figures are in the cash table below.`}/>
+        <Source files={['cash.csv']} note={ROUNDED + ' ' + d.cashNote}/>
+      </section>
+    </div>
+  </>;
+}
+
+/** Everything the panels compute from the plan, once. */
+function derive(d: PlanData) {
+  const n = d.periods.length, last = n - 1, F0 = fy(d.periods[0]), FL = fy(d.periods[last]);
+  const {revenue: rev, grossProfit: gp, ebitda, netIncome: ni} = d.series;
+  const close = d.series.closingCash, segs = d.segments, segTotal = (i: number) => segs.reduce((a, s) => a + s.values[i], 0);
+  const uses = [...d.uses].sort((a, b) => b.value - a.value), opex = (i: number) => d.opexParts.reduce((a, o) => a + o.values[i], 0);
+  return {d, last, F0, FL, rev, gp, ebitda, ni, firstProfit: ni.findIndex(v => v > 0), close, trough: close.indexOf(Math.min(...close)),
+    open0: d.series.openingCash[0], segs, segTotal, segMax: Math.max(...segs.map(s => s.values[last])), sources: d.sources, uses,
+    recon: segs.find(s => s.name === d.reconcileSegment), usesTotal: uses.reduce((a, f) => a + f.value, 0), useMax: Math.max(...uses.map(f => f.value)),
+    opex, opTop: largest(d.opexParts.map(o => ({label: o.label, group: o.group, value: o.values[last]}))),
+    company: revenueBuild.filter(([k]) => /^FY\d\d$/.test(k)).map(([k, v]) => ({fy: k, plan: Number(v.replace(/[^\d.]/g, ''))}))};
+}
+type V = ReturnType<typeof derive>;
+
+function PlTable({v: {d, rev, ni, F0, FL, last, firstProfit}}: {v: V}) {
   return (
-    <Chapter id="ch-flow" title="Where revenue and cash go, by year">
-      <div className="pd-years" role="group" aria-label="Year shown in the two walk-downs">
-        {d.periods.map((p, k) => <button key={p} type="button" className="pd-year" aria-pressed={k === i} onClick={() => setI(k)}>{fy(p)}</button>)}
-      </div>
-      <div className="pd-flow">
-        <section className="pd-panel" aria-labelledby="pd-plw-h">
-          <h3 id="pd-plw-h">In {F}, {cr(rev)} of revenue {ni >= 0 ? `leaves ${cr(ni)} of net income` : `ends in a net loss of ${cr(-ni)}`}; {lower(big.label)} is the largest cost at {cr(big.value)}.</h3>
-          <Walk rows={pl} fmt={signed} label={`Revenue to net income, ${F}, ₹ Cr: each cost taken from revenue in turn. The same figures are in the P&L table below.`}/>
-          <Source files={['pl.csv']} note={ROUNDED + ' ' + d.plNote}/>
-        </section>
-        <section className="pd-panel" aria-labelledby="pd-cashw-h">
-          <h3 id="pd-cashw-h">Cash {cl < op ? 'falls' : 'rises'} from {cr(op)} to {cr(cl)} in {F}{out ? `; ${lower(out.label)} is the largest outflow at ${cr(-out.value)}` : ''}.</h3>
-          <Walk rows={cash} fmt={signed} label={`Opening to closing cash, ${F}, ₹ Cr. The same figures are in the cash table below.`}/>
-          <Source files={['cash.csv']} note={ROUNDED + ' ' + d.cashNote}/>
-        </section>
-      </div>
-      {children}
-    </Chapter>
+    <section className="pd-panel" aria-labelledby="pd-pl-h">
+      <h3 id="pd-pl-h">Revenue grows from {cr(rev[0])} in {F0} to {cr(rev[last])} in {FL}; net income turns positive in {fy(d.periods[firstProfit])} and reaches {cr(ni[last])}.</h3>
+      <div className="table-scroll"><table className="pd-table">
+        <caption className="sr-only">Company P&L, ₹ Cr</caption>
+        <thead><tr><th scope="col">₹{NB}Cr</th>{d.periods.map(p => <th scope="col" key={p}>{fy(p)}</th>)}</tr></thead>
+        <tbody>{d.plRows.map(r => <tr key={r.label} className={r.strong ? 'pd-strong' : undefined}><th scope="row">{r.label}</th>{r.values.map((v, i) => <td key={i}>{num(v)}</td>)}</tr>)}</tbody>
+      </table></div>
+      <Source files={['pl.csv']} note="P&L sheet of the corrected model."/>
+    </section>
   );
+}
+
+function SegPanel({v: {d, segs, segTotal, segMax, last, FL}}: {v: V}) {
+  return (
+    <section className="pd-panel" aria-labelledby="pd-seg-h">
+      <h3 id="pd-seg-h">{segs[0].name} carries {pct(segs[0].values[last] / segTotal(last), 0)} of {FL} revenue; {segs[1].name} follows with {pct(segs[1].values[last] / segTotal(last), 0)}.</h3>
+      <StackedBars d={d}/>
+      <div className="table-scroll"><table className="pd-table">
+        <caption className="sr-only">Revenue by segment, ₹ Cr</caption>
+        <thead><tr><th scope="col">Segment</th>{d.periods.map(p => <th scope="col" key={p}>{fy(p)}</th>)}<th scope="col">{FL} share</th></tr></thead>
+        <tbody>
+          {segs.map((s, si) => <tr key={s.name}><th scope="row"><span className={'pd-swatch pd-s' + (si + 1)} aria-hidden="true"/>{s.name}</th>
+            {s.values.map((v, i) => <td key={i}>{num(v)}</td>)}
+            <td><span className="pd-inbar"><span className={'pd-inbar-fill pd-s' + (si + 1)} style={{width: `${s.values[last] / segMax * 100}%`}}/></span>{pct(s.values[last] / segTotal(last))}</td></tr>)}
+          <tr className="pd-total"><th scope="row">Total</th>{d.periods.map((_, i) => <td key={i}>{num(segTotal(i))}</td>)}<td>100.0{NB}%</td></tr>
+        </tbody>
+      </table></div>
+      <Source files={['revenue-by-segment.csv']} note="Segment share = segment revenue ÷ total revenue, same year. Segments sum to P&L revenue (checked at build)."/>
+    </section>
+  );
+}
+
+function MarginPanel({v: {d, gp, ebitda, ni, rev, last, firstProfit}}: {v: V}) {
+  return (
+    <section className="pd-panel" aria-labelledby="pd-margin-h">
+      <h3 id="pd-margin-h">Gross margin rises from {pct(gp[0] / rev[0])} to {pct(gp[last] / rev[last])}; net margin turns positive in {fy(d.periods[firstProfit])} and reaches {pct(ni[last] / rev[last])}.</h3>
+      <Lines d={d} label="Gross, EBITDA and net margin by year, per cent of revenue. The same figures follow from the P&L table below." series={[
+        {name: 'Gross margin', values: gp.map((v, i) => v / rev[i]), slot: 1},
+        {name: 'EBITDA margin', values: ebitda.map((v, i) => v / rev[i]), slot: 2},
+        {name: 'Net margin', values: ni.map((v, i) => v / rev[i]), slot: 3},
+      ]}/>
+      <Source files={['pl.csv']} note="Gross, EBITDA and net margin = gross profit, EBITDA and net income ÷ revenue, same year."/>
+    </section>
+  );
+}
+
+function OpexPanel({v: {d, opex, opTop, F0, FL, last}}: {v: V}) {
+  return (
+    <section className="pd-panel" aria-labelledby="pd-opex-h">
+      <h3 id="pd-opex-h">Operating expense grows from {cr(opex(0))} in {F0} to {cr(opex(last))} in {FL}; {lower(opTop.label)} is {pct(opTop.value / opex(last), 0)} of it.</h3>
+      <HBars label="Operating expense mix by year: each line's share of that year's operating expense, with the total at the end. The same figures are in the P&L table." max={100}
+        legend={d.opexParts.map((o, k) => ({name: o.label, slot: k + 1}))}
+        rows={d.periods.map((p, i) => ({key: p, label: fy(p), end: cr(opex(i)), tip: [`${fy(p)} operating expense: ${cr(opex(i))}`],
+          stack: d.opexParts.map((o, k) => ({value: o.values[i] / opex(i) * 100, slot: k + 1, name: o.label, text: `${cr(o.values[i])}, ${pct(o.values[i] / opex(i))}`}))}))}/>
+      <Source files={['pl.csv']} note="Operating expense = run-rate R&D + tape-out programme + sales and marketing + G&A (checked at build)."/>
+    </section>
+  );
+}
+
+function CashPanel({v: {d, open0, close, trough, F0, last, FL}}: {v: V}) {
+  return (
+    <section className="pd-panel" aria-labelledby="pd-cash-h">
+      <h3 id="pd-cash-h">Cash falls from {cr(open0)} to {cr(close[trough])} by the end of {fy(d.periods[trough])}, with {cr(-d.series.capex.slice(0, trough + 1).reduce((a, v) => a + v, 0), 0)} of {d.capexLabel} in {F0}–{fy(d.periods[trough])}, then rebuilds to {cr(close[last])} by {FL}.</h3>
+      <CashBars d={d}/>
+      <div className="table-scroll"><table className="pd-table">
+        <caption className="sr-only">Cash flow and balance, ₹ Cr</caption>
+        <thead><tr><th scope="col">₹{NB}Cr</th>{d.periods.map(p => <th scope="col" key={p}>{fy(p)}</th>)}</tr></thead>
+        <tbody>{d.cashRows.map(r => <tr key={r.label} className={r.strong ? 'pd-strong' : undefined}><th scope="row">{r.label}</th>{r.values.map((v, i) => <td key={i}>{num(v)}</td>)}</tr>)}</tbody>
+      </table></div>
+      <Source files={['cash.csv']} note={'Closing cash = opening cash + net cash flow. ' + d.cashNote}/>
+    </section>
+  );
+}
+
+function FundsPanel({v: {sources, uses, usesTotal, useMax}}: {v: V}) {
+  return (
+    <section className="pd-panel" aria-labelledby="pd-funds-h">
+      <h3 id="pd-funds-h">The plan raises {cr(sources.reduce((a, f) => a + f.value, 0), 0)}; the largest use takes {pct(uses[0].value / usesTotal, 0)} of it.</h3>
+      <p className="pd-lede">{'Sources: ' + sources.map(f => `${f.label} (${cr(f.value, 0)})`).join(' and ') + '.'}</p>
+      <div className="table-scroll"><table className="pd-table pd-funds">
+        <caption className="sr-only">Use of funds, ₹ Cr</caption>
+        <thead><tr><th scope="col">Use</th><th scope="col">₹{NB}Cr</th><th scope="col">Share</th></tr></thead>
+        <tbody>
+          {uses.map(f => <tr key={f.label}><th scope="row">{f.label}</th><td>{num(f.value)}</td><td><span className="pd-inbar pd-inbar-wide"><span className="pd-inbar-fill pd-s1" style={{width: `${f.value / useMax * 100}%`}}/></span>{pct(f.value / usesTotal)}</td></tr>)}
+          <tr className="pd-total"><th scope="row">Total</th><td>{num(usesTotal)}</td><td>100.0{NB}%</td></tr>
+        </tbody>
+      </table></div>
+      <Source files={['use-of-funds.csv']} note="Use-of-funds share = allocation ÷ total uses; uses equal sources within ₹0.02 Cr (checked at build)."/>
+    </section>
+  );
+}
+
+function ReconPanel({v: {d, company, rev, recon}}: {v: V}) {
+  return (
+    <section className="pd-panel" aria-labelledby="pd-rec-h">
+      <h3 id="pd-rec-h">This model and the plan on the Portfolio strategy page are different plans, and their revenue does not reconcile.</h3>
+      <p className="pd-lede">{d.reconcileLede}</p>
+      <div className="table-scroll"><table className="pd-table">
+        <caption className="sr-only">Revenue plans compared, ₹ Cr</caption>
+        <thead><tr><th scope="col">Year</th><th scope="col">Portfolio strategy page (silicon plan)</th><th scope="col">This model, total</th><th scope="col">This model, {d.reconcileSegment}</th></tr></thead>
+        <tbody>{company.map(c => { const i = d.periods.findIndex(p => fy(p) === c.fy);
+          return <tr key={c.fy}><th scope="row">{c.fy}</th><td>{c.plan.toLocaleString('en-IN')}</td><td>{i >= 0 ? num(rev[i]) : '–'}</td><td>{i >= 0 && recon ? num(recon.values[i]) : '–'}</td></tr>; })}</tbody>
+      </table></div>
+      <p className="pd-source">Portfolio strategy figures: the mature-node whitepaper, as published on <a className="pd-link" href={url('/company')}>the Portfolio strategy page</a>. Model figures: pl.csv and revenue-by-segment.csv.</p>
+    </section>
+  );
+}
+
+/** The plan years Ask may pass to a panel; none in a build without the plan. */
+export const planYears = data.available ? data.periods.map(fy) : [];
+export const planAvailable = data.available;
+
+/** One panel, for Ask DeepGrid: the same component and data as the dashboard. Null in a build without the plan. */
+export function PlanPanel({id, year}: {id: string; year?: string}) {
+  if (!data.available) return null;
+  const v = derive(data);
+  switch (id) {
+    case 'plan-flow': return <FlowWalks d={data} year={year}/>;
+    case 'plan-segments': return <SegPanel v={v}/>;
+    case 'plan-margins': return <MarginPanel v={v}/>;
+    case 'plan-opex': return <OpexPanel v={v}/>;
+    case 'plan-cash': return <CashPanel v={v}/>;
+    case 'plan-funds': return <FundsPanel v={v}/>;
+    case 'plan-reconcile': return <ReconPanel v={v}/>;
+    default: return null;
+  }
 }
 
 export function PlanDashboard() {
@@ -206,18 +352,7 @@ export function PlanDashboard() {
       <a className="pd-link" href={url('/contact')}>Contact the team</a>
     </section>
   );
-  const d = data, n = d.periods.length, last = n - 1, F0 = fy(d.periods[0]), FL = fy(d.periods[last]);
-  const {revenue: rev, grossProfit: gp, ebitda, netIncome: ni} = d.series;
-  const firstProfit = ni.findIndex(v => v > 0);
-  const close = d.series.closingCash, trough = close.indexOf(Math.min(...close)), open0 = d.series.openingCash[0];
-  const segs = d.segments, segTotal = (i: number) => segs.reduce((a, s) => a + s.values[i], 0);
-  const segMax = Math.max(...segs.map(s => s.values[last]));
-  const sources = d.sources, uses = [...d.uses].sort((a, b) => b.value - a.value);
-  const recon = segs.find(s => s.name === d.reconcileSegment);
-  const usesTotal = uses.reduce((a, f) => a + f.value, 0), useMax = Math.max(...uses.map(f => f.value));
-  const opex = (i: number) => d.opexParts.reduce((a, o) => a + o.values[i], 0);
-  const opTop = largest(d.opexParts.map(o => ({label: o.label, group: o.group, value: o.values[last]})));
-  const company = revenueBuild.filter(([k]) => /^FY\d\d$/.test(k)).map(([k, v]) => ({fy: k, plan: Number(v.replace(/[^\d.]/g, ''))}));
+  const v = derive(data), {d, last, F0, FL, rev, gp, ebitda, ni, firstProfit, close, trough, open0, segs, segTotal, recon} = v;
   return (
     <div className="pd-root">
       <header className="pd-head">
@@ -238,99 +373,15 @@ export function PlanDashboard() {
         <ul>{d.checks.map(c => <li key={c}>{c}</li>)}</ul>
       </details>
 
-      <MoneyFlow d={d}>
-      <section className="pd-panel" aria-labelledby="pd-pl-h">
-        <h3 id="pd-pl-h">Revenue grows from {cr(rev[0])} in {F0} to {cr(rev[last])} in {FL}; net income turns positive in {fy(d.periods[firstProfit])} and reaches {cr(ni[last])}.</h3>
-        <div className="table-scroll"><table className="pd-table">
-          <caption className="sr-only">Company P&L, ₹ Cr</caption>
-          <thead><tr><th scope="col">₹{NB}Cr</th>{d.periods.map(p => <th scope="col" key={p}>{fy(p)}</th>)}</tr></thead>
-          <tbody>{d.plRows.map(r => <tr key={r.label} className={r.strong ? 'pd-strong' : undefined}><th scope="row">{r.label}</th>{r.values.map((v, i) => <td key={i}>{num(v)}</td>)}</tr>)}</tbody>
-        </table></div>
-        <Source files={['pl.csv']} note="P&L sheet of the corrected model."/>
-      </section>
-      </MoneyFlow>
-
-      <Chapter id="ch-sells" title="Revenue mix and business segments">
-      <section className="pd-panel" aria-labelledby="pd-seg-h">
-        <h3 id="pd-seg-h">{segs[0].name} carries {pct(segs[0].values[last] / segTotal(last), 0)} of {FL} revenue; {segs[1].name} follows with {pct(segs[1].values[last] / segTotal(last), 0)}.</h3>
-        <StackedBars d={d}/>
-        <div className="table-scroll"><table className="pd-table">
-          <caption className="sr-only">Revenue by segment, ₹ Cr</caption>
-          <thead><tr><th scope="col">Segment</th>{d.periods.map(p => <th scope="col" key={p}>{fy(p)}</th>)}<th scope="col">{FL} share</th></tr></thead>
-          <tbody>
-            {segs.map((s, si) => <tr key={s.name}><th scope="row"><span className={'pd-swatch pd-s' + (si + 1)} aria-hidden="true"/>{s.name}</th>
-              {s.values.map((v, i) => <td key={i}>{num(v)}</td>)}
-              <td><span className="pd-inbar"><span className={'pd-inbar-fill pd-s' + (si + 1)} style={{width: `${s.values[last] / segMax * 100}%`}}/></span>{pct(s.values[last] / segTotal(last))}</td></tr>)}
-            <tr className="pd-total"><th scope="row">Total</th>{d.periods.map((_, i) => <td key={i}>{num(segTotal(i))}</td>)}<td>100.0{NB}%</td></tr>
-          </tbody>
-        </table></div>
-        <Source files={['revenue-by-segment.csv']} note="Segment share = segment revenue ÷ total revenue, same year. Segments sum to P&L revenue (checked at build)."/>
-      </section>
+      <Chapter id="ch-flow" title="Where revenue and cash go, by year">
+        <FlowWalks d={d} fromUrl/>
+        <PlTable v={v}/>
       </Chapter>
-
-      <Chapter id="ch-margins" title="Gross and net profitability targets, and operating expense">
-      <section className="pd-panel" aria-labelledby="pd-margin-h">
-        <h3 id="pd-margin-h">Gross margin rises from {pct(gp[0] / rev[0])} to {pct(gp[last] / rev[last])}; net margin turns positive in {fy(d.periods[firstProfit])} and reaches {pct(ni[last] / rev[last])}.</h3>
-        <Lines d={d} label="Gross, EBITDA and net margin by year, per cent of revenue. The same figures follow from the P&L table below." series={[
-          {name: 'Gross margin', values: gp.map((v, i) => v / rev[i]), slot: 1},
-          {name: 'EBITDA margin', values: ebitda.map((v, i) => v / rev[i]), slot: 2},
-          {name: 'Net margin', values: ni.map((v, i) => v / rev[i]), slot: 3},
-        ]}/>
-        <Source files={['pl.csv']} note="Gross, EBITDA and net margin = gross profit, EBITDA and net income ÷ revenue, same year."/>
-      </section>
-      <section className="pd-panel" aria-labelledby="pd-opex-h">
-        <h3 id="pd-opex-h">Operating expense grows from {cr(opex(0))} in {F0} to {cr(opex(last))} in {FL}; {lower(opTop.label)} is {pct(opTop.value / opex(last), 0)} of it.</h3>
-        <HBars label="Operating expense mix by year: each line's share of that year's operating expense, with the total at the end. The same figures are in the P&L table." max={100}
-          legend={d.opexParts.map((o, k) => ({name: o.label, slot: k + 1}))}
-          rows={d.periods.map((p, i) => ({key: p, label: fy(p), end: cr(opex(i)), tip: [`${fy(p)} operating expense: ${cr(opex(i))}`],
-            stack: d.opexParts.map((o, k) => ({value: o.values[i] / opex(i) * 100, slot: k + 1, name: o.label, text: `${cr(o.values[i])}, ${pct(o.values[i] / opex(i))}`}))}))}/>
-        <Source files={['pl.csv']} note="Operating expense = run-rate R&D + tape-out programme + sales and marketing + G&A (checked at build)."/>
-      </section>
-      </Chapter>
-
-      <Chapter id="ch-cash" title="Liquidity requirements and capital expenditure">
-      <section className="pd-panel" aria-labelledby="pd-cash-h">
-        <h3 id="pd-cash-h">Cash falls from {cr(open0)} to {cr(close[trough])} by the end of {fy(d.periods[trough])}, with {cr(-d.series.capex.slice(0, trough + 1).reduce((a, v) => a + v, 0), 0)} of {d.capexLabel} in {F0}–{fy(d.periods[trough])}, then rebuilds to {cr(close[last])} by {FL}.</h3>
-        <CashBars d={d}/>
-        <div className="table-scroll"><table className="pd-table">
-          <caption className="sr-only">Cash flow and balance, ₹ Cr</caption>
-          <thead><tr><th scope="col">₹{NB}Cr</th>{d.periods.map(p => <th scope="col" key={p}>{fy(p)}</th>)}</tr></thead>
-          <tbody>{d.cashRows.map(r => <tr key={r.label} className={r.strong ? 'pd-strong' : undefined}><th scope="row">{r.label}</th>{r.values.map((v, i) => <td key={i}>{num(v)}</td>)}</tr>)}</tbody>
-        </table></div>
-        <Source files={['cash.csv']} note={'Closing cash = opening cash + net cash flow. ' + d.cashNote}/>
-      </section>
-      </Chapter>
-
-      <Chapter id="ch-raise" title="Funding sources and capital allocation">
-      <section className="pd-panel" aria-labelledby="pd-funds-h">
-        <h3 id="pd-funds-h">The plan raises {cr(sources.reduce((a, f) => a + f.value, 0), 0)}; the largest use takes {pct(uses[0].value / usesTotal, 0)} of it.</h3>
-        <p className="pd-lede">{'Sources: ' + sources.map(f => `${f.label} (${cr(f.value, 0)})`).join(' and ') + '.'}</p>
-        <div className="table-scroll"><table className="pd-table pd-funds">
-          <caption className="sr-only">Use of funds, ₹ Cr</caption>
-          <thead><tr><th scope="col">Use</th><th scope="col">₹{NB}Cr</th><th scope="col">Share</th></tr></thead>
-          <tbody>
-            {uses.map(f => <tr key={f.label}><th scope="row">{f.label}</th><td>{num(f.value)}</td><td><span className="pd-inbar pd-inbar-wide"><span className="pd-inbar-fill pd-s1" style={{width: `${f.value / useMax * 100}%`}}/></span>{pct(f.value / usesTotal)}</td></tr>)}
-            <tr className="pd-total"><th scope="row">Total</th><td>{num(usesTotal)}</td><td>100.0{NB}%</td></tr>
-          </tbody>
-        </table></div>
-        <Source files={['use-of-funds.csv']} note="Use-of-funds share = allocation ÷ total uses; uses equal sources within ₹0.02 Cr (checked at build)."/>
-      </section>
-      </Chapter>
-
-
-      <Chapter id="ch-compare" title="Reconcile company revenue with the chip portfolio plan">
-      <section className="pd-panel" aria-labelledby="pd-rec-h">
-        <h3 id="pd-rec-h">This model and the plan on the Portfolio strategy page are different plans, and their revenue does not reconcile.</h3>
-        <p className="pd-lede">{d.reconcileLede}</p>
-        <div className="table-scroll"><table className="pd-table">
-          <caption className="sr-only">Revenue plans compared, ₹ Cr</caption>
-          <thead><tr><th scope="col">Year</th><th scope="col">Portfolio strategy page (silicon plan)</th><th scope="col">This model, total</th><th scope="col">This model, {d.reconcileSegment}</th></tr></thead>
-          <tbody>{company.map(c => { const i = d.periods.findIndex(p => fy(p) === c.fy);
-            return <tr key={c.fy}><th scope="row">{c.fy}</th><td>{c.plan.toLocaleString('en-IN')}</td><td>{i >= 0 ? num(rev[i]) : '–'}</td><td>{i >= 0 && recon ? num(recon.values[i]) : '–'}</td></tr>; })}</tbody>
-        </table></div>
-        <p className="pd-source">Portfolio strategy figures: the mature-node whitepaper, as published on <a className="pd-link" href={url('/company')}>the Portfolio strategy page</a>. Model figures: pl.csv and revenue-by-segment.csv.</p>
-      </section>
-      </Chapter>
+      <Chapter id="ch-sells" title="Revenue mix and business segments"><SegPanel v={v}/></Chapter>
+      <Chapter id="ch-margins" title="Gross and net profitability targets, and operating expense"><MarginPanel v={v}/><OpexPanel v={v}/></Chapter>
+      <Chapter id="ch-cash" title="Liquidity requirements and capital expenditure"><CashPanel v={v}/></Chapter>
+      <Chapter id="ch-raise" title="Funding sources and capital allocation"><FundsPanel v={v}/></Chapter>
+      <Chapter id="ch-compare" title="Reconcile company revenue with the chip portfolio plan"><ReconPanel v={v}/></Chapter>
     </div>
   );
 }

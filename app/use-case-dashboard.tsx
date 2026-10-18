@@ -70,6 +70,31 @@ function Implementation({c}: {c: UseCase}) {
   </div>;
 }
 
+/** FY31 ramp by approval window: what the markets that qualify within a year carry. */
+function WindowsCard({planned, sources}: {planned: UseCase[]; sources: boolean}) {
+  return <section className="uc-card"><h3>Markets qualifying within a year carry {cr(sum(planned.filter(c => c.approval.high <= 12), 'fy31Cr'))} of the FY31 chip ramp.</h3>
+    <HBars label="FY31 ramp by approval window, rupees crore" max={Math.max(1, sum(planned, 'fy31Cr'))} rows={[[6,12],[12,18],[18,36]].map(([lo,hi]) => {
+      const group = planned.filter(c => c.approval.low === lo && c.approval.high === hi), total = sum(group, 'fy31Cr');
+      return {key: String(hi), label: `${lo}–${hi} months`, bars: [{value: total, slot: hi === 12 ? 1 : 0}], end: cr(total), tip: [`${lo}–${hi} month qualification`, cr(total), `${group.length} chips`, ...group.map(c => c.chip.name)]};
+    })}/><Source tables={['skus', 'approvals']} expanded={sources}/></section>;
+}
+
+/** Declared market share per chip against the 30% planning reference. */
+function ShareCard({planned, sources}: {planned: UseCase[]; sources: boolean}) {
+  const shares = planned.flatMap(c => c.chip.shareMidPct == null ? [] : [c.chip.shareMidPct]), coverageMax = Math.max(...shares, 30);
+  return <section className="uc-card"><h3>{shares.length && Math.max(...shares) < 30 ? 'Every declared midpoint share is below 30%.' : 'Compare declared market shares with the 30% reference.'}</h3>
+    <p className="pd-lede">Bar: share at the high-end market estimate to the declared midpoint share. Dot: midpoint. These are the Blueprint's stated shares, not a calculation from the two market endpoints.</p>
+    <HBars label="Declared market share range per chip, percent" max={coverageMax + 5} refLine={{value:30,label:'30% planning reference'}} legend={[{name:'Plausible (Blueprint)',slot:1},{name:'Conservative (Blueprint)',slot:0}]} rows={planned.filter(c => c.chip.shareMidPct != null && c.chip.shareTopPct != null).map(c => ({key:c.sku,label:`${c.sku} · ${c.chip.name}`,range:[c.chip.shareTopPct!,c.chip.shareMidPct!],dot:c.chip.shareMidPct!,slot:c.chip.verdict === 'PLAUSIBLE' ? 1 : 0,end:`${c.chip.shareTopPct}–${c.chip.shareMidPct}% · ${c.chip.verdict.toLowerCase()}`,tip:[c.chip.name,`Declared midpoint ${c.chip.shareMidPct}%`, `At high market estimate ${c.chip.shareTopPct}%`,c.chip.verdict + ' · Blueprint estimate']}))}/>
+    <Source tables={['skus']} expanded={sources}/>
+  </section>;
+}
+
+/** One panel, for Ask DeepGrid: the same card and the same checked tables as the Markets and qualification view. */
+export function UseCasePanel({id}: {id: string}) {
+  const {d} = usePortfolio(), planned = useCases(d).filter(c => c.chip.planCr != null);
+  return id === 'uc-windows' ? <WindowsCard planned={planned} sources={false}/> : id === 'uc-share' ? <ShareCard planned={planned} sources={false}/> : null;
+}
+
 export function UseCaseDashboard() {
   const {d, prov, refresh} = usePortfolio();
   const cases = useCases(d);
@@ -116,7 +141,6 @@ export function UseCaseDashboard() {
   const openRow = (sku: string) => (e: React.MouseEvent) => { if (!plainClick(e)) return; e.preventDefault(); choose(sku, true); document.getElementById('uc-implementation')?.scrollIntoView({block: 'start'}); };
   const visible = cases.filter(c => (!search.trim() || `${c.title} ${c.sku} ${c.chip.name} ${c.buyer}`.toLowerCase().includes(search.trim().toLowerCase())) &&
     (filter === 'all' || (filter === 'shuttle' ? c.chip.shuttle : filter === 'fast' ? c.approval.high <= 12 : !c.chip.shuttle)));
-  const coverageMax = Math.max(...shares, 30);
 
   return <div className="uc-dashboard">
     <header className="pd-head">
@@ -139,11 +163,7 @@ export function UseCaseDashboard() {
 
     <Chapter id="uc-revenue" title="FY31 revenue opportunity and qualification exposure">
       <div className="uc-chart-grid">
-        <section className="uc-card"><h3>Markets qualifying within a year carry {cr(sum(planned.filter(c => c.approval.high <= 12), 'fy31Cr'))} of the FY31 chip ramp.</h3>
-          <HBars label="FY31 ramp by approval window, rupees crore" max={Math.max(1, sum(planned, 'fy31Cr'))} rows={[[6,12],[12,18],[18,36]].map(([lo,hi]) => {
-            const group = planned.filter(c => c.approval.low === lo && c.approval.high === hi), total = sum(group, 'fy31Cr');
-            return {key: String(hi), label: `${lo}–${hi} months`, bars: [{value: total, slot: hi === 12 ? 1 : 0}], end: cr(total), tip: [`${lo}–${hi} month qualification`, cr(total), `${group.length} chips`, ...group.map(c => c.chip.name)]};
-          })}/><Source tables={['skus', 'approvals']} expanded={sources}/></section>
+        <WindowsCard planned={planned} sources={sources}/>
         <section className="uc-card"><h3>Three chips carry {cr(sum(ranked.slice(0,3), 'fy31Cr'))} of the {cr(sum(planned, 'fy31Cr'))} chip-by-chip ramp.</h3>
           <HBars label="FY31 revenue ramp by chip, rupees crore" max={Math.max(1, ...planned.map(c => c.chip.fy31Cr ?? 0))} legend={[{name: '6–12 month qualification',slot:1},{name:'Longer qualification',slot:0}]} rows={ranked.map(c => ({key:c.sku,label:`${c.sku} · ${c.chip.name}`,bars:[{value:c.chip.fy31Cr ?? 0,slot:c.approval.high <= 12 ? 1 : 0}],end:cr(c.chip.fy31Cr ?? 0),tip:[c.chip.name,`FY31 ${cr(c.chip.fy31Cr ?? 0)}`,`${c.approval.low}–${c.approval.high} months (estimate)`]}))}/><Source tables={['skus']} expanded={sources}/></section>
       </div>
@@ -159,11 +179,7 @@ export function UseCaseDashboard() {
     </Chapter>
 
     <Chapter id="uc-market" title="Market-share assumptions and commercial exposure">
-      <section className="uc-card"><h3>{shares.length && Math.max(...shares) < 30 ? 'Every declared midpoint share is below 30%.' : 'Compare declared market shares with the 30% reference.'}</h3>
-        <p className="pd-lede">Bar: share at the high-end market estimate to the declared midpoint share. Dot: midpoint. These are the Blueprint's stated shares, not a calculation from the two market endpoints.</p>
-        <HBars label="Declared market share range per chip, percent" max={coverageMax + 5} refLine={{value:30,label:'30% planning reference'}} legend={[{name:'Plausible (Blueprint)',slot:1},{name:'Conservative (Blueprint)',slot:0}]} rows={planned.filter(c => c.chip.shareMidPct != null && c.chip.shareTopPct != null).map(c => ({key:c.sku,label:`${c.sku} · ${c.chip.name}`,range:[c.chip.shareTopPct!,c.chip.shareMidPct!],dot:c.chip.shareMidPct!,slot:c.chip.verdict === 'PLAUSIBLE' ? 1 : 0,end:`${c.chip.shareTopPct}–${c.chip.shareMidPct}% · ${c.chip.verdict.toLowerCase()}`,tip:[c.chip.name,`Declared midpoint ${c.chip.shareMidPct}%`, `At high market estimate ${c.chip.shareTopPct}%`,c.chip.verdict + ' · Blueprint estimate']}))}/>
-        <Source tables={['skus']} expanded={sources}/>
-      </section>
+      <ShareCard planned={planned} sources={sources}/>
     </Chapter>
 
     <Chapter id="uc-readiness" title="What a buyer can evaluate today">
