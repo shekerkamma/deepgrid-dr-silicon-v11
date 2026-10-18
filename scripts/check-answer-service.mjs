@@ -42,6 +42,11 @@ try{
  const preflight=await worker.fetch(new Request('https://test/answer',{method:'OPTIONS',headers:{Origin:previewOrigin,'Access-Control-Request-Method':'POST','Access-Control-Request-Headers':'content-type'}}),env);
  assert.equal(preflight.headers.get('Access-Control-Allow-Origin'),previewOrigin);
  assert.match(preflight.headers.get('Access-Control-Allow-Methods'),/POST/);
+ // Every published site's origin, so a Worker deployed from one repo cannot shut Ask off on the others.
+ for(const site of ['https://shekerkamma.github.io','https://aravindgp.github.io','https://sku.deepgridsemi.com']){
+  const pre=await worker.fetch(new Request('https://test/answer',{method:'OPTIONS',headers:{Origin:site,'Access-Control-Request-Method':'POST'}}),env);
+  assert.equal(pre.headers.get('Access-Control-Allow-Origin'),site,site+' must be allowed');
+ }
  const deniedPreflight=await worker.fetch(new Request('https://test/answer',{method:'OPTIONS',headers:{Origin:'http://127.0.0.1:8795.evil.example'}}),env);
  assert.equal(deniedPreflight.headers.get('Access-Control-Allow-Origin'),'null');
  assert.equal((await worker.fetch(request({question:'D100 funding'},{Origin:'https://evil.example'}),env)).status,403);
