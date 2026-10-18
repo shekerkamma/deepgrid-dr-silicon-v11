@@ -6,5 +6,5 @@
   "workers_dev": true,
   "keep_vars": true,
   "placement": {"region": "aws:ap-south-1"},
-  "ratelimits": [{"name": "ANSWER_RATE", "namespace_id": "1011", "simple": {"limit": 12, "period": 60}}]
+  "ratelimits": [{"name": "ANSWER_RATE", "namespace_id": "1011", "simple": {"limit": 12, "period": 60}}, {"name": "PANEL_RATE", "namespace_id": "1012", "simple": {"limit": 30, "period": 60}}]
 }

@@ -6,8 +6,9 @@
 //   - the rules open a wrong panel for any question, or any panel for an expect:null question
 //   - a build without the plan could open a plan panel
 //   - an example question copies an eval question (the eval would score the examples against themselves)
-//   - the panel rows in semantic.bin were built from other examples, or the recorded two-stage eval shows a wrong
-//     or forced panel, or falls under its recall floor. Rebuild with: npm run build:semantic
+//   - the panel rows in semantic.bin were built from other examples, the recorded two-stage eval from other rules
+//     or eval questions, or that eval shows a wrong or forced panel or falls under its recall floor.
+//     Rebuild with: npm run build:semantic
 import fs from 'node:fs';
 import crypto from 'node:crypto';
 import {matchPanel, panelKey, PANEL_EXAMPLES, PANEL_IDS} from '../app/data/dashboard-panels.ts';
@@ -36,6 +37,8 @@ if (thin.length) fail.push(`fewer than 4 example questions: ${thin.join(', ')}`)
 
 const p = meta.panels;
 if (!p || p.keySha256 !== crypto.createHash('sha256').update(panelKey()).digest('hex')) fail.push('the panel example questions changed since the semantic index was built. Run: npm run build:semantic');
+else if (p.sourceSha256 !== crypto.createHash('sha256').update(fs.readFileSync('app/data/dashboard-panels.ts')).update(fs.readFileSync('scripts/ask-panel-eval.json')).digest('hex'))
+  fail.push('the phrase rules or the eval changed since the panel eval was recorded. Run: npm run build:semantic');
 else {
   if (p.eval.wrong.length || p.eval.forced.length) fail.push(`recorded panel eval: wrong ${p.eval.wrong.join(' | ')}; forced ${p.eval.forced.join(' | ')}`);
   if (p.eval.right / p.eval.positives < evalSet.minRecall) fail.push(`recorded panel eval: ${p.eval.right}/${p.eval.positives} under the ${evalSet.minRecall} floor`);

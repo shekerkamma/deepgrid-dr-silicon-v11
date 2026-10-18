@@ -75,6 +75,6 @@ export default function GroundedAnswerView({query}: GroundedAnswerViewProps) {
         </details>}
       </>}
     </article>}
-    {query&&<Suspense fallback={null}><AskPanel query={query} sem={panelSem.q===query?panelSem.sem:null}/></Suspense>}
+    {query&&<Suspense fallback={null}><AskPanel query={query} sem={panelSem.q===query?panelSem.sem:null} semDone={panelSem.q===query}/></Suspense>}
   </div>;
 }

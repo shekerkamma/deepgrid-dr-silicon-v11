@@ -184,6 +184,8 @@ const meta = {
   exampleTheme: examples.map(e => e.theme),
   panelExampleOf: panelRows.map(e => e.panel),
   panels: {ids: PANEL_IDS, min: panelPick.m / 100, gap: panelPick.g / 100, keySha256: crypto.createHash('sha256').update(panelKey()).digest('hex'),
+    // the recorded eval depends on the phrase rules and the eval questions too: check-ask-panels.mjs compares this
+    sourceSha256: crypto.createHash('sha256').update(fs.readFileSync(path.join(ROOT, 'app/data/dashboard-panels.ts'))).update(fs.readFileSync(path.join(ROOT, 'scripts/ask-panel-eval.json'))).digest('hex'),
     eval: {positives: panelPositives, negatives: panelEval.cases.length - panelPositives, right: panelPick.r.right, wrong: [], forced: [], missed: panelPick.r.missed}},
   themeMin: pick.m / 100, themeGap: pick.g / 100,
   eval: {positives, negatives, right: pick.r.right, wrong: 0, forced: 0, missed: pick.r.missed},

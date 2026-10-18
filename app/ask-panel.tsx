@@ -1,16 +1,33 @@
 'use client';
 /** The dashboard panel Ask DeepGrid shows beside its answer: the dashboard's own component and checked data, picked
- *  by app/data/dashboard-panels.ts from the question (phrase rules, then the semantic stage once it has loaded).
- *  Loaded only when a question is asked, so the Ask page does not carry the dashboards until then. The prose answer
- *  is unchanged and cites its sources; this panel shows the numbers behind it and links to the full dashboard. */
-import {matchPanel, PANEL_HOME, DASHBOARD_NAME, type PanelSemantic} from './data/dashboard-panels';
+ *  by app/data/dashboard-panels.ts from the question in three stages: phrase rules and the semantic match, both
+ *  instant, then, only when neither finds one, one short call to the answer service's model (POST /panel), whose
+ *  pick is accepted only if it is on the panel list. Loaded only when a question is asked, so the Ask page does not
+ *  carry the dashboards until then. The prose answer is unchanged and cites its sources; this panel shows the
+ *  numbers behind it and links to the full dashboard. */
+import {useEffect, useState} from 'react';
+import {matchPanel, panelFromModel, PANEL_ENDPOINT, PANEL_HOME, DASHBOARD_NAME, type PanelMatch, type PanelSemantic} from './data/dashboard-panels';
 import {PlanPanel, planAvailable, planYears} from './plan-dashboard';
 import {PortfolioPanel} from './portfolio-dashboard';
 import {UseCasePanel} from './use-case-dashboard';
 import {url} from './routes';
 
-export default function AskPanel({query, sem}: {query: string; sem?: PanelSemantic | null}) {
-  const m = matchPanel(query, {plan: planAvailable, years: planYears, sem});
+/** semDone: the semantic stage has finished for this question (sem may still be null if it could not load). */
+export default function AskPanel({query, sem, semDone}: {query: string; sem?: PanelSemantic | null; semDone: boolean}) {
+  const opts = {plan: planAvailable, years: planYears};
+  const instant = matchPanel(query, {...opts, sem});
+  const [model, setModel] = useState<{q: string; m: PanelMatch | null} | null>(null);
+  useEffect(() => {
+    if (instant || !semDone) return;
+    const ctl = new AbortController();
+    fetch(PANEL_ENDPOINT, {method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({question: query}),
+      signal: AbortSignal.any([ctl.signal, AbortSignal.timeout(20000)])})
+      .then(r => (r.ok ? r.json() as Promise<{panel?: unknown}> : null))
+      .then(v => setModel({q: query, m: panelFromModel(v?.panel, query, opts)}))
+      .catch(() => { /* no panel: the answer stands on its own */ });
+    return () => ctl.abort();
+  }, [query, semDone, !!instant]);
+  const m = instant ?? (model?.q === query ? model.m : null);
   if (!m) return null;
   const home = PANEL_HOME[m.id], name = DASHBOARD_NAME[m.dashboard];
   const search = m.dashboard === 'use-cases' ? '?view=use-cases' : m.year ? '?year=' + m.year : '';

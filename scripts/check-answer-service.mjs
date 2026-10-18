@@ -70,6 +70,20 @@ try{
  const quota=await worker.fetch(request({question:'D100 funding'}),env);assert.equal(quota.status,429);assert.match((await quota.json()).error,/quota/);
  globalThis.fetch=async()=>Response.json({candidates:[{finishReason:'STOP',content:{parts:[{text:JSON.stringify({answerable:true,title:'Fake',lead:{text:'This invented claim is not grounded.',kind:'evidence',support:[{sourceId:'fake',quote:'A fabricated citation that does not exist.'}]},sections:[],gaps:[]})}]}}]});
  assert.equal((await worker.fetch(request({question:'D100 funding'}),env)).status,502);
+ // POST /panel: one short model call, an id from the list or null; the question is bounded and rate limited.
+ const panelReq=(body,headers={})=>new Request('https://test/panel',{method:'POST',headers:{Origin:origin,...headers},body:JSON.stringify(body)});
+ let panelAsked=null;
+ const panelModel=reply=>async(_u,o)=>{const b=JSON.parse(o.body);assert.match(b.systemInstruction.parts[0].text,/plan-cash: /);assert.deepEqual(b.generationConfig.responseJsonSchema.properties.panel.enum.slice(-1),['none']);
+  panelAsked=JSON.parse(b.contents[0].parts[0].text).question;return Response.json({candidates:[{finishReason:'STOP',content:{parts:[{text:JSON.stringify({panel:reply})}]}}]});};
+ globalThis.fetch=panelModel('plan-cash');
+ const pc=await worker.fetch(panelReq({question:'  How long   will the money last? '}),env);assert.equal(pc.status,200);assert.equal((await pc.json()).panel,'plan-cash');assert.equal(panelAsked,'How long will the money last?');
+ globalThis.fetch=panelModel('none');assert.equal((await (await worker.fetch(panelReq({question:'Who founded DeepGrid?'}),env)).json()).panel,null);
+ globalThis.fetch=panelModel('drop-tables');assert.equal((await (await worker.fetch(panelReq({question:'Show me everything'}),env)).json()).panel,null,'an id off the list is never returned');
+ assert.equal((await worker.fetch(panelReq({question:'x'}),env)).status,400);
+ assert.equal((await worker.fetch(panelReq({question:'D100 funding'},{Origin:'https://evil.example'}),env)).status,403);
+ assert.equal((await worker.fetch(panelReq({question:'D100 funding'}),{...env,PANEL_RATE:{limit:async()=>({success:false})}})).status,429);
+ globalThis.fetch=async()=>new Response('{}',{status:429});assert.equal((await worker.fetch(panelReq({question:'D100 funding'}),env)).status,429);
+ console.log('PASS: /panel returns a listed panel id or null, normalises and bounds the question, origin and rate limits.');
  console.log('PASS: portfolio facts from the live sheets (8 reads, cached), withheld figures never sent, tranche question led by its fact.');
  console.log('PASS: trusted corpus, grounded citations, rejected origins, body/query bounds, rate limit, explicit quota failure, synthesis and audit calls.');
 }finally{globalThis.fetch=originalFetch;}

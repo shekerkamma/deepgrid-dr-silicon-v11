@@ -19,9 +19,19 @@ const mock = async route => {
   return route.fulfill({status: 200, contentType: 'application/json', headers: h, body: JSON.stringify({model: 'mock', sources: [chunk], answer: {answerable: true, title: 'Mock', lead: claim, sections: [{heading: 'Mock', paragraphs: [claim]}], gaps: []}})});
 };
 
+// POST /panel, the model stage: asked only when the rules and the semantic match find nothing. Mocked by question.
+const MODEL_PICKS = {"What's the financial picture?": 'plan-cash', 'Who founded DeepGrid?': 'none'};
+let panelCalls = [];
+const panelMock = async route => {
+  const h = {'Access-Control-Allow-Origin': new URL(base).origin, 'Access-Control-Allow-Methods': 'POST, OPTIONS', 'Access-Control-Allow-Headers': 'Content-Type'};
+  if (route.request().method() === 'OPTIONS') return route.fulfill({status: 204, headers: h});
+  const q = route.request().postDataJSON().question; panelCalls.push(q);
+  return route.fulfill({status: 200, contentType: 'application/json', headers: h, body: JSON.stringify({model: 'mock', panel: MODEL_PICKS[q] === 'none' ? null : MODEL_PICKS[q] ?? 'drop-tables'})});
+};
 async function open(ctx) {
   const page = await ctx.newPage(); page.on('pageerror', e => errors.push(e.message));
   await page.route('https://deepgrid-rerank.shekerkamma.workers.dev/answer', mock);
+  await page.route('https://deepgrid-rerank.shekerkamma.workers.dev/panel', panelMock);
   await page.goto(base + 'ask/', {waitUntil: 'networkidle'}); await page.locator('[data-ready="true"]').waitFor({state: 'attached'});
   return page;
 }
@@ -69,10 +79,23 @@ for (const [label, opts] of [['1440', {viewport: {width: 1440, height: 1000}}], 
   await ask(page, 'Who founded DeepGrid?');
   await page.waitForTimeout(1500);
   assert.equal(await page.locator('.ask-panel').count(), 0, `${label}: a people question opened a dashboard panel`);
+  assert(panelCalls.includes('Who founded DeepGrid?'), `${label}: the model stage was not asked when the instant stages found nothing`);
+
+  // model stage: no rule or semantic match, the service names a listed panel
+  if (plan) {
+    await ask(page, "What's the financial picture?");
+    await page.locator('.ask-panel[data-panel="plan-cash"][data-via="model"]').waitFor({timeout: 20000});
+  }
+  // an id off the list is never shown
+  await ask(page, 'Tell me something surprising');
+  await page.waitForTimeout(1500);
+  assert.equal(await page.locator('.ask-panel').count(), 0, `${label}: a panel id off the list was shown`);
+  assert(!panelCalls.some(q => /FY30|SKU-3|sell to first/.test(q)), `${label}: the model stage was asked although a rule had matched`);
+  panelCalls = [];
 
   assert(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth + 1), `${label}: horizontal scroll`);
   await ctx.close();
 }
 await browser.close();
 assert.deepEqual(errors, []);
-console.log(`PASS Ask dashboard panels at 1440/390: ${plan ? 'money flow on the year asked with working year buttons, ' : 'no plan panel without the plan, '}two-chip comparison, market card, semantic routing of a reworded question, none for a people question, dashboard links resolve.`);
+console.log(`PASS Ask dashboard panels at 1440/390: ${plan ? 'money flow on the year asked with working year buttons, ' : 'no plan panel without the plan, '}two-chip comparison, market card, semantic routing of a reworded question, none for a people question, the model stage only after the instant stages miss and only with a listed id, dashboard links resolve.`);
