@@ -64,3 +64,18 @@ Source for every metric: the CSVs in this folder, extracted from
 - **Plain English:** One allocation's part of the capital being raised.
 - **Formula:** allocation ₹ Cr ÷ total uses (₹54.99 Cr). Total uses equal total sources (₹45 Cr equity + ₹10 Cr CGTMSE-backed loan) within ₹0.02 Cr.
 - **Known limitations:** the sheet's "Grants & prior funding" context block is deliberately not extracted. It is not part of this raise, and it includes figures the public site treats as unverified.
+
+## Metric: Tranche 1 engineering runway (internal decision report)
+- **Plain English:** The funded engineering window in `tranche1-uses.csv` before Tranche 2 growth capital is required.
+- **Formula:** `₹1.00 Cr` through March 2027 + `₹1.50 Cr` for the following `12 months` (April 2027–March 2028, at `₹0.125 Cr/month`) = funded through **March 2028** (`+12 months` post-FY2027).
+- **Components:** `data/portfolio/tranche1-uses.csv` row `Engineering team` (`₹2.50 Cr`, delivering `"₹1.0 Cr to March 2027, ₹1.5 Cr for the following 12 months; tranche 2 grows"`).
+- **Known limitations:**
+  - The pre-March-2027 month count depends on the Tranche 1 close date (`INPUT REQUIRED`), and actual cash in the bank today is `INPUT REQUIRED`.
+  - Assumes Tranche 2 (`₹40.00 Cr`, target close date `INPUT REQUIRED`) funds team expansion beyond the base headcount.
+
+## Metric: Three-way silicon capital tie-out (internal decision report)
+- **Plain English:** Side-by-side comparison of silicon prototype and tape-out spending across the October 2026 SKU Blueprint (`tranche1-uses.csv`) and the September 2026 Financial Model v3 (`use-of-funds.csv` and `cash.csv`).
+- **Formula:**
+  - Blueprint Tranche 1 silicon = `Nine prototypes, December 2026 shuttle` (`₹2.60 Cr`) + `Respin reserve` (`₹2.50 Cr`) = `₹5.10 Cr` out of `₹10.00 Cr` Tranche 1 (`51.0 %`).
+  - Model v3 3-year tape-out capex = `−(cash.csv[FY2027] + cash.csv[FY2028] + cash.csv[FY2029])` on `Less: tapeout capex (one-time)` (`₹18.00 + ₹10.00 + ₹2.00 = ₹30.00 Cr`), matching `use-of-funds.csv` row `SoC2 tapeout NRE + IP` (`₹29.80 Cr`) within `₹0.20 Cr`.
+- **Known limitations:** the two tables describe different capital scopes written one month apart (`130 nm` MPW shuttle tranches vs phased `SoC2` mask + `SoC4 5nm` R&D); reconciling them requires Model v4 before Tranche 2.

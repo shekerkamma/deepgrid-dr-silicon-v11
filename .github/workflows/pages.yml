@@ -42,6 +42,7 @@ jobs:
       - run: npm run typecheck
       - run: python3 scripts/analyst/validate_use_cases.py
       - run: node scripts/check-answer-service.mjs
+      - run: DGS_INTERNAL=1 node scripts/build-plan-data.mjs && node scripts/verify-decision-report.mjs --data-only --check-public
       - run: npm run build:pages
       # The multi-route browser gate (scripts/verify-routes.mjs) on the built site, served under the same base path Pages uses.
       # A red gate stops the deploy.

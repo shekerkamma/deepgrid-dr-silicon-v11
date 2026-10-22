@@ -47,3 +47,5 @@ Windows: run npm through `node 'C:/Program Files/nodejs/node_modules/npm/bin/npm
 - `scripts/build-primary-answer-evidence.mjs`, `app/data/primary-answer-evidence.json`: deterministic primary-guide passages supplement graph retrieval; regenerate after architecture-guide edits. Build checks source freshness.
 
 - app/investor-journey.tsx and app/investor-journey.css: investor homepage story, contextual diligence links and site directory; contact/page.tsx supports shareable investor/partner/engineering enquiry intent. Use-case dashboard query parameters persist search and market filters.
+
+- `scripts/build-plan-data.mjs`, `app/plan-dashboard.tsx`, `app/plan-dashboard.css`, `data/plan/metrics.md`: internal founder decision report (`/plan?view=decisions`, built only when `DGS_INTERNAL=1`, `decisionReport: null` in public `DGS_PLAN=1` builds). `scripts/verify-decision-report.mjs` checks raw-CSV per-field & per-SKU tie-out, public isolation, link resolution, responsive layout and WCAG 2.2 A/AA.

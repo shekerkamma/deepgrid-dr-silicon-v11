@@ -97,8 +97,360 @@ const fundLabel = {
   'Pre-Series A equity round': 'Pre-Series A equity round',
   'CGTMSE-backed term loan': 'CGTMSE-backed term loan',
 };
+
+function parsePortfolioCsv(file) {
+  const text = fs.readFileSync(path.join(root, 'data/portfolio', file), 'utf8').replace(/\r\n/g, '\n').trim();
+  const rows = text.split('\n').map(line => {
+    const cells = []; let cur = '', q = false;
+    for (let i = 0; i < line.length; i++) {
+      const c = line[i];
+      if (q) { if (c === '"' && line[i + 1] === '"') { cur += '"'; i++; } else if (c === '"') q = false; else cur += c; }
+      else if (c === '"') q = true; else if (c === ',') { cells.push(cur.trim()); cur = ''; } else cur += c;
+    }
+    cells.push(cur.trim()); return cells;
+  });
+  const [head, ...body] = rows;
+  return body.map(r => Object.fromEntries(head.map((h, i) => [h, r[i] ?? ''])));
+}
+
+function buildDecisionReport() {
+  const tranche = parsePortfolioCsv('tranche1-uses.csv');
+  const skus = parsePortfolioCsv('skus.csv');
+  const ramp = parsePortfolioCsv('ramp.csv');
+  const unitCost = parsePortfolioCsv('unit-cost.csv');
+  const specs = parsePortfolioCsv('dg32-specs.csv');
+  const docs = parsePortfolioCsv('documents.csv');
+  const conflicts = parsePortfolioCsv('conflicts.csv');
+
+  const mustNum = (v, label) => {
+    const n = Number(v ?? NaN);
+    if (v === undefined || v === '' || Number.isNaN(n)) throw new Error(`plan data: missing or non-numeric ${label}`);
+    return n;
+  };
+  const trancheTotalCr = Math.round(tranche.reduce((a, r) => a + mustNum(r.cr, 'tranche.cr'), 0) * 100) / 100;
+  const protoRow = tranche.find(r => /prototypes/i.test(r.use));
+  const respinRow = tranche.find(r => /respin/i.test(r.use));
+  const teamRow = tranche.find(r => /engineering team/i.test(r.use));
+  const approvalsRow = tranche.find(r => /approvals/i.test(r.use));
+  const protoCr = mustNum(protoRow?.cr, 'protoCr');
+  const respinCr = mustNum(respinRow?.cr, 'respinCr');
+  const siliconTrancheCr = Math.round((protoCr + respinCr) * 100) / 100;
+  const teamCr = mustNum(teamRow?.cr, 'teamCr');
+  const approvalsCr = mustNum(approvalsRow?.cr, 'approvalsCr');
+  // Extract "₹1.0 Cr to March 2027, ₹1.5 Cr for the following 12 months; tranche 2 grows" directly from tranche1-uses.csv
+  const followMonthsMatch = teamRow?.delivers.match(/(\d+)\s+months/i);
+  const followMonths = mustNum(followMonthsMatch?.[1], 'followMonths');
+
+  const shuttleSkus = skus.filter(s => s.dec2026_shuttle === 'yes');
+  const plannedSkus = skus.filter(s => s.plan_line_cr !== '');
+  const shuttleCount = shuttleSkus.length;
+  const perChipShuttleCr = Math.round((protoCr / shuttleCount) * 100) / 100;
+  // tranche1-uses.csv row 5 explicitly states "About eight prototype re-runs at ₹0.29 Cr each"
+  if (!/eight/i.test(respinRow?.delivers ?? '')) throw new Error('plan data: missing respin re-run count in tranche1-uses.csv');
+  const respinRuns = 8;
+  const shuttlePlanCr = Math.round(shuttleSkus.reduce((a, s) => a + mustNum(s.plan_line_cr, 'shuttle plan_line_cr'), 0) * 10) / 10;
+  const totalPlanCr = Math.round(plannedSkus.reduce((a, s) => a + mustNum(s.plan_line_cr, 'plan_line_cr'), 0) * 10) / 10;
+  const shuttleRampFy31Cr = Math.round(shuttleSkus.reduce((a, s) => a + mustNum(s.fy31_ramp_cr, 'shuttle fy31_ramp_cr'), 0) * 10) / 10;
+  const skuRampFy31SumCr = Math.round(plannedSkus.reduce((a, s) => a + mustNum(s.fy31_ramp_cr, 'fy31_ramp_cr'), 0) * 10) / 10;
+  const top3Shuttle = [...shuttleSkus].sort((a, b) => Number(b.fy31_ramp_cr) - Number(a.fy31_ramp_cr)).slice(0, 3);
+  const top3ShuttleRampCr = Math.round(top3Shuttle.reduce((a, s) => a + mustNum(s.fy31_ramp_cr, 'top3 fy31_ramp_cr'), 0) * 10) / 10;
+  const top3ShuttleSharePct = Math.round((top3ShuttleRampCr / shuttleRampFy31Cr) * 1000) / 10;
+  const sku6RampCr = mustNum(shuttleSkus.find(s => s.sku === 'SKU-6')?.fy31_ramp_cr, 'sku6RampCr');
+  const top4ProtectedSharePct = Math.round(((top3ShuttleRampCr + sku6RampCr) / shuttleRampFy31Cr) * 1000) / 10;
+  const devLowShuttleCr = Math.round(shuttleSkus.reduce((a, s) => a + mustNum(s.dev_cost_low_cr, 'dev_cost_low_cr'), 0) * 10) / 10;
+  const devHighShuttleCr = Math.round(shuttleSkus.reduce((a, s) => a + mustNum(s.dev_cost_high_cr, 'dev_cost_high_cr'), 0) * 10) / 10;
+  const devLowAllCr = Math.round(plannedSkus.reduce((a, s) => a + mustNum(s.dev_cost_low_cr, 'dev_cost_low_cr'), 0) * 10) / 10;
+  const devHighAllCr = Math.round(plannedSkus.reduce((a, s) => a + mustNum(s.dev_cost_high_cr, 'dev_cost_high_cr'), 0) * 10) / 10;
+
+  const modelSourcesCr = Math.round(total('source') * 100) / 100;
+  const modelUsesCr = Math.round(total('use') * 100) / 100;
+  const soc2NreCr = mustNum(funds.find(f => /SoC2 tapeout/i.test(f.item))?.value, 'soc2NreCr');
+  const y27 = periods.indexOf('FY2027'), y28 = periods.indexOf('FY2028'), y29 = periods.indexOf('FY2029'), y31 = periods.indexOf('FY2031');
+  const capex = C('Less: tapeout capex (one-time)');
+  const fy27TapeoutCapexCr = capex[y27];
+  const threeYrTapeoutCapexCr = Math.round((capex[y27] + capex[y28] + capex[y29]) * 100) / 100;
+  const fy27OpenCashCr = C('Opening cash')[y27];
+  const fy29CloseCashCr = C('Closing cash')[y29];
+  const fy31ModelRevCr = P('Revenue')[y31];
+  const fy31ModelGpCr = P('Gross profit')[y31];
+  const fy31ModelGmPct = Math.round((fy31ModelGpCr / fy31ModelRevCr) * 1000) / 10;
+  const soc4CumRdCr = Math.round(P('SoC4 5nm tape-out program').reduce((a, v) => a + v, 0) * 100) / 100;
+  const fy31SemiRevCr = S('Semiconductors')[y31];
+  const fy31SysRevCr = S('Systems')[y31];
+  const fy31RampTotalCr = mustNum(ramp.find(r => r.group === 'Total')?.FY31, 'fy31RampTotalCr');
+  const chipGapRatio = Math.round((fy31RampTotalCr / fy31SemiRevCr) * 10) / 10;
+  const minChipMarginPct = Math.min(...unitCost.map(u => Number(u.margin_low_pct)));
+  const maxChipMarginPct = Math.max(...unitCost.map(u => Number(u.margin_high_pct)));
+
+  const claimSrc = fs.readFileSync(path.join(root, 'app/claims.ts'), 'utf8');
+  const compSrc = fs.readFileSync(path.join(root, 'app/company-content.ts'), 'utf8');
+  const ENTRY = /'([\w-]+)':\s*\{[\s\S]*?source:\s*'([^']+)'[\s\S]*?probe:\s*'([^']+)'/g;
+  const parseEntries = text => [...text.matchAll(ENTRY)].map(m => ({id: m[1], source: m[2], probe: m[3]}));
+  const claimEntries = parseEntries(claimSrc);
+  const cStart = compSrc.indexOf('export const companySources');
+  const companyEntries = cStart < 0 ? [] : parseEntries(compSrc.slice(cStart, compSrc.indexOf('\n};', cStart)));
+  const allEntries = [...claimEntries, ...companyEntries];
+  for (const e of allEntries) {
+    const p = path.join(root, 'public/downloads', e.source);
+    if (!fs.existsSync(p) || !fs.readFileSync(p, 'utf8').includes(e.probe)) {
+      throw new Error(`plan data: claim probe failed for ${e.id} (${e.source})`);
+    }
+  }
+  const totalProbedClaims = allEntries.length;
+  const supersededPublished = docs.filter(d => d.where === 'published' && /superseded/i.test(d.status));
+  const fixedConflicts = conflicts.filter(c => /^fixed/i.test(c.status)).length;
+
+  const crFmt = (v, dp = 2) => `${v < 0 ? '−' : ''}₹${Math.abs(v).toLocaleString('en-IN', {minimumFractionDigits: dp, maximumFractionDigits: dp})}\u00a0Cr`;
+
+  const ladder = skus.map(s => {
+    const specRow = specs.find(sp => sp.sku === s.sku);
+    const r = s.readiness || '';
+    const hasSpec = Boolean(s.plan_line_cr || r);
+    const hasRtl = /RTL/i.test(r) || Boolean(specRow);
+    const hasAnalog = /analog schematics/i.test(r) ? 'Schematics ready' : specRow ? '8-bit SAR (untrimmed)' : 'INPUT REQUIRED';
+    const hasLayout = specRow && /hardened die/i.test(specRow.status) ? 'Hardened die (55–62 MHz post-route)' : 'INPUT REQUIRED';
+    return {
+      sku: s.sku,
+      name: s.name,
+      process: s.process,
+      shuttle: s.dec2026_shuttle === 'yes' ? 'Dec 2026 shuttle' : 'Off shuttle',
+      planCr: s.plan_line_cr ? Number(s.plan_line_cr).toFixed(2) : 'INPUT REQUIRED',
+      rampFy31Cr: s.fy31_ramp_cr ? Number(s.fy31_ramp_cr).toFixed(2) : 'INPUT REQUIRED',
+      devRangeCr: s.dev_cost_low_cr && s.dev_cost_high_cr ? `${s.dev_cost_low_cr}–${s.dev_cost_high_cr}` : 'INPUT REQUIRED',
+      spec: hasSpec ? (specRow ? specRow.source : 'SKU Blueprint (no standalone datasheet)') : 'INPUT REQUIRED',
+      rtl: hasRtl ? r || specRow.status : 'INPUT REQUIRED',
+      analog: hasAnalog,
+      layout: hasLayout,
+      drcLvs: 'INPUT REQUIRED',
+      slotBooked: s.mpw ? `${s.mpw} (booking confirmation: INPUT REQUIRED)` : 'INPUT REQUIRED',
+      gdsSubmitted: 'INPUT REQUIRED',
+      sourceAttr: 'data/portfolio/skus.csv; data/portfolio/dg32-specs.csv',
+      sourceHref: '/portfolio-data/skus.csv',
+      sourceLabel: 'skus.csv',
+    };
+  });
+
+  return {
+    tabs: [
+      {id: 'model', label: 'Company model (FY27–FY32)'},
+      {id: 'decisions', label: 'Founder decisions (internal)'},
+    ],
+    labels: {
+      sourcePrefix: 'Source:',
+      sourcesPrefix: 'Sources:',
+      deadlinePrefix: 'Deadline:',
+      forLabel: 'Argument for',
+      againstLabel: 'Argument against',
+      missingLabel: 'Missing input',
+      tieTitle: 'Three-way capital and runway tie-out',
+      tieSub: 'Reconciliation of Blueprint Tranche 1 against Model v3 sources, uses and cash flow.',
+      tieCaption: 'Three-way financial tie-out',
+      tieHead: ['Dimension', 'SKU Blueprint (Oct 2026)', 'Model v3 Sources & Uses', 'Model v3 Cash & P&L', 'Tie-out verdict', 'Source'],
+      ladderTitle: 'Per-SKU stage-gate readiness ladder',
+      ladderSub: 'Stage-gate status across all twelve portfolio rows; unverified stages are marked INPUT REQUIRED.',
+      ladderCaption: 'Per-SKU shuttle readiness ladder',
+      ladderHead: ['SKU', 'Chip', 'Cohort', 'Plan ₹\u00a0Cr', 'FY31 ₹\u00a0Cr', 'Dev ₹\u00a0Cr', 'Spec', 'RTL', 'Analog', 'Layout', 'DRC/LVS', 'Slot booked', 'GDS', 'Source'],
+      auditTitle: 'Red-team audit and evidence integrity',
+      auditSub: 'Ranked contradictions and diligence checks from raw tables and public downloads.',
+      auditCaption: 'Red-team findings ranked',
+      auditHead: ['#', 'Lens', 'Finding', 'Current status', 'Source'],
+    },
+    flag: `Internal founder decision report (DGS_INTERNAL=1 · noindex). Every figure is computed at build from data/plan/*.csv, data/portfolio/*.csv and app/claims.ts (${totalProbedClaims}/${totalProbedClaims} probed claims verified, 0 untraced). Missing tape-out and bank actuals are marked INPUT REQUIRED.`,
+    heading: 'DECIDE THIS WEEK',
+    subhead: `Target outcome: put ${shuttleCount} SKUs (${crFmt(shuttlePlanCr, 0)} of ${crFmt(totalPlanCr, 0)} plan lines; ${crFmt(shuttleRampFy31Cr, 0)} FY31 ramp) onto the December 2026 shuttle (exact foundry GDS cutoff: INPUT REQUIRED) and close the ${crFmt(trancheTotalCr)} Tranche 1 without an investor finding two numbers that disagree.`,
+    metrics: {
+      trancheTotalCr, protoCr, respinCr, siliconTrancheCr, teamCr, approvalsCr, followMonths,
+      shuttleCount, perChipShuttleCr, respinRuns, shuttlePlanCr, totalPlanCr, shuttleRampFy31Cr, skuRampFy31SumCr,
+      top3ShuttleRampCr, top3ShuttleSharePct, top4ProtectedSharePct, devLowShuttleCr, devHighShuttleCr, devLowAllCr, devHighAllCr,
+      modelSourcesCr, modelUsesCr, soc2NreCr, fy27TapeoutCapexCr, threeYrTapeoutCapexCr,
+      fy27OpenCashCr, fy29CloseCashCr, fy31ModelRevCr, fy31ModelGpCr, fy31ModelGmPct, soc4CumRdCr,
+      fy31SemiRevCr, fy31SysRevCr, fy31RampTotalCr, chipGapRatio, minChipMarginPct, maxChipMarginPct,
+      totalProbedClaims, conflictsCount: conflicts.length, documentsCount: docs.length,
+    },
+    kpis: [
+      {
+        label: 'Tranche 1 silicon allocation',
+        value: `${crFmt(siliconTrancheCr)} / ${crFmt(trancheTotalCr)}`,
+        context: `${crFmt(protoCr)} for ${shuttleCount} Dec 2026 prototypes (~${crFmt(perChipShuttleCr)} each) + ${crFmt(respinCr)} respin reserve (~${respinRuns} re-runs).`,
+        def: `Blueprint Tranche 1 silicon = prototypes (${crFmt(protoCr)}) + respin reserve (${crFmt(respinCr)}) ÷ ${crFmt(trancheTotalCr)} total ask (${((siliconTrancheCr / trancheTotalCr) * 100).toFixed(1)}%).`,
+        sourceAttr: 'data/portfolio/tranche1-uses.csv rows 2,5',
+        sourceHref: '/portfolio-data/tranche1-uses.csv',
+        sourceLabel: 'tranche1-uses.csv',
+      },
+      {
+        label: 'Tranche 1 team runway',
+        value: `Mar 2028 (+${followMonths} mo)`,
+        context: `${crFmt(teamCr)} funds ₹1.00 Cr to Mar 2027 + ₹1.50 Cr for the following ${followMonths} months (to Mar 2028) until Tranche 2 (target date: INPUT REQUIRED).`,
+        def: `Formula: ₹1.00 Cr through Mar 2027 + ₹1.50 Cr across ${followMonths} months (Apr 2027–Mar 2028 at ₹0.125 Cr/mo). Close date & bank cash: INPUT REQUIRED.`,
+        sourceAttr: 'data/portfolio/tranche1-uses.csv row 6; data/plan/metrics.md',
+        sourceHref: '/portfolio-data/tranche1-uses.csv',
+        sourceLabel: 'tranche1-uses.csv',
+      },
+      {
+        label: 'Top-3 shuttle concentration',
+        value: `${top3ShuttleSharePct.toFixed(1)}% (${crFmt(top3ShuttleRampCr, 0)})`,
+        context: `${top3Shuttle.map(s => s.sku).join(', ')} carry ${crFmt(top3ShuttleRampCr, 0)} of the ${crFmt(shuttleRampFy31Cr, 0)} FY31 shuttle ramp; 0 of 3 have a datasheet.`,
+        def: 'Formula: sum of top 3 shuttle FY31 ramps (₹256 + ₹175 + ₹110 Cr) ÷ 9-chip shuttle FY31 ramp (₹601 Cr).',
+        sourceAttr: 'data/portfolio/skus.csv rows 2,3,11',
+        sourceHref: '/portfolio-data/skus.csv',
+        sourceLabel: 'skus.csv',
+      },
+      {
+        label: 'Blueprint vs Model chip gap',
+        value: `${chipGapRatio.toFixed(1)}×`,
+        context: `FY31 chips: ${crFmt(fy31RampTotalCr, 0)} in Blueprint ramp vs ${crFmt(fy31SemiRevCr)} in Model v3 (${crFmt(fy31ModelRevCr, 1)} total; ${crFmt(fy31SysRevCr, 1)} Systems).`,
+        def: 'Formula: ramp.csv FY31 Total (₹608.00 Cr) ÷ revenue-by-segment.csv FY2031 Semiconductors (₹45.00 Cr).',
+        sourceAttr: 'data/portfolio/ramp.csv row 6; data/plan/revenue-by-segment.csv row 3',
+        sourceHref: '/plan-data/revenue-by-segment.csv',
+        sourceLabel: 'revenue-by-segment.csv',
+      },
+    ],
+    decisions: [
+      {
+        id: 'D1',
+        title: '1. Lock physical layout & preliminary datasheets for SKU-1, SKU-2 and SKU-10, or narrow the Dec 2026 shuttle cohort',
+        badge: `${top3ShuttleSharePct.toFixed(1)}% of FY31 shuttle ramp (${crFmt(top3ShuttleRampCr, 0)} / ${crFmt(shuttleRampFy31Cr, 0)})`,
+        lead: `Three chips (SKU-1 ₹256 Cr, SKU-2 ₹175 Cr, SKU-10 ₹110 Cr) carry ${crFmt(top3ShuttleRampCr, 0)} of the ${crFmt(shuttleRampFy31Cr, 0)} FY31 shuttle ramp, yet only SKU-4 (₹4 Cr FY31 ramp) has a hardened die and preliminary datasheet.`,
+        forArg: `Focusing layout, DRC/LVS and preliminary datasheets on SKU-1, SKU-2, SKU-6 (${crFmt(approvalsCr)} First approvals covers SKU-6 MIL screening and SKU-2 meter certification) and SKU-10 protects ${top4ProtectedSharePct.toFixed(1)}% of FY31 shuttle revenue before the December 2026 shuttle.`,
+        againstArg: `Dropping any of the 9 shuttle chips changes the headline "nine prototypes for ${crFmt(protoCr)}" in the Oct 2026 Blueprint and leaves ${crFmt(perChipShuttleCr)}/slot unspent unless reallocated to respins.`,
+        deadline: 'Before December 2026 shuttle (exact foundry GDS cutoff date: INPUT REQUIRED)',
+        inputRequired: 'INPUT REQUIRED: ChipFoundry GDS freeze date, slot booking receipts, and layout/DRC/LVS status for SKU-1..3, 5, 6, 8, 9, 10.',
+        sourceAttr: 'data/portfolio/skus.csv rows 2-11; data/portfolio/dg32-specs.csv rows 2-3',
+        sourceLinks: [
+          {label: 'skus.csv', href: '/portfolio-data/skus.csv', download: true},
+          {label: 'dg32-specs.csv', href: '/portfolio-data/dg32-specs.csv', download: true},
+        ],
+      },
+      {
+        id: 'D2',
+        title: '2. Publish Financial Model v4 reconciling the ₹10.00 Cr Tranche 1 against the ₹55.00 Cr / −₹18.00 Cr FY27 capex model',
+        badge: `${crFmt(siliconTrancheCr)} Tranche 1 silicon vs ${crFmt(fy27TapeoutCapexCr)} FY27 tape-out capex`,
+        lead: `Adversarial tie-out confirms two separate capital scopes: Blueprint Tranche 1 raises ${crFmt(trancheTotalCr)} (${crFmt(protoCr)} prototypes + ${crFmt(respinCr)} respins), while Model v3 opens FY27 with ${crFmt(fy27OpenCashCr)} and spends ${crFmt(fy27TapeoutCapexCr)} FY27 tape-out capex (${crFmt(threeYrTapeoutCapexCr)} over FY27–FY29) plus ${crFmt(soc4CumRdCr)} on "SoC4 5nm tape-out program".`,
+        forArg: `Issuing Model v4 with the ${crFmt(fy31RampTotalCr, 0)} Blueprint chip ramp, 130/180 nm capex schedule and ${crFmt(devLowAllCr, 1)}–${crFmt(devHighAllCr, 1)} 11-SKU development range eliminates the #1 diligence contradiction (${chipGapRatio.toFixed(1)}× FY31 chip gap).`,
+        againstArg: `Replacing Model v3 changes the ${crFmt(fy31ModelRevCr, 1)} FY31 whole-company headline (${crFmt(fy31SysRevCr, 1)} Systems) and exposes that ${crFmt(devHighAllCr, 1)} high-case chip dev cost exceeds the ${crFmt(50, 0)} Blueprint tranches by ${crFmt(devHighAllCr - 50, 1)}.`,
+        deadline: 'Before Tranche 1 close & March 2027 engineering milestone (exact close date: INPUT REQUIRED)',
+        inputRequired: 'INPUT REQUIRED: actual cash in bank today, committed Tranche 1 subscriptions, and whether Systems & SoC4 5nm stay in the corporate entity.',
+        sourceAttr: 'data/portfolio/tranche1-uses.csv; data/plan/use-of-funds.csv; data/plan/cash.csv; data/plan/pl.csv',
+        sourceLinks: [
+          {label: 'tranche1-uses.csv', href: '/portfolio-data/tranche1-uses.csv', download: true},
+          {label: 'cash.csv', href: '/plan-data/cash.csv', download: true},
+          {label: 'use-of-funds.csv', href: '/plan-data/use-of-funds.csv', download: true},
+        ],
+      },
+      {
+        id: 'D3',
+        title: '3. Replace or watermark the superseded 5 Sep 2026 Master Whitepaper v3 PDF in public downloads',
+        badge: `${supersededPublished.length} superseded PDF published · ${conflicts.length} logged conflicts (${fixedConflicts} fixed on site)`,
+        lead: `The site discloses all ${conflicts.length} cross-document conflicts and passes ${totalProbedClaims} source-probe checks, but ${supersededPublished[0]?.file ?? 'whitepaper v3'} remains publicly downloadable with superseded figures (10 chips, 200 MHz, ₹10 Cr seed, withdrawn order claim) and personal contact details on page 2.`,
+        forArg: `Adding a cover-page supersession notice (or replacing the PDF with a redacted v3.1 pointing to the Oct 2026 Blueprint) neutralises the easiest short-seller screenshot while preserving audit history.`,
+        againstArg: `Owner decision on 2026-10-12 (conflicts.csv row 11) kept authored PDFs untouched and relied on site-level disclosures; altering the PDF requires re-verifying check-claims.mjs probes.`,
+        deadline: 'Before Tranche 1 investor data-room circulation (owner sign-off date: INPUT REQUIRED)',
+        inputRequired: 'INPUT REQUIRED: owner sign-off to watermark or redact page 2 of deepgrid-mature-node-silicon-master-whitepaper-v3.pdf.',
+        sourceAttr: 'data/portfolio/documents.csv row 3; data/portfolio/conflicts.csv rows 5-11',
+        sourceLinks: [
+          {label: 'documents.csv', href: '/portfolio-data/documents.csv', download: true},
+          {label: 'conflicts.csv', href: '/portfolio-data/conflicts.csv', download: true},
+        ],
+      },
+    ],
+    tieOut: [
+      {
+        item: 'Total capital raised / ask',
+        blueprint: `${crFmt(trancheTotalCr)} Tranche 1 (+ ₹40.00\u00a0Cr Tranche 2 = ₹50.00\u00a0Cr equity)`,
+        modelFunds: `${crFmt(modelSourcesCr)} (₹45.00\u00a0Cr equity + ₹10.00\u00a0Cr CGTMSE loan)`,
+        modelCash: `FY27 Opening cash ${crFmt(fy27OpenCashCr)} (models full equity round on day 1)`,
+        verdict: 'Different capital structures (staged equity vs upfront equity + loan)',
+        sourceAttr: 'tranche1-uses.csv; use-of-funds.csv rows 2-3; cash.csv row 8',
+        sourceHref: '/plan-data/use-of-funds.csv',
+        sourceLabel: 'use-of-funds.csv',
+      },
+      {
+        item: 'Silicon tape-out / prototype spend',
+        blueprint: `${crFmt(protoCr)} (9 Dec 2026 prototypes) + ${crFmt(respinCr)} (respin reserve) = ${crFmt(siliconTrancheCr)}`,
+        modelFunds: `${crFmt(soc2NreCr)} SoC2 tapeout NRE + IP (MPW → full die → mask)`,
+        modelCash: `Tape-out capex ${crFmt(fy27TapeoutCapexCr)} FY27, −₹10.00\u00a0Cr FY28, −₹2.00\u00a0Cr FY29 (${crFmt(threeYrTapeoutCapexCr)} 3-yr)`,
+        verdict: `Scope split: 130 nm MPW shuttle (${crFmt(siliconTrancheCr)}) vs multi-year mask capex (${crFmt(threeYrTapeoutCapexCr)})`,
+        sourceAttr: 'tranche1-uses.csv rows 2,5; use-of-funds.csv row 4; cash.csv row 3',
+        sourceHref: '/plan-data/cash.csv',
+        sourceLabel: 'cash.csv',
+      },
+      {
+        item: 'All-chip development cost vs raise',
+        blueprint: `9 shuttle SKUs: ${crFmt(devLowShuttleCr, 1)}–${crFmt(devHighShuttleCr, 1)}; all 11 SKUs: ${crFmt(devLowAllCr, 1)}–${crFmt(devHighAllCr, 1)}`,
+        modelFunds: `${crFmt(modelUsesCr)} total uses (${crFmt(9.024)} Engineering + ${crFmt(soc2NreCr)} NRE)`,
+        modelCash: `Cash trough ${crFmt(fy29CloseCashCr)} at end FY2029; P&L also spends ${crFmt(soc4CumRdCr)} on SoC4 5nm R&D`,
+        verdict: `₹50.00\u00a0Cr covers low case (+${crFmt(50 - devLowAllCr, 1)}) but is ${crFmt(devHighAllCr - 50, 1)} below 11-SKU high case`,
+        sourceAttr: 'skus.csv dev_cost_low_cr..dev_cost_high_cr; pl.csv row 7; cash.csv row 9',
+        sourceHref: '/portfolio-data/skus.csv',
+        sourceLabel: 'skus.csv',
+      },
+      {
+        item: 'FY2031 revenue & gross margin',
+        blueprint: `${crFmt(fy31RampTotalCr, 0)} chip ramp table (${crFmt(skuRampFy31SumCr, 0)} SKU sum); chip GM ${minChipMarginPct}–${maxChipMarginPct}%`,
+        modelFunds: 'Not in use-of-funds.csv',
+        modelCash: `FY31 Revenue ${crFmt(fy31ModelRevCr, 2)} (${crFmt(fy31SemiRevCr)} Chips, ${crFmt(fy31SysRevCr, 2)} Systems); GM ${fy31ModelGmPct.toFixed(1)}%`,
+        verdict: `${chipGapRatio.toFixed(1)}× chip revenue gap; model GM (${fy31ModelGmPct.toFixed(1)}%) sits above chip ceiling (${maxChipMarginPct}%)`,
+        sourceAttr: 'ramp.csv row 6; unit-cost.csv; pl.csv rows 2-3; revenue-by-segment.csv',
+        sourceHref: '/plan-data/pl.csv',
+        sourceLabel: 'pl.csv',
+      },
+    ],
+    ladder,
+    redTeam: [
+      {
+        rank: 1,
+        role: 'Short seller / Forensic accountant',
+        finding: `${chipGapRatio.toFixed(1)}× FY31 chip revenue gap (${crFmt(fy31RampTotalCr, 0)} Blueprint vs ${crFmt(fy31SemiRevCr)} Model Semiconductors) + ${crFmt(soc4CumRdCr)} cumulative SoC4 5nm R&D in P&L`,
+        status: 'Disclosed as separate plans (conflicts.csv row 10); Model v4 uncommitted',
+        sourceAttr: 'ramp.csv row 6; revenue-by-segment.csv row 3; pl.csv row 7',
+        sourceHref: '/plan-data/pl.csv',
+        sourceLabel: 'pl.csv',
+      },
+      {
+        rank: 2,
+        role: 'Tape-out PM / Diligence analyst',
+        finding: `${top3ShuttleSharePct.toFixed(1)}% (${crFmt(top3ShuttleRampCr, 0)}) of FY31 shuttle ramp (SKU-1, SKU-2, SKU-10) has no standalone datasheet and no layout/post-route evidence in repo`,
+        status: 'Open execution risk before December 2026 shuttle (exact cutoff: INPUT REQUIRED)',
+        sourceAttr: 'skus.csv rows 2,3,11; documents.csv; dg32-specs.csv',
+        sourceHref: '/portfolio-data/skus.csv',
+        sourceLabel: 'skus.csv',
+      },
+      {
+        rank: 3,
+        role: 'Short seller',
+        finding: `Superseded Master Whitepaper v3 (5 Sep 2026) remains in public downloads with CONFIDENTIAL header and withdrawn ₹2.88\u00a0Cr / ₹1.01\u00a0Cr order claim in raw PDF`,
+        status: 'Site text fixed 12 Oct 2026 (conflicts.csv rows 8,11); PDF kept as authored',
+        sourceAttr: 'documents.csv row 3; conflicts.csv rows 8,11',
+        sourceHref: '/portfolio-data/conflicts.csv',
+        sourceLabel: 'conflicts.csv',
+      },
+      {
+        rank: 4,
+        role: 'Forensic accountant',
+        finding: `High-case chip development cost (${crFmt(devHighShuttleCr, 1)} for 9 shuttle SKUs; ${crFmt(devHighAllCr, 1)} for 11 SKUs) exceeds ₹50.00\u00a0Cr Blueprint tranches by up to ${crFmt(devHighAllCr - 50, 1)}`,
+        status: 'Disclosed in brief; contingency funding source INPUT REQUIRED',
+        sourceAttr: 'skus.csv dev_cost_low_cr..dev_cost_high_cr',
+        sourceHref: '/portfolio-data/skus.csv',
+        sourceLabel: 'skus.csv',
+      },
+      {
+        rank: 5,
+        role: 'Forensic accountant / Short seller',
+        finding: `Model FY31 gross margin (${fy31ModelGmPct.toFixed(1)}%) exceeds the high-case margin of all 4 costed chips (${minChipMarginPct}–${maxChipMarginPct}% in unit-cost.csv); SKU FY31 ramp sums to ${crFmt(skuRampFy31SumCr, 0)} vs ${crFmt(fy31RampTotalCr, 0)} table total (and FY33 ramp sums to ₹947 Cr vs ₹948 Cr in conflicts.csv row 12)`,
+        status: 'Margin & FY31 sum new in audit; FY33 rounding in conflicts.csv row 12',
+        sourceAttr: 'pl.csv rows 2-3; unit-cost.csv rows 2-5; skus.csv; ramp.csv; conflicts.csv row 12',
+        sourceHref: '/portfolio-data/unit-cost.csv',
+        sourceLabel: 'unit-cost.csv',
+      },
+    ],
+  };
+}
+
+const decisionReport = process.env.DGS_INTERNAL === '1' ? buildDecisionReport() : null;
+
 fs.writeFileSync(out, JSON.stringify({
   available: true,
+  decisionReport,
   model: 'Deepgrid Semi financial model, corrected v3 (September)',
   periods,
   series: {

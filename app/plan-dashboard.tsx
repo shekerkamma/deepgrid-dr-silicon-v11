@@ -22,7 +22,35 @@ import {Insights, Chapter, Walk, HBars, useWidth, type WalkRow} from './dash-cha
  *  file's code ships in every build, public included. */
 type Row = {label: string; strong: boolean; values: number[]};
 type Item = {label: string; value: number};
-type PlanData = {available: true; model: string; periods: string[];
+type SourceLink = {label: string; href: string; download?: boolean};
+type DecisionReport = {
+  tabs: {id: string; label: string}[];
+  labels: {
+    sourcePrefix: string; sourcesPrefix: string; deadlinePrefix: string;
+    forLabel: string; againstLabel: string; missingLabel: string;
+    tieTitle: string; tieSub: string; tieCaption: string; tieHead: string[];
+    ladderTitle: string; ladderSub: string; ladderCaption: string; ladderHead: string[];
+    auditTitle: string; auditSub: string; auditCaption: string; auditHead: string[];
+  };
+  flag: string;
+  heading: string;
+  subhead: string;
+  kpis: {label: string; value: string; context: string; def: string; sourceAttr: string; sourceHref: string; sourceLabel: string}[];
+  decisions: {
+    id: string; title: string; badge: string; lead: string;
+    forArg: string; againstArg: string; deadline: string; inputRequired: string;
+    sourceAttr: string; sourceLinks: SourceLink[];
+  }[];
+  tieOut: {item: string; blueprint: string; modelFunds: string; modelCash: string; verdict: string; sourceAttr: string; sourceHref: string; sourceLabel: string}[];
+  ladder: {
+    sku: string; name: string; process: string; shuttle: string;
+    planCr: string; rampFy31Cr: string; devRangeCr: string;
+    spec: string; rtl: string; analog: string; layout: string; drcLvs: string; slotBooked: string; gdsSubmitted: string;
+    sourceAttr: string; sourceHref: string; sourceLabel: string;
+  }[];
+  redTeam: {rank: number; role: string; finding: string; status: string; sourceAttr: string; sourceHref: string; sourceLabel: string}[];
+};
+type PlanData = {available: true; decisionReport?: DecisionReport | null; model: string; periods: string[];
   series: {revenue: number[]; grossProfit: number[]; ebitda: number[]; netIncome: number[]; openingCash: number[]; closingCash: number[]; netCashFlow: number[]; capex: number[]};
   capexLabel: string; segments: {name: string; values: number[]}[]; reconcileSegment: string; reconcileLede: string;
   plRows: Row[]; cashRows: Row[]; cashNote: string; plNote: string; sources: Item[]; uses: Item[]; checks: string[];
@@ -344,7 +372,152 @@ export function PlanPanel({id, year}: {id: string; year?: string}) {
   }
 }
 
+function DecisionReportView({dr}: {dr: DecisionReport}) {
+  const L = dr.labels;
+  return (
+    <div className="dr-root" data-decision-report="true">
+      <header className="pd-head">
+        <p className="pd-flag">{dr.flag}</p>
+        <h2 className="dg-verdict">{dr.heading}</h2>
+        <p className="dg-lede">{dr.subhead}</p>
+      </header>
+
+      <div className="dr-kpis">
+        {dr.kpis.map(k => (
+          <div className="dr-kpi" key={k.label} data-source={k.sourceAttr}>
+            <span className="dr-kpi-label">{k.label}</span>
+            <strong className="dr-kpi-val">{k.value}</strong>
+            <p className="dr-kpi-ctx">{k.context}</p>
+            <p className="pd-def">{k.def}</p>
+            <p className="pd-source">{L.sourcePrefix} <a className="pd-link" href={asset(k.sourceHref)} download>{k.sourceLabel}</a></p>
+          </div>
+        ))}
+      </div>
+
+      <ol className="dr-cards">
+        {dr.decisions.map(dec => (
+          <li className="dr-card" key={dec.id} data-source={dec.sourceAttr}>
+            <div className="dr-card-top">
+              <span className="dr-badge">{dec.badge}</span>
+              <span className="pd-source">{L.deadlinePrefix} {dec.deadline}</span>
+            </div>
+            <h3 className="dr-card-title">{dec.title}</h3>
+            <p className="dr-card-lead">{dec.lead}</p>
+            <dl className="dr-args">
+              <div><dt>{L.forLabel}</dt><dd>{dec.forArg}</dd></div>
+              <div><dt>{L.againstLabel}</dt><dd>{dec.againstArg}</dd></div>
+              <div><dt>{L.missingLabel}</dt><dd>{dec.inputRequired}</dd></div>
+            </dl>
+            <p className="pd-source">
+              {L.sourcesPrefix} {dec.sourceLinks.map((s, i) => (
+                <span key={s.href}>{i > 0 && ', '}<a className="pd-link" href={asset(s.href)} download={s.download}>{s.label}</a></span>
+              ))}
+            </p>
+          </li>
+        ))}
+      </ol>
+
+      <Chapter id="ch-dr-tieout" title={L.tieTitle}>
+        <section className="pd-panel" aria-labelledby="dr-tie-h" data-source={dr.tieOut[0]?.sourceAttr}>
+          <h3 id="dr-tie-h">{L.tieSub}</h3>
+          <div className="table-scroll">
+            <table className="pd-table">
+              <caption className="sr-only">{L.tieCaption}</caption>
+              <thead>
+                <tr>{L.tieHead.map(h => <th scope="col" key={h}>{h}</th>)}</tr>
+              </thead>
+              <tbody>
+                {dr.tieOut.map(r => (
+                  <tr key={r.item} data-source={r.sourceAttr}>
+                    <th scope="row">{r.item}</th>
+                    <td>{r.blueprint}</td>
+                    <td>{r.modelFunds}</td>
+                    <td>{r.modelCash}</td>
+                    <td>{r.verdict}</td>
+                    <td><a className="pd-link" href={asset(r.sourceHref)} download>{r.sourceLabel}</a></td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </section>
+      </Chapter>
+
+      <Chapter id="ch-dr-ladder" title={L.ladderTitle}>
+        <section className="pd-panel" aria-labelledby="dr-lad-h" data-source={dr.ladder[0]?.sourceAttr}>
+          <h3 id="dr-lad-h">{L.ladderSub}</h3>
+          <div className="table-scroll">
+            <table className="pd-table dr-ladder">
+              <caption className="sr-only">{L.ladderCaption}</caption>
+              <thead>
+                <tr>{L.ladderHead.map(h => <th scope="col" key={h}>{h}</th>)}</tr>
+              </thead>
+              <tbody>
+                {dr.ladder.map(s => (
+                  <tr key={s.sku} data-source={s.sourceAttr}>
+                    <th scope="row">{s.sku}</th>
+                    <td>{s.name}</td>
+                    <td>{s.shuttle}</td>
+                    <td>{s.planCr}</td>
+                    <td>{s.rampFy31Cr}</td>
+                    <td>{s.devRangeCr}</td>
+                    <td>{s.spec}</td>
+                    <td>{s.rtl}</td>
+                    <td>{s.analog}</td>
+                    <td>{s.layout}</td>
+                    <td>{s.drcLvs}</td>
+                    <td>{s.slotBooked}</td>
+                    <td>{s.gdsSubmitted}</td>
+                    <td><a className="pd-link" href={asset(s.sourceHref)} download>{s.sourceLabel}</a></td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </section>
+      </Chapter>
+
+      <Chapter id="ch-dr-audit" title={L.auditTitle}>
+        <section className="pd-panel" aria-labelledby="dr-aud-h" data-source={dr.redTeam[0]?.sourceAttr}>
+          <h3 id="dr-aud-h">{L.auditSub}</h3>
+          <div className="table-scroll">
+            <table className="pd-table">
+              <caption className="sr-only">{L.auditCaption}</caption>
+              <thead>
+                <tr>{L.auditHead.map(h => <th scope="col" key={h}>{h}</th>)}</tr>
+              </thead>
+              <tbody>
+                {dr.redTeam.map(item => (
+                  <tr key={item.rank} data-source={item.sourceAttr}>
+                    <th scope="row">{item.rank}</th>
+                    <td>{item.role}</td>
+                    <td>{item.finding}</td>
+                    <td>{item.status}</td>
+                    <td><a className="pd-link" href={asset(item.sourceHref)} download>{item.sourceLabel}</a></td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </section>
+      </Chapter>
+    </div>
+  );
+}
+
 export function PlanDashboard() {
+  const dr = data.available ? data.decisionReport ?? null : null;
+  const [tab, setTab] = useState<'model' | 'decisions'>('model');
+  useEffect(() => {
+    if (!dr) return;
+    const read = () => {
+      const v = new URLSearchParams(location.search).get('view');
+      setTab(v === 'decisions' ? 'decisions' : 'model');
+    };
+    read();
+    window.addEventListener('popstate', read);
+    return () => window.removeEventListener('popstate', read);
+  }, [dr]);
   if (!data.available) return (
     <section className="pd-unavailable">
       <h2>Discuss the business plan and funding requirements.</h2>
@@ -352,9 +525,45 @@ export function PlanDashboard() {
       <a className="pd-link" href={url('/contact')}>Contact the team</a>
     </section>
   );
+  const selectTab = (id: 'model' | 'decisions') => {
+    setTab(id);
+    const target = new URL(location.href);
+    if (id === 'decisions') target.searchParams.set('view', 'decisions');
+    else target.searchParams.delete('view');
+    history.pushState(null, '', target);
+  };
   const v = derive(data), {d, last, F0, FL, rev, gp, ebitda, ni, firstProfit, close, trough, open0, segs, segTotal, recon} = v;
   return (
     <div className="pd-root">
+      {dr && (
+        <div className="bf-tabs" role="tablist" aria-label="Plan views">
+          {dr.tabs.map((x, i) => (
+            <button
+              key={x.id}
+              role="tab"
+              id={'pd-tab-' + x.id}
+              aria-selected={tab === x.id}
+              tabIndex={tab === x.id ? 0 : -1}
+              className="bf-tab"
+              onClick={() => selectTab(x.id as 'model' | 'decisions')}
+              onKeyDown={e => {
+                const next = e.key === 'ArrowRight' ? (i + 1) % dr.tabs.length : e.key === 'ArrowLeft' ? (i + dr.tabs.length - 1) % dr.tabs.length : e.key === 'Home' ? 0 : e.key === 'End' ? dr.tabs.length - 1 : -1;
+                if (next < 0) return;
+                e.preventDefault();
+                const nextId = dr.tabs[next].id as 'model' | 'decisions';
+                selectTab(nextId);
+                document.getElementById('pd-tab-' + nextId)?.focus();
+              }}
+            >
+              {x.label}
+            </button>
+          ))}
+        </div>
+      )}
+      {dr && tab === 'decisions' ? (
+        <DecisionReportView dr={dr}/>
+      ) : (
+      <>
       <header className="pd-head">
         <h2 className="dg-verdict">The financial plan targets profitability in {fy(d.periods[firstProfit])}, but cash bottoms at {cr(close[trough])} in {fy(d.periods[trough])}, and {pct(segs[0].values[last] / segTotal(last), 0)} of {FL} revenue is {segs[0].name}.</h2>
         <p className="dg-lede">Revenue grows from {cr(rev[0])} in {F0} to {cr(rev[last])} in {FL}. {segs[0].name} carries most of it{recon && recon !== segs[0] ? `; ${recon.name} is ${pct(recon.values[last] / segTotal(last), 0)} of ${FL} revenue` : ''}. The raise has to carry the company through the {fy(d.periods[trough])} cash low before revenue catches up.</p>
@@ -382,6 +591,8 @@ export function PlanDashboard() {
       <Chapter id="ch-cash" title="Liquidity requirements and capital expenditure"><CashPanel v={v}/></Chapter>
       <Chapter id="ch-raise" title="Funding sources and capital allocation"><FundsPanel v={v}/></Chapter>
       <Chapter id="ch-compare" title="Reconcile company revenue with the chip portfolio plan"><ReconPanel v={v}/></Chapter>
+      </>
+      )}
     </div>
   );
 }
