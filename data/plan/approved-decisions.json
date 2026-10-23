@@ -1,0 +1,51 @@
+{
+  "note": "Approved wording of the founder decisions (numbers masked as #). Edit only through scripts/approve-decisions.mjs after the owner approves a change.",
+  "heading": "DECIDE THIS WEEK",
+  "labels": {
+    "forLabel": "Argument for",
+    "againstLabel": "Argument against",
+    "deadlinePrefix": "Deadline:",
+    "missingLabel": "Missing input"
+  },
+  "decisions": [
+    {
+      "id": "D1",
+      "approvedBy": "owner (shipped 2841b0e, pushed on owner instruction)",
+      "approvedOn": "2026-10-22",
+      "fields": {
+        "title": "#. Lock physical layout & preliminary datasheets for SKU-#, SKU-# and SKU-#, or narrow the Dec # shuttle cohort",
+        "lead": "Three chips (SKU-# ₹# Cr, SKU-# ₹# Cr, SKU-# ₹# Cr) carry ₹# Cr of the ₹# Cr FY# shuttle ramp, yet only SKU-# (₹# Cr FY# ramp) has a hardened die and preliminary datasheet.",
+        "forArg": "Focusing layout, DRC/LVS and preliminary datasheets on SKU-#, SKU-#, SKU-# (₹# Cr First approvals covers SKU-# MIL screening and SKU-# meter certification) and SKU-# protects #% of FY# shuttle revenue before the December # shuttle.",
+        "againstArg": "Dropping any of the # shuttle chips changes the headline \"nine prototypes for ₹# Cr\" in the Oct # Blueprint and leaves ₹# Cr/slot unspent unless reallocated to respins.",
+        "deadline": "Before December # shuttle (exact foundry GDS cutoff date: INPUT REQUIRED)",
+        "inputRequired": "INPUT REQUIRED: ChipFoundry GDS freeze date, slot booking receipts, and layout/DRC/LVS status for SKU-#..#, #, #, #, #, #."
+      }
+    },
+    {
+      "id": "D2",
+      "approvedBy": "owner (shipped 2841b0e, pushed on owner instruction)",
+      "approvedOn": "2026-10-22",
+      "fields": {
+        "title": "#. Publish Financial Model v# reconciling the ₹# Cr Tranche # against the ₹# Cr / −₹# Cr FY# capex model",
+        "lead": "Adversarial tie-out confirms two separate capital scopes: Blueprint Tranche # raises ₹# Cr (₹# Cr prototypes + ₹# Cr respins), while Model v# opens FY# with ₹# Cr and spends −₹# Cr FY# tape-out capex (−₹# Cr over FY#–FY#) plus ₹# Cr on \"SoC# #nm tape-out program\".",
+        "forArg": "Issuing Model v# with the ₹# Cr Blueprint chip ramp, #/# nm capex schedule and ₹# Cr–₹# Cr #-SKU development range eliminates the ## diligence contradiction (#× FY# chip gap).",
+        "againstArg": "Replacing Model v# changes the ₹# Cr FY# whole-company headline (₹# Cr Systems) and exposes that ₹# Cr high-case chip dev cost exceeds the ₹# Cr Blueprint tranches by ₹# Cr.",
+        "deadline": "Before Tranche # close & March # engineering milestone (exact close date: INPUT REQUIRED)",
+        "inputRequired": "INPUT REQUIRED: actual cash in bank today, committed Tranche # subscriptions, and whether Systems & SoC# #nm stay in the corporate entity."
+      }
+    },
+    {
+      "id": "D3",
+      "approvedBy": "owner (shipped 2841b0e, pushed on owner instruction)",
+      "approvedOn": "2026-10-22",
+      "fields": {
+        "title": "#. Replace or watermark the superseded # Sep # Master Whitepaper v# PDF in public downloads",
+        "lead": "The site discloses all # cross-document conflicts and passes # source-probe checks, but deepgrid-mature-node-silicon-master-whitepaper-v#.pdf remains publicly downloadable with superseded figures (# chips, # MHz, ₹# Cr seed, withdrawn order claim) and personal contact details on page #.",
+        "forArg": "Adding a cover-page supersession notice (or replacing the PDF with a redacted v# pointing to the Oct # Blueprint) neutralises the easiest short-seller screenshot while preserving audit history.",
+        "againstArg": "Owner decision on #-#-# (conflicts.csv row #) kept authored PDFs untouched and relied on site-level disclosures; altering the PDF requires re-verifying check-claims.mjs probes.",
+        "deadline": "Before Tranche # investor data-room circulation (owner sign-off date: INPUT REQUIRED)",
+        "inputRequired": "INPUT REQUIRED: owner sign-off to watermark or redact page # of deepgrid-mature-node-silicon-master-whitepaper-v#.pdf."
+      }
+    }
+  ]
+}

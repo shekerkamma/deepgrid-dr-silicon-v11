@@ -19,6 +19,7 @@ import path from 'node:path';
 import {fileURLToPath} from 'node:url';
 import {execFileSync} from 'node:child_process';
 import {createRequire} from 'node:module';
+import {DECISION_FIELDS, LABEL_FIELDS, decisionShape} from './decision-shape.mjs';
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const base = process.argv[2]?.startsWith('http') ? process.argv[2].replace(/\/?$/, '/') : null;
@@ -179,6 +180,15 @@ const totalProbedClaims = allClaimEntries.length;
 const supersededPublishedCount = docs.filter(d => d.where === 'published' && /superseded/i.test(d.status)).length;
 const fixedConflictsCount = conflicts.filter(c => /^fixed/i.test(c.status)).length;
 
+// Founder inputs: the gitignored real file when present, else the committed empty template.
+const fiRel = fs.existsSync(path.join(root, 'data/plan/founder-inputs.csv')) ? 'data/plan/founder-inputs.csv' : 'data/plan/founder-inputs.template.csv';
+const fiRows = parseCsv(fiRel);
+const fiGet = (scope, field) => fiRows.find(r => r.scope === scope && r.field === field && r.value !== '')?.value;
+const fiFilled = fiRows.filter(r => r.value !== '');
+const fiAsOf = fiFilled.map(r => r.as_of).sort().at(-1);
+const fiToday = process.env.DGS_TODAY || new Date().toISOString().slice(0, 10);
+const fiAge = fiAsOf ? Math.round((Date.parse(fiToday) - Date.parse(fiAsOf)) / 864e5) : null;
+
 // Expected per-SKU ladder derived from skus.csv, dg32-specs.csv and app/claims.ts
 const fmaxFig = claimSrc.match(/'fmax-lockstep':[\s\S]*?figure:\s*'([^']+)'/)?.[1] ?? '';
 const fmaxRange = fmaxFig.replace(/\s+to\s+/i, '–');
@@ -205,10 +215,10 @@ const expectedLadder = skus.map(s => {
     spec: hasSpec ? (specRow ? specRow.source : 'SKU Blueprint (no standalone datasheet)') : 'INPUT REQUIRED',
     rtl: hasRtl ? r || specRow.status : 'INPUT REQUIRED',
     analog: hasAnalog,
-    layout: hasLayout,
-    drcLvs: 'INPUT REQUIRED',
-    slotBooked: s.mpw ? `${s.mpw} (booking confirmation: INPUT REQUIRED)` : 'INPUT REQUIRED',
-    gdsSubmitted: 'INPUT REQUIRED',
+    layout: fiGet(s.sku, 'layout') ?? hasLayout,
+    drcLvs: fiGet(s.sku, 'drc_lvs') ?? 'INPUT REQUIRED',
+    slotBooked: fiGet(s.sku, 'slot_booked') ?? (s.mpw ? `${s.mpw} (booking confirmation: INPUT REQUIRED)` : 'INPUT REQUIRED'),
+    gdsSubmitted: fiGet(s.sku, 'gds_submitted') ?? 'INPUT REQUIRED',
     sourceAttr: 'data/portfolio/skus.csv; data/portfolio/dg32-specs.csv',
     sourceHref: '/portfolio-data/skus.csv',
     sourceLabel: 'skus.csv',
@@ -251,6 +261,13 @@ if (dr) {
   check(norm(dr.heading) === 'DECIDE THIS WEEK', `dr.heading must be "DECIDE THIS WEEK", got "${norm(dr.heading)}"`);
   sameNums(dr.heading, [], 'dr.heading', []);
   sameNums(dr.flag, [1, totalProbedClaims, totalProbedClaims, 0], 'dr.flag', []);
+  // First line: founder-input freshness. Stale (> 7 days) must lead with STALE; none recorded must say so.
+  const st = norm(dr.inputsStatus);
+  if (!fiAsOf) check(/^Founder inputs: none recorded\b/.test(st), `dr.inputsStatus must say no founder inputs are recorded, got "${st}"`);
+  else {
+    check(st.startsWith('STALE: ') === (fiAge > 7), `dr.inputsStatus STALE prefix wrong for ${fiAge}-day-old inputs: "${st}"`);
+    check(st.includes(`as of ${fiAsOf} (${fiAge} days`) && st.includes(`${fiFilled.length} of ${fiRows.length} values`), `dr.inputsStatus must state as-of ${fiAsOf}, age ${fiAge} and ${fiFilled.length}/${fiRows.length} values: "${st}"`);
+  }
   sameNums(dr.subhead, [shuttleCount, shuttlePlanCr, totalPlanCr, shuttleRampFy31Cr, 2026, trancheTotalCr, 1], 'dr.subhead', ['FY31', 'December']);
   check(Array.isArray(dr.tabs) && dr.tabs.length === 2, 'dr.tabs must have 2 entries');
   if (Array.isArray(dr.tabs) && dr.tabs.length === 2) {
@@ -445,6 +462,81 @@ if (dr) {
   for (const h of new Set(hrefs)) {
     check(Boolean(h) && fs.existsSync(path.join(root, 'public', h.replace(/^\//, ''))), `missing source file in public/: ${h}`);
   }
+
+  // Backtest and ranking sections, recomputed here from conflict-backtest.csv and the expected ladder.
+  const secs = Object.fromEntries((dr.sections || []).map(x => [x.id, x]));
+  const bt = parseCsv('data/portfolio/conflict-backtest.csv');
+  const btSec = secs['ch-dr-backtest'];
+  check(Boolean(btSec), 'decisionReport.sections lacks ch-dr-backtest');
+  if (btSec) {
+    check(btSec.rows.length === bt.length, `backtest rows ${btSec.rows.length} != conflict-backtest.csv ${bt.length}`);
+    bt.forEach((b, i) => {
+      const want = [b.topic, b.both_present_date ? `${b.both_present_date} (${b.both_present_commit})` : 'Not in git', `${b.logged_date} (${b.logged_commit})`, b.lag_days || 'Not measurable', b.note || ''];
+      check(JSON.stringify(btSec.rows[i]?.cells) === JSON.stringify(want), `backtest row ${i} (${b.topic}) != conflict-backtest.csv`);
+    });
+    const lags = bt.filter(b => b.lag_days !== '').map(b => Number(b.lag_days));
+    sameNums(btSec.sub, [lags.length, bt.length, Math.min(...lags), Math.max(...lags), 3, bt.length], 'sections.backtest.sub', []);
+  }
+  const rkSec = secs['ch-dr-rank'];
+  check(Boolean(rkSec), 'decisionReport.sections lacks ch-dr-rank');
+  if (rkSec) {
+    const want = expectedLadder
+      .filter(l => l.shuttle === 'Dec 2026 shuttle')
+      .map(l => ({sku: l.sku, cr: Number(l.rampFy31Cr), missing: [l.layout, l.drcLvs, l.gdsSubmitted].filter(v => !/^(?:complete|clean|confirmed|submitted|signed off)\b|^Hardened die/i.test(v)).length}))
+      .filter(x => x.missing > 0)
+      .sort((a, b) => b.cr - a.cr || a.sku.localeCompare(b.sku));
+    check(rkSec.rows.length === want.length, `ranking rows ${rkSec.rows.length} != expected ${want.length}`);
+    want.forEach((x, i) => {
+      const cells = rkSec.rows[i]?.cells || [];
+      check(cells[1] === x.sku && cells[2] === x.cr.toFixed(2) && cells[3] === String(x.missing), `ranking row ${i + 1}: got ${JSON.stringify(cells)}, expected ${x.sku} ${x.cr.toFixed(2)} ${x.missing}`);
+      check((cells[4] === 'Decision 1') === ['SKU-1', 'SKU-2', 'SKU-10'].includes(x.sku), `ranking row ${i + 1}: "Covered by" wrong for ${x.sku}`);
+    });
+    check(rkSec.sub.includes(fiGet('company', 'gds_deadline') ?? 'INPUT REQUIRED'), 'ranking sub must state the GDS freeze date or INPUT REQUIRED');
+  }
+
+  // Diligence section: present exactly when data/diligence/results.csv exists; rows = its failed questions.
+  const dilPath = 'data/diligence/results.csv';
+  const dlSec = secs['ch-dr-diligence'];
+  if (fs.existsSync(path.join(root, dilPath))) {
+    const dil = parseCsv(dilPath);
+    check(Boolean(dlSec), 'decisionReport.sections lacks ch-dr-diligence although results.csv exists');
+    if (dlSec) {
+      const failed = dil.filter(r => r.pass !== 'yes');
+      check(dlSec.rows.length === failed.length, `diligence rows ${dlSec.rows.length} != failed questions in results.csv ${failed.length}`);
+      failed.forEach((r, i) => check(JSON.stringify(dlSec.rows[i]?.cells) === JSON.stringify([r.n, r.q, r.set, r.expect, r.reason]), `diligence row ${i} (question ${r.n}) != results.csv`));
+      const sc = set => [dil.filter(r => r.set === set && r.pass === 'yes').length, dil.filter(r => r.set === set).length];
+      const ms = dil.map(r => Number(r.ms)).sort((a, b) => a - b);
+      const p95 = ms[Math.min(ms.length - 1, Math.ceil(0.95 * ms.length) - 1)];
+      sameNums(dlSec.sub, [dil.length, ...sc('holdout'), ...sc('tuning'), Number((p95 / 1000).toFixed(1)), 5, dil.filter(r => r.cites_superseded_whitepaper === 'yes').length, 3, 10], 'sections.diligence.sub', []);
+    }
+  } else check(!dlSec, 'ch-dr-diligence present without data/diligence/results.csv');
+
+  // Section titles carry figures too: each must match the numbers it states.
+  if (btSec) { const L2 = bt.filter(b => b.lag_days !== '').map(b => Number(b.lag_days)); sameNums(btSec.title, [L2.length, bt.length, Math.min(...L2), Math.max(...L2)], 'sections.backtest.title', []); }
+  if (rkSec) { const k = rkSec.rows.findIndex(r => r.cells[4] !== 'Decision 1'); sameNums(rkSec.title, [k < 0 ? rkSec.rows.length : k, 1], 'sections.rank.title', ['FY31']); }
+  if (dlSec && fs.existsSync(path.join(root, dilPath))) {
+    const dil = parseCsv(dilPath), h = dil.filter(r => r.set === 'holdout');
+    const ms = dil.map(r => Number(r.ms)).sort((a, b) => a - b), p95 = ms[Math.min(ms.length - 1, Math.ceil(0.95 * ms.length) - 1)];
+    sameNums(dlSec.title, [h.filter(r => r.pass === 'yes').length, h.length, Number((p95 / 1000).toFixed(1))], 'sections.diligence.title', []);
+  }
+
+  // Decision direction: the numeric checks above cannot see "Lock" become "Postpone". Every decision's
+  // wording (numbers masked) must match its owner-approved entry in data/plan/approved-decisions.json.
+  const approvedPath = path.join(root, 'data/plan/approved-decisions.json');
+  const approvedDoc = fs.existsSync(approvedPath) ? JSON.parse(fs.readFileSync(approvedPath, 'utf8')) : {};
+  const approved = approvedDoc.decisions ?? [];
+  check(decisionShape(dr.heading) === approvedDoc.heading, `heading differs from the approved entry: "${norm(dr.heading)}"`);
+  for (const f of LABEL_FIELDS) check(decisionShape(dr.labels?.[f]) === approvedDoc.labels?.[f], `labels.${f} differs from the approved entry: "${norm(dr.labels?.[f])}"`);
+  check(approved.length > 0, 'data/plan/approved-decisions.json missing or empty (run scripts/approve-decisions.mjs after owner approval)');
+  const gotIds = (dr.decisions || []).map(d => d.id), wantIds = approved.map(a => a.id);
+  check(JSON.stringify(gotIds) === JSON.stringify(wantIds), `decision ids ${JSON.stringify(gotIds)} != approved ${JSON.stringify(wantIds)}`);
+  for (const d of dr.decisions || []) {
+    const a = approved.find(x => x.id === d.id);
+    if (!a) continue;
+    for (const f of DECISION_FIELDS) {
+      check(decisionShape(d[f]) === a.fields?.[f], `${d.id}.${f}: wording differs from the approved entry (${a.approvedBy}, ${a.approvedOn}): "${decisionShape(d[f]).slice(0, 90)}"`);
+    }
+  }
 }
 
 // 3. Check that app/plan-dashboard.tsx carries zero static decision-report prose or labels
@@ -468,6 +560,17 @@ if (process.argv.includes('--check-public')) {
     check(!/DECIDE THIS WEEK|Three-way capital/i.test(JSON.stringify(pubJson)), 'public DGS_PLAN=1 plan-data.json leaked decision report');
   } finally {
     if (saved !== null) fs.writeFileSync(planJsonPath, saved);
+  }
+}
+
+// Recompute what the report transcribes: the backtest from git history (skipped, with a notice, on a shallow
+// clone such as CI's checkout) and the diligence verdicts from answers.json.
+for (const [script, label] of [['scripts/backtest-conflicts.mjs', 'backtest'], ['scripts/score-diligence.mjs', 'diligence']]) {
+  if (label === 'diligence' && !fs.existsSync(path.join(root, 'data/diligence/answers.json'))) continue;
+  try { execFileSync(process.execPath, [path.join(root, script), '--check'], {cwd: root, stdio: 'pipe'}); }
+  catch (e) {
+    if (label === 'backtest' && e.status === 2) console.log('verify-decision-report: backtest recompute skipped (shallow clone)');
+    else check(false, `${label} recompute failed: ${String(e.stderr || e.message).split('\n')[0]}`);
   }
 }
 
@@ -508,7 +611,11 @@ for (const width of [1440, 768, 390]) {
 
     // Check rendered KPI cards, decision cards, tie-out cells, ladder cells, and red-team cells match dr / expectedLadder in the DOM
     if (dr) {
-      check(norm(await report.locator('.pd-flag').innerText()) === norm(dr.flag), `${width}: DOM .pd-flag mismatch`);
+      check(norm(await report.locator('.pd-flag:not([data-inputs-status])').innerText()) === norm(dr.flag), `${width}: DOM .pd-flag mismatch`);
+      const statusEl = report.locator('[data-inputs-status="true"]');
+      check(await statusEl.count() === 1 && norm(await statusEl.innerText()) === norm(dr.inputsStatus), `${width}: DOM founder-inputs status line missing or differs from dr.inputsStatus`);
+      const firstLine = await report.locator('header .pd-flag').first().getAttribute('data-inputs-status');
+      check(firstLine === 'true', `${width}: founder-inputs status must be the report's first line`);
       check(norm(await report.locator('.dg-verdict').innerText()) === norm(dr.heading), `${width}: DOM .dg-verdict mismatch`);
       check(norm(await report.locator('.dg-lede').innerText()) === norm(dr.subhead), `${width}: DOM .dg-lede mismatch`);
       const domKpis = await report.locator('.dr-kpi').evaluateAll(els =>

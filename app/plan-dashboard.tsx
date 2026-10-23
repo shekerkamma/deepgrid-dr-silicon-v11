@@ -33,6 +33,7 @@ type DecisionReport = {
     auditTitle: string; auditSub: string; auditCaption: string; auditHead: string[];
   };
   flag: string;
+  inputsStatus?: string;
   heading: string;
   subhead: string;
   kpis: {label: string; value: string; context: string; def: string; sourceAttr: string; sourceHref: string; sourceLabel: string}[];
@@ -48,6 +49,7 @@ type DecisionReport = {
     spec: string; rtl: string; analog: string; layout: string; drcLvs: string; slotBooked: string; gdsSubmitted: string;
     sourceAttr: string; sourceHref: string; sourceLabel: string;
   }[];
+  sections?: {id: string; title: string; heading: string; sub: string; caption: string; head: string[]; rows: {cells: string[]; sourceAttr: string; sourceHref: string; sourceLabel: string}[]}[];
   redTeam: {rank: number; role: string; finding: string; status: string; sourceAttr: string; sourceHref: string; sourceLabel: string}[];
 };
 type PlanData = {available: true; decisionReport?: DecisionReport | null; model: string; periods: string[];
@@ -377,6 +379,7 @@ function DecisionReportView({dr}: {dr: DecisionReport}) {
   return (
     <div className="dr-root" data-decision-report="true">
       <header className="pd-head">
+        {dr.inputsStatus ? <p className="pd-flag" data-inputs-status="true">{dr.inputsStatus}</p> : null}
         <p className="pd-flag">{dr.flag}</p>
         <h2 className="dg-verdict">{dr.heading}</h2>
         <p className="dg-lede">{dr.subhead}</p>
@@ -476,6 +479,32 @@ function DecisionReportView({dr}: {dr: DecisionReport}) {
           </div>
         </section>
       </Chapter>
+
+      {(dr.sections ?? []).map(sec => (
+        <Chapter id={sec.id} title={sec.title} key={sec.id}>
+          <section className="pd-panel" aria-labelledby={sec.id + '-h'} data-source={sec.rows[0]?.sourceAttr}>
+            <h3 id={sec.id + '-h'}>{sec.heading}</h3>
+            <p className="pd-lede">{sec.sub}</p>
+            <div className="table-scroll">
+              <table className="pd-table">
+                <caption className="sr-only">{sec.caption}</caption>
+                <thead>
+                  <tr>{sec.head.map(h => <th scope="col" key={h}>{h}</th>)}<th scope="col">{L.sourcePrefix}</th></tr>
+                </thead>
+                <tbody>
+                  {sec.rows.map(r => (
+                    <tr key={r.cells[0]} data-source={r.sourceAttr}>
+                      <th scope="row">{r.cells[0]}</th>
+                      {r.cells.slice(1).map((c, i) => <td key={i}>{c}</td>)}
+                      <td><a className="pd-link" href={asset(r.sourceHref)} download>{r.sourceLabel}</a></td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </section>
+        </Chapter>
+      ))}
 
       <Chapter id="ch-dr-audit" title={L.auditTitle}>
         <section className="pd-panel" aria-labelledby="dr-aud-h" data-source={dr.redTeam[0]?.sourceAttr}>

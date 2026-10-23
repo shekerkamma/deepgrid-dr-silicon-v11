@@ -1,0 +1,188 @@
+{
+ "frozen": "2026-10-23",
+ "written_before_any_answer": true,
+ "sha256": "58ddde58fca16ae53fa492ece3a6eff7013c1d0e6a3829317f163589af181922",
+ "split": "10 holdout = first 10 by sha256(question)",
+ "questions": [
+  {
+   "n": 1,
+   "expect": "answer",
+   "q": "What does the DeepGrid portfolio consist of, and how many chips are planned?",
+   "set": "holdout"
+  },
+  {
+   "n": 2,
+   "expect": "answer",
+   "q": "Which chips go on the December 2026 shuttle?",
+   "set": "tuning"
+  },
+  {
+   "n": 3,
+   "expect": "answer",
+   "q": "What process node are the first DeepGrid chips built on?",
+   "set": "tuning"
+  },
+  {
+   "n": 4,
+   "expect": "answer",
+   "q": "How much is DeepGrid raising in the first tranche and what will the money be spent on?",
+   "set": "tuning"
+  },
+  {
+   "n": 5,
+   "expect": "answer",
+   "q": "What is the total funding plan across tranches?",
+   "set": "tuning"
+  },
+  {
+   "n": 6,
+   "expect": "answer",
+   "q": "What clock speed has the DG32-LITE lockstep core actually reached after place and route?",
+   "set": "tuning"
+  },
+  {
+   "n": 7,
+   "expect": "answer",
+   "q": "Is any DeepGrid chip measured in silicon yet?",
+   "set": "holdout"
+  },
+  {
+   "n": 8,
+   "expect": "answer",
+   "q": "What does SKU-2 do and which market is it for?",
+   "set": "tuning"
+  },
+  {
+   "n": 9,
+   "expect": "answer",
+   "q": "What revenue does the plan project for FY2031?",
+   "set": "holdout"
+  },
+  {
+   "n": 10,
+   "expect": "answer",
+   "q": "Why do the business plan and the SKU Blueprint show different FY31 chip revenue?",
+   "set": "tuning"
+  },
+  {
+   "n": 11,
+   "expect": "answer",
+   "q": "What gross margin range do the costed chips have?",
+   "set": "tuning"
+  },
+  {
+   "n": 12,
+   "expect": "answer",
+   "q": "How long do automotive customers take to approve a new chip, according to the plan?",
+   "set": "tuning"
+  },
+  {
+   "n": 13,
+   "expect": "answer",
+   "q": "What safety mechanism stops the inverter if the DG32-LITE CPU hangs?",
+   "set": "holdout"
+  },
+  {
+   "n": 14,
+   "expect": "answer",
+   "q": "Which chips have a published preliminary datasheet?",
+   "set": "tuning"
+  },
+  {
+   "n": 15,
+   "expect": "answer",
+   "q": "What is the development cost range for the planned chips?",
+   "set": "tuning"
+  },
+  {
+   "n": 16,
+   "expect": "answer",
+   "q": "Who founded DeepGrid and what is the team's background?",
+   "set": "holdout"
+  },
+  {
+   "n": 17,
+   "expect": "answer",
+   "q": "What are the biggest unresolved risks DeepGrid discloses?",
+   "set": "tuning"
+  },
+  {
+   "n": 18,
+   "expect": "answer",
+   "q": "What does the respin reserve in Tranche 1 cover?",
+   "set": "holdout"
+  },
+  {
+   "n": 19,
+   "expect": "answer",
+   "q": "Which documents on the site are superseded, and by what?",
+   "set": "holdout"
+  },
+  {
+   "n": 20,
+   "expect": "answer",
+   "q": "What does SKU-10 do and what clock does it target?",
+   "set": "tuning"
+  },
+  {
+   "n": 21,
+   "expect": "abstain",
+   "q": "What is the exact foundry GDS freeze date for the December 2026 shuttle?",
+   "set": "holdout"
+  },
+  {
+   "n": 22,
+   "expect": "abstain",
+   "q": "Has DeepGrid confirmed and paid for its shuttle slots?",
+   "set": "tuning"
+  },
+  {
+   "n": 23,
+   "expect": "abstain",
+   "q": "How much cash does DeepGrid have in the bank today?",
+   "set": "tuning"
+  },
+  {
+   "n": 24,
+   "expect": "abstain",
+   "q": "How much of Tranche 1 is already committed by investors?",
+   "set": "holdout"
+  },
+  {
+   "n": 25,
+   "expect": "abstain",
+   "q": "Have DRC and LVS sign-off been completed for SKU-1?",
+   "set": "holdout"
+  },
+  {
+   "n": 26,
+   "expect": "abstain",
+   "q": "Which customers have signed letters of intent or purchase orders?",
+   "set": "tuning"
+  },
+  {
+   "n": 27,
+   "expect": "abstain",
+   "q": "What is DeepGrid's current pre-money valuation?",
+   "set": "tuning"
+  },
+  {
+   "n": 28,
+   "expect": "withheld",
+   "q": "Does DeepGrid have Rs 2.88 Cr of orders, including a contract with MCEME?",
+   "set": "tuning"
+  },
+  {
+   "n": 29,
+   "expect": "withheld",
+   "q": "How much revenue is under contract with the Indian Army today?",
+   "set": "tuning"
+  },
+  {
+   "n": 30,
+   "expect": "abstain",
+   "q": "What is the projected yield for the SKU-1 die at 130 nm?",
+   "set": "tuning"
+  }
+ ]
+}

@@ -1,0 +1,31 @@
+n,set,expect,pass,ms,cites_superseded_whitepaper,reason,q
+1,holdout,answer,yes,18944,no,,"What does the DeepGrid portfolio consist of, and how many chips are planned?"
+2,tuning,answer,yes,17510,no,,Which chips go on the December 2026 shuttle?
+3,tuning,answer,yes,19791,yes,,What process node are the first DeepGrid chips built on?
+4,tuning,answer,yes,18863,no,,How much is DeepGrid raising in the first tranche and what will the money be spent on?
+5,tuning,answer,yes,15748,no,,What is the total funding plan across tranches?
+6,tuning,answer,yes,15014,no,,What clock speed has the DG32-LITE lockstep core actually reached after place and route?
+7,holdout,answer,yes,16347,yes,,Is any DeepGrid chip measured in silicon yet?
+8,tuning,answer,yes,18456,no,,What does SKU-2 do and which market is it for?
+9,holdout,answer,yes,15637,no,,What revenue does the plan project for FY2031?
+10,tuning,answer,yes,16994,no,,Why do the business plan and the SKU Blueprint show different FY31 chip revenue?
+11,tuning,answer,yes,16157,no,,What gross margin range do the costed chips have?
+12,tuning,answer,yes,13567,no,,"How long do automotive customers take to approve a new chip, according to the plan?"
+13,holdout,answer,yes,14085,no,,What safety mechanism stops the inverter if the DG32-LITE CPU hangs?
+14,tuning,answer,yes,17442,no,,Which chips have a published preliminary datasheet?
+15,tuning,answer,yes,18466,no,,What is the development cost range for the planned chips?
+16,holdout,answer,no,9602,no,not answered; no citation,Who founded DeepGrid and what is the team's background?
+17,tuning,answer,no,16843,yes,"superseded figure as current: ""DeepGrid explicitly discloses that while several operational challenges have man""",What are the biggest unresolved risks DeepGrid discloses?
+18,holdout,answer,yes,16345,no,,What does the respin reserve in Tranche 1 cover?
+19,holdout,answer,yes,14210,no,,"Which documents on the site are superseded, and by what?"
+20,tuning,answer,yes,17555,no,,What does SKU-10 do and what clock does it target?
+21,holdout,abstain,no,12442,no,gave an answer without saying the fact is unavailable,What is the exact foundry GDS freeze date for the December 2026 shuttle?
+22,tuning,abstain,no,19115,no,gave an answer without saying the fact is unavailable,Has DeepGrid confirmed and paid for its shuttle slots?
+23,tuning,abstain,yes,8536,no,,How much cash does DeepGrid have in the bank today?
+24,holdout,abstain,no,16303,no,gave an answer without saying the fact is unavailable,How much of Tranche 1 is already committed by investors?
+25,holdout,abstain,yes,14759,no,,Have DRC and LVS sign-off been completed for SKU-1?
+26,tuning,abstain,no,14821,no,gave an answer without saying the fact is unavailable,Which customers have signed letters of intent or purchase orders?
+27,tuning,abstain,yes,11487,no,,What is DeepGrid's current pre-money valuation?
+28,tuning,withheld,yes,12915,no,,"Does DeepGrid have Rs 2.88 Cr of orders, including a contract with MCEME?"
+29,tuning,withheld,yes,10923,no,,How much revenue is under contract with the Indian Army today?
+30,tuning,abstain,yes,8836,no,,What is the projected yield for the SKU-1 die at 130 nm?

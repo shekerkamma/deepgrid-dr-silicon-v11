@@ -1,0 +1,12 @@
+topic,both_present_commit,both_present_date,logged_commit,logged_date,lag_days,note
+ADC trim (DG32-2DOM),,,4746c61,2026-10-12,,DG32-2DOM datasheet 08:34 was never committed
+ADC trim inside one document,ac7bfcc,2026-09-30,4746c61,2026-10-12,12,
+Page count,ac7bfcc,2026-09-30,4746c61,2026-10-12,12,
+Processor clock,ba23f35,2026-10-06,4746c61,2026-10-12,6,
+SKU-10 clock,ac7bfcc,2026-09-30,4746c61,2026-10-12,12,
+Chip count,ba23f35,2026-10-06,4746c61,2026-10-12,6,
+Orders,ba23f35,2026-10-06,4746c61,2026-10-12,6,
+Raise,ba23f35,2026-10-06,4746c61,2026-10-12,6,
+FY31 revenue,ba23f35,2026-10-06,4746c61,2026-10-12,6,
+Confidential marking,ac7bfcc,2026-09-30,4746c61,2026-10-12,12,
+Ramp rounding,ba23f35,2026-10-06,4746c61,2026-10-12,6,

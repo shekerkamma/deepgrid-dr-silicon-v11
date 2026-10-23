@@ -1,0 +1,42 @@
+scope,field,value,as_of,note
+company,gds_deadline,,,Foundry GDS freeze date for the December 2026 shuttle (YYYY-MM-DD)
+company,tranche1_close_date,,,Target close date of Tranche 1 (YYYY-MM-DD)
+company,tranche1_committed_cr,,,"Tranche 1 subscriptions committed so far, ₹ Cr"
+company,bank_cash_cr,,,"Cash in bank today, ₹ Cr"
+company,tranche2_target_date,,,Target date of Tranche 2 (YYYY-MM-DD)
+SKU-1,layout,,,"Layout status, e.g. ""not started"", ""in progress"", ""complete"""
+SKU-1,drc_lvs,,,"DRC/LVS sign-off, e.g. ""clean 2026-11-20"" or ""open: 14 DRC errors"""
+SKU-1,slot_booked,,,"Shuttle slot booking confirmation, e.g. ""confirmed, receipt 4411"""
+SKU-1,gds_submitted,,,GDS submission date (YYYY-MM-DD)
+SKU-2,layout,,,"Layout status, e.g. ""not started"", ""in progress"", ""complete"""
+SKU-2,drc_lvs,,,"DRC/LVS sign-off, e.g. ""clean 2026-11-20"" or ""open: 14 DRC errors"""
+SKU-2,slot_booked,,,"Shuttle slot booking confirmation, e.g. ""confirmed, receipt 4411"""
+SKU-2,gds_submitted,,,GDS submission date (YYYY-MM-DD)
+SKU-3,layout,,,"Layout status, e.g. ""not started"", ""in progress"", ""complete"""
+SKU-3,drc_lvs,,,"DRC/LVS sign-off, e.g. ""clean 2026-11-20"" or ""open: 14 DRC errors"""
+SKU-3,slot_booked,,,"Shuttle slot booking confirmation, e.g. ""confirmed, receipt 4411"""
+SKU-3,gds_submitted,,,GDS submission date (YYYY-MM-DD)
+SKU-4,layout,,,"Layout status, e.g. ""not started"", ""in progress"", ""complete"""
+SKU-4,drc_lvs,,,"DRC/LVS sign-off, e.g. ""clean 2026-11-20"" or ""open: 14 DRC errors"""
+SKU-4,slot_booked,,,"Shuttle slot booking confirmation, e.g. ""confirmed, receipt 4411"""
+SKU-4,gds_submitted,,,GDS submission date (YYYY-MM-DD)
+SKU-5,layout,,,"Layout status, e.g. ""not started"", ""in progress"", ""complete"""
+SKU-5,drc_lvs,,,"DRC/LVS sign-off, e.g. ""clean 2026-11-20"" or ""open: 14 DRC errors"""
+SKU-5,slot_booked,,,"Shuttle slot booking confirmation, e.g. ""confirmed, receipt 4411"""
+SKU-5,gds_submitted,,,GDS submission date (YYYY-MM-DD)
+SKU-6,layout,,,"Layout status, e.g. ""not started"", ""in progress"", ""complete"""
+SKU-6,drc_lvs,,,"DRC/LVS sign-off, e.g. ""clean 2026-11-20"" or ""open: 14 DRC errors"""
+SKU-6,slot_booked,,,"Shuttle slot booking confirmation, e.g. ""confirmed, receipt 4411"""
+SKU-6,gds_submitted,,,GDS submission date (YYYY-MM-DD)
+SKU-8,layout,,,"Layout status, e.g. ""not started"", ""in progress"", ""complete"""
+SKU-8,drc_lvs,,,"DRC/LVS sign-off, e.g. ""clean 2026-11-20"" or ""open: 14 DRC errors"""
+SKU-8,slot_booked,,,"Shuttle slot booking confirmation, e.g. ""confirmed, receipt 4411"""
+SKU-8,gds_submitted,,,GDS submission date (YYYY-MM-DD)
+SKU-9,layout,,,"Layout status, e.g. ""not started"", ""in progress"", ""complete"""
+SKU-9,drc_lvs,,,"DRC/LVS sign-off, e.g. ""clean 2026-11-20"" or ""open: 14 DRC errors"""
+SKU-9,slot_booked,,,"Shuttle slot booking confirmation, e.g. ""confirmed, receipt 4411"""
+SKU-9,gds_submitted,,,GDS submission date (YYYY-MM-DD)
+SKU-10,layout,,,"Layout status, e.g. ""not started"", ""in progress"", ""complete"""
+SKU-10,drc_lvs,,,"DRC/LVS sign-off, e.g. ""clean 2026-11-20"" or ""open: 14 DRC errors"""
+SKU-10,slot_booked,,,"Shuttle slot booking confirmation, e.g. ""confirmed, receipt 4411"""
+SKU-10,gds_submitted,,,GDS submission date (YYYY-MM-DD)

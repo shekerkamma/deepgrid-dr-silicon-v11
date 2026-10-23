@@ -98,8 +98,8 @@ const fundLabel = {
   'CGTMSE-backed term loan': 'CGTMSE-backed term loan',
 };
 
-function parsePortfolioCsv(file) {
-  const text = fs.readFileSync(path.join(root, 'data/portfolio', file), 'utf8').replace(/\r\n/g, '\n').trim();
+function parsePortfolioCsv(file, dir = 'data/portfolio') {
+  const text = fs.readFileSync(path.join(root, dir, file), 'utf8').replace(/\r\n/g, '\n').trim();
   const rows = text.split('\n').map(line => {
     const cells = []; let cur = '', q = false;
     for (let i = 0; i < line.length; i++) {
@@ -111,6 +111,23 @@ function parsePortfolioCsv(file) {
   });
   const [head, ...body] = rows;
   return body.map(r => Object.fromEntries(head.map((h, i) => [h, r[i] ?? ''])));
+}
+
+// Founder inputs (tape-out and bank actuals). The real file is gitignored because these repos are public;
+// without it the committed empty template is read and every value stays INPUT REQUIRED.
+function readFounderInputs() {
+  const local = fs.existsSync(path.join(root, 'data/plan/founder-inputs.csv'));
+  const rows = parsePortfolioCsv(local ? 'founder-inputs.csv' : 'founder-inputs.template.csv', 'data/plan');
+  const filled = rows.filter(r => r.value !== '');
+  for (const r of filled) if (!/^\d{4}-\d{2}-\d{2}$/.test(r.as_of)) throw new Error(`founder inputs: ${r.scope}.${r.field} has a value but no YYYY-MM-DD as_of`);
+  const get = (scope, field) => rows.find(r => r.scope === scope && r.field === field && r.value !== '')?.value;
+  const asOf = filled.map(r => r.as_of).sort().at(-1);
+  const today = process.env.DGS_TODAY || new Date().toISOString().slice(0, 10);
+  const ageDays = asOf ? Math.round((Date.parse(today) - Date.parse(asOf)) / 864e5) : null;
+  const status = !asOf
+    ? `Founder inputs: none recorded. Fill data/plan/founder-inputs.csv (kept out of git) from founder-inputs.template.csv; until then tape-out and bank actuals stay INPUT REQUIRED.`
+    : `${ageDays > 7 ? 'STALE: ' : ''}Founder inputs as of ${asOf} (${ageDays} days before this build${ageDays > 7 ? ', more than 7' : ''}); ${filled.length} of ${rows.length} values recorded.`;
+  return {get, status};
 }
 
 function buildDecisionReport() {
@@ -202,6 +219,7 @@ function buildDecisionReport() {
 
   const crFmt = (v, dp = 2) => `${v < 0 ? '−' : ''}₹${Math.abs(v).toLocaleString('en-IN', {minimumFractionDigits: dp, maximumFractionDigits: dp})}\u00a0Cr`;
 
+  const inputs = readFounderInputs();
   const ladder = skus.map(s => {
     const specRow = specs.find(sp => sp.sku === s.sku);
     const r = s.readiness || '';
@@ -220,15 +238,77 @@ function buildDecisionReport() {
       spec: hasSpec ? (specRow ? specRow.source : 'SKU Blueprint (no standalone datasheet)') : 'INPUT REQUIRED',
       rtl: hasRtl ? r || specRow.status : 'INPUT REQUIRED',
       analog: hasAnalog,
-      layout: hasLayout,
-      drcLvs: 'INPUT REQUIRED',
-      slotBooked: s.mpw ? `${s.mpw} (booking confirmation: INPUT REQUIRED)` : 'INPUT REQUIRED',
-      gdsSubmitted: 'INPUT REQUIRED',
+      layout: inputs.get(s.sku, 'layout') ?? hasLayout,
+      drcLvs: inputs.get(s.sku, 'drc_lvs') ?? 'INPUT REQUIRED',
+      slotBooked: inputs.get(s.sku, 'slot_booked') ?? (s.mpw ? `${s.mpw} (booking confirmation: INPUT REQUIRED)` : 'INPUT REQUIRED'),
+      gdsSubmitted: inputs.get(s.sku, 'gds_submitted') ?? 'INPUT REQUIRED',
       sourceAttr: 'data/portfolio/skus.csv; data/portfolio/dg32-specs.csv',
       sourceHref: '/portfolio-data/skus.csv',
       sourceLabel: 'skus.csv',
     };
   });
+
+  // Backtest (scripts/backtest-conflicts.mjs, regenerated from full git history) and the ranking challenge.
+  const backtest = fs.existsSync(path.join(root, 'data/portfolio/conflict-backtest.csv')) ? parsePortfolioCsv('conflict-backtest.csv') : [];
+  const measured = backtest.filter(b => b.lag_days !== '');
+  const lags = measured.map(b => Number(b.lag_days));
+  const decidedConflict = conflicts.find(c => /^decided/i.test(c.status) && /confidential/i.test(c.topic));
+  const openConflicts = conflicts.filter(c => !/^(fixed|decided|info)/i.test(c.status));
+  // Exposure = FY31 shuttle ramp of each SKU with an unrecorded stage; urgency (days to the GDS freeze) is uniform
+  // until data/plan/founder-inputs.csv records the freeze date, so the order is by exposure alone.
+  const gdsDeadline = inputs.get('company', 'gds_deadline');
+  // A stage counts as resolved only when it says so; "open: 14 DRC errors" or "not started" still counts as unresolved.
+  const STAGE_DONE = /^(?:complete|clean|confirmed|submitted|signed off)\b|^Hardened die/i;
+  const exposure = ladder
+    .filter(l => l.shuttle === 'Dec 2026 shuttle')
+    .map(l => ({sku: l.sku, cr: Number(l.rampFy31Cr), missing: ['layout', 'drcLvs', 'gdsSubmitted'].filter(k => !STAGE_DONE.test(l[k])).length}))
+    .filter(x => x.missing > 0)
+    .sort((a, b) => b.cr - a.cr || a.sku.localeCompare(b.sku));
+  const d1Skus = ['SKU-1', 'SKU-2', 'SKU-10'];
+  // Diligence holdout (scripts/ask-diligence.mjs + score-diligence.mjs): the questions the live Ask cannot answer.
+  const dil = fs.existsSync(path.join(root, 'data/diligence/results.csv')) ? parsePortfolioCsv('results.csv', 'data/diligence') : [];
+  const dilScore = set => `${dil.filter(r => r.set === set && r.pass === 'yes').length}/${dil.filter(r => r.set === set).length}`;
+  const dilMs = dil.map(r => Number(r.ms)).sort((a, b) => a - b);
+  const dilP95 = dilMs.length ? dilMs[Math.min(dilMs.length - 1, Math.ceil(0.95 * dilMs.length) - 1)] : 0;
+  const sections = [
+    {
+      id: 'ch-dr-backtest',
+      title: `${measured.length} of ${backtest.length} contradictions sat in the repo ${Math.min(...lags)} to ${Math.max(...lags)} days before anyone logged them`,
+      heading: 'Days between both sides entering git and the conflict being logged',
+      sub: `${measured.length} of ${backtest.length} logged conflicts are measurable from git history: ${Math.min(...lags)} to ${Math.max(...lags)} days between both sides being in the repo and the conflict being logged. Today's content gates (check-claims, check-crossrefs) pass on commit 3f05289, where all ${backtest.length} were still present: they check that claims link to their sources, not that two documents agree. Dates come from when each source file or passage first entered git.`,
+      caption: 'Conflict backtest against git history',
+      head: ['Conflict', 'Both sides in repo', 'Logged', 'Days', 'Note'],
+      rows: backtest.map(b => ({
+        cells: [b.topic, b.both_present_date ? `${b.both_present_date} (${b.both_present_commit})` : 'Not in git', `${b.logged_date} (${b.logged_commit})`, b.lag_days || 'Not measurable', b.note || ''],
+        sourceAttr: 'data/portfolio/conflict-backtest.csv; data/portfolio/conflicts.csv', sourceHref: '/portfolio-data/conflicts.csv', sourceLabel: 'conflicts.csv',
+      })),
+    },
+    {
+      id: 'ch-dr-rank',
+      title: `The top ${exposure.findIndex(x => !d1Skus.includes(x.sku)) < 0 ? exposure.length : exposure.findIndex(x => !d1Skus.includes(x.sku))} SKUs by FY31 revenue at stake are all in Decision 1`,
+      heading: 'Shuttle SKUs with a stage not recorded as complete, by FY31 revenue',
+      sub: `Ranked by FY31 shuttle revenue exposed to a stage not recorded as complete. Days to the GDS freeze: ${gdsDeadline ?? 'INPUT REQUIRED'}${gdsDeadline ? '' : ', so urgency cannot be computed and the order uses exposure alone'}. Open conflicts: ${openConflicts.length} of ${conflicts.length}. Decision 3 reopens the whitepaper, which conflicts.csv records as decided on 12 Oct 2026 (kept published by the owner).`,
+      caption: 'Exposure ranking against the current decisions',
+      head: ['Rank', 'Item', 'FY31 ₹ Cr exposed', 'Stages not complete', 'Covered by'],
+      rows: exposure.map((x, i) => ({
+        cells: [String(i + 1), x.sku, x.cr.toFixed(2), String(x.missing), d1Skus.includes(x.sku) ? 'Decision 1' : 'Not in a decision'],
+        sourceAttr: 'data/portfolio/skus.csv; data/plan/founder-inputs.csv', sourceHref: '/portfolio-data/skus.csv', sourceLabel: 'skus.csv',
+      })),
+      decided: decidedConflict ? `${decidedConflict.topic}: ${decidedConflict.status}` : '',
+    },
+    ...(dil.length ? [{
+      id: 'ch-dr-diligence',
+      title: `Ask answers ${dilScore('holdout')} holdout diligence questions correctly, at ${(dilP95 / 1000).toFixed(1)} s p95`,
+      heading: 'Questions that failed, with the reason',
+      sub: `${dil.length} data-room questions written and frozen before any answer was seen, run through the live Ask service and scored without a model. Holdout ${dilScore('holdout')}, tuning ${dilScore('tuning')}; latency p95 ${(dilP95 / 1000).toFixed(1)} s against a 5 s goal; ${dil.filter(r => r.cites_superseded_whitepaper === 'yes').length} answers cite the superseded whitepaper. The scorer was corrected after the holdout answers had been read (holdout 3/10 before the citation fix), so the holdout is no longer blind; see data/diligence/README.md. Rows below are the questions that failed.`,
+      caption: 'Diligence questions the site does not answer correctly',
+      head: ['#', 'Question', 'Set', 'Expected', 'Why it failed'],
+      rows: dil.filter(r => r.pass !== 'yes').map(r => ({
+        cells: [r.n, r.q, r.set, r.expect, r.reason],
+        sourceAttr: 'data/diligence/results.csv; data/diligence/questions.json', sourceHref: '/portfolio-data/documents.csv', sourceLabel: 'documents.csv',
+      })),
+    }] : []),
+  ];
 
   return {
     tabs: [
@@ -256,6 +336,7 @@ function buildDecisionReport() {
       auditHead: ['#', 'Lens', 'Finding', 'Current status', 'Source'],
     },
     flag: `Internal founder decision report (DGS_INTERNAL=1 · noindex). Every figure is computed at build from data/plan/*.csv, data/portfolio/*.csv and app/claims.ts (${totalProbedClaims}/${totalProbedClaims} probed claims verified, 0 untraced). Missing tape-out and bank actuals are marked INPUT REQUIRED.`,
+    inputsStatus: inputs.status,
     heading: 'DECIDE THIS WEEK',
     subhead: `Target outcome: put ${shuttleCount} SKUs (${crFmt(shuttlePlanCr, 0)} of ${crFmt(totalPlanCr, 0)} plan lines; ${crFmt(shuttleRampFy31Cr, 0)} FY31 ramp) onto the December 2026 shuttle (exact foundry GDS cutoff: INPUT REQUIRED) and close the ${crFmt(trancheTotalCr)} Tranche 1 without an investor finding two numbers that disagree.`,
     metrics: {
@@ -396,6 +477,7 @@ function buildDecisionReport() {
       },
     ],
     ladder,
+    sections,
     redTeam: [
       {
         rank: 1,

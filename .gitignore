@@ -82,3 +82,6 @@ pieces/*/check.png
 pieces/*/end.png
 # Reference media for animate styles (new-style.md): local only, never committed.
 references/
+
+# founder inputs hold bank cash and commitments: never commit (these repos are public)
+/data/plan/founder-inputs.csv
