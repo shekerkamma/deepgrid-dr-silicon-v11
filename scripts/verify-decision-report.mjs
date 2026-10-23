@@ -355,17 +355,22 @@ if (dr) {
     sameNums(d2.inputRequired, [1, 5], 'decisions[1].inputRequired', ['SoC4']);
     sameNums(d2.sourceAttr, [], 'decisions[1].sourceAttr', []);
 
-    sameNums(d3.title, [3, 5, 2026], 'decisions[2].title', ['Sep', 'v3']);
-    sameNums(d3.badge, [supersededPublishedCount, conflicts.length, fixedConflictsCount], 'decisions[2].badge', []);
-    sameNums(d3.lead, [conflicts.length, totalProbedClaims, 10, 200, 10, 2], 'decisions[2].lead', ['v3']);
-    sameNums(d3.forArg, [1, 2026], 'decisions[2].forArg', ['v3.1', 'Oct']);
-    sameNums(d3.againstArg, [2026, 10, 12, 11], 'decisions[2].againstArg', ['2026-10-12']);
+    // Decision 3 (replaced 23 Oct 2026 on the owner's instruction): SKU-6 qualification path.
+    const sku6 = skus.find(s => s.sku === 'SKU-6');
+    const defence = parseCsv('data/portfolio/approvals.csv').find(a => /^Defence/i.test(a.market));
+    const sku6Ramp = Number(sku6.fy31_ramp_cr), sku6Plan = Number(sku6.plan_line_cr);
+    const dMin = Number(defence.months_low), dMax = Number(defence.months_high);
+    sameNums(d3.title, [3, 6, 130, 2026, 180], 'decisions[2].title', ['SKU-6', 'December']);
+    sameNums(d3.badge, [sku6Ramp, sku6Plan, approvalsCr], 'decisions[2].badge', ['FY31']);
+    sameNums(d3.lead, [6, sku6Ramp, 130, 180, 1, approvalsCr, dMin, dMax], 'decisions[2].lead', ['SKU-6', 'FY31']);
+    sameNums(d3.forArg, [130, 180, approvalsCr, 6, dMin, dMax, 2026], 'decisions[2].forArg', ['SKU-6', 'December']);
+    sameNums(d3.againstArg, [6, sku6Ramp, Math.round(shuttleRampFy31Cr), Math.round((sku6Ramp / shuttleRampFy31Cr) * 1000) / 10], 'decisions[2].againstArg', ['SKU-6', 'FY31']);
     check(
-      norm(d3.deadline) === 'Before Tranche 1 investor data-room circulation (owner sign-off date: INPUT REQUIRED)',
+      norm(d3.deadline) === 'Before December 2026 shuttle (exact foundry GDS cutoff date: INPUT REQUIRED)',
       `decisions[2].deadline unexpected: ${d3.deadline}`
     );
-    sameNums(d3.inputRequired, [2], 'decisions[2].inputRequired', ['v3']);
-    sameNums(d3.sourceAttr, [3, 5, 11], 'decisions[2].sourceAttr', []);
+    sameNums(d3.inputRequired, [130, 180, 6], 'decisions[2].inputRequired', ['SKU-6']);
+    sameNums(d3.sourceAttr, [7, 4, 5], 'decisions[2].sourceAttr', []);
 
     for (let i = 0; i < 3; i++) {
       for (const link of dr.decisions[i].sourceLinks || []) {
@@ -489,7 +494,8 @@ if (dr) {
     want.forEach((x, i) => {
       const cells = rkSec.rows[i]?.cells || [];
       check(cells[1] === x.sku && cells[2] === x.cr.toFixed(2) && cells[3] === String(x.missing), `ranking row ${i + 1}: got ${JSON.stringify(cells)}, expected ${x.sku} ${x.cr.toFixed(2)} ${x.missing}`);
-      check((cells[4] === 'Decision 1') === ['SKU-1', 'SKU-2', 'SKU-10'].includes(x.sku), `ranking row ${i + 1}: "Covered by" wrong for ${x.sku}`);
+      const covered = ['SKU-1', 'SKU-2', 'SKU-10'].includes(x.sku) ? 'Decision 1' : x.sku === 'SKU-6' ? 'Decision 3' : 'Not in a decision';
+      check(cells[4] === covered, `ranking row ${i + 1}: "Covered by" is "${cells[4]}", expected "${covered}" for ${x.sku}`);
     });
     check(rkSec.sub.includes(fiGet('company', 'gds_deadline') ?? 'INPUT REQUIRED'), 'ranking sub must state the GDS freeze date or INPUT REQUIRED');
   }
@@ -513,7 +519,7 @@ if (dr) {
 
   // Section titles carry figures too: each must match the numbers it states.
   if (btSec) { const L2 = bt.filter(b => b.lag_days !== '').map(b => Number(b.lag_days)); sameNums(btSec.title, [L2.length, bt.length, Math.min(...L2), Math.max(...L2)], 'sections.backtest.title', []); }
-  if (rkSec) { const k = rkSec.rows.findIndex(r => r.cells[4] !== 'Decision 1'); sameNums(rkSec.title, [k < 0 ? rkSec.rows.length : k, 1], 'sections.rank.title', ['FY31']); }
+  if (rkSec) { const k = rkSec.rows.findIndex(r => r.cells[4] === 'Not in a decision'); sameNums(rkSec.title, [k < 0 ? rkSec.rows.length : k], 'sections.rank.title', ['FY31']); }
   if (dlSec && fs.existsSync(path.join(root, dilPath))) {
     const dil = parseCsv(dilPath), h = dil.filter(r => r.set === 'holdout');
     const ms = dil.map(r => Number(r.ms)).sort((a, b) => a - b), p95 = ms[Math.min(ms.length - 1, Math.ceil(0.95 * ms.length) - 1)];

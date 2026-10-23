@@ -173,6 +173,10 @@ function buildDecisionReport() {
   const top3ShuttleRampCr = Math.round(top3Shuttle.reduce((a, s) => a + mustNum(s.fy31_ramp_cr, 'top3 fy31_ramp_cr'), 0) * 10) / 10;
   const top3ShuttleSharePct = Math.round((top3ShuttleRampCr / shuttleRampFy31Cr) * 1000) / 10;
   const sku6RampCr = mustNum(shuttleSkus.find(s => s.sku === 'SKU-6')?.fy31_ramp_cr, 'sku6RampCr');
+  const sku6PlanCr = mustNum(shuttleSkus.find(s => s.sku === 'SKU-6')?.plan_line_cr, 'sku6PlanCr');
+  const sku6SharePct = Math.round((sku6RampCr / shuttleRampFy31Cr) * 1000) / 10;
+  const defence = parsePortfolioCsv('approvals.csv').find(a => /^Defence/i.test(a.market));
+  if (!defence) throw new Error('plan data: approvals.csv has no Defence row');
   const top4ProtectedSharePct = Math.round(((top3ShuttleRampCr + sku6RampCr) / shuttleRampFy31Cr) * 1000) / 10;
   const devLowShuttleCr = Math.round(shuttleSkus.reduce((a, s) => a + mustNum(s.dev_cost_low_cr, 'dev_cost_low_cr'), 0) * 10) / 10;
   const devHighShuttleCr = Math.round(shuttleSkus.reduce((a, s) => a + mustNum(s.dev_cost_high_cr, 'dev_cost_high_cr'), 0) * 10) / 10;
@@ -265,6 +269,7 @@ function buildDecisionReport() {
     .filter(x => x.missing > 0)
     .sort((a, b) => b.cr - a.cr || a.sku.localeCompare(b.sku));
   const d1Skus = ['SKU-1', 'SKU-2', 'SKU-10'];
+  const coveredBy = sku => d1Skus.includes(sku) ? 'Decision 1' : sku === 'SKU-6' ? 'Decision 3' : 'Not in a decision';
   // Diligence holdout (scripts/ask-diligence.mjs + score-diligence.mjs): the questions the live Ask cannot answer.
   const dil = fs.existsSync(path.join(root, 'data/diligence/results.csv')) ? parsePortfolioCsv('results.csv', 'data/diligence') : [];
   const dilScore = set => `${dil.filter(r => r.set === set && r.pass === 'yes').length}/${dil.filter(r => r.set === set).length}`;
@@ -285,13 +290,13 @@ function buildDecisionReport() {
     },
     {
       id: 'ch-dr-rank',
-      title: `The top ${exposure.findIndex(x => !d1Skus.includes(x.sku)) < 0 ? exposure.length : exposure.findIndex(x => !d1Skus.includes(x.sku))} SKUs by FY31 revenue at stake are all in Decision 1`,
+      title: `The top ${exposure.findIndex(x => coveredBy(x.sku) === 'Not in a decision') < 0 ? exposure.length : exposure.findIndex(x => coveredBy(x.sku) === 'Not in a decision')} SKUs by FY31 revenue at stake are all in a decision`,
       heading: 'Shuttle SKUs with a stage not recorded as complete, by FY31 revenue',
-      sub: `Ranked by FY31 shuttle revenue exposed to a stage not recorded as complete. Days to the GDS freeze: ${gdsDeadline ?? 'INPUT REQUIRED'}${gdsDeadline ? '' : ', so urgency cannot be computed and the order uses exposure alone'}. Open conflicts: ${openConflicts.length} of ${conflicts.length}. Decision 3 reopens the whitepaper, which conflicts.csv records as decided on 12 Oct 2026 (kept published by the owner).`,
+      sub: `Ranked by FY31 shuttle revenue exposed to a stage not recorded as complete. Days to the GDS freeze: ${gdsDeadline ?? 'INPUT REQUIRED'}${gdsDeadline ? '' : ', so urgency cannot be computed and the order uses exposure alone'}. Open conflicts: ${openConflicts.length} of ${conflicts.length}. Decision 3 was replaced on 23 Oct 2026 by SKU-6, the first SKU not in a decision: the owner kept the whitepaper published, as conflicts.csv records (decided 12 Oct 2026).`,
       caption: 'Exposure ranking against the current decisions',
       head: ['Rank', 'Item', 'FY31 ₹ Cr exposed', 'Stages not complete', 'Covered by'],
       rows: exposure.map((x, i) => ({
-        cells: [String(i + 1), x.sku, x.cr.toFixed(2), String(x.missing), d1Skus.includes(x.sku) ? 'Decision 1' : 'Not in a decision'],
+        cells: [String(i + 1), x.sku, x.cr.toFixed(2), String(x.missing), coveredBy(x.sku)],
         sourceAttr: 'data/portfolio/skus.csv; data/plan/founder-inputs.csv', sourceHref: '/portfolio-data/skus.csv', sourceLabel: 'skus.csv',
       })),
       decided: decidedConflict ? `${decidedConflict.topic}: ${decidedConflict.status}` : '',
@@ -420,17 +425,18 @@ function buildDecisionReport() {
       },
       {
         id: 'D3',
-        title: '3. Replace or watermark the superseded 5 Sep 2026 Master Whitepaper v3 PDF in public downloads',
-        badge: `${supersededPublished.length} superseded PDF published · ${conflicts.length} logged conflicts (${fixedConflicts} fixed on site)`,
-        lead: `The site discloses all ${conflicts.length} cross-document conflicts and passes ${totalProbedClaims} source-probe checks, but ${supersededPublished[0]?.file ?? 'whitepaper v3'} remains publicly downloadable with superseded figures (10 chips, 200 MHz, ₹10 Cr seed, withdrawn order claim) and personal contact details on page 2.`,
-        forArg: `Adding a cover-page supersession notice (or replacing the PDF with a redacted v3.1 pointing to the Oct 2026 Blueprint) neutralises the easiest short-seller screenshot while preserving audit history.`,
-        againstArg: `Owner decision on 2026-10-12 (conflicts.csv row 11) kept authored PDFs untouched and relied on site-level disclosures; altering the PDF requires re-verifying check-claims.mjs probes.`,
-        deadline: 'Before Tranche 1 investor data-room circulation (owner sign-off date: INPUT REQUIRED)',
-        inputRequired: 'INPUT REQUIRED: owner sign-off to watermark or redact page 2 of deepgrid-mature-node-silicon-master-whitepaper-v3.pdf.',
-        sourceAttr: 'data/portfolio/documents.csv row 3; data/portfolio/conflicts.csv rows 5-11',
+        title: '3. Decide the SKU-6 qualification path: whether military screening of the 130 nm December 2026 prototype carries over to 180 nm production',
+        badge: `${crFmt(sku6RampCr, 0)} FY31 ramp · ${crFmt(sku6PlanCr, 0)} plan line · ${crFmt(approvalsCr)} first approvals`,
+        lead: `SKU-6 (Voltage Supervisor) is the first shuttle SKU not covered by a decision: ${crFmt(sku6RampCr, 0)} FY31 ramp, built at 130 nm first and 180 nm in production. Tranche 1 spends ${crFmt(approvalsCr)} on first approvals, which include its military screening, and MIL screening plus approved-vendor listing takes ${defence.months_low}–${defence.months_high} months from silicon (estimate).`,
+        forArg: `Settling now whether screening runs on the 130 nm prototype or is repeated at 180 nm sets how much of the ${crFmt(approvalsCr)} first-approvals line SKU-6 needs, and whether a defence buyer can start the ${defence.months_low}–${defence.months_high} month listing from the December 2026 silicon.`,
+        againstArg: `SKU-6 carries ${crFmt(sku6RampCr, 0)} of the ${crFmt(shuttleRampFy31Cr, 0)} FY31 shuttle ramp (${sku6SharePct.toFixed(1)}%), and its layout, DRC/LVS and GDS stages are not recorded yet, so the choice could wait until physical design shows which node it ships on.`,
+        deadline: 'Before December 2026 shuttle (exact foundry GDS cutoff date: INPUT REQUIRED)',
+        inputRequired: 'INPUT REQUIRED: the screening standard, whether 130 nm screening results are accepted for 180 nm production, and layout/DRC/LVS status for SKU-6.',
+        sourceAttr: 'data/portfolio/skus.csv row 7; data/portfolio/tranche1-uses.csv row 4; data/portfolio/approvals.csv row 5',
         sourceLinks: [
-          {label: 'documents.csv', href: '/portfolio-data/documents.csv', download: true},
-          {label: 'conflicts.csv', href: '/portfolio-data/conflicts.csv', download: true},
+          {label: 'skus.csv', href: '/portfolio-data/skus.csv', download: true},
+          {label: 'tranche1-uses.csv', href: '/portfolio-data/tranche1-uses.csv', download: true},
+          {label: 'approvals.csv', href: '/portfolio-data/approvals.csv', download: true},
         ],
       },
     ],

@@ -10,8 +10,8 @@
   "decisions": [
     {
       "id": "D1",
-      "approvedBy": "owner (shipped 2841b0e, pushed on owner instruction)",
-      "approvedOn": "2026-10-22",
+      "approvedBy": "Sheker (owner), instruction 2026-10-23: drop whitepaper decision, add next ranked SKU",
+      "approvedOn": "2026-10-23",
       "fields": {
         "title": "#. Lock physical layout & preliminary datasheets for SKU-#, SKU-# and SKU-#, or narrow the Dec # shuttle cohort",
         "lead": "Three chips (SKU-# ₹# Cr, SKU-# ₹# Cr, SKU-# ₹# Cr) carry ₹# Cr of the ₹# Cr FY# shuttle ramp, yet only SKU-# (₹# Cr FY# ramp) has a hardened die and preliminary datasheet.",
@@ -23,8 +23,8 @@
     },
     {
       "id": "D2",
-      "approvedBy": "owner (shipped 2841b0e, pushed on owner instruction)",
-      "approvedOn": "2026-10-22",
+      "approvedBy": "Sheker (owner), instruction 2026-10-23: drop whitepaper decision, add next ranked SKU",
+      "approvedOn": "2026-10-23",
       "fields": {
         "title": "#. Publish Financial Model v# reconciling the ₹# Cr Tranche # against the ₹# Cr / −₹# Cr FY# capex model",
         "lead": "Adversarial tie-out confirms two separate capital scopes: Blueprint Tranche # raises ₹# Cr (₹# Cr prototypes + ₹# Cr respins), while Model v# opens FY# with ₹# Cr and spends −₹# Cr FY# tape-out capex (−₹# Cr over FY#–FY#) plus ₹# Cr on \"SoC# #nm tape-out program\".",
@@ -36,15 +36,15 @@
     },
     {
       "id": "D3",
-      "approvedBy": "owner (shipped 2841b0e, pushed on owner instruction)",
-      "approvedOn": "2026-10-22",
+      "approvedBy": "Sheker (owner), instruction 2026-10-23: drop whitepaper decision, add next ranked SKU",
+      "approvedOn": "2026-10-23",
       "fields": {
-        "title": "#. Replace or watermark the superseded # Sep # Master Whitepaper v# PDF in public downloads",
-        "lead": "The site discloses all # cross-document conflicts and passes # source-probe checks, but deepgrid-mature-node-silicon-master-whitepaper-v#.pdf remains publicly downloadable with superseded figures (# chips, # MHz, ₹# Cr seed, withdrawn order claim) and personal contact details on page #.",
-        "forArg": "Adding a cover-page supersession notice (or replacing the PDF with a redacted v# pointing to the Oct # Blueprint) neutralises the easiest short-seller screenshot while preserving audit history.",
-        "againstArg": "Owner decision on #-#-# (conflicts.csv row #) kept authored PDFs untouched and relied on site-level disclosures; altering the PDF requires re-verifying check-claims.mjs probes.",
-        "deadline": "Before Tranche # investor data-room circulation (owner sign-off date: INPUT REQUIRED)",
-        "inputRequired": "INPUT REQUIRED: owner sign-off to watermark or redact page # of deepgrid-mature-node-silicon-master-whitepaper-v#.pdf."
+        "title": "#. Decide the SKU-# qualification path: whether military screening of the # nm December # prototype carries over to # nm production",
+        "lead": "SKU-# (Voltage Supervisor) is the first shuttle SKU not covered by a decision: ₹# Cr FY# ramp, built at # nm first and # nm in production. Tranche # spends ₹# Cr on first approvals, which include its military screening, and MIL screening plus approved-vendor listing takes #–# months from silicon (estimate).",
+        "forArg": "Settling now whether screening runs on the # nm prototype or is repeated at # nm sets how much of the ₹# Cr first-approvals line SKU-# needs, and whether a defence buyer can start the #–# month listing from the December # silicon.",
+        "againstArg": "SKU-# carries ₹# Cr of the ₹# Cr FY# shuttle ramp (#%), and its layout, DRC/LVS and GDS stages are not recorded yet, so the choice could wait until physical design shows which node it ships on.",
+        "deadline": "Before December # shuttle (exact foundry GDS cutoff date: INPUT REQUIRED)",
+        "inputRequired": "INPUT REQUIRED: the screening standard, whether # nm screening results are accepted for # nm production, and layout/DRC/LVS status for SKU-#."
       }
     }
   ]
