@@ -11,6 +11,8 @@
 import { url } from './routes';
 import { explainers } from './explainers';
 const EXPLAINER_IDS = explainers.map((e) => e.id);
+// The videos page leads with the DG32 fault path its headline names, full width, then the other nine parts.
+const VIDEOS_FILM_IDS = ['sku-4-explainer', ...EXPLAINER_IDS.filter((id) => id !== 'sku-4-explainer')];
 import { areas, products } from './applications-story-data';
 import { groundedDocuments } from './documents-data';
 import { V, videoGroups, shortGroups, docGroups, type VideoGroup, type DocGroup } from './resources-data';
@@ -27,7 +29,7 @@ export type Section =
   | { kind: 'figures'; kicker?: string; title: string; items: { src: string; alt: string; caption: string; w: number; h: number }[]; from: string }
   | { kind: 'contact'; from: string }
   | { kind: 'roster'; kicker?: string; title: string; lede?: string; groups: { title: string; people: [string, string][] }[]; from: string }
-  | { kind: 'films'; kicker?: string; title: string; lede?: string; ids: string[]; from: string }
+  | { kind: 'films'; kicker?: string; title: string; lede?: string; ids: string[]; feature?: string; from: string }
   | { kind: 'videos'; kicker?: string; title: string; lede?: string; groups: VideoGroup[]; shorts?: VideoGroup[]; channel?: boolean; from: string }
   | { kind: 'docs'; groups: DocGroup[]; from: string }
   | { kind: 'scene'; scene: 'motor' | 'truck' | 'defence'; title: string; lede: string; from: string }
@@ -194,8 +196,8 @@ export const companyPages: CompanyPage[] = [
     kicker: 'Demos, field tests & deep dives', title: 'Videos',
     lede: 'Watch DeepGrid Semi’s silicon, autonomous driving, and mobility platforms in action.',
     sections: [
+      { kind: 'films', title: 'Ten parts, one film each: the problem, the mechanism, what is unproven.', lede: 'One short animated film per part: the problem it solves, the mechanism moving on the words that describe it, and what is still unproven. Animations illustrate; they are not simulations. Pre-silicon; every figure is a design target.', ids: VIDEOS_FILM_IDS, feature: 'sku-4-explainer', from: 'part explainer films' },
       { kind: 'videos', title: 'By platform', groups: videoGroups, shorts: shortGroups, channel: true, from: 'deepgridsemi.com/resources/videos + youtube.com DeepGrid Semi channel' },
-      { kind: 'films', title: 'Ten parts, one film each: the problem, the mechanism, what is unproven.', lede: 'One short animated film per part: the problem it solves, the mechanism moving on the words that describe it, and what is still unproven. Animations illustrate; they are not simulations. Pre-silicon; every figure is a design target.', ids: EXPLAINER_IDS, from: 'part explainer films' },
       { kind: 'cta', title: 'The 104-slide portfolio, narrated end to end, and the silicon films.', lede: 'The product lines in their simulators, the silicon films, and the 104-slide portfolio narrated end to end.', from: 'showcase films',
         actions: [ { label: 'Narrated decks & films', href: 'resources', primary: true }, { label: 'Documentation', href: 'resources/docs' } ] },
     ],

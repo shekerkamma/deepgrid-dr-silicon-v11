@@ -85,7 +85,8 @@
 
 .cp-films { display: grid; gap: 1rem; max-width: 60rem; }
 .cp-films-multi { grid-template-columns: repeat(3, minmax(0, 1fr)); max-width: none; }
-.cp-film { margin: 0; display: grid; gap: .6rem; }
+.cp-film { margin: 0; display: grid; gap: .6rem; align-content: start; }
+.cp-films-multi .cp-film-feature { grid-column: 1 / -1; }
 .cp-film video { display: block; width: 100%; height: auto; aspect-ratio: 16 / 9; background: var(--t-bg); }
 .cp-film figcaption { display: grid; gap: .15rem; }
 .cp-film figcaption strong { color: var(--ink); font-weight: 600; }

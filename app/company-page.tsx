@@ -299,7 +299,7 @@ function Block({ s }: { s: Section }) {
           </header>
           <div className={'cp-films' + (s.ids.length > 1 ? ' cp-films-multi' : '')}>
             {s.ids.map((id) => [...films, ...explainers].find((f) => f.id === id)).filter((f) => !!f).map((f) => (
-              <figure key={f.id} className="cp-film">
+              <figure key={f.id} className={'cp-film' + (f.id === s.feature ? ' cp-film-feature' : '')}>
                 <Player film={f} />
                 <figcaption><strong>{f.title}</strong><span>{f.sub} · {f.length}</span></figcaption>
               </figure>
