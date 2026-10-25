@@ -1,5 +1,5 @@
 import {ArrowUpRight, ArrowRight} from 'lucide-react';
-import {url, type RouteId} from './routes';
+import {byId, url, type RouteId} from './routes';
 import {briefVisual as brief} from './brief-content';
 
 const money = (value: number) => `₹${new Intl.NumberFormat('en-IN', {maximumFractionDigits:1}).format(value)} Cr`;
@@ -46,10 +46,15 @@ export function DiscussionClose({compact = false}: {compact?: boolean}) {
 }
 
 export function InvestorGuide({route}: {route: RouteId}) {
-  const technical = ['technology','safety','control','die','package','procurement'].includes(route) || /^(sku|d100)/.test(route);
-  const links = technical ? [['/evidence','Review validation & readiness'],['/resources/docs','Read technical specifications']] :
+  const technical = ['technology','safety','control','die','package','procurement','products','evidence'].includes(route) || /^(sku|d100)/.test(route);
+  const buyer = ['applications','resources','docs','videos','read','ask'].includes(route) || /^uc-/.test(route);
+  const all: string[][] = technical ? [['/evidence','Review validation & readiness'],['/resources/docs','Read technical specifications'],['/portfolio','Compare portfolio economics']] :
+    buyer ? [['/products','Compare product architectures'],['/evidence','Review validation & readiness'],['/portfolio','Compare portfolio economics']] :
     route === 'brief' ? [['/plan','Examine the business plan'],['/evidence','Review evidence & gaps']] :
     [['/portfolio/brief','Read the investment brief'],['/portfolio/brief?view=use-cases','Compare first markets & approval windows']];
+  // Never point a reader at the page they are on.
+  const here = byId[route].href;
+  const links = all.filter(([href]) => href !== here).slice(0, 2);
   return <nav className="ij-route-guide" aria-label="Continue your review"><p>Continue your review</p><div>
     {links.map(([href,label]) => <a key={href} href={url(href)}>{label}<ArrowRight size={16} aria-hidden="true"/></a>)}
     <a href={discussion()}>Request a discussion<ArrowUpRight size={16} aria-hidden="true"/></a>

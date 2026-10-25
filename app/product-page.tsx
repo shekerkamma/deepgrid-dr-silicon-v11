@@ -107,6 +107,8 @@ export default function ProductPageView({slug}: {slug: string}) {
           </dl>
           <div className="pp-actions">
             <a className="primary" href={bpPdf}><Download size={15} aria-hidden="true"/> SKU Blueprint, {sheet} (PDF)</a>
+            {/* Only DG32 has a published datasheet; no other part gets a datasheet button until one exists. */}
+            {part.id === 'sku-4' && <a className="text-link" href={url('/downloads/docs/deepgrid-dg32-lite-preliminary-datasheet.pdf')} download><Download size={15} aria-hidden="true"/> DG32-LITE preliminary datasheet (PDF)</a>}
             {hasDesignFiles && <a className="text-link" href={deck}><Download size={15} aria-hidden="true"/> Architecture deck</a>}
             <a className="text-link" href="#pp-specs">The architecture <ArrowRight size={15} aria-hidden="true"/></a>
           </div>

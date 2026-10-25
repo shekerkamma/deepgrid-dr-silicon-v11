@@ -24,7 +24,7 @@ export function Shell({
   children,
   reduced,
 }: {
-  route: RouteId;
+  route: RouteId | 'not-found';
   children: React.ReactNode;
   reduced?: boolean;
 }) {
@@ -57,15 +57,19 @@ export function Shell({
       menuButton.current?.focus();
     };
   }, [menu]);
-  const here = byId[route];
+  // The 404 page renders inside the shell without being a route: no menu tab is active, the breadcrumb names it,
+  // and the page hooks run as for a plain text page (contact has no scroll scenes, rails or drawings).
+  const missing = route === 'not-found';
+  const page: RouteId = missing ? 'contact' : route;
+  const here = missing ? {href: '/404', label: 'Page not found', parent: undefined} : byId[route];
   const parent = here.parent ? byId[here.parent] : undefined;
   const href = url;
 
   useScrollVars();
-  useReveal(route);
+  useReveal(page);
   useScrollRegions();
-  useDraw(route);
-  useRail(route);
+  useDraw(page);
+  useRail(page);
 
 
   return (
@@ -74,7 +78,7 @@ export function Shell({
 
       <header className="topbar">
         <a className="brand" href={href('/')} aria-label="DeepGrid Semi home"><Brand/></a>
-        <div className="main-nav"><MegaNav route={route} compact/></div><div className="topline">
+        <div className="main-nav"><MegaNav route={missing ? undefined : route} compact/></div><div className="topline">
           <span>DG32 · LOCKSTEP RISC-V MOTOR-CONTROL SILICON</span>
           <span className="status-dot">PRE-SILICON · ENGINEERING EVIDENCE</span>
         </div>
@@ -89,7 +93,7 @@ export function Shell({
       {menu && (
         <dialog ref={menuDialog} id="mobile-navigation" className="navigation-sheet mobile-sheet" aria-label="Navigation" onCancel={() => setMenu(false)} onClose={() => setMenu(false)}>
           <button className="mobile-sheet-close" aria-label="Close navigation" onClick={() => setMenu(false)}><X aria-hidden="true"/></button>
-          <MegaNav route={route} label="Primary" onNavigate={() => setMenu(false)}/>
+          <MegaNav route={missing ? undefined : route} label="Primary" onNavigate={() => setMenu(false)}/>
         </dialog>
       )}
 
@@ -110,8 +114,8 @@ export function Shell({
             ))}
           </nav>
         )}
-        <StoryRoute.Provider value={route}>{children}</StoryRoute.Provider>
-        {['ask','read'].includes(route) && <InvestorGuide route={route}/>}
+        <StoryRoute.Provider value={page}>{children}</StoryRoute.Provider>
+        {!missing && route !== 'home' && route !== 'contact' && <InvestorGuide route={route}/>}
 
 
       </main>
