@@ -86,11 +86,13 @@
 .cp-films { display: grid; gap: 1rem; max-width: 60rem; }
 .cp-films-multi { grid-template-columns: repeat(3, minmax(0, 1fr)); max-width: none; }
 .cp-film { margin: 0; display: grid; gap: .6rem; align-content: start; }
-.cp-films-multi .cp-film-feature { grid-column: 1 / -1; }
 .cp-film video { display: block; width: 100%; height: auto; aspect-ratio: 16 / 9; background: var(--t-bg); }
 .cp-film figcaption { display: grid; gap: .15rem; }
 .cp-film figcaption strong { color: var(--ink); font-weight: 600; }
 .cp-film figcaption span { color: var(--ink-3); font-size: var(--sc-t-meta); }
+.cp-film figcaption .cp-film-sku { color: var(--copper); font-size: var(--sc-t-meta); letter-spacing: .08em; text-transform: uppercase; }
+.cp-film figcaption .cp-film-links { display: flex; flex-wrap: wrap; gap: .25rem 1rem; }
+.cp-film-links a { display: inline-flex; align-items: center; gap: .25rem; min-height: 24px; color: var(--copper); font-size: var(--sc-t-meta); }
 
 .cp-contact-page { display: grid; grid-template-columns: minmax(0, 1.3fr) minmax(0, 1fr); gap: 1rem; align-items: start; }
 .cp-contact-side { display: grid; gap: 1rem; }
@@ -127,6 +129,22 @@
 .cp-yt figcaption span { color: var(--ink-3); font-size: var(--sc-t-control); line-height: 1.55; }
 .cp-yt.is-short figcaption strong { font-weight: 500; font-size: var(--sc-t-meta); }
 .cp-yt-link { display: inline-flex; align-items: center; gap: .25rem; min-height: 24px; color: var(--copper); font-size: var(--sc-t-meta); justify-self: start; }
+.cp-vfeature { margin: 0 0 2.25rem; display: grid; grid-template-columns: minmax(0, 3fr) minmax(0, 2fr); gap: 1.25rem 2rem; align-items: center; }
+.cp-vfeature-text { display: grid; gap: .6rem; align-content: center; }
+.cp-vfeature-text h3 { margin: 0; color: var(--ink); font-size: var(--sc-t-block); line-height: 1.25; }
+.cp-vfeature-text p { margin: 0; color: var(--ink-2); font-size: var(--sc-t-control); line-height: 1.55; }
+.cp-vstart { padding-top: 0; }
+.cp-vtools { display: grid; gap: .85rem; }
+.cp-vsearch { display: flex; align-items: center; gap: .5rem; max-width: 30rem; min-height: 44px; padding: 0 .8rem; border: 1px solid var(--line); border-radius: 6px; background: var(--surface); color: var(--ink-3); }
+.cp-vsearch:focus-within { outline: 2px solid var(--copper); outline-offset: 2px; }
+.cp-vsearch input { flex: 1; min-width: 0; min-height: 42px; border: 0; background: transparent; color: var(--ink); font: inherit; font-size: var(--sc-t-control); outline: none; }
+.cp-vchips { display: flex; flex-wrap: wrap; gap: .5rem; }
+.cp-vchips button { display: inline-flex; align-items: center; gap: .35rem; min-height: 40px; padding: .45rem .8rem; border: 1px solid var(--line); border-radius: 6px; background: var(--surface); color: var(--ink-2); font: inherit; font-size: var(--sc-t-control); cursor: pointer; }
+.cp-vchips button small { color: var(--ink-3); }
+.cp-vchips button[aria-pressed="true"] { border-color: var(--copper); color: var(--ink); }
+@media (hover: hover) { .cp-vchips button:hover { border-color: var(--copper); color: var(--ink); } }
+.cp-vcount { margin: 0; color: var(--ink-3); font-size: var(--sc-t-meta); }
+@media (max-width: 760px) { .cp-vfeature { grid-template-columns: 1fr; } }
 .cp-docs { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 22rem), 1fr)); gap: 1rem; }
 .cp-docgroup ul { list-style: none; margin: .5rem 0 0; padding: 0; display: grid; gap: .1rem; }
 .cp-docgroup li a { display: grid; gap: .1rem; padding: .55rem .6rem; margin-inline: -.6rem; border-radius: 6px; color: var(--ink); }

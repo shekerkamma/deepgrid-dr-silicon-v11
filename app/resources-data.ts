@@ -60,6 +60,11 @@ export const V = {
 } satisfies Record<string, Video>;
 
 // On the DG32 site the silicon group, which holds the DG32 videos, comes first.
+// The videos page opens like a streaming library: one featured film, then a four-film start for a first
+// visit, one per product line. The channel carries no upload dates or view counts, so these are editorial picks.
+export const featuredVideo: Video = V.dieVoice;
+export const startHere: Video[] = [V.hitech, V.mirrorThermal, V.followMe, V.thub];
+
 export const videoGroups: VideoGroup[] = [
   { title: 'Silicon & Architecture', lede: 'Go inside our AI accelerators: chip floorplanning, compute engines, and the silicon design behind ultra-low-power inference at the edge.', from: REF + ' + ' + YT,
     videos: [V.dieVoice, V.anatomy, V.lockstep, V.gdsii, V.wrapalign, V.latchup, V.dieSilent, V.softmax] },
