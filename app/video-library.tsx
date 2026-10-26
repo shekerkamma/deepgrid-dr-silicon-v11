@@ -7,7 +7,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { ArrowRight, ArrowUpRight, Play, Search, X } from 'lucide-react';
 import { explainers, type Explainer } from './explainers';
-import transcriptIds from '../public/transcripts/index.json';
+import transcriptLangs from '../public/transcripts/index.json';
 import { CHANNEL, type Video, type VideoGroup } from './resources-data';
 import { url } from './routes';
 
@@ -72,7 +72,10 @@ function RowView({ row, onPlay }: { row: Row; onPlay: (i: Item) => void }) {
 /** Timestamped lines for a video: YouTube's own captions, saved by scripts/build-video-transcripts.py, or a part
  *  film's caption file. Videos with no narration have none, and the panel says so instead of guessing. */
 type Line = [number, string];
-const hasTranscript = new Set<string>(transcriptIds);
+const langOf: Record<string, string> = transcriptLangs;
+const hasTranscript = new Set(Object.keys(langOf));
+/** 'Hindi' for 'hi': the panel names the language a transcript is in when it is not English. */
+const languageName = (code: string) => new Intl.DisplayNames(['en'], { type: 'language' }).of(code) ?? code;
 function parseVtt(vtt: string): Line[] {
   const out: Line[] = [];
   for (const block of vtt.split(/\n\s*\n/)) {
@@ -117,6 +120,7 @@ function PlayerDialog({ playing, onPick, onClose }: { playing: Playing; onPick: 
   }, [playing]);
   const item = playing?.item;
   const lines = useTranscript(item);
+  const spoken = item?.kind === 'yt' ? langOf[item.v.id] ?? 'en' : 'en';
   useEffect(() => { setNow(0); }, [item && keyOf(item)]);
   // YouTube reports its playhead to a page that says it is listening (the iframe API's own message channel).
   useEffect(() => {
@@ -170,14 +174,14 @@ function PlayerDialog({ playing, onPick, onClose }: { playing: Playing; onPick: 
                 : lines === null ? <p className="vl-transcript-note">This video has no narration, so there is no transcript.</p>
                 : (
                   <>
-                    <ol ref={list} className="vl-lines">
+                    <ol ref={list} className="vl-lines" lang={spoken}>
                       {lines.map(([t, text], n) => (
                         <li key={n}><button type="button" aria-current={n === current ? 'true' : undefined} onClick={() => seek(t)}>
                           <span className="vl-ts">{mmss(Math.floor(t))}</span><span>{text}</span>
                         </button></li>
                       ))}
                     </ol>
-                    <p className="vl-transcript-note">{item.kind === 'yt' ? 'From YouTube’s captions, which can mishear names and terms.' : 'From the film’s own captions.'} Select a line to jump to it.</p>
+                    <p className="vl-transcript-note">{spoken !== 'en' && `Spoken in ${languageName(spoken)}; shown as heard, not translated. `}{item.kind === 'yt' ? 'From YouTube’s captions, which can mishear names and terms.' : 'From the film’s own captions.'} Select a line to jump to it.</p>
                   </>
                 )}
             </section>

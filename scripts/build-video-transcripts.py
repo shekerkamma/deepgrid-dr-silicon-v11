@@ -1,22 +1,37 @@
 #!/usr/bin/env python3
 """Timestamped transcripts for the YouTube videos on /resources/videos, from YouTube's own captions.
 
-For every video id in app/resources-data.ts, ask yt-dlp for English captions (uploaded first, then automatic) and
-write public/transcripts/<id>.json as [[seconds, text], ...], plus public/transcripts/index.json listing the ids that
-have one. The page shows these beside the player (app/video-library.tsx).
+For every video id in app/resources-data.ts, take the caption track in the language the video is spoken in: one the
+uploader added first, then YouTube's automatic captions of the original audio ("<lang>-orig"). Machine translations of
+those captions are never used. Write public/transcripts/<id>.json as [[seconds, text], ...] and public/transcripts/
+index.json mapping each id that has one to its language code. The page shows these beside the player
+(app/video-library.tsx) and names the language when it is not English.
 
-Only captions YouTube already holds are used. Videos without them get no transcript, on purpose: on 2026-10-26
-speech-to-text over the uncaptioned clips returned song lyrics from background music, invented sentences over digital
-silence and unrelated chatter, none of which may appear on this site. The page says such a video has no narration.
+Only real speech reaches the page. English automatic captions need at least 25 words: below
+that they are a few misheard sounds. A track in another language needs a second, independent hearing recorded in
+CROSS_CHECKED. On 2026-10-26 speech-to-text over the uncaptioned clips returned song lyrics from background music,
+invented sentences over digital silence and unrelated chatter, none of which may appear on this site. The page says a
+video without a transcript has no narration.
 
 Run from the repo root:  python3 scripts/build-video-transcripts.py   (needs yt-dlp on PATH)
 """
-import json, re, subprocess, sys, tempfile, time
+import json, re, subprocess, sys, time, urllib.request
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
 OUT = ROOT / 'public' / 'transcripts'
 IDS = re.findall(r"id: '([^']+)'", (ROOT / 'app' / 'resources-data.ts').read_text())
+
+# Tracks outside English that a second, independent hearing agrees with. Checked 2026-10-26 by running Silero VAD and
+# faster-whisper `small` locally on each clip's audio and comparing with YouTube's track.
+CROSS_CHECKED = {
+    # Whisper: 'अभी माँ लोग क्या करते है, बाडी बनाखे, बाडी लाए आखे, अभी चेख ... बस' against YouTube's
+    # 'अभी हम लोग क्या करते हैं? बॉडी बना के बॉडी लगा के अभी चेक ... बस हो गया।': the same sentence.
+    '75G6kkpDopw': 'hi',
+}
+# Reviewed and refused, so a later run cannot let them in on word count alone:
+#   -iY2KLMsZqw  hi-orig: 48 scattered words in two scripts ('Facebook', Telugu 'హల్లెలూయ'); Silero finds no speech in 654 s.
+#   eCAw60kV01Q  te-orig: 8 words; Whisper hears a different language.
 
 
 def secs(stamp: str) -> float:
@@ -48,30 +63,44 @@ def parse(vtt: str) -> list:
     return segs
 
 
+def pick(info: dict):
+    """(language, track) in the language the video is spoken in: uploaded first, then automatic. None if neither."""
+    lang = (info.get('language') or 'en').split('-')[0]
+    for pool, keys in ((info.get('subtitles') or {}, [lang, f'{lang}-orig']),
+                       (info.get('automatic_captions') or {}, [f'{lang}-orig', lang])):
+        for k in keys:
+            vtt = next((f for f in pool.get(k, []) if f.get('ext') == 'vtt'), None)
+            if vtt:
+                return lang, vtt['url']
+    return None
+
+
 def main() -> int:
     OUT.mkdir(parents=True, exist_ok=True)
-    have = []
-    with tempfile.TemporaryDirectory() as tmp:
-        for vid in IDS:
-            files = [Path(tmp) / f'{vid}.en.vtt', Path(tmp) / f'{vid}.en-orig.vtt']
-            for attempt in range(3):   # YouTube answers bursts with HTTP 429; wait and ask again
-                r = subprocess.run(['yt-dlp', '--skip-download', '--write-subs', '--write-auto-subs', '--sub-langs',
-                                    'en,en-orig', '--sub-format', 'vtt', '--sleep-subtitles', '2', '--no-warnings', '-q',
-                                    '-o', f'{tmp}/%(id)s.%(ext)s', '--', vid], check=False, capture_output=True, text=True)
-                if any(f.exists() for f in files) or '429' not in r.stderr:
-                    break
-                time.sleep(20 * (attempt + 1))
-            src = next((f for f in files if f.exists()), None)
-            if not src:
-                continue
-            segs = parse(src.read_text(encoding='utf-8'))
-            # Automatic captions of a clip with no narration are a few misheard words (the 10:55 D-Drive follow-me
-            # run yields only 'Divider did it seem'); under 25 words is noise, not a transcript.
-            if sum(len(x[1].split()) for x in segs) >= 25:
-                (OUT / f'{vid}.json').write_text(json.dumps(segs, ensure_ascii=False, separators=(',', ':')) + '\n')
-                have.append(vid)
-    (OUT / 'index.json').write_text(json.dumps(sorted(have)) + '\n')
-    print(f'{len(have)} of {len(IDS)} videos have YouTube captions -> public/transcripts/')
+    have = {}
+    for vid in IDS:
+        for attempt in range(3):   # YouTube answers bursts with HTTP 429; wait and ask again
+            r = subprocess.run(['yt-dlp', '-J', '--no-warnings', '--', vid], check=False, capture_output=True, text=True)
+            if r.returncode == 0 or '429' not in r.stderr:
+                break
+            time.sleep(20 * (attempt + 1))
+        if r.returncode != 0:
+            print(f'{vid}: yt-dlp failed: {r.stderr.strip()[-200:]}', file=sys.stderr)
+            return 1   # a silent skip here would drop a real transcript from the page
+        got = pick(json.loads(r.stdout))
+        if not got:
+            continue
+        lang, src = got
+        segs = parse(urllib.request.urlopen(src, timeout=60).read().decode('utf-8'))
+        words = sum(len(x[1].split()) for x in segs)
+        if CROSS_CHECKED.get(vid) == lang or (lang == 'en' and words >= 25):
+            (OUT / f'{vid}.json').write_text(json.dumps(segs, ensure_ascii=False, separators=(',', ':')) + '\n')
+            have[vid] = lang
+        else:
+            (OUT / f'{vid}.json').unlink(missing_ok=True)
+        time.sleep(2)
+    (OUT / 'index.json').write_text(json.dumps(dict(sorted(have.items())), ensure_ascii=False) + '\n')
+    print(f'{len(have)} of {len(IDS)} videos have a transcript in their spoken language -> public/transcripts/')
     return 0
 
 
