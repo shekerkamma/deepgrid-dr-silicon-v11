@@ -16,9 +16,12 @@ import {url} from './routes';
 export default function AskPanel({query, sem, semDone}: {query: string; sem?: PanelSemantic | null; semDone: boolean}) {
   const opts = {plan: planAvailable, years: planYears};
   const instant = matchPanel(query, {...opts, sem});
+  // A plan rule fired, but this build does not publish the plan. The question is answered (no panel), so the model
+  // stage is not asked: it could only pick a plan panel this build hides, or a chart the question did not mean.
+  const planOnly = !instant && !opts.plan && matchPanel(query, {plan: true, years: opts.years})?.dashboard === 'plan';
   const [model, setModel] = useState<{q: string; m: PanelMatch | null} | null>(null);
   useEffect(() => {
-    if (instant || !semDone) return;
+    if (instant || planOnly || !semDone) return;
     const ctl = new AbortController();
     fetch(PANEL_ENDPOINT, {method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({question: query}),
       signal: AbortSignal.any([ctl.signal, AbortSignal.timeout(20000)])})
@@ -26,7 +29,7 @@ export default function AskPanel({query, sem, semDone}: {query: string; sem?: Pa
       .then(v => setModel({q: query, m: panelFromModel(v?.panel, query, opts)}))
       .catch(() => { /* no panel: the answer stands on its own */ });
     return () => ctl.abort();
-  }, [query, semDone, !!instant]);
+  }, [query, semDone, !!instant, planOnly]);
   const m = instant ?? (model?.q === query ? model.m : null);
   if (!m) return null;
   const home = PANEL_HOME[m.id], name = DASHBOARD_NAME[m.dashboard];
