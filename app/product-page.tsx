@@ -27,6 +27,7 @@ import {products, areas} from './applications-story-data';
 import {groundedDocuments} from './documents-data';
 import {readHref} from './doc-links';
 import {url} from './routes';
+import {ClaimBadge} from './claim-badge';
 import './product-page.css';
 import executiveProducts from './executive-products.json';
 
@@ -89,7 +90,7 @@ export default function ProductPageView({slug}: {slug: string}) {
         </figure>
         <dl className="pp-hero-specs" aria-describedby="pp-targets-note">
           {p.heroSpecs.map(name => { const row = p.specs.find(r => r[0] === name)!; const Icon = iconFor(name); return (
-            <div key={name}><dt><Icon size={16} aria-hidden="true"/>{name}{tag(row[1])}</dt><dd>{nbspUnits(row[1])}</dd></div>
+            <div key={name}><dt><Icon size={16} aria-hidden="true"/>{name}{tag(row[1])}</dt><dd>{nbspUnits(row[1])}{p.heroClaims?.[name] && <ClaimBadge id={p.heroClaims[name]} label="Evidence"/>}</dd></div>
           ); })}
         </dl>
       </header>

@@ -1,6 +1,20 @@
 import {ArrowUpRight, ArrowRight} from 'lucide-react';
 import {byId, url, type RouteId} from './routes';
 import {briefVisual as brief} from './brief-content';
+import {areas, type ProductId} from './applications-story-data';
+import {portfolioParts} from './portfolio-story-data';
+
+// The DG32 pages (technology, its sub-pages, the evidence register and the G0 comparison) are all about SKU-4.
+const dg32Routes: RouteId[] = ['technology', 'safety', 'control', 'die', 'package', 'evidence', 'procurement'];
+
+/** The parts a page is about: a use case's primary parts, from the same `areas` record its page renders, or
+ *  SKU-4 on the DG32 pages. Other pages get none, rather than a list that is not about them. */
+function partsFor(route: RouteId) {
+  const area = route.startsWith('uc-') ? areas.find(a => 'uc-' + a.id === route) : undefined;
+  const ids: ProductId[] = area ? area.items.filter(i => i.primary).map(i => i.product) : dg32Routes.includes(route) ? ['sku4'] : [];
+  const code = (id: ProductId) => id === 'd100' ? 'D100' : 'SKU-' + id.slice(3);
+  return ids.map(id => portfolioParts.find(p => p.code === code(id))).filter(p => !!p);
+}
 
 const money = (value: number) => `₹${new Intl.NumberFormat('en-IN', {maximumFractionDigits:1}).format(value)} Cr`;
 const discussion = () => url('/contact') + '?intent=investor';
@@ -55,10 +69,14 @@ export function InvestorGuide({route}: {route: RouteId}) {
   // Never point a reader at the page they are on.
   const here = byId[route].href;
   const links = all.filter(([href]) => href !== here).slice(0, 2);
+  const parts = partsFor(route);
   return <nav className="ij-route-guide" aria-label="Continue your review"><p>Continue your review</p><div>
     {links.map(([href,label]) => <a key={href} href={url(href)}>{label}<ArrowRight size={16} aria-hidden="true"/></a>)}
     <a href={discussion()}>Request a discussion<ArrowUpRight size={16} aria-hidden="true"/></a>
-  </div></nav>;
+  </div>
+  {parts.length > 0 && <><p className="ij-route-parts-h">Parts for this topic</p><div className="ij-route-parts">
+    {parts.map(p => <a key={p.id} href={url(p.code === 'D100' ? '/products/d100' : `/products/${p.id}`)}><span className="mono">{p.code}</span> {p.name}<ArrowRight size={16} aria-hidden="true"/></a>)}
+  </div></>}</nav>;
 }
 
 export function SiteDirectory() {

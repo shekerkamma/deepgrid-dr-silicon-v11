@@ -11,6 +11,7 @@ import {url} from '../routes';
 import {BrandImage} from '../brand-imagery';
 import {LayoutEvidence} from '../engineering-visuals';
 import {productSlugById} from '../product-pages-data';
+import {claimAnchor} from '../claim-badge';
 
 /** The moment in a narrated film where each kind of evidence is actually on screen, with the deck
  *  slide that states it as the poster. Timings are the film segment maps in app/data/*-film.json;
@@ -85,7 +86,7 @@ function Figures({rows, caption}: {rows: [string, typeof claims[string]][]; capt
         </thead>
         <tbody>
           {rows.map(([id, c]) => (
-            <tr key={id}><th scope="row">{c.figure}</th><td>{c.measures}</td><td>{c.sourceTitle}</td></tr>
+            <tr key={id} id={claimAnchor(id)} className="st-claim-row"><th scope="row">{c.figure}</th><td>{c.measures}</td><td>{c.sourceTitle}</td></tr>
           ))}
         </tbody>
       </table>
