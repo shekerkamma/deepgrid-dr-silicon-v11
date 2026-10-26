@@ -6,7 +6,7 @@ import {lattice} from './lattice';
 // deepgridsemi.com's templates (split, card grid, steps, stats, people, figures, contact, CTA).
 import { useEffect, useState } from 'react';
 import { Accordion } from '@base-ui/react/accordion';
-import { ArrowRight, ArrowUpRight, BookOpen, Boxes, Check, CircleCheck, Cpu, Download, Film, Gauge, Hand, Layers, Library, Loader, Mail, MapPin, Mic, Play, ScanEye, Search, SlidersHorizontal, Terminal } from 'lucide-react';
+import { ArrowRight, ArrowUpRight, BookOpen, Boxes, Check, CircleCheck, Cpu, Download, Film, Gauge, Hand, Layers, Library, Loader, Mail, MapPin, Mic, ScanEye, SlidersHorizontal, Terminal } from 'lucide-react';
 import type { FlowStep } from './company-pages';
 import { url } from './routes';
 import { useReduced } from './shell';
@@ -15,7 +15,7 @@ import AppModel3D from './app-model-3d';
 import { films } from './dg32-films';
 import { explainers } from './explainers';
 import { FilmPlayer as Player } from './film-player';
-import { CHANNEL, type Video } from './resources-data';
+import { VideoLibrary } from './video-library';
 import type { CompanyPage, Person, Section } from './company-pages';
 
 // Scenes are concept renders; posters are stills from DeepGrid’s simulators; apexgrid-* are stills from the
@@ -141,176 +141,6 @@ function Flow({ steps, label }: { steps: FlowStep[]; label?: string }) {
 // Site paths in the data are written root-relative ('contact', '/evidence'); resolve them under the Pages base.
 const link = (h: string) => (/^(https?:|mailto:|#)/.test(h) ? h : url(h.startsWith('/') ? h : '/' + h));
 
-
-const mmss = (t: number) => `${Math.floor(t / 60)}:${String(t % 60).padStart(2, '0')}`;
-
-// A YouTube video as a thumbnail until it is asked for: no third-party frame, cookie or autoplay before a click.
-// The videos library: a featured film, a four-film start, then search and topic chips over every group.
-// Search and topic chips cover the part films and every YouTube group; featured and start rows step aside while
-// a search or a topic is active, so the results read as one list.
-function FeaturedVideo({ v }: { v: Video }) {
-  const [on, setOn] = useState(false);
-  return (
-    <figure className="cp-vfeature">
-      <div className="cp-yt-frame">
-        {on ? (
-          <iframe
-            src={`https://www.youtube-nocookie.com/embed/${v.id}?autoplay=1&rel=0`}
-            title={v.title}
-            allow="autoplay; encrypted-media; picture-in-picture; fullscreen"
-            allowFullScreen
-          />
-        ) : (
-          <button type="button" className="cp-yt-play" onClick={() => setOn(true)} aria-label={`Play ${v.title}${v.secs ? ', ' + mmss(v.secs) : ''}`}>
-            <img
-              src={`https://i.ytimg.com/vi/${v.id}/sddefault.jpg`}
-              onError={(e) => { const i = e.currentTarget; if (!i.src.endsWith('/hqdefault.jpg')) i.src = `https://i.ytimg.com/vi/${v.id}/hqdefault.jpg`; }}
-              alt="" decoding="async" width={640} height={480}
-            />
-            <span className="cp-yt-btn"><Play size={16} fill="currentColor" aria-hidden="true" /></span>
-            {v.secs ? <em className="cp-yt-dur">{mmss(v.secs)}</em> : null}
-          </button>
-        )}
-      </div>
-      <figcaption className="cp-vfeature-text">
-        <h3>{v.title}</h3>
-        {v.text && <p>{v.text}</p>}
-        <a className="cp-yt-link" href={`https://www.youtube.com/watch?v=${v.id}`} target="_blank" rel="noopener noreferrer">Watch on YouTube <ArrowUpRight size={12} aria-hidden="true" /></a>
-      </figcaption>
-    </figure>
-  );
-}
-
-function VideoLibrary({ s }: { s: Extract<Section, { kind: 'videos' }> }) {
-  const [q, setQ] = useState('');
-  const [topic, setTopic] = useState('all');
-  const query = q.trim().toLowerCase();
-  const has = (text: string) => !query || text.toLowerCase().includes(query);
-  const hit = (v: Video) => has(`${v.title} ${v.text ?? ''}`);
-  const count = (gs: { videos: Video[] }[]) => gs.reduce((n, g) => n + g.videos.length, 0);
-  const parts = (s.films?.ids ?? []).map((id) => explainers.find((f) => f.id === id)).filter((f) => !!f);
-  const partsShown = topic === 'all' || topic === 'films' ? parts.filter((f) => has(`${f.code} ${f.title} ${f.sub}`)) : [];
-  const groups = s.groups.map((g, i) => ({ ...g, key: 'vg-' + i, videos: g.videos.filter(hit) }));
-  const shorts = (s.shorts ?? []).map((g) => ({ ...g, videos: g.videos.filter(hit) }));
-  const shown = groups.filter((g) => (topic === 'all' || topic === g.key) && g.videos.length > 0);
-  const showShorts = (topic === 'all' || topic === 'shorts') && count(shorts) > 0;
-  const total = partsShown.length + count(shown) + (showShorts ? count(shorts) : 0);
-  const all = parts.length + count(s.groups) + count(s.shorts ?? []);
-  const filtering = query !== '' || topic !== 'all';
-  const youtubeShown = shown.length > 0 || showShorts;
-  const chip = (key: string, label: string, n: number) => (
-    <button key={key} type="button" aria-pressed={topic === key} onClick={() => setTopic(key)}>{label} <small>{n}</small></button>
-  );
-  return (
-    <>
-      <section className="cp-sec cp-vtools" aria-label="Find a video">
-        <label className="cp-vsearch">
-          <Search size={16} aria-hidden="true" />
-          <input type="search" value={q} onChange={(e) => setQ(e.target.value)} placeholder="Search parts, titles and descriptions" aria-label="Search videos" />
-        </label>
-        <div className="cp-vchips" role="group" aria-label="Filter videos by topic">
-          {chip('all', 'All', all)}
-          {parts.length > 0 && chip('films', 'Part films', parts.length)}
-          {s.groups.map((g, i) => chip('vg-' + i, g.title, g.videos.length))}
-          {s.shorts && chip('shorts', 'Shorts', count(s.shorts))}
-        </div>
-        <p className="cp-vcount" aria-live="polite">{filtering ? `${total} of ${all} videos` : `${all} videos`}</p>
-        {total === 0 && <p className="cp-detail">No part, title or description contains “{q.trim()}”.</p>}
-      </section>
-      {s.films && partsShown.length > 0 && (
-        <section className="cp-sec" id="vg-films">
-          <header className="cp-sec-head">
-            <h2>{s.films.title}</h2>
-            {!filtering && <p className="cp-lede">{s.films.lede}</p>}
-          </header>
-          <div className="cp-films cp-films-multi">
-            {partsShown.map((f) => (
-              <figure key={f.id} className="cp-film">
-                <Player film={f} />
-                <figcaption>
-                  <span className="cp-film-sku">{f.code}</span>
-                  <strong>{f.title}</strong>
-                  <span>{f.sub} · {f.length}</span>
-                  <span className="cp-film-links">
-                    <a href={url(`/products/${f.slug}`)}>{f.code} product page <ArrowRight size={12} aria-hidden="true" /></a>
-                    <a href={url('/evidence')}>Evidence register <ArrowRight size={12} aria-hidden="true" /></a>
-                  </span>
-                </figcaption>
-              </figure>
-            ))}
-          </div>
-        </section>
-      )}
-      {youtubeShown && (
-        <section className="cp-sec">
-          <header className="cp-sec-head">
-            <h2>{s.title}</h2>
-            {s.lede && <p className="cp-lede">{s.lede}</p>}
-          </header>
-          {s.featured && !filtering && <FeaturedVideo v={s.featured} />}
-          {s.start && !filtering && (
-            <div className="cp-vgroup cp-vstart">
-              <header className="cp-vgroup-head">
-                <h3>ADAS, the smart mirror, D-Drive and the company, one film each</h3>
-              </header>
-              <div className="cp-yts">{s.start.map((v) => <YouTube key={v.id} v={v} />)}</div>
-            </div>
-          )}
-          {shown.map((g) => (
-            <div key={g.key} className="cp-vgroup" id={g.key}>
-              <header className="cp-vgroup-head">
-                <h3>{g.title} <span className="cp-count">{g.videos.length} {g.videos.length === 1 ? 'video' : 'videos'}</span></h3>
-                {g.lede && !filtering && <p>{g.lede}</p>}
-              </header>
-              <div className="cp-yts">{g.videos.map((v) => <YouTube key={v.id} v={v} />)}</div>
-            </div>
-          ))}
-          {showShorts && (
-            <div className="cp-vgroup" id="vg-shorts">
-              <header className="cp-vgroup-head"><h3>Shorts</h3></header>
-              {shorts.filter((g) => g.videos.length > 0).map((g) => (
-                <div key={g.title}>
-                  {shorts.length > 1 && <p className="cp-meta cp-shorts-title">{g.title}</p>}
-                  <div className="cp-yts cp-yts-short">{g.videos.map((v) => <YouTube key={v.id} v={v} />)}</div>
-                </div>
-              ))}
-            </div>
-          )}
-          {s.channel && <p className="cp-actions"><a className="primary" href={CHANNEL} target="_blank" rel="noopener noreferrer">The DeepGrid Semi channel on YouTube <ArrowUpRight size={16} aria-hidden="true" /></a></p>}
-        </section>
-      )}
-    </>
-  );
-}
-
-function YouTube({ v }: { v: Video }) {
-  const [on, setOn] = useState(false);
-  return (
-    <figure className={'cp-yt' + (v.short ? ' is-short' : '')}>
-      <div className="cp-yt-frame">
-        {on ? (
-          <iframe
-            src={`https://www.youtube-nocookie.com/embed/${v.id}?autoplay=1&rel=0`}
-            title={v.title}
-            allow="autoplay; encrypted-media; picture-in-picture; fullscreen"
-            allowFullScreen
-          />
-        ) : (
-          <button type="button" className="cp-yt-play" onClick={() => setOn(true)} aria-label={`Play ${v.title}${v.secs ? ', ' + mmss(v.secs) : ''}`}>
-            <img src={`https://i.ytimg.com/vi/${v.id}/hqdefault.jpg`} alt="" loading="lazy" decoding="async" width={480} height={360} />
-            <span className="cp-yt-btn"><Play size={16} fill="currentColor" aria-hidden="true" /></span>
-            {v.secs ? <em className="cp-yt-dur">{mmss(v.secs)}</em> : v.short ? <em className="cp-yt-dur">Short</em> : null}
-          </button>
-        )}
-      </div>
-      <figcaption>
-        <strong>{v.title}</strong>
-        {v.text && <span>{v.text}</span>}
-        <a className="cp-yt-link" href={`https://www.youtube.com/watch?v=${v.id}`} target="_blank" rel="noopener noreferrer">Watch on YouTube <ArrowUpRight size={12} aria-hidden="true" /></a>
-      </figcaption>
-    </figure>
-  );
-}
 
 function SceneSection({ s }: { s: Extract<Section, { kind: 'scene' }> }) {
   const reduced = useReduced();
@@ -446,7 +276,7 @@ function Block({ s }: { s: Section }) {
         </section>
       );
     case 'videos':
-      return <VideoLibrary s={s} />;
+      return <VideoLibrary groups={s.groups} shorts={s.shorts} featured={s.featured} start={s.start} films={s.films} channel={s.channel} />;
     case 'docs': {
       // Published documents lead, as cards. Everything deepgridsemi.com lists but does not publish ("on request")
       // folds into one accordion below, one row per group, so request-only titles never read as missing documents.
