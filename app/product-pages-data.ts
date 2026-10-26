@@ -18,6 +18,8 @@ export type ProductPage = {
   specs: [string, string][];
   /** The three spec rows the hero carries beside the part, as deepgridsemi.com's product pages do. */
   heroSpecs: string[];
+  /** Hero spec name to its entry in app/claims.ts, for the figures the evidence register carries. */
+  heroClaims?: Record<string, string>;
   /** Three performance-highlight tiles: [figure, label, the spec row it comes from]. Checked: the figure's
    *  number appears in that row. */
   highlights: [string, string, string][];
@@ -153,6 +155,7 @@ export const productPages: ProductPage[] = [
     id: 'sku4', slug: 'sku-4', portfolioId: 'sku-4',
     fit: {buyers: 'EV battery management, motor-safety supervision, braking and steering controllers and robot joints; and the safety processor beside SKU-1 and inside D100.', policy: 'The design targets the ISO 26262 ASIL-D automotive safety level; the lockstep checker has been fault-injection tested in RTL simulation.', node: 'Running two processors costs chip area, not speed. A mature node makes that redundancy, and radiation-hardened latches, affordable.'},
     heroSpecs: ['Lockstep', 'Fault response', 'Package (DG32-LITE)'],
+    heroClaims: {'Fault response': 'fault-39', 'Package (DG32-LITE)': 'qfn-64'},
     highlights: [['39', 'Cycles from injected fault to FAULT_N', 'Fault response'], ['2', 'Cycles of lockstep skew', 'Lockstep'], ['100 MHz', 'Product clock on 130 nm', 'Clock']],
     headline: 'Two cores, two cycles apart, and a comparator that answers in hardware.',
     lede: 'SKU-4 is the safety microcontroller of the portfolio and the one part with detailed engineering evidence: DG32-LITE implements it. A second core runs the same instructions two cycles behind the first; when their committed results differ, a comparator latches the cause and drives the fault pin without waiting for firmware.',

@@ -9,6 +9,10 @@ import Related from '../related';
 import {url} from '../routes';
 import {MotionLoop} from '../motion-loop';
 import {ShuttleScene} from '../three/blocks';
+import {ClaimBadge} from '../claim-badge';
+
+// Comparison rows whose DG32 figure is an entry in the evidence register (app/claims.ts).
+const rowClaims: Record<string, string> = {'Program memory': 'rom-64k', RAM: 'sram-32k', 'Process & status': 'node-130'};
 
 export default function Page() {
   const {navigate, go} = useNav();
@@ -16,7 +20,7 @@ export default function Page() {
   return (
     <Shell route="procurement">
       <section className="page-wrap"><SectionHead title="Where DG32 leads, and where it does not yet" copy="Compared at the design level with the STM32G0, the incumbent entry-level motor-control MCU. DG32 targets hardware checking and control acceleration; the G0 provides the mature analog, memory and production baseline."/>
-  <div className="table-scroll"><table className="dr-table dr-compare"><caption>DG32-LITE compared with the STM32G0 series</caption><thead><tr><th scope="col">Dimension</th><th scope="col" className="cmp-hl">DG32-LITE</th><th scope="col">STM32G0 series</th><th scope="col">What it means</th></tr></thead><tbody>{comparison.map(([d,a,b,m])=><tr key={d}><th scope="row">{d}</th><td className="cmp-hl">{a}</td><td>{b}</td><td>{m}</td></tr>)}</tbody></table></div>
+  <div className="table-scroll"><table className="dr-table dr-compare"><caption>DG32-LITE compared with the STM32G0 series</caption><thead><tr><th scope="col">Dimension</th><th scope="col" className="cmp-hl">DG32-LITE</th><th scope="col">STM32G0 series</th><th scope="col">What it means</th></tr></thead><tbody>{comparison.map(([d,a,b,m])=><tr key={d}><th scope="row">{d}</th><td className="cmp-hl">{a}{rowClaims[d] && <ClaimBadge id={rowClaims[d]}/>}</td><td>{b}</td><td>{m}</td></tr>)}</tbody></table></div>
   <p className="disclaimer">STM32G0 column: public datasheet values for the STM32G0x1 / G0B1 family (Arm Cortex-M0+). DG32-LITE column: first-silicon design values, verified in simulation and static timing, not yet measured on silicon.</p>
 
   {/* An "Executive procurement scorecard" sat here, pricing DG32 against the STM32G0 and TI Hercules and
