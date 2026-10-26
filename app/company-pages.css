@@ -285,3 +285,119 @@
 .cp-acc-list a { display: inline-flex; align-items: center; gap: .4rem; min-height: 2.25rem; padding: .35rem .75rem; border: 1px solid var(--line); border-radius: 6px; color: var(--ink); }
 .cp-acc-list a:hover { border-color: var(--t-accent, var(--ink)); }
 @media (prefers-reduced-motion: reduce) { .cp-acc-icon { transition: none; } }
+
+/* The videos page as a streaming library (app/video-library.tsx, Stitch design A): a banner, search and chips,
+   one horizontal row per topic, and one on-page player. Colours are the band's own tokens (theme-dgs.css). */
+.vl { display: grid; gap: 2.5rem; padding-block: 2rem 3rem; }
+.vl-hero { position: relative; display: grid; align-items: end; min-height: clamp(22rem, 42vw, 34rem); border: .0625rem solid var(--line); border-radius: .75rem; overflow: hidden; background: var(--background); isolation: isolate; }
+.vl-hero-img { position: absolute; inset: 0; z-index: -2; width: 100%; height: 100%; object-fit: cover; }
+.vl-hero::before { content: ""; position: absolute; inset: 0; z-index: -1; background: linear-gradient(90deg, var(--background) 0%, color-mix(in srgb, var(--background) 82%, transparent) 42%, transparent 78%), linear-gradient(0deg, var(--background) 0%, transparent 55%); }
+.vl-hero { grid-template-columns: minmax(0, 1fr) minmax(16rem, 24rem); gap: 1.5rem; }
+.vl-hero-copy { display: grid; gap: .9rem; max-width: 38rem; padding: clamp(1.25rem, 4vw, 3rem); }
+.vl-hero-tags { display: flex; flex-wrap: wrap; align-items: center; gap: .5rem .9rem; margin: 0; color: var(--ink-2); font-size: var(--sc-t-meta); letter-spacing: var(--sc-track-meta); text-transform: uppercase; }
+.vl-tag { padding: .2rem .55rem; border-radius: .25rem; background: var(--copper); color: var(--background); font-weight: 700; }
+.vl-hero h2 { margin: 0; font-family: var(--font-display, inherit); font-size: var(--sc-t-page, 2.5rem); line-height: 1.08; color: var(--ink); text-wrap: balance; }
+.vl-hero-text { margin: 0; color: var(--ink-2); font-size: var(--sc-t-lead); line-height: 1.5; }
+.vl-hero-actions { display: flex; flex-wrap: wrap; align-items: center; gap: .75rem 1.5rem; margin-top: .4rem; }
+.vl-hero-actions .primary { display: inline-flex; align-items: center; gap: .5rem; min-height: 2.75rem; }
+.vl-more { display: inline-flex; align-items: center; gap: .4rem; min-height: 2.75rem; color: var(--ink); font-size: var(--sc-t-control); text-underline-offset: .25rem; }
+
+.vl-start { align-self: end; margin: clamp(1rem, 3vw, 2rem); padding: .9rem; border: .0625rem solid var(--line); border-radius: .6rem; background: color-mix(in srgb, var(--surface) 88%, transparent); }
+.vl-start > p { margin: 0 0 .6rem; color: var(--ink-2); font-size: var(--sc-t-meta); letter-spacing: var(--sc-track-meta); text-transform: uppercase; }
+.vl-start ol { display: grid; gap: .4rem; margin: 0; padding: 0; list-style: none; }
+.vl-start button { display: grid; grid-template-columns: 1.4rem 5.5rem minmax(0, 1fr); gap: .6rem; align-items: center; width: 100%; min-height: 2.75rem; padding: .3rem; border: .0625rem solid transparent; border-radius: .4rem; background: none; color: var(--ink); font: inherit; text-align: left; cursor: pointer; }
+.vl-start button:focus-visible { outline: .125rem solid var(--copper); }
+@media (hover: hover) { .vl-start button:hover { border-color: var(--line); } }
+.vl-start-n { color: var(--copper); font-size: var(--sc-t-control); font-weight: 700; text-align: center; }
+.vl-start img { width: 100%; aspect-ratio: 16 / 9; object-fit: cover; border-radius: .25rem; }
+.vl-start-t { display: grid; gap: .1rem; font-size: var(--sc-t-meta); line-height: 1.35; }
+.vl-start-t small { color: var(--ink-3); }
+.vl-tools { display: grid; gap: .9rem; }
+.vl-search { display: flex; align-items: center; gap: .5rem; max-width: 34rem; min-height: 2.75rem; padding: 0 .8rem; border: .0625rem solid var(--line); border-radius: .4rem; background: var(--surface); color: var(--ink-3); }
+.vl-search:focus-within { outline: .125rem solid var(--copper); outline-offset: .125rem; }
+.vl-search input { flex: 1; min-width: 0; min-height: 2.6rem; border: 0; background: transparent; color: var(--ink); font: inherit; font-size: var(--sc-t-control); outline: none; }
+.vl-chips { display: flex; flex-wrap: wrap; gap: .5rem; }
+.vl-chips button { display: inline-flex; align-items: center; gap: .35rem; min-height: 2.5rem; padding: .45rem .8rem; border: .0625rem solid var(--line); border-radius: 999px; background: var(--surface); color: var(--ink-2); font: inherit; font-size: var(--sc-t-control); cursor: pointer; }
+.vl-chips button small { color: var(--ink-3); }
+.vl-chips button[aria-pressed="true"] { border-color: var(--copper); background: var(--copper); color: var(--background); }
+.vl-chips button[aria-pressed="true"] small { color: inherit; }
+@media (hover: hover) { .vl-chips button:hover { border-color: var(--copper); color: var(--ink); } .vl-chips button[aria-pressed="true"]:hover { color: var(--background); } }
+.vl-count, .vl-empty { margin: 0; color: var(--ink-3); font-size: var(--sc-t-meta); }
+
+.vl-row { display: grid; gap: .6rem; min-width: 0; scroll-margin-top: 6rem; }
+.vl-row-head { display: flex; flex-wrap: wrap; align-items: baseline; gap: .4rem 1rem; }
+/* Row titles are labels for a strip, as in design A, not section headings: lift over theme-dgs.css's `body h2:not(#_)`. */
+body .vl-row-head h2:not(#_) { margin: 0; font-size: 1.5rem; font-weight: 600; line-height: 1.25; color: var(--ink); }
+.vl-row-n { color: var(--ink-3); font-size: var(--sc-t-meta); }
+.vl-row-lede { max-width: 50rem; margin: 0; color: var(--ink-2); font-size: var(--sc-t-control); line-height: 1.55; }
+.vl-strip { display: grid; grid-auto-flow: column; grid-auto-columns: minmax(15rem, 18rem); gap: 1rem; margin: 0; padding: .4rem .1rem 1rem; list-style: none; overflow-x: auto; overscroll-behavior-x: contain; scroll-snap-type: x proximity; scrollbar-color: var(--line) transparent; }
+.vl-strip.is-short { grid-auto-columns: minmax(9rem, 10.5rem); }
+.vl-strip:focus-visible { outline: .125rem solid var(--copper); outline-offset: .25rem; }
+.vl-card { scroll-snap-align: start; min-width: 0; }
+.vl-card-btn { display: grid; gap: .55rem; width: 100%; padding: 0; border: 0; background: none; color: inherit; font: inherit; text-align: left; cursor: pointer; }
+.vl-card-btn:focus-visible { outline: .125rem solid var(--copper); outline-offset: .2rem; border-radius: .5rem; }
+.vl-thumb { position: relative; display: block; aspect-ratio: 16 / 9; border: .0625rem solid var(--line); border-radius: .5rem; overflow: hidden; background: var(--background); }
+.vl-card.is-short .vl-thumb { aspect-ratio: 9 / 16; }
+.vl-thumb img { width: 100%; height: 100%; object-fit: cover; }
+.vl-play { position: absolute; left: 50%; top: 50%; translate: -50% -50%; display: grid; place-items: center; width: 3rem; height: 3rem; border-radius: 50%; background: var(--copper); color: var(--background); opacity: .92; }
+.vl-dur { position: absolute; right: .5rem; bottom: .5rem; padding: .1rem .45rem; border-radius: .25rem; background: color-mix(in srgb, var(--background) 82%, transparent); color: var(--ink); font-style: normal; font-size: var(--sc-t-meta); font-variant-numeric: tabular-nums; }
+.vl-badge { position: absolute; left: .5rem; top: .5rem; padding: .1rem .45rem; border-radius: .25rem; background: color-mix(in srgb, var(--background) 82%, transparent); color: var(--ink); font-size: var(--sc-t-meta); }
+.vl-badge-tr { left: auto; right: .5rem; color: var(--copper); }
+.vl-card.is-short .vl-badge-tr { top: auto; bottom: 2.1rem; }
+.vl-card-text { display: grid; gap: .25rem; }
+.vl-card-text strong { color: var(--ink); font-size: var(--sc-t-control); font-weight: 600; line-height: 1.35; }
+.vl-code { color: var(--copper); font-size: var(--sc-t-meta); letter-spacing: var(--sc-track-meta); text-transform: uppercase; }
+.vl-card-sub { color: var(--ink-3); font-size: var(--sc-t-meta); line-height: 1.45; }
+@media (hover: hover) { .vl-card-btn:hover .vl-thumb { border-color: var(--copper); } .vl-card-btn:hover strong { color: var(--copper); } }
+@media (hover: hover) and (prefers-reduced-motion: no-preference) { .vl-thumb img { transition: scale .25s ease-out; } .vl-card-btn:hover .vl-thumb img { scale: 1.04; } }
+.vl-channel { margin: 0; font-size: var(--sc-t-control); }
+.vl-channel a { display: inline-flex; align-items: center; gap: .35rem; min-height: 2.75rem; color: var(--ink-2); }
+
+.vl-dialog { width: min(72rem, calc(100vw - 1.5rem)); max-height: calc(100dvh - 1.5rem); padding: 0; border: .0625rem solid var(--line); border-radius: .75rem; background: var(--surface); color: var(--ink); overflow: auto; }
+.vl-dialog::backdrop { background: rgb(2 6 15 / .82); }
+.vl-dialog-body { display: grid; }
+.vl-dialog-bar { display: flex; align-items: center; justify-content: space-between; gap: 1rem; padding: .6rem .6rem .6rem 1.1rem; border-bottom: .0625rem solid var(--line); }
+.vl-dialog-title { display: flex; flex-wrap: wrap; align-items: baseline; gap: .3rem .8rem; margin: 0; font-size: var(--sc-t-control); }
+.vl-dialog-title span { color: var(--ink-3); font-variant-numeric: tabular-nums; }
+.vl-close { display: grid; place-items: center; width: 2.75rem; height: 2.75rem; border: .0625rem solid var(--line); border-radius: 50%; background: none; color: var(--ink); cursor: pointer; }
+.vl-close:focus-visible { outline: .125rem solid var(--copper); outline-offset: .125rem; }
+/* The video sets the row's height (16:9 of its column); the transcript takes no height of its own (size containment)
+   and scrolls inside that row, so a long transcript never stretches the video wider than its column. */
+.vl-stage { display: grid; grid-template-columns: minmax(0, 1fr) minmax(16rem, 22rem); border-bottom: .0625rem solid var(--line); }
+.vl-stage .vl-screen { align-self: start; }
+.vl-screen { aspect-ratio: 16 / 9; background: var(--background); }
+.vl-transcript { display: grid; grid-template-rows: auto minmax(0, 1fr) auto; min-height: 0; contain: size; border-left: .0625rem solid var(--line); }
+.vl-transcript-h { margin: 0; padding: .7rem 1rem .5rem; color: var(--ink-2); font-size: var(--sc-t-meta); letter-spacing: var(--sc-track-meta); text-transform: uppercase; }
+.vl-transcript-note { margin: 0; padding: .6rem 1rem .8rem; color: var(--ink-3); font-size: var(--sc-t-meta); line-height: 1.45; }
+.vl-lines { margin: 0; padding: 0 .4rem; list-style: none; overflow-y: auto; overscroll-behavior: contain; scrollbar-color: var(--line) transparent; }
+.vl-lines button { display: grid; grid-template-columns: 3rem minmax(0, 1fr); gap: .5rem; width: 100%; min-height: 2.75rem; padding: .45rem .6rem; border: 0; border-radius: .35rem; background: none; color: var(--ink-2); font: inherit; font-size: var(--sc-t-control); line-height: 1.5; text-align: left; cursor: pointer; }
+.vl-lines button:focus-visible { outline: .125rem solid var(--copper); outline-offset: -.125rem; }
+.vl-lines button[aria-current="true"] { background: var(--t-muted, var(--surface)); color: var(--ink); }
+@media (hover: hover) { .vl-lines button:hover { color: var(--ink); } }
+.vl-ts { color: var(--copper); font-variant-numeric: tabular-nums; }
+.vl-screen.is-short { aspect-ratio: auto; height: min(72dvh, 44rem); }
+.vl-screen iframe, .vl-screen video { display: block; width: 100%; height: 100%; border: 0; }
+.vl-dialog-info { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 20rem); gap: 1.5rem; padding: 1.1rem; }
+.vl-dialog-info p { margin: 0 0 .6rem; color: var(--ink-2); font-size: var(--sc-t-control); line-height: 1.55; }
+.vl-dialog-links { display: flex; flex-wrap: wrap; gap: .4rem 1.25rem; }
+.vl-dialog-links a { display: inline-flex; align-items: center; gap: .3rem; min-height: 2.75rem; color: var(--copper); }
+.vl-next > p { margin: 0 0 .5rem; color: var(--ink-3); font-size: var(--sc-t-meta); letter-spacing: var(--sc-track-meta); text-transform: uppercase; }
+.vl-next ul { display: grid; gap: .5rem; margin: 0; padding: 0; list-style: none; }
+.vl-next button { display: grid; grid-template-columns: 6.5rem minmax(0, 1fr); gap: .7rem; align-items: start; width: 100%; padding: .3rem; border: .0625rem solid transparent; border-radius: .4rem; background: none; color: var(--ink); font: inherit; font-size: var(--sc-t-meta); text-align: left; cursor: pointer; }
+.vl-next button:focus-visible { outline: .125rem solid var(--copper); }
+@media (hover: hover) { .vl-next button:hover { border-color: var(--line); } }
+.vl-next img { width: 100%; aspect-ratio: 16 / 9; object-fit: cover; border-radius: .25rem; }
+.vl-next span { display: grid; gap: .15rem; line-height: 1.35; }
+.vl-next small { color: var(--ink-3); font-variant-numeric: tabular-nums; }
+@media (max-width: 47.99rem) {
+  .vl-hero { min-height: 0; padding-top: 52%; }
+  .vl-hero-img { height: 62%; }
+  .vl-hero::before { background: linear-gradient(0deg, var(--background) 42%, transparent 72%); }
+  .vl-dialog-info { grid-template-columns: 1fr; }
+  .vl-hero { grid-template-columns: 1fr; }
+  .vl-start { align-self: auto; margin: 0 1rem 1rem; }
+  .vl-stage { grid-template-columns: 1fr; }
+  .vl-transcript { height: 18rem; border-left: 0; border-top: .0625rem solid var(--line); }
+  .vl-strip { grid-auto-columns: minmax(13.5rem, 78%); }
+  .vl-strip.is-short { grid-auto-columns: minmax(8.5rem, 42%); }
+}
