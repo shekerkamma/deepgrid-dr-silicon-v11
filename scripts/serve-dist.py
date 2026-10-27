@@ -12,20 +12,23 @@ from functools import partial
 port = int(sys.argv[1]) if len(sys.argv) > 1 else 8000
 root = os.path.abspath(sys.argv[2] if len(sys.argv) > 2 else os.getcwd())
 class Handler(SimpleHTTPRequestHandler):
-    # Pages resolves /x to x.html before x/, and never lists a directory: a directory with no index.html is a 404.
+    # GitHub Pages, as tested by https://til.simonwillison.net/github/github-pages and
+    # https://github.com/slorber/trailing-slash-guide: /x serves x.html even when a folder x/ exists (no redirect);
+    # /x/ serves x/index.html and never x.html, so it is a 404 without one; a folder with no index.html is never
+    # listed. This server used to answer /x/ from x.html, which hid that every route 404'd with a slash on Pages.
     def send_head(self):
         request_path = self.path.split('?')[0]
         # Match Pages case-sensitive route lookup on Windows as well as Linux.
         if '/downloads/' not in request_path and os.path.splitext(request_path)[1] in ('', '.html') and request_path != request_path.lower():
             self.send_error(404); return None
         path = self.translate_path(self.path)
-        if not os.path.exists(path) and os.path.isfile(path.rstrip('/') + '.html'):
-            self.path = self.path.split('?')[0].rstrip('/') + '.html'
-        elif os.path.isdir(path) and not os.path.isfile(os.path.join(path, 'index.html')):
-            if os.path.isfile(path.rstrip('/') + '.html') and not self.path.split('?')[0].endswith('/'):
-                self.path = self.path.split('?')[0] + '.html'
-            else:
+        if request_path.endswith('/'):
+            if not os.path.isfile(os.path.join(path, 'index.html')):
                 self.send_error(404); return None
+        elif not os.path.isfile(path) and os.path.isfile(path + '.html'):
+            self.path = request_path + '.html'
+        elif os.path.isdir(path) and not os.path.isfile(os.path.join(path, 'index.html')):
+            self.send_error(404); return None
         return super().send_head()
     # GitHub Pages serves the site's 404.html (status 404) for a missing path, so the gate can test the not-found page.
     def send_error(self, code, message=None, explain=None):
