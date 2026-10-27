@@ -133,7 +133,11 @@ function PlayerDialog({ playing, onPick, onClose }: { playing: Playing; onPick: 
   }, []);
   const send = (msg: object) => frame.current?.contentWindow?.postMessage(JSON.stringify(msg), YT_ORIGIN);
   const seek = (t: number) => {
-    if (item?.kind === 'film' && video.current) { video.current.currentTime = t; void video.current.play(); }
+    if (item?.kind === 'film' && video.current) {
+      video.current.currentTime = t;
+      // Closing the player removes the video before play() settles; that rejection is expected, not a fault.
+      video.current.play().catch(() => {});
+    }
     else { send({ event: 'command', func: 'seekTo', args: [t, true] }); send({ event: 'command', func: 'playVideo', args: [] }); }
     setNow(t);
   };
