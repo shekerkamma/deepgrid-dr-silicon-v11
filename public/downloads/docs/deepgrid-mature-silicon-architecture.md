@@ -1,7 +1,8 @@
 # DeepGrid Semi — Mature-Node Silicon System Architecture & Operational Specification
-**Document Classification:** Confidential Diligence Whitepaper Specification (Plain-Language Edition v3, Sept 2026)  
+**Document:** Whitepaper, Plain-Language Edition v3, September 2026. Reading edition published on this site.  
+**Status:** Superseded in part by the SKU Blueprint (October 2026) on chip count, clock, orders and funding. Where the two disagree, the Blueprint governs.  
 **Corporate Entity:** DeepGrid Semi Pvt Ltd · CIN: U62099TS2024PTC183631 · DPIIT: DIPP194870 · T-Hub Phase 2, Hyderabad  
-**Round Context:** Angel / Seed Round · ₹10 Crore ($1.2M) · Managing Director: Aravind Prasad (+91 74163 19944)
+**Round Context:** Angel / Seed Round · ₹10 Crore ($1.2M) · Managing Director: Aravind Prasad
 
 ---
 
@@ -13,7 +14,7 @@ India imports roughly **$23.4 billion of semiconductor chips per year** (UN COMT
 2. **Mature-Node Silicon ($ \ge 130\ \text{nm} $):** $9.0 Billion (divided by 2.6; newer sub-28nm processes excluded).
 3. **DeepGrid 9 Core Chip Classes:** $0.46 Billion (~₹4,300 Cr addressable market; factor of 19 reduction).
 4. **FY31 Target Revenue:** ₹1,000 Crore (~$105M; ~23% capture of addressable classes).
-5. **Live Pre-ASIC Contracted Revenue:** ₹2.88 Crore (Indian Army MCEME ₹1.01 Cr, Infinis Agritech ₹1.25 Cr, Axitech Solar ₹0.62 Cr).
+5. **Pre-ASIC orders:** none claimed. The order figure this edition originally carried did not survive verification and is listed on the site's evidence register; the SKU Blueprint claims no purchase orders or letters of intent.
 
 ---
 
@@ -103,7 +104,7 @@ DeepGrid conducted a line-by-line OCR audit of the Indian Ministry of Defence's 
 | **Chip 1** | BLDC Motor Controller | 130 nm BCD | 5V – 120V Native | **Airgap Technology** (EV Motors); PIL-5 Anti-Tank Missile |
 | **Chip 2** | Smart-Meter SoC | 130 nm CMOS | 24-bit 6-ch AFE | **Ripple Metering** (250M National Smart Meter Tender) |
 | **Chip 3** | High-Reliability PMIC | 180 nm BCD | 28V Avionics Bus | **BEL Tanks / Aircraft**; SRIJAN NSG-5962; DO-160G |
-| **Chip 4** | Lockstep Safety MCU | 130 nm CMOS | 1.8V / 3.3V | **Indian Army MCEME** (₹1.01 Cr Contracted); ISO 26262 ASIL-D |
+| **Chip 4** | Lockstep Safety MCU | 130 nm CMOS | 1.8V / 3.3V | ISO 26262 ASIL-D (target, not certified) |
 | **Chip 5** | Robust Transceiver | 130 nm HV | ±15 kV ESD, 5V | Replaces discontinued TI/ADI RS-485 / CAN-FD |
 | **Chip 6** | Voltage Supervisor | sky130 $\rightarrow$ SCL | 4-rail, 8 µs filter | **SCL MIL-883 Pathfinder**; Simplest chip through qual first |
 | **Chip 7** | 4D MIMO Radar | IHP SiGe + CMOS | 77 GHz / 350 GHz | BEL EW Suites, Su-30 MKI Radar Warning Receiver |

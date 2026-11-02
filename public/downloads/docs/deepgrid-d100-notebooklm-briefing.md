@@ -40,7 +40,7 @@ The DeepGrid D100 consolidates 4 discrete avionic PCBs into a single $15 \times 
 | **Power Input** | 5V–120V Raw Battery Rail (SKU-3 BCD PMIC) | Direct LiPo connection without external buck-converter failure points. |
 | **Thermal Budget** | 4.8W nominal / 7.2W peak (with 10-TOPS NPU) | Top copper slug interfaces directly with carbon-fiber airframe. |
 | **Foundry Roadmap** | SkyWater 130nm $\rightarrow$ IHP SG13G2 $\rightarrow$ SCL Mohali | Sovereign production path targeting domestic fab lines at SCL Mohali. |
-| **Economics** | ₹10 Cr funding $\rightarrow$ ₹1,000 Cr FY31 target | ₹2.88 Cr pre-ASIC contracted revenue (MCEME, Infinis, Axitech). |
+| **Economics** | ₹10 Cr funding $\rightarrow$ ₹1,000 Cr FY31 target | Plan target only; no pre-ASIC orders are claimed. |
 
 ---
 

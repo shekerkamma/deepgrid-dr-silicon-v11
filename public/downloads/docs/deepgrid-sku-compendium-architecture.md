@@ -21,7 +21,7 @@ Sub-10nm silicon is physically incapable of withstanding 28V–120V transient po
 | **02** | **SKU-1: BLDC Motor** | 130nm BCD | 5V – 120V B/B | DGridRiscV @ 200MHz, HW PID <1 µs, CORDIC FOC, PWM×7 | BEE 5-Star Fans (₹250–550 Cr/yr), EV 2W/3W |
 | **03** | **SKU-2: Smart Meter** | 130nm CMOS | 3.3V / <2µW RTC | DG-AFE6 6-ch 24-bit $\Sigma\Delta$, sinc³ OSR-256, P/Q/S + THD-15 | 250M National Meter Rollout ($2–5 ASP) |
 | **04** | **SKU-3: Hi-Rel PMIC** | 180nm BCD | 4.5V – 40V (28V Mil) | Pre-buck regulator, 4 sequenced rails, Brokaw bandgap (12 ppm/°C) | DO-160, MIL-STD-461, SRIJAN NSG-5962 |
-| **05** | **SKU-4: Safety MCU** | 130nm CMOS | 1.8V / 3.3V | Dual DGridRiscV with 2-cycle skew, FAULTn latch in <2 cycles | ISO 26262 ASIL-D, EV BMS, MCEME ₹1.01 Cr |
+| **05** | **SKU-4: Safety MCU** | 130nm CMOS | 1.8V / 3.3V | Dual DGridRiscV with 2-cycle skew, FAULTn latch in <2 cycles | ISO 26262 ASIL-D (target), EV BMS |
 | **06** | **SKU-5: Transceiver** | 130nm LDMOS | 5V / ±40V Fault | RS-485 + CAN-FD (5 Mbps), ±15 kV HBM ESD, 30 mV hysteresis | Harsh industrial harnesses, ISO 11898-2 |
 | **07** | **SKU-6: Supervisor** | 180nm CMOS | 1.0V – 5.0V Quad | Chopper comparators, 8 µs deglitch, 10 ppm/°C, windowed WDT | MIL-STD-883K pathfinder, 30–80M/yr PCB attach |
 | **08** | **SKU-7: 77GHz Radar** | IHP SiGe + 130nm | 3.3V RF / 1.2V BB | 2TX/4RX, IHP SG13G2 HBTs ($f_T$ 350 GHz), 4 GHz sweep (3.75 cm res) | AD2 Mirror Tower (captive), Non-ITAR counter-UAS |
@@ -57,7 +57,6 @@ Designed for India’s 250-million-meter national smart grid mandate ($2–5 ASP
 The D100 drone processor implements an uncompromised hardware separation pattern:
 - **Independent Failsafe Island:** Hardware link monitor and safe-state state machine wired directly to electronic speed controllers (ESCs). Runs on dedicated isolated power and clock nets.
 - **Jamming Immunity:** If the Linux vision tile or autonomous VIO stack crashes or suffers electronic jamming, the failsafe island instantly takes over and guides the airframe to a controlled landing.
-- **Contracted Pre-ASIC Proof:** ₹1.01 Cr formal contract signed with the Indian Army’s Military College of Electronics and Mechanical Engineering (MCEME).
 
 ### 3.5 Sheet 13: Organic Substrate Multi-Die SiP Packaging
 - **Pragmatic Packaging:** Rather than adopting expensive silicon interposers ($>\$10\text{M}$ NRE) or fragile TSV micro-bumps, DeepGrid uses a standard 4-layer organic BT-resin laminate BGA package (15×15 mm).
