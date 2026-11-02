@@ -17,6 +17,8 @@ concurrency:
   cancel-in-progress: false
 jobs:
   build:
+    # A normal run takes about 36 min. Without a limit a hung browser gate holds the shared Pages queue for 6 h.
+    timeout-minutes: 60
     runs-on: ubuntu-latest
     env:
       # Derived from the repository name, so one source tree builds correctly in every repo that
@@ -84,6 +86,9 @@ jobs:
   deploy:
     if: github.event_name != 'pull_request'
     needs: build
+    # Deploys finish in under a minute. Worst case is two deploy-pages attempts (10 min default each) and the
+    # 2 min wait between them.
+    timeout-minutes: 30
     runs-on: ubuntu-latest
     permissions:
       pages: write
@@ -111,6 +116,8 @@ jobs:
   verify-live:
     if: github.event_name != 'pull_request'
     needs: deploy
+    # About 32 min, including up to 10 min waiting for Pages to serve the commit.
+    timeout-minutes: 60
     runs-on: ubuntu-latest
     env:
       SITE: https://${{ github.repository_owner }}.github.io/${{ github.event.repository.name }}/
