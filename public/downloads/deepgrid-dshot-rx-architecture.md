@@ -2,7 +2,7 @@
 
 **Document Reference**: Block Spec for Review · DG32 · 13 Sep 2026 · Draft 1  
 **Author**: DG32 Engineering (drafted with Claude) · **Reviewer**: Ayaz Khan  
-**Classification**: DeepGrid Semi Technical Annex · Internal Silicon Diligence Canon  
+**Classification**: DeepGrid Semi Technical Annex · Public reading edition  
 
 ---
 

@@ -344,6 +344,8 @@ body .vl-row-head h2:not(#_) { margin: 0; font-size: 1.5rem; font-weight: 600; l
 .vl-badge { position: absolute; left: .5rem; top: .5rem; padding: .1rem .45rem; border-radius: .25rem; background: color-mix(in srgb, var(--background) 82%, transparent); color: var(--ink); font-size: var(--sc-t-meta); }
 .vl-badge-tr { left: auto; right: .5rem; color: var(--copper); }
 .vl-card.is-short .vl-badge-tr { top: auto; bottom: 2.1rem; }
+.vl-badge-runs { top: auto; bottom: .5rem; }
+.vl-card.is-short .vl-badge-runs { bottom: 4.2rem; }
 .vl-card-text { display: grid; gap: .25rem; }
 .vl-card-text strong { color: var(--ink); font-size: var(--sc-t-control); font-weight: 600; line-height: 1.35; }
 .vl-code { color: var(--copper); font-size: var(--sc-t-meta); letter-spacing: var(--sc-track-meta); text-transform: uppercase; }

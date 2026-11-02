@@ -8,7 +8,7 @@ import { useEffect, useRef, useState } from 'react';
 import { ArrowRight, ArrowUpRight, Play, Search, X } from 'lucide-react';
 import { explainers, type Explainer } from './explainers';
 import transcriptLangs from '../public/transcripts/index.json';
-import { CHANNEL, type Video, type VideoGroup } from './resources-data';
+import { CHANNEL, RUNS, type Video, type VideoGroup } from './resources-data';
 import { url } from './routes';
 
 type Item = { kind: 'yt'; v: Video } | { kind: 'film'; f: Explainer };
@@ -43,6 +43,7 @@ function Card({ item, short, topic, onPlay }: { item: Item; short?: boolean; top
           {len && <em className="vl-dur">{len}</em>}
           {topic && <span className="vl-badge">{topic}</span>}
           {(item.kind === 'film' || hasTranscript.has(item.v.id)) && <span className="vl-badge vl-badge-tr">Transcript</span>}
+          {item.kind === 'yt' && <span className="vl-badge vl-badge-runs">{RUNS[item.v.runs].badge}</span>}
         </span>
         <span className="vl-card-text">
           {item.kind === 'film' && <span className="vl-code">{item.f.code}</span>}
@@ -192,7 +193,13 @@ function PlayerDialog({ playing, onPick, onClose }: { playing: Playing; onPick: 
           </div>
           <div className="vl-dialog-info">
             <div>
-              {item.kind === 'yt' ? item.v.text && <p>{item.v.text}</p> : (
+              {item.kind === 'yt' ? (
+                <>
+                  {item.v.text && <p>{item.v.text}</p>}
+                  <p>{RUNS[item.v.runs].note}</p>
+                  <p className="vl-dialog-links"><a href={url('/evidence')}>Evidence register <ArrowRight size={14} aria-hidden="true" /></a></p>
+                </>
+              ) : (
                 <>
                   <p>{item.f.sub}. Animations illustrate; they are not simulations. Pre-silicon; every figure is a design target.</p>
                   <p className="vl-dialog-links">

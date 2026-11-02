@@ -9,7 +9,7 @@ import {ArrowUpRight, Download, FileText} from 'lucide-react';
 import {useQuery} from './shell';
 import {url, asset} from './routes';
 import {headingSlug, readHref} from './doc-links';
-import {groundedDocuments} from './documents-data';
+import {groundedDocuments, GroundedDoc} from './documents-data';
 import './doc-reader.css';
 
 const escape = (s: string) => String(s).replace(/[&<>"']/g, c => ({'&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'}[c]!));
@@ -78,6 +78,18 @@ function render(raw: string) {
   return {title, html: md.parse(text) as string, headings};
 }
 
+/** The banner says what this edition is. Only the SKU Blueprint reproduces its PDF; the others are summaries or
+ *  concept architectures, and a superseded or draft document says so before anything is read. */
+function editionNote(d: GroundedDoc | undefined): string {
+  const edition = !d ? 'A reading edition of a source document; the PDF, where there is one, governs.'
+    : d.edition === 'verbatim' ? 'The text and tables of the PDF, reproduced for reading.'
+    : d.edition === 'summary' ? 'A reading summary written from the PDF, not the PDF itself. Where the two differ, the PDF governs.'
+    : 'A concept architecture written for this site. It has no PDF of its own and is not a product specification.';
+  const status = d?.status === 'superseded-in-part' ? ' Superseded in part by the SKU Blueprint (October 2026) on chip count, clock, orders and funding; where they disagree, the Blueprint governs.'
+    : d?.status === 'draft' ? ' A draft, not a released specification.' : '';
+  return edition + status;
+}
+
 export default function DocReader() {
   const [params] = useQuery();
   const key = params.get('doc') || '';
@@ -128,7 +140,7 @@ export default function DocReader() {
         <p className="dr-kicker">Source document</p>
         <h1>{registered?.title || doc.title}</h1>
         {registered && registered.title !== doc.title && <p className="rd-sub">{doc.title}</p>}
-        <p className="rd-banner">The source edition, unchanged. Architecture targets, proposals and dated plans are preserved as written; they do not establish measured silicon, qualification or certification. <a href={url('/evidence')}>How each figure on this site is graded</a>.</p>
+        <p className="rd-banner">{editionNote(registered)} Architecture targets, proposals and dated plans do not establish measured silicon, qualification or certification. <a href={url('/evidence')}>How each figure on this site is graded</a>.</p>
         <div className="rd-content" dangerouslySetInnerHTML={{__html: doc.html}}/>
       </article>
     </div>

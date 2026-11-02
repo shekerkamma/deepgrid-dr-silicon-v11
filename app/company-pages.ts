@@ -182,7 +182,12 @@ export const companyPages: CompanyPage[] = [
     lede: 'Access technical documentation, datasheets, whitepapers, and development resources',
     sections: [
       { kind: 'cards', title: 'Technical specifications and product evaluation guides', lede: 'The documents every figure on this site traces to. Each opens inside the site with its contents and sections; the PDF is the edition of record.', cols: 3,
-        items: groundedDocuments.map((d) => ({ title: d.title, meta: `PDF · ${d.pdfPageCount}`, text: d.summary.split(/(?<=\.)\s/)[0], href: d.specFile, go: 'Read on this site' })),
+        items: groundedDocuments.map((d) => ({ title: d.title,
+          // A card shows one sentence, so a superseded or draft document says that before its summary does.
+          meta: [d.edition === 'concept' ? 'Concept architecture' : `PDF · ${d.pdfPageCount}`, d.status === 'superseded-in-part' ? 'Superseded in part' : d.status === 'draft' ? 'Draft' : ''].filter(Boolean).join(' · '),
+          text: d.status === 'superseded-in-part' ? 'Superseded in part by the October 2026 SKU Blueprint on chip count, clock, orders and funding; read it for the plain-language thesis, not current figures.'
+            : d.summary.split(/(?<=\.)\s/)[0],
+          href: d.specFile, go: 'Read on this site' })),
         from: 'app/documents-data.ts (grounded document registry)' },
       { kind: 'docs', groups: docGroups, from: 'deepgridsemi.com/resources/docs + the site’s own PDFs' },
       { kind: 'cta', title: 'The technical team answers product and integration questions.', lede: 'Our technical team is here to help you get the most out of our products', from: 'deepgridsemi.com/resources/docs',

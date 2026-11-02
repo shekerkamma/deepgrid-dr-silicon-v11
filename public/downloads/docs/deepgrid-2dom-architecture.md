@@ -5,7 +5,7 @@
 **Die Revision**: `dg32_2dom (A3)` · **Die Dimensions**: 3400 × 4500 µm (15.30 mm²)  
 **Process/CPU**: 2× RV32IMC DGridRiscV Lockstep + INT8 Attention Engine  
 **Clock Frequencies**: 50 MHz Core Domain (`clk_i`) / 114 MHz Fast Domain (`clk_fast_i`)  
-**Classification**: DeepGrid Semi Technical Annex · Confidential Silicon Diligence Canon  
+**Classification**: DeepGrid Semi Technical Annex · Public reading edition  
 
 ---
 
