@@ -117,7 +117,7 @@ export const groundedDocuments: GroundedDoc[] = [
       { label: 'Memory Bus', value: 'Slot 0xC APB memory-mapped' },
       { label: 'Floorplan Area', value: '28 KB vs 32 KB SRAM layout lever' },
     ],
-    summary: 'Complete RTL engineering specification for dgrid_dshot_rx: offloads ESC motor signal decoding and bidirectional eRPM telemetry reply entirely into deterministic hardware logic. Features glitch-free pad-ring direction reuse without external analog multiplexers, early-abort frame suppression, and floorplan trade-off recovering 4,800 µm² die area.',
+    summary: 'Draft RTL specification (draft 1) for dgrid_dshot_rx: offloads ESC motor signal decoding and bidirectional eRPM telemetry reply entirely into deterministic hardware logic. Features glitch-free pad-ring direction reuse without external analog multiplexers, early-abort frame suppression, and floorplan trade-off recovering 4,800 µm² die area.',
     highlights: [
       'Zero-CPU overhead motor command capture and validation up to DShot1200 rates',
       'Autonomous GCR 4b→5b eRPM packet assembly and transmission without software intervention',
