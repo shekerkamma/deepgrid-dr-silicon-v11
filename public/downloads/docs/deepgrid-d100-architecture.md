@@ -4,8 +4,8 @@
 **Classification**: Unclassified / Commercial & Defence Dual-Use Reference Architecture  
 **Author**: DeepGrid Semi Pvt Ltd · Hyderabad, India  
 **Process Technology**: 130nm CMOS (SkyWater 130 / IHP SG13G2) + BCD 180nm + 28nm Compute  
-**Target Standards**: MIL-STD-810H, MIL-STD-461G, DGCA Type Certification, DAP-2020 Make-II  
-**Generated Via**: `/architecture-to-everything` compounded with `/deepgrid-mature-silicon`
+**Target Standards**: MIL-STD-810H, MIL-STD-461G, DGCA type certification (future requirement; none claimed), DAP-2020 Make-II  
+**Status**: Concept architecture, earlier than the SKU Blueprint (October 2026). The Blueprint (pp. 42–44) describes D100 as one 28 nm chip; where this edition describes a multi-die package or a 200 MHz clock, the Blueprint governs.
 
 ---
 
@@ -114,7 +114,7 @@ Under India's **DAP-2020 Buy (Indian-IDDM)** category, military procurement requ
 ### 5.2 Qualification & Screening Matrix
 1. **MIL-STD-810H**: Method 501.7 (High Temp $+85^\circ\text{C}$ operating), Method 502.7 (Low Temp $-40^\circ\text{C}$ operating), Method 514.8 (Vibration profile for propeller-induced structural resonance).
 2. **MIL-STD-461G**: Radiated emissions (RE102) and conducted susceptibility (CS114/CS116) against EW microwave and high-power radio interference.
-3. **DGCA Type Certification**: Compliant with Directorate General of Civil Aviation standard civil airworthiness regulations for commercial drone operation in India.
+3. **DGCA type certification**: required for commercial drone operation in India. A future requirement; no certification is claimed.
 
 ---
 

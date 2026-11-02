@@ -1,5 +1,5 @@
 # DeepGrid Semi — DG32-LITE & DG32-2DOM Datasheet Engineering Specification
-**Document Classification:** Confidential Preliminary Datasheet Specification (CI2609 & CI2612 Releases)  
+**Document Classification:** Preliminary Datasheet Specification (CI2609 & CI2612 Releases); pre-silicon design targets, not measured values  
 **Corporate Entity:** DeepGrid Semi Pvt Ltd · CIN: U62099TS2024PTC183631 · T-Hub Phase 2, Hyderabad  
 **Package:** 64-pin QFN ($9.0 \times 9.0\ \text{mm}$, 0.5 mm pitch, exposed paddle = VSS)  
 **Process Technology:** SkyWater sky130A (130 nm CMOS)  

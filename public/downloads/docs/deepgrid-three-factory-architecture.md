@@ -6,7 +6,7 @@
 **Foundry Partners**: SkyWater Technology (USA) · IHP Leibniz (Germany) · SCL Mohali (India)  
 **Process Nodes**: 130nm Planar CMOS · 130nm SiGe:C BiCMOS · 180nm Military CMOS/BCD  
 **Target Standards**: DAP-2020 Buy (Indian-IDDM), MIL-STD-883, JSS-55555, CEMILAC  
-**Generated Via**: `/deepgrid-architecture` (Codified Compound Architecture Compiler)
+**Status**: Concept architecture, earlier than the SKU Blueprint (October 2026). Where the two disagree, the Blueprint governs. No DeepGrid part has measured silicon yet.
 
 ---
 
@@ -23,11 +23,11 @@ DeepGrid resolves this impasse through an agile, three-stage sequential foundry 
 
 ```
 ┌─────────────────────────────────────────────────────────────────────────────┐
-│ 1. PROVEN: SkyWater Technology (USA)                                        │
+│ 1. FIRST: SkyWater Technology (USA)                                         │
 │ • Node: sky130 (130 nm Planar CMOS)                                         │
 │ • Role: Rapid, low-cost digital & mixed-signal commercial prototyping       │
 │ • Cost: $14,300 per MPW shuttle run vs $1M proprietary EDA                  │
-│ • Status: DONE — Physical working silicon fabricated & validated            │
+│ • Status: TAPED OUT — shuttle CI2609, Sep 2026; no silicon measured yet     │
 ├─────────────────────────────────────────────────────────────────────────────┤
 │ 2. DIFFERENTIATED: IHP Leibniz Institute (Germany)                          │
 │ • Node: SG13G2 (130 nm SiGe BiCMOS)                                         │
@@ -38,7 +38,7 @@ DeepGrid resolves this impasse through an agile, three-stage sequential foundry 
 │ 3. SOVEREIGN: SCL Mohali (Punjab, India)                                    │
 │ • Node: 180 nm Military-Qualified CMOS & High-Voltage BCD                   │
 │ • Role: Buy(Indian-IDDM) compliance; complete domestic design & fab         │
-│ • Moat: Unlocks absolute monopoly priority in sovereign military tenders    │
+│ • Moat: Qualifies designs for Buy (Indian-IDDM) defence procurement         │
 │ • Status: PLANNED — Strategic retargeting & defence qualification           │
 └─────────────────────────────────────────────────────────────────────────────┘
 ```
@@ -49,7 +49,7 @@ DeepGrid resolves this impasse through an agile, three-stage sequential foundry 
 
 | Foundry & Node | Physical Substrate & Gate Geometry | Operating Frequencies / Power Rails | Strategic Architectural Function |
 |---|---|---|---|
-| **SkyWater SKY130** (USA) | 130 nm Bulk CMOS, 5-Metal Layer Stack | Fixed 200 MHz Digital Logic · 1.8V Core / 3.3V–5.0V I/O | Fast digital IP validation, DGridRiscV core proof, low-cost MPW loops. |
+| **SkyWater SKY130** (USA) | 130 nm Bulk CMOS, 5-Metal Layer Stack | 50–100 MHz digital logic (DG32 50 MHz; Blueprint SKUs 100 MHz) · 1.8V Core / 3.3V–5.0V I/O | Fast digital IP validation, DGridRiscV core proof, low-cost MPW loops. |
 | **IHP SG13G2** (Germany) | 130 nm SiGe:C BiCMOS Heterojunction | $f_T = 350\text{ GHz}$, $f_{\max} = 450\text{ GHz}$ · 1.2V / 3.3V | Ultra-high frequency front-ends, 77 GHz automotive & airborne mmWave radar. |
 | **SCL Mohali** (India) | 180 nm Military-Grade CMOS / BCD | 5V to 120V High-Voltage LDMOS · Rad-Hard by Design | Sovereign defense production, high-voltage PMICs, motor drivers, supervisors. |
 
