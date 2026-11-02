@@ -16,6 +16,12 @@ export interface GroundedDoc {
   fileSizeMd: string;
   fileSizePdf: string;
   pdfPageCount: string;
+  /** What the in-site reading edition is: the PDF's own text, a summary written from it, or a concept
+   *  architecture with no PDF of its own. The reader's banner says which, so a summary is never presented as
+   *  the source. */
+  edition: 'verbatim' | 'summary' | 'concept';
+  /** Set when the document must not be read as current: superseded in part by a later source, or a draft. */
+  status?: 'superseded-in-part' | 'draft';
   stats: { label: string; value: string }[];
   summary: string;
   highlights: string[];
@@ -39,6 +45,7 @@ export const groundedDocuments: GroundedDoc[] = [
     fileSizeMd: '7.3 KB',
     fileSizePdf: '414 KB',
     pdfPageCount: '12 pages',
+    edition: 'summary',
     stats: [
       { label: 'Compute Engine', value: '50 MHz RV32IM (Zero NPU)' },
       { label: 'Scalar Ceiling', value: '12.5 MMAC/s (int8)' },
@@ -70,6 +77,7 @@ export const groundedDocuments: GroundedDoc[] = [
     fileSizeMd: '66 KB',
     fileSizePdf: '3.6 MB',
     pdfPageCount: '46 pages',
+    edition: 'verbatim',
     stats: [
       { label: 'Portfolio', value: '11 SKUs plus the Track B D100 drone SoC' },
       { label: 'Process', value: 'SkyWater 130 nm and SCL 180 nm; SKU-7 on IHP SG13G2' },
@@ -101,6 +109,8 @@ export const groundedDocuments: GroundedDoc[] = [
     fileSizeMd: '11.3 KB',
     fileSizePdf: '353 KB',
     pdfPageCount: '8 pages',
+    edition: 'summary',
+    status: 'draft',
     stats: [
       { label: 'Data Rates', value: 'DShot150 / 300 / 600 / 1200' },
       { label: 'Telemetry Engine', value: 'Hardware GCR 4b→5b eRPM reply' },
@@ -132,6 +142,7 @@ export const groundedDocuments: GroundedDoc[] = [
     fileSizeMd: '9.3 KB',
     fileSizePdf: '79 KB',
     pdfPageCount: '24 pages',
+    edition: 'summary',
     stats: [
       { label: 'Clock Partition', value: '50 MHz Control · 114 MHz Attention' },
       { label: 'CDC Mechanism', value: '4-Phase Asynchronous Handshake' },
@@ -163,6 +174,8 @@ export const groundedDocuments: GroundedDoc[] = [
     fileSizeMd: '10.7 KB',
     fileSizePdf: '5.62 MB',
     pdfPageCount: '71 pages',
+    edition: 'summary',
+    status: 'superseded-in-part',
     stats: [
       { label: 'Import Funnel', value: '$9B Mature-Node Defence Market' },
       { label: 'Tapeout Cadence', value: '198-Day Shuttle Loop' },
@@ -194,6 +207,7 @@ export const groundedDocuments: GroundedDoc[] = [
     fileSizeMd: '13.6 KB',
     fileSizePdf: '78 KB',
     pdfPageCount: '24 pages',
+    edition: 'summary',
     stats: [
       { label: 'Package Spec', value: 'QFN-64 (9×9 mm, 0.5 mm pitch)' },
       { label: 'Signal Pins', value: '44 Signal Pins across 11 groups' },
@@ -225,6 +239,7 @@ export const groundedDocuments: GroundedDoc[] = [
     fileSizeMd: '12.1 KB',
     fileSizePdf: '3.6 MB',
     pdfPageCount: 'pp. 42–44',
+    edition: 'concept',
     stats: [
       { label: 'Process', value: '28 nm; failsafe island buildable at 130 nm' },
       { label: 'Failsafe Domain', value: 'Isolated hardware failsafe island' },
@@ -256,6 +271,7 @@ export const groundedDocuments: GroundedDoc[] = [
     fileSizeMd: '8.0 KB',
     fileSizePdf: '8.0 KB',
     pdfPageCount: 'in-site document',
+    edition: 'concept',
     stats: [
       { label: 'Power switching', value: '16 × smart e-fuses (48 V / 12 V)' },
       { label: 'Vehicle bus', value: '4 × CAN-XL, up to 20 Mbps' },
@@ -287,6 +303,7 @@ export const groundedDocuments: GroundedDoc[] = [
     fileSizeMd: '9.6 KB',
     fileSizePdf: '5.62 MB',
     pdfPageCount: 'Section 4',
+    edition: 'concept',
     stats: [
       { label: 'Foundry Network', value: 'SkyWater · SCL Mohali · Dholera 28nm' },
       { label: 'Node Distribution', value: '180nm BCD · 130nm CMOS · 28nm Planar' },
