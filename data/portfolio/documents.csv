@@ -1,6 +1,6 @@
 document,file,where,version,pages,status,note
 "SKU Blueprint, October 2026",deepgrid-sku-blueprint-oct2026.pdf,published,Oct 2026,46,current,Text-identical to the Downloads copy. Pages are marked CONFIDENTIAL.
-Master whitepaper v3,deepgrid-mature-node-silicon-master-whitepaper-v3.pdf,published,5 Sep 2026,71,superseded in part,"The Blueprint is newer on chip count, clock, orders, plan and funding. Marked ""CONFIDENTIAL · Not for distribution""; prints personal contact details on page 2."
+Master whitepaper v3,deepgrid-mature-node-silicon-master-whitepaper-v3.pdf,on request,5 Sep 2026,71,superseded in part,"The Blueprint is newer on chip count, clock, orders, plan and funding. Marked ""CONFIDENTIAL · Not for distribution""; prints personal contact details on page 2."
 DG32-LITE preliminary datasheet,deepgrid-dg32-lite-preliminary-datasheet.pdf,published,12 Sep 2026,12,current,States the ADC runs untrimmed on this silicon.
 DG32-2DOM preliminary datasheet,deepgrid-dg32-2dom-preliminary-datasheet.pdf,published,12 Sep 2026 9:07,12,current (replaced 12 Oct 2026),"The published copy was the 08:34 version, which said per-die ADC trim is a bring-up step. Replaced with the 09:07 version (ADC untrimmed). Only page 10 differs."
 "DG32 QFN-64 datasheets, both parts",deepgrid-datasheets-qfn64.pdf,published,rebuilt 12 Oct 2026,24,current (rebuilt 12 Oct 2026),DG32-LITE (pages 1-12) plus the current DG32-2DOM (pages 13-24). Its 2DOM half had contradicted its LITE half on ADC trim.
