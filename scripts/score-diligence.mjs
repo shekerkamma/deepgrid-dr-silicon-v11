@@ -55,7 +55,8 @@ for (const raw of run.answers) {
   const unresolved = a.cited.filter(id => !resolve(id));
   const deadDocs = [];
   for (const d of docs) if ((await live(d)) !== 200) deadDocs.push(d);
-  const citesSuperseded = docs.some(d => /master-whitepaper-v3/.test(d));
+  // The whitepaper's PDF left public download on 5 Nov 2026; its chunks now link the cleaned summary, which is the same document.
+  const citesSuperseded = docs.some(d => /master-whitepaper-v3|mature-silicon-architecture\.md/.test(d));
   if (a.expect === 'answer') {
     if (a.answerable !== true) reasons.push('not answered');
     if (!a.cited.length) reasons.push('no citation');
