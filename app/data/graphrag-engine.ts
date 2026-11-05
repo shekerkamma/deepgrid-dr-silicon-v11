@@ -387,8 +387,9 @@ export const executiveThemes: ExecutiveTheme[] = [
     docTitle: 'Master Whitepaper v3 (Mature-Node Silicon)',
     section: 'Section 11: Two Ways to Sell the Same Chip & Statutory Moats',
     page: 'p. 45–52',
-    pdfPath: '/downloads/docs/deepgrid-mature-node-silicon-master-whitepaper-v3.pdf',
-    pdfSize: '5.4 MB',
+    // The whitepaper PDF is on request only (5 Nov 2026); link its cleaned summary instead.
+    pdfPath: '/downloads/docs/deepgrid-mature-silicon-architecture.md',
+    pdfSize: '10.7 KB',
     specPath: '/downloads/docs/deepgrid-mature-silicon-architecture.md',
     refLinks: [
       { label: 'Where DG32 leads, and where it does not', hash: 'procurement', description: 'The comparison with the STM32G0, gaps included, and the roadmap that closes them.' },
@@ -512,8 +513,9 @@ export const executiveThemes: ExecutiveTheme[] = [
     docTitle: 'Master Whitepaper v3 (Mature-Node Silicon)',
     section: 'Section 13: Financial Model, Unit Economics & Use of Funds',
     page: 'p. 58–64',
-    pdfPath: '/downloads/docs/deepgrid-mature-node-silicon-master-whitepaper-v3.pdf',
-    pdfSize: '5.4 MB',
+    // The whitepaper PDF is on request only (5 Nov 2026); link its cleaned summary instead.
+    pdfPath: '/downloads/docs/deepgrid-mature-silicon-architecture.md',
+    pdfSize: '10.7 KB',
     specPath: '/downloads/docs/deepgrid-mature-silicon-architecture.md',
     refLinks: [
       { label: 'Review Financial Model in Detail', hash: 'overview', description: 'Inspect the 5-year financial projections and unit economics breakdown.' },
@@ -542,8 +544,9 @@ export const executiveThemes: ExecutiveTheme[] = [
     docTitle: 'Master Whitepaper v3 (Mature-Node Silicon)',
     section: 'Section 12 & 14: Competitor Insulation & Risk Matrix',
     page: 'p. 53–57',
-    pdfPath: '/downloads/docs/deepgrid-mature-node-silicon-master-whitepaper-v3.pdf',
-    pdfSize: '5.4 MB',
+    // The whitepaper PDF is on request only (5 Nov 2026); link its cleaned summary instead.
+    pdfPath: '/downloads/docs/deepgrid-mature-silicon-architecture.md',
+    pdfSize: '10.7 KB',
     specPath: '/downloads/docs/deepgrid-mature-silicon-architecture.md',
     refLinks: [
       { label: 'Review Risk Audit & Stop Rules', hash: 'overview', description: 'Read the complete Charlie Munger inversion audit and risk matrix.' },
@@ -607,8 +610,9 @@ export const executiveThemes: ExecutiveTheme[] = [
     docTitle: 'Master Whitepaper v3 (Mature-Node Silicon)',
     section: 'Section 4 & 9: Sovereign Supply Architecture & Three-Factory Strategy',
     page: 'p. 18–24',
-    pdfPath: '/downloads/docs/deepgrid-mature-node-silicon-master-whitepaper-v3.pdf',
-    pdfSize: '5.4 MB',
+    // The whitepaper PDF is on request only (5 Nov 2026); link its cleaned summary instead.
+    pdfPath: '/downloads/docs/deepgrid-mature-silicon-architecture.md',
+    pdfSize: '10.7 KB',
     specPath: '/downloads/docs/deepgrid-mature-silicon-architecture.md',
     refLinks: [
       { label: 'Examine Three-Factory Roadmap', hash: 'roadmap', description: 'Review the multi-fab transition across SkyWater, IHP, and SCL Mohali.' },
