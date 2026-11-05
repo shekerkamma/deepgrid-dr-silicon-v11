@@ -10,6 +10,7 @@ import {loopStages,loopRates,CLOCK_HZ,HW_FIXED_CYCLES,CYCLES_PER_INSTRUCTION,fma
 import {SectionHead,Sec,ExplainedGrid,DataTable,Stats,Callout} from './detail';
 import {fetchBound,controlNotes,peripheralLimits,packageSides} from './detail-content';
 import {claims} from './claims';
+import {ClaimBadge} from './claim-badge';
 
 export function PackageDiagram(){
  const [active,setActive]=useState<string|null>(null);
@@ -72,7 +73,7 @@ export function ControlLoop({go}:{go:(hash:string)=>void}){
         <tbody>
           {['loop-100k','hw-300','adc-177','cordic-53','cpi-8','fmax-lockstep','headroom-82'].map(id=>{
             const c=claims[id];
-            return <tr key={id}><th scope="row">{c.figure}</th><td>{c.kind ?? <span className="mono">design constant</span>}</td><td>{c.sourceTitle}</td></tr>;
+            return <tr key={id}><th scope="row">{c.figure}</th><td><ClaimBadge id={id}/></td><td>{c.sourceTitle}</td></tr>;
           })}
         </tbody>
       </table>

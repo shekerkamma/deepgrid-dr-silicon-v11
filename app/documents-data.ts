@@ -16,6 +16,12 @@ export interface GroundedDoc {
   fileSizeMd: string;
   fileSizePdf: string;
   pdfPageCount: string;
+  /** What the in-site reading edition is: the PDF's own text, a summary written from it, or a concept
+   *  architecture with no PDF of its own. The reader's banner says which, so a summary is never presented as
+   *  the source. */
+  edition: 'verbatim' | 'summary' | 'concept';
+  /** Set when the document must not be read as current: superseded in part by a later source, or a draft. */
+  status?: 'superseded-in-part' | 'draft';
   stats: { label: string; value: string }[];
   summary: string;
   highlights: string[];
@@ -39,13 +45,14 @@ export const groundedDocuments: GroundedDoc[] = [
     fileSizeMd: '7.3 KB',
     fileSizePdf: '414 KB',
     pdfPageCount: '12 pages',
+    edition: 'summary',
     stats: [
       { label: 'Compute Engine', value: '50 MHz RV32IM (Zero NPU)' },
       { label: 'Scalar Ceiling', value: '12.5 MMAC/s (int8)' },
       { label: 'RAM Ceiling', value: '16.5 KB SRAM budget' },
       { label: 'Standard Compliance', value: 'ISO 13373 / 20816 / 20958' },
     ],
-    summary: 'Formal proof that high-accuracy industrial condition monitoring and predictive diagnostics do not require heavy transformer acceleration or multi-watt NPU arrays. By exploiting the architectural inversion that comparisons and table lookups cost almost nothing on an integer CPU, tree ensembles achieve parity with deep learning (95.6% vs 97–100% on CWRU bearing benchmarks) while requiring zero multiplications and running 50–500× faster.',
+    summary: 'An analysis showing that high-accuracy industrial condition monitoring and predictive diagnostics do not require heavy transformer acceleration or multi-watt NPU arrays. By exploiting the architectural inversion that comparisons and table lookups cost almost nothing on an integer CPU, tree ensembles achieve parity with deep learning (95.6% vs 97–100% on CWRU bearing benchmarks) while requiring zero multiplications and running 50–500× faster.',
     highlights: [
       '12.5 MMAC/s integer budget leaves 82% CPU headroom at 10 kHz FOC current loop rate',
       'Single-bin Goertzel DFT replaces multi-megabyte FFT buffers for broken rotor bar detection',
@@ -70,6 +77,7 @@ export const groundedDocuments: GroundedDoc[] = [
     fileSizeMd: '66 KB',
     fileSizePdf: '3.6 MB',
     pdfPageCount: '46 pages',
+    edition: 'verbatim',
     stats: [
       { label: 'Portfolio', value: '11 SKUs plus the Track B D100 drone SoC' },
       { label: 'Process', value: 'SkyWater 130 nm and SCL 180 nm; SKU-7 on IHP SG13G2' },
@@ -101,13 +109,15 @@ export const groundedDocuments: GroundedDoc[] = [
     fileSizeMd: '11.3 KB',
     fileSizePdf: '353 KB',
     pdfPageCount: '8 pages',
+    edition: 'summary',
+    status: 'draft',
     stats: [
       { label: 'Data Rates', value: 'DShot150 / 300 / 600 / 1200' },
       { label: 'Telemetry Engine', value: 'Hardware GCR 4b→5b eRPM reply' },
       { label: 'Memory Bus', value: 'Slot 0xC APB memory-mapped' },
       { label: 'Floorplan Area', value: '28 KB vs 32 KB SRAM layout lever' },
     ],
-    summary: 'Complete RTL engineering specification for dgrid_dshot_rx: offloads ESC motor signal decoding and bidirectional eRPM telemetry reply entirely into deterministic hardware logic. Features glitch-free pad-ring direction reuse without external analog multiplexers, early-abort frame suppression, and floorplan trade-off recovering 4,800 µm² die area.',
+    summary: 'Draft RTL specification (draft 1) for dgrid_dshot_rx: offloads ESC motor signal decoding and bidirectional eRPM telemetry reply entirely into deterministic hardware logic. Features glitch-free pad-ring direction reuse without external analog multiplexers, early-abort frame suppression, and floorplan trade-off recovering 4,800 µm² die area.',
     highlights: [
       'Zero-CPU overhead motor command capture and validation up to DShot1200 rates',
       'Autonomous GCR 4b→5b eRPM packet assembly and transmission without software intervention',
@@ -132,6 +142,7 @@ export const groundedDocuments: GroundedDoc[] = [
     fileSizeMd: '9.3 KB',
     fileSizePdf: '79 KB',
     pdfPageCount: '24 pages',
+    edition: 'summary',
     stats: [
       { label: 'Clock Partition', value: '50 MHz Control · 114 MHz Attention' },
       { label: 'CDC Mechanism', value: '4-Phase Asynchronous Handshake' },
@@ -140,10 +151,10 @@ export const groundedDocuments: GroundedDoc[] = [
     ],
     summary: 'System architecture of DG32-2DOM: adds an INT8 multi-head self-attention engine on an independent 114 MHz clock domain alongside the frozen 50 MHz lockstep control core. Robust 4-phase CDC bridges isolate domains so condition monitoring cannot stall the motor control loop. Utilizes AVIP stator current signature analysis to detect bearing faults with zero additional sensor BOM.',
     highlights: [
-      'Rigorous dual-clock domain isolation: control loop worst-case execution time guaranteed untouched',
+      'Dual-clock domain isolation, designed so the control loop’s worst-case execution time is unaffected',
       '40-bit accumulator headroom prevents INT8 softmax overflow and numerical saturation',
       'AVIP stator current diagnostics isolate inner/outer race bearing faults without accelerometers',
-      '18 on-die SRAM macros occupying 86% of sky130 active die area with positive timing slack',
+      '18 on-die SRAM macros occupying 86% of sky130 active die area with positive post-route timing slack',
     ],
     defaultQuery: 'How do the 50 MHz core and 114 MHz attention clock domains communicate via CDC bridges?',
     queryDocId: 'doc4',
@@ -153,7 +164,7 @@ export const groundedDocuments: GroundedDoc[] = [
     badge: 'DOC #5 · DEFENCE & ECONOMIC STRATEGY',
     docNum: '05',
     title: "Mature-Node Silicon for India’s Defence (Whitepaper v3)",
-    subtitle: '$9B mature-node import funnel, 198-day loop, 10x NRE dismantling & DAP-2020 Make-II statutory moats',
+    subtitle: '$9B mature-node import funnel, 198-day loop, 10x NRE dismantling & DAP-2020 Make-II procurement eligibility',
     group: 'core',
     subsystem: 'Geopolitics & Strategic Moats',
     specFile: '/downloads/docs/deepgrid-mature-silicon-architecture.md',
@@ -163,13 +174,15 @@ export const groundedDocuments: GroundedDoc[] = [
     fileSizeMd: '10.7 KB',
     fileSizePdf: '5.62 MB',
     pdfPageCount: '71 pages',
+    edition: 'summary',
+    status: 'superseded-in-part',
     stats: [
       { label: 'Import Funnel', value: '$9B Mature-Node Defence Market' },
       { label: 'Tapeout Cadence', value: '198-Day Shuttle Loop' },
       { label: 'NRE Economics', value: '₹0.6–1.2 Cr (10x NRE reduction)' },
       { label: 'Legal Framework', value: 'DAP-2020 Make-II · PIL-1..5 · SRIJAN' },
     ],
-    summary: "The foundational 71-page master whitepaper establishing India’s mature-node semiconductor doctrine. Sizes India’s roughly $9B mature-node import funnel, and shows how open-source EDA and shared MPW shuttles bring NRE to ₹0.6–1.2 Cr per chip against $2–5M for a conventional flow, creates statutory moats through 'Boxes, Not Chips' integration under DAP-2020, and models Chinese supply disruption resilience. September 2026 edition, superseded in part by the October SKU Blueprint (chip count, clock, orders, funding). Its orders figure includes a contract this site withholds as misdescribed; do not cite it.",
+    summary: "The 71-page plain-language whitepaper setting out DeepGrid’s mature-node thesis. Sizes India’s roughly $9B mature-node import funnel, and shows how open-source EDA and shared MPW shuttles bring NRE to ₹0.6–1.2 Cr per chip against $2–5M for a conventional flow, creates statutory moats through 'Boxes, Not Chips' integration under DAP-2020, and models Chinese supply disruption resilience. September 2026 edition, superseded in part by the October SKU Blueprint (chip count, clock, orders, funding). Its orders figure includes a contract this site withholds as misdescribed; do not cite it.",
     highlights: [
       '$9B mature-node import funnel prioritized across 10 critical defence semiconductor SKUs',
       '198-day tapeout loop from RTL freeze to packaged silicon delivery using OpenLane EDA',
@@ -194,6 +207,7 @@ export const groundedDocuments: GroundedDoc[] = [
     fileSizeMd: '13.6 KB',
     fileSizePdf: '78 KB',
     pdfPageCount: '24 pages',
+    edition: 'summary',
     stats: [
       { label: 'Package Spec', value: 'QFN-64 (9×9 mm, 0.5 mm pitch)' },
       { label: 'Signal Pins', value: '44 Signal Pins across 11 groups' },
@@ -225,6 +239,7 @@ export const groundedDocuments: GroundedDoc[] = [
     fileSizeMd: '12.1 KB',
     fileSizePdf: '3.6 MB',
     pdfPageCount: 'pp. 42–44',
+    edition: 'concept',
     stats: [
       { label: 'Process', value: '28 nm; failsafe island buildable at 130 nm' },
       { label: 'Failsafe Domain', value: 'Isolated hardware failsafe island' },
@@ -256,6 +271,7 @@ export const groundedDocuments: GroundedDoc[] = [
     fileSizeMd: '8.0 KB',
     fileSizePdf: '8.0 KB',
     pdfPageCount: 'in-site document',
+    edition: 'concept',
     stats: [
       { label: 'Power switching', value: '16 × smart e-fuses (48 V / 12 V)' },
       { label: 'Vehicle bus', value: '4 × CAN-XL, up to 20 Mbps' },
@@ -277,7 +293,7 @@ export const groundedDocuments: GroundedDoc[] = [
     badge: 'STRATEGY · SOVEREIGN SILICON',
     docNum: 'S3',
     title: 'Three-Factory Sovereign Silicon Architecture',
-    subtitle: 'Strategic manufacturing arbitrage across SkyWater, SCL Mohali, and Dholera 28nm fabs',
+    subtitle: 'A sequential three-foundry path: SkyWater sky130, IHP silicon-germanium for radar, SCL Mohali 180 nm',
     group: 'platform',
     subsystem: 'Manufacturing & Fab Strategy',
     specFile: '/downloads/docs/deepgrid-three-factory-architecture.md',
@@ -287,18 +303,19 @@ export const groundedDocuments: GroundedDoc[] = [
     fileSizeMd: '9.6 KB',
     fileSizePdf: '5.62 MB',
     pdfPageCount: 'Section 4',
+    edition: 'concept',
     stats: [
-      { label: 'Foundry Network', value: 'SkyWater · SCL Mohali · Dholera 28nm' },
-      { label: 'Node Distribution', value: '180nm BCD · 130nm CMOS · 28nm Planar' },
-      { label: 'Supply Resilience', value: 'Sanction-proof multi-foundry PDKs' },
+      { label: 'Foundry Network', value: 'SkyWater · IHP · SCL Mohali' },
+      { label: 'Node Distribution', value: '130nm CMOS · 130nm SiGe BiCMOS · 180nm CMOS/BCD' },
+      { label: 'Supply Resilience', value: 'Designs portable across three foundry PDKs' },
       { label: 'Economic Model', value: '₹10 Cr Capital Efficiency' },
     ],
-    summary: "Geopolitical and fab-arbitrage blueprint for Indian semiconductor sovereignty. Aligns design tooling so RTL can port seamlessly between US open-access fabs (SkyWater), Indian strategic fabs (SCL Mohali 180nm), and emerging commercial mega-fabs (Tata Dholera 28nm), guaranteeing supply continuity across international supply crunches. September 2026 edition, superseded in part by the October SKU Blueprint (chip count, clock, orders, funding). Its orders figure includes a contract this site withholds as misdescribed; do not cite it.",
+    summary: "Geopolitical and fab-arbitrage blueprint for Indian semiconductor sovereignty. Aligns design tooling so RTL can port seamlessly between US open-access fabs (SkyWater), a silicon-germanium run at IHP for the radar front end, and India’s SCL Mohali (180 nm), so no single fab is a point of failure. September 2026 edition, superseded in part by the October SKU Blueprint (chip count, clock, orders, funding). Its orders figure includes a contract this site withholds as misdescribed; do not cite it.",
     highlights: [
       'Multi-foundry PDK portability preventing vendor lock-in to single fabs',
-      'Zero-NRE open-source toolchain (OpenLane/Magic/KLayout) validated on test silicon',
+      'Zero-licence open-source toolchain (OpenLane/Magic/KLayout); first shuttle silicon not yet measured',
       'Strategic arbitrage between high-voltage BCD (actuators) and dense CMOS (controllers)',
-      "Proof of concept for India’s ₹10 Cr sovereign chip initiative",
+      "Sized for the ₹10 Cr first round",
     ],
     defaultQuery: 'What is the three-factory fab arbitrage model?',
     queryDocId: 'doc5',

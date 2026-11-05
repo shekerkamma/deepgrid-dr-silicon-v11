@@ -57,3 +57,7 @@
 @media(max-width:800px){.ij-funding,.ij-evidence{grid-template-columns:1fr;gap:2rem}.ij-review-paths{grid-template-columns:1fr}.ij-review-paths>a+a{border-left:0;border-top:.0625rem solid var(--t-border);padding-left:0}.ij-review-paths>a{padding-block:1rem}.ij-review-paths svg{top:1.2rem}.ij-discussion{flex-direction:column;align-items:stretch;gap:.5rem}.ij-primary{white-space:normal}.ij-directory{grid-template-columns:repeat(2,minmax(0,1fr));gap:1.5rem}.uc-mobile-readiness{display:block}.uc-mobile-readiness ul{list-style:none;padding:0;margin:0}.uc-mobile-readiness li{display:flex;justify-content:space-between;gap:1rem;align-items:center;padding:.65rem 0;border-bottom:.0625rem solid var(--t-line)}.uc-mobile-readiness li button{border:0;background:none;color:var(--t-accent);font:inherit;min-height:2.75rem;text-align:left}.uc-mobile-readiness li span{white-space:nowrap;font-variant-numeric:tabular-nums}.uc-mobile-readiness summary{min-height:2.75rem;color:var(--t-accent);cursor:pointer}}
 
 @media(max-width:760px){.v6-home.v11-home .v11-hero .v11-hero-copy{order:0;padding-top:2rem}.v6-home.v11-home .v11-hero .v11-visual{order:1;margin:1.5rem 0 0}}
+/* Parts for this topic: the guide's second row, the parts the page is about (app/investor-journey.tsx partsFor). */
+.ij-route-guide>.ij-route-parts-h{margin-top:1rem}
+.ij-route-guide .ij-route-parts a{color:var(--t-fg)}
+.ij-route-guide .ij-route-parts .mono{color:var(--t-accent)}

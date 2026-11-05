@@ -1,7 +1,8 @@
 # DeepGrid Semi — Mature-Node Silicon System Architecture & Operational Specification
-**Document Classification:** Confidential Diligence Whitepaper Specification (Plain-Language Edition v3, Sept 2026)  
+**Document:** Whitepaper, Plain-Language Edition v3, September 2026. Reading edition published on this site.  
+**Status:** Superseded in part by the SKU Blueprint (October 2026) on chip count, clock, orders and funding. Where the two disagree, the Blueprint governs.  
 **Corporate Entity:** DeepGrid Semi Pvt Ltd · CIN: U62099TS2024PTC183631 · DPIIT: DIPP194870 · T-Hub Phase 2, Hyderabad  
-**Round Context:** Angel / Seed Round · ₹10 Crore ($1.2M) · Managing Director: Aravind Prasad (+91 74163 19944)
+**Round Context:** Angel / Seed Round · ₹10 Crore ($1.2M) · Managing Director: Aravind Prasad
 
 ---
 
@@ -13,7 +14,7 @@ India imports roughly **$23.4 billion of semiconductor chips per year** (UN COMT
 2. **Mature-Node Silicon ($ \ge 130\ \text{nm} $):** $9.0 Billion (divided by 2.6; newer sub-28nm processes excluded).
 3. **DeepGrid 9 Core Chip Classes:** $0.46 Billion (~₹4,300 Cr addressable market; factor of 19 reduction).
 4. **FY31 Target Revenue:** ₹1,000 Crore (~$105M; ~23% capture of addressable classes).
-5. **Live Pre-ASIC Contracted Revenue:** ₹2.88 Crore (Indian Army MCEME ₹1.01 Cr, Infinis Agritech ₹1.25 Cr, Axitech Solar ₹0.62 Cr).
+5. **Pre-ASIC orders:** none claimed. The order figure this edition originally carried did not survive verification and is listed on the site's evidence register; the SKU Blueprint claims no purchase orders or letters of intent.
 
 ---
 
@@ -96,18 +97,18 @@ DeepGrid conducted a line-by-line OCR audit of the Indian Ministry of Defence's 
 
 ---
 
-## 7. Ten-Chip Portfolio & Anchor Customers
+## 7. Ten-Chip Portfolio & Target Markets
 
-| Chip # | Product Name | Target Process | Voltage / Nodes | Anchor Customer & Legal Hook |
+| Chip # | Product Name | Target Process | Voltage / Nodes | Target Market & Standard |
 | :--- | :--- | :--- | :--- | :--- |
-| **Chip 1** | BLDC Motor Controller | 130 nm BCD | 5V – 120V Native | **Airgap Technology** (EV Motors); PIL-5 Anti-Tank Missile |
-| **Chip 2** | Smart-Meter SoC | 130 nm CMOS | 24-bit 6-ch AFE | **Ripple Metering** (250M National Smart Meter Tender) |
-| **Chip 3** | High-Reliability PMIC | 180 nm BCD | 28V Avionics Bus | **BEL Tanks / Aircraft**; SRIJAN NSG-5962; DO-160G |
-| **Chip 4** | Lockstep Safety MCU | 130 nm CMOS | 1.8V / 3.3V | **Indian Army MCEME** (₹1.01 Cr Contracted); ISO 26262 ASIL-D |
+| **Chip 1** | BLDC Motor Controller | 130 nm BCD | 5V – 120V Native | EV motors; PIL-5 anti-tank missile actuators |
+| **Chip 2** | Smart-Meter SoC | 130 nm CMOS | 24-bit 6-ch AFE | 250M national smart-meter rollout |
+| **Chip 3** | High-Reliability PMIC | 180 nm BCD | 28V Avionics Bus | Defence vehicles and aircraft (BEL a target buyer; no engagement claimed); SRIJAN NSG-5962; DO-160G |
+| **Chip 4** | Lockstep Safety MCU | 130 nm CMOS | 1.8V / 3.3V | ISO 26262 ASIL-D (target, not certified) |
 | **Chip 5** | Robust Transceiver | 130 nm HV | ±15 kV ESD, 5V | Replaces discontinued TI/ADI RS-485 / CAN-FD |
 | **Chip 6** | Voltage Supervisor | sky130 $\rightarrow$ SCL | 4-rail, 8 µs filter | **SCL MIL-883 Pathfinder**; Simplest chip through qual first |
-| **Chip 7** | 4D MIMO Radar | IHP SiGe + CMOS | 77 GHz / 350 GHz | BEL EW Suites, Su-30 MKI Radar Warning Receiver |
-| **Chip 8** | Rugged Display Driver | 130 nm HV CMOS | 0–12V, 3,840 cols | **BEL 17" Cockpit Display** (PIL-5 Item #5, Dec 2027) |
+| **Chip 7** | 4D MIMO Radar | IHP SiGe + CMOS | 77 GHz / 350 GHz | Defence EW suites, Su-30 MKI radar warning receiver (target market; no engagement claimed) |
+| **Chip 8** | Rugged Display Driver | 130 nm HV CMOS | 0–12V, 3,840 cols | 17" rugged cockpit display listed on PIL-5 (item #5, Dec 2027) |
 | **Chip 9** | SDV Zonal Gateway | 130 nm + 180 nm | 16 e-Fuses, TSN | Vehicle Zonal Controller; Replaces mechanical relay boxes |
 | **Track B** | D100 Drone SoC | TSMC 28 nm | Multi-Die SiP | **Chakravayu CPDL** (Tactical Drones); Separate ₹50 Cr Round |
 
@@ -134,7 +135,7 @@ If Chinese state-subsidized silicon floods the open Indian market:
 - **Stressed Total:** **₹750 Crore** $\rightarrow$ *The business survives, remains profitable at 60–75% margins, and triggers the next financing round.*
 
 ### The Pre-Committed Stop Rules (S1–S4)
-- **S1 (Meter Signature Gate):** If Ripple Metering has not executed a binding letter by the factory-order cutoff date for Chip 2, Chip 2 is paused for one cycle and its capital reallocated to Chips 1 and 3.
+- **S1 (Meter Signature Gate):** If no smart-meter maker has signed a binding letter by the factory-order cutoff date for Chip 2, Chip 2 is paused for one cycle and its capital reallocated to Chips 1 and 3.
 - **S2 (Screening Failure):** If Chip 6 fails military screening twice, all forward defence revenue projections are deferred by 12 months across all materials within 30 days.
 - **S3 (Commercial Exit Gate):** In FY29, evaluate delivered Chinese component pricing. If it drops below DeepGrid's bare manufacturing cost, immediately exit ceiling fan drivers and focus solely on two-wheelers and proprietary modules.
 - **S4 (SCL Mohali Lateness):** If SCL Mohali slips by more than two manufacturing cycles, publicly declare the delay and execute production runs exclusively at SkyWater and IHP.

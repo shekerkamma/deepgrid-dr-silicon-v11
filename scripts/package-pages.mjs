@@ -54,6 +54,19 @@ const declared=[...routeSrc.matchAll(/href:\s*'([^']+)'/g)].map(m=>m[1]);
 if(declared.length<8)throw Error(`Only ${declared.length} routes parsed from app/routes.ts; the route table looks wrong`);
 const missing=declared.filter(r=>{const f=r==='/'?'index.html':r.replace(/^\//,'')+'.html';return !fs.existsSync(path.join(output,f));});
 if(missing.length)throw Error(`Declared routes missing from the export: ${missing.join(', ')}`);
+// GitHub Pages serves /ask from ask.html but looks for ask/index.html at /ask/, so every route typed or linked with
+// a trailing slash answered 404 (the 404 page then moved the browser on, but the status stayed 404 for crawlers and
+// link checkers). Write each route again as <route>/index.html. It is a full copy, not a redirect: whichever file
+// Pages picks for either form, the page renders, so the two can never redirect into each other. Its canonical link
+// names the address without the slash, so search engines count one page.
+for(const r of declared.filter(r=>r!=='/')){
+ const rel=r.replace(/^\//,''), dst=path.join(output,rel,'index.html');
+ if(fs.existsSync(dst))throw Error(`${rel}/index.html already exists; the trailing-slash copy would overwrite it`);
+ const html=fs.readFileSync(path.join(output,rel+'.html'),'utf8');
+ if(!html.includes('<head>'))throw Error(`No <head> in ${rel}.html for the trailing-slash copy`);
+ fs.mkdirSync(path.dirname(dst),{recursive:true});
+ fs.writeFileSync(dst,html.replace('<head>','<head><link rel="canonical" href="'+base+rel+'"/>'));
+}
 // The design direction contract is development-only (impeccable): it is never shipped in page source.
 fs.writeFileSync(path.join(output,'.nojekyll'),'');
 if(domain)fs.writeFileSync(path.join(output,'CNAME'),domain+'\n');

@@ -6,7 +6,7 @@ import {lattice} from './lattice';
 // deepgridsemi.com's templates (split, card grid, steps, stats, people, figures, contact, CTA).
 import { useEffect, useState } from 'react';
 import { Accordion } from '@base-ui/react/accordion';
-import { ArrowRight, ArrowUpRight, BookOpen, Boxes, Check, CircleCheck, Cpu, Download, Film, Gauge, Hand, Layers, Library, Loader, Mail, MapPin, Mic, Play, ScanEye, SlidersHorizontal, Terminal } from 'lucide-react';
+import { ArrowRight, ArrowUpRight, BookOpen, Boxes, Check, CircleCheck, Cpu, Download, Film, Gauge, Hand, Layers, Library, Loader, Mail, MapPin, Mic, ScanEye, SlidersHorizontal, Terminal } from 'lucide-react';
 import type { FlowStep } from './company-pages';
 import { url } from './routes';
 import { useReduced } from './shell';
@@ -15,7 +15,7 @@ import AppModel3D from './app-model-3d';
 import { films } from './dg32-films';
 import { explainers } from './explainers';
 import { FilmPlayer as Player } from './film-player';
-import { CHANNEL, type Video } from './resources-data';
+import { VideoLibrary } from './video-library';
 import type { CompanyPage, Person, Section } from './company-pages';
 
 // Scenes are concept renders; posters are stills from DeepGrid’s simulators; apexgrid-* are stills from the
@@ -141,38 +141,6 @@ function Flow({ steps, label }: { steps: FlowStep[]; label?: string }) {
 // Site paths in the data are written root-relative ('contact', '/evidence'); resolve them under the Pages base.
 const link = (h: string) => (/^(https?:|mailto:|#)/.test(h) ? h : url(h.startsWith('/') ? h : '/' + h));
 
-
-const mmss = (t: number) => `${Math.floor(t / 60)}:${String(t % 60).padStart(2, '0')}`;
-
-// A YouTube video as a thumbnail until it is asked for: no third-party frame, cookie or autoplay before a click.
-function YouTube({ v }: { v: Video }) {
-  const [on, setOn] = useState(false);
-  return (
-    <figure className={'cp-yt' + (v.short ? ' is-short' : '')}>
-      <div className="cp-yt-frame">
-        {on ? (
-          <iframe
-            src={`https://www.youtube-nocookie.com/embed/${v.id}?autoplay=1&rel=0`}
-            title={v.title}
-            allow="autoplay; encrypted-media; picture-in-picture; fullscreen"
-            allowFullScreen
-          />
-        ) : (
-          <button type="button" className="cp-yt-play" onClick={() => setOn(true)} aria-label={`Play ${v.title}${v.secs ? ', ' + mmss(v.secs) : ''}`}>
-            <img src={`https://i.ytimg.com/vi/${v.id}/hqdefault.jpg`} alt="" loading="lazy" decoding="async" width={480} height={360} />
-            <span className="cp-yt-btn"><Play size={16} fill="currentColor" aria-hidden="true" /></span>
-            {v.secs ? <em className="cp-yt-dur">{mmss(v.secs)}</em> : v.short ? <em className="cp-yt-dur">Short</em> : null}
-          </button>
-        )}
-      </div>
-      <figcaption>
-        <strong>{v.title}</strong>
-        {v.text && <span>{v.text}</span>}
-        <a className="cp-yt-link" href={`https://www.youtube.com/watch?v=${v.id}`} target="_blank" rel="noopener noreferrer">Watch on YouTube <ArrowUpRight size={12} aria-hidden="true" /></a>
-      </figcaption>
-    </figure>
-  );
-}
 
 function SceneSection({ s }: { s: Extract<Section, { kind: 'scene' }> }) {
   const reduced = useReduced();
@@ -308,43 +276,7 @@ function Block({ s }: { s: Section }) {
         </section>
       );
     case 'videos':
-      return (
-        <section className="cp-sec">
-          <header className="cp-sec-head">
-            <h2>{s.title}</h2>
-            {s.lede && <p className="cp-lede">{s.lede}</p>}
-          </header>
-          {s.groups.length > 1 && (
-            <nav className="cp-vnav" aria-label="Video groups">
-              {s.groups.map((g, i) => <a key={g.title} href={'#vg-' + i}>{g.title} <small>{g.videos.length}</small></a>)}
-              {s.shorts && <a href="#vg-shorts">Shorts <small>{s.shorts.reduce((n, g) => n + g.videos.length, 0)}</small></a>}
-            </nav>
-          )}
-          {s.groups.map((g, i) => (
-            <div key={g.title} className="cp-vgroup" id={s.groups.length > 1 ? 'vg-' + i : undefined}>
-              {s.groups.length > 1 && (
-                <header className="cp-vgroup-head">
-                  <h3>{g.title} <span className="cp-count">{g.videos.length} {g.videos.length === 1 ? 'video' : 'videos'}</span></h3>
-                  {g.lede && <p>{g.lede}</p>}
-                </header>
-              )}
-              <div className="cp-yts">{g.videos.map((v) => <YouTube key={v.id} v={v} />)}</div>
-            </div>
-          ))}
-          {s.shorts && (
-            <div className="cp-vgroup" id={s.groups.length > 1 ? 'vg-shorts' : undefined}>
-              <header className="cp-vgroup-head"><h3>Shorts</h3></header>
-              {s.shorts.map((g) => (
-                <div key={g.title}>
-                  {s.shorts!.length > 1 && <p className="cp-meta cp-shorts-title">{g.title}</p>}
-                  <div className="cp-yts cp-yts-short">{g.videos.map((v) => <YouTube key={v.id} v={v} />)}</div>
-                </div>
-              ))}
-            </div>
-          )}
-          {s.channel && <p className="cp-actions"><a className="primary" href={CHANNEL} target="_blank" rel="noopener noreferrer">The DeepGrid Semi channel on YouTube <ArrowUpRight size={16} aria-hidden="true" /></a></p>}
-        </section>
-      );
+      return <VideoLibrary groups={s.groups} shorts={s.shorts} featured={s.featured} start={s.start} films={s.films} channel={s.channel} />;
     case 'docs': {
       // Published documents lead, as cards. Everything deepgridsemi.com lists but does not publish ("on request")
       // folds into one accordion below, one row per group, so request-only titles never read as missing documents.

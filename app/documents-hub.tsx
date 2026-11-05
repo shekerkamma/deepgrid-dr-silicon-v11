@@ -213,7 +213,7 @@ export default function GroundedDocumentsHub({go}: {go?: (hash: string) => void}
 
             {/* Key Engineering Highlights */}
             <div className="dr-doc-highlights-wrap">
-              <span className="dr-doc-highlights-title">Key architectural proofs</span>
+              <span className="dr-doc-highlights-title">Design highlights (pre-silicon)</span>
               <ul className="dr-doc-highlights">
                 {doc.highlights.map((h, i) => (
                   <li key={i}>{h}</li>

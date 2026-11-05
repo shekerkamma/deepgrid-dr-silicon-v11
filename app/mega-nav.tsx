@@ -8,11 +8,23 @@
 import { useEffect, useId, useLayoutEffect, useRef, useState } from 'react';
 import { ChevronDown } from 'lucide-react';
 import { url, byId, type RouteId } from './routes';
+import { portfolioGroups, portfolioParts } from './portfolio-story-data';
 
 type Item = { label: string; href: string; note?: string };
-type Menu = { id: string; label: string; match: RouteId[]; items: Item[] };
+type Menu = { id: string; label: string; match: RouteId[]; items: Item[]; groups?: { label: string; items: Item[] }[] };
 
 const a = (path: string, hash = '') => url(path) + (hash ? '#' + hash : '');
+
+// Every part, grouped as /products groups them. Label and note are the product page's own heading
+// ("SKU-7 · IHP SiGe + 130 nm CMOS 77 GHz radar"), read from the data that page renders.
+const partGroups = portfolioGroups.map((g) => ({
+  label: g.title,
+  items: portfolioParts.filter((p) => p.group === g.id).map((p) => ({
+    label: `${p.code} ${p.name}`,
+    href: a(p.code === 'D100' ? '/products/d100' : `/products/${p.id}`),
+    note: p.process,
+  })),
+}));
 
 const menuDefinitions: Menu[] = [
   {
@@ -29,11 +41,10 @@ const menuDefinitions: Menu[] = [
     id: 'products', label: 'Products', match: ['products', 'procurement'],
     items: [
       { label: 'All product architectures', href: a('/products'), note: 'Motion, power, sensing, interfaces and integration' },
-      { label: 'DG32 safety MCU', href: a('/products/sku-4'), note: 'Lockstep control and the hardware fault path' },
-      { label: 'BLDC motor controller', href: a('/products/sku-1'), note: 'Motor control and its power stage' },
-      { label: 'D100 Drone SoC', href: a('/products/d100'), note: 'Flight safety and perception compute' },
       { label: 'DG32 vs STM32G0', href: a('/procurement'), note: 'Control capabilities, electrical limits and readiness' },
+      { label: 'Portfolio economics', href: a('/portfolio'), note: 'Readiness, unit costs and revenue assumptions' },
     ],
+    groups: partGroups,
   },
   {
     id: 'technology', label: 'Technology', match: ['technology', 'safety', 'control', 'die', 'package', 'evidence'],
@@ -85,7 +96,8 @@ export const menus = ['products','usecases','technology','resources','about','in
 
 const canHover = () => typeof matchMedia !== 'undefined' && matchMedia('(min-width: 1101px) and (hover: hover)').matches;
 
-export function MegaNav({ route, onNavigate, label = 'Primary navigation', compact = false }: { route: RouteId; onNavigate?: () => void; label?: string; compact?: boolean }) {
+export function MegaNav({ route, onNavigate, label = 'Primary navigation', compact = false }: { route?: RouteId; onNavigate?: () => void; label?: string; compact?: boolean }) {
+  const current = route ? url(byId[route].href) : undefined;
   const [open, setOpen] = useState<string | null>(null);
   const menuId = 'menu-' + useId().replace(/[^a-zA-Z0-9_-]/g, '') + '-';
   const root = useRef<HTMLElement>(null);
@@ -140,19 +152,19 @@ export function MegaNav({ route, onNavigate, label = 'Primary navigation', compa
       </a>}
       {menus.map((m) => {
         const isOpen = open === m.id;
-        const parent = byId[route].parent;
-        const active = m.match.includes(route) || (parent === 'products' && route !== 'portfolio' && m.id === 'products');
+        const parent = route ? byId[route].parent : undefined;
+        const active = !!route && (m.match.includes(route) || (parent === 'products' && route !== 'portfolio' && m.id === 'products'));
         return (
           <div key={m.id} className="mega-item" onMouseEnter={() => enter(m.id)} onMouseLeave={leave}>
             <button type="button" className={'mega-trigger' + (active ? ' active' : '')} aria-expanded={isOpen} aria-controls={menuId + m.id} onClick={() => setOpen(isOpen ? null : m.id)}>
               {m.label}
               <ChevronDown size={14} aria-hidden="true" />
             </button>
-            <div id={menuId + m.id} className="mega-panel" hidden={!isOpen}>
+            <div id={menuId + m.id} className={'mega-panel' + (m.groups ? ' mega-panel-grid' : '')} hidden={!isOpen}>
               <ul>
                 {m.items.map((it) => (
                   <li key={it.href + it.label}>
-                    <a href={it.href} aria-current={it.href === url(byId[route].href) ? 'page' : undefined} onClick={() => { setOpen(null); onNavigate?.(); }}
+                    <a href={it.href} aria-current={it.href === current ? 'page' : undefined} onClick={() => { setOpen(null); onNavigate?.(); }}
                       {...(/^https?:\/\//.test(it.href) ? { target: '_blank', rel: 'noopener noreferrer' } : {})}>
                       <span>{it.label}</span>
                       {it.note && <small>{it.note}</small>}
@@ -160,6 +172,25 @@ export function MegaNav({ route, onNavigate, label = 'Primary navigation', compa
                   </li>
                 ))}
               </ul>
+              {m.groups && (
+                <div className="mega-groups">
+                  {m.groups.map((g) => (
+                    <div key={g.label} className="mega-group">
+                      <p className="mega-group-label">{g.label}</p>
+                      <ul>
+                        {g.items.map((it) => (
+                          <li key={it.href}>
+                            <a href={it.href} aria-current={it.href === current ? 'page' : undefined} onClick={() => { setOpen(null); onNavigate?.(); }}>
+                              <span>{it.label}</span>
+                              {it.note && <small>{it.note}</small>}
+                            </a>
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  ))}
+                </div>
+              )}
             </div>
           </div>
         );

@@ -13,7 +13,7 @@ import { explainers } from './explainers';
 const EXPLAINER_IDS = explainers.map((e) => e.id);
 import { areas, products } from './applications-story-data';
 import { groundedDocuments } from './documents-data';
-import { V, videoGroups, shortGroups, docGroups, type VideoGroup, type DocGroup } from './resources-data';
+import { V, videoGroups, shortGroups, featuredVideo, startHere, docGroups, type Video, type VideoGroup, type DocGroup } from './resources-data';
 
 export type Card = { title: string; text?: string; image?: string; meta?: string; href?: string; go?: string; icon?: string };
 export type FlowStep = { label: string; text: string; icon: string };
@@ -28,7 +28,7 @@ export type Section =
   | { kind: 'contact'; from: string }
   | { kind: 'roster'; kicker?: string; title: string; lede?: string; groups: { title: string; people: [string, string][] }[]; from: string }
   | { kind: 'films'; kicker?: string; title: string; lede?: string; ids: string[]; from: string }
-  | { kind: 'videos'; kicker?: string; title: string; lede?: string; groups: VideoGroup[]; shorts?: VideoGroup[]; channel?: boolean; from: string }
+  | { kind: 'videos'; kicker?: string; title: string; lede?: string; groups: VideoGroup[]; shorts?: VideoGroup[]; featured?: Video; start?: Video[]; films?: { title: string; lede: string; ids: string[] }; channel?: boolean; from: string }
   | { kind: 'docs'; groups: DocGroup[]; from: string }
   | { kind: 'scene'; scene: 'motor' | 'truck' | 'defence'; title: string; lede: string; from: string }
   | { kind: 'bullets'; kicker?: string; title: string; items: string[]; from: string }
@@ -182,7 +182,12 @@ export const companyPages: CompanyPage[] = [
     lede: 'Access technical documentation, datasheets, whitepapers, and development resources',
     sections: [
       { kind: 'cards', title: 'Technical specifications and product evaluation guides', lede: 'The documents every figure on this site traces to. Each opens inside the site with its contents and sections; the PDF is the edition of record.', cols: 3,
-        items: groundedDocuments.map((d) => ({ title: d.title, meta: `PDF · ${d.pdfPageCount}`, text: d.summary.split(/(?<=\.)\s/)[0], href: d.specFile, go: 'Read on this site' })),
+        items: groundedDocuments.map((d) => ({ title: d.title,
+          // A card shows one sentence, so a superseded or draft document says that before its summary does.
+          meta: [d.edition === 'concept' ? 'Concept architecture' : `PDF · ${d.pdfPageCount}`, d.status === 'superseded-in-part' ? 'Superseded in part' : d.status === 'draft' ? 'Draft' : ''].filter(Boolean).join(' · '),
+          text: d.status === 'superseded-in-part' ? 'Superseded in part by the October 2026 SKU Blueprint on chip count, clock, orders and funding; read it for the plain-language thesis, not current figures.'
+            : d.summary.split(/(?<=\.)\s/)[0],
+          href: d.specFile, go: 'Read on this site' })),
         from: 'app/documents-data.ts (grounded document registry)' },
       { kind: 'docs', groups: docGroups, from: 'deepgridsemi.com/resources/docs + the site’s own PDFs' },
       { kind: 'cta', title: 'The technical team answers product and integration questions.', lede: 'Our technical team is here to help you get the most out of our products', from: 'deepgridsemi.com/resources/docs',
@@ -194,8 +199,9 @@ export const companyPages: CompanyPage[] = [
     kicker: 'Demos, field tests & deep dives', title: 'Videos',
     lede: 'Watch DeepGrid Semi’s silicon, autonomous driving, and mobility platforms in action.',
     sections: [
-      { kind: 'videos', title: 'By platform', groups: videoGroups, shorts: shortGroups, channel: true, from: 'deepgridsemi.com/resources/videos + youtube.com DeepGrid Semi channel' },
-      { kind: 'films', title: 'Ten parts, one film each: the problem, the mechanism, what is unproven.', lede: 'One short animated film per part: the problem it solves, the mechanism moving on the words that describe it, and what is still unproven. Animations illustrate; they are not simulations. Pre-silicon; every figure is a design target.', ids: EXPLAINER_IDS, from: 'part explainer films' },
+      { kind: 'videos', title: 'By platform', groups: videoGroups, shorts: shortGroups, featured: featuredVideo, start: startHere,
+        films: { title: 'Ten parts, one film each: the problem, the mechanism, what is unproven.', lede: 'One short animated film per part: the problem it solves, the mechanism moving on the words that describe it, and what is still unproven. Animations illustrate; they are not simulations. Pre-silicon; every figure is a design target.', ids: EXPLAINER_IDS },
+        channel: true, from: 'deepgridsemi.com/resources/videos + youtube.com DeepGrid Semi channel' },
       { kind: 'cta', title: 'The 104-slide portfolio, narrated end to end, and the silicon films.', lede: 'The product lines in their simulators, the silicon films, and the 104-slide portfolio narrated end to end.', from: 'showcase films',
         actions: [ { label: 'Narrated decks & films', href: 'resources', primary: true }, { label: 'Documentation', href: 'resources/docs' } ] },
     ],

@@ -615,3 +615,30 @@
 .st-loop-cap strong { color: var(--foreground); font-weight: 600; }
 .st-loop:has(.st-loop-cap) .st-loop-btn { bottom: auto; top: 8px; }
 .st-fam-anchor { scroll-margin-top: 80px; }
+
+/* A claim row on /evidence is a link target (app/claim-badge.tsx): clear the sticky header, and mark the row
+   a reader arrived at. */
+.st-claim-row { scroll-margin-top: 6rem; }
+.st-claim-row:target > * { background: var(--t-muted, var(--surface-2)); }
+.st-claim-row:target > th { box-shadow: inset .25rem 0 0 var(--t-accent, var(--copper)); }
+
+/* A figure's link to its row in the evidence register. Sits after the figure, in the text's own size. */
+/* 24px tall at least: WCAG 2.5.8, and the control-loop table shows the badge alone in its cell, outside any sentence. */
+.claim-badge {
+  display: inline-flex;
+  align-items: center;
+  min-height: 1.5rem;
+  margin-left: .5rem;
+  padding: 0 .4rem;
+  border: 1px solid var(--t-border, var(--line));
+  border-radius: 999px;
+  font-size: var(--text-meta);
+  font-weight: 500;
+  line-height: 1.6;
+  white-space: nowrap;
+  color: var(--t-accent, var(--copper));
+  text-decoration: none;
+  vertical-align: baseline;
+}
+.claim-badge:hover { text-decoration: underline; }
+.claim-badge:focus-visible { outline: .125rem solid var(--t-accent, var(--copper)); outline-offset: .125rem; }
