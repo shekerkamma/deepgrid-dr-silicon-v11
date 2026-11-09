@@ -3,6 +3,7 @@ import assert from 'node:assert/strict';
 import fs from 'node:fs';
 import {pathToFileURL} from 'node:url';
 import path from 'node:path';
+import {WITHHELD,scanWorkerBundle} from './lib/withheld.mjs';
 const outfile=path.resolve('node_modules/.cache/answer-service.mjs');
 await esbuild.build({entryPoints:['services/ask/worker.ts'],bundle:true,platform:'node',format:'esm',outfile});
 const {default:worker}=await import(pathToFileURL(outfile));
@@ -91,4 +92,12 @@ try{
  console.log('PASS: /panel returns a listed panel id or null, normalises and bounds the question, origin and rate limits.');
  console.log('PASS: portfolio facts from the live sheets (8 reads, cached), withheld figures never sent, tranche question led by its fact.');
  console.log('PASS: trusted corpus, grounded citations, rejected origins, body/query bounds, rate limit, explicit quota failure, synthesis and audit calls.');
+ // The bundle is what the Worker ships. The planted hit comes from the pattern, so this file states no withheld claim.
+ const bundle=fs.readFileSync(outfile,'utf8');
+ const planted=` note ${WITHHELD.source.match(/[A-Z]{5}/)[0]} note `;
+ assert.deepEqual(scanWorkerBundle(bundle),[],'Withheld wording in the Worker bundle');
+ assert.equal(scanWorkerBundle(bundle+planted).length,1,'A planted withheld claim must be reported');
+ assert.throws(()=>scanWorkerBundle(bundle.replace('withheld claims (','')),/exactly once/,'The audit-list exemption must exist');
+ assert.throws(()=>scanWorkerBundle(bundle+bundle),/exactly once/,'A second audit list must not be exempted');
+ console.log('PASS: Worker bundle has no withheld wording outside the one audit list; a planted hit and a missing or repeated list are caught.');
 }finally{globalThis.fetch=originalFetch;}
