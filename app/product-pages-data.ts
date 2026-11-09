@@ -156,7 +156,7 @@ export const productPages: ProductPage[] = [
     fit: {buyers: 'EV battery management, motor-safety supervision, braking and steering controllers and robot joints; and the safety processor beside SKU-1 and inside D100.', policy: 'The design targets the ISO 26262 ASIL-D automotive safety level; the lockstep checker has been fault-injection tested in RTL simulation.', node: 'Running two processors costs chip area, not speed. A mature node makes that redundancy, and radiation-hardened latches, affordable.'},
     heroSpecs: ['Lockstep', 'Fault response', 'Package (DG32-LITE)'],
     heroClaims: {'Fault response': 'fault-39', 'Package (DG32-LITE)': 'qfn-64'},
-    highlights: [['39', 'Cycles from injected fault to FAULT_N', 'Fault response'], ['2', 'Cycles of lockstep skew', 'Lockstep'], ['100 MHz', 'Product clock on 130 nm', 'Clock']],
+    highlights: [['39', 'Cycles from injected fault to FAULT_N', 'Fault response'], ['2', 'Cycles of lockstep skew', 'Lockstep'], ['100 MHz', 'Product design target; DG32-LITE die 55–62 MHz post-route', 'Clock']],
     headline: 'Two cores, two cycles apart, and a comparator that answers in hardware.',
     lede: 'SKU-4 is the safety microcontroller of the portfolio and the one part with detailed engineering evidence: DG32-LITE implements it. A second core runs the same instructions two cycles behind the first; when their committed results differ, a comparator latches the cause and drives the fault pin without waiting for firmware.',
     physics: [
@@ -387,7 +387,7 @@ export const productPages: ProductPage[] = [
     id: 'sku10', slug: 'sku-10', portfolioId: 'sku-10',
     fit: {buyers: 'Industrial controllers, drone flight controllers and ESCs, EV body and charger controllers, IoT gateways; captive as the host platform inside SKU-1 and SKU-11.', policy: 'Country-of-origin rules for defence and drone procurement bar land-border-nation components; an indigenous secure MCU on an open PDK, auditable at every layer, answers that directly. Verified boot is the first security requirement buyers ask for, and here it is in mask ROM rather than a second chip.', node: 'SKY130 through ChipFoundry’s OpenFrame is a low-cost shuttle slot with 44 pads, and its 100 MHz design target is enough for the control and crypto load. SKY130 has no OTP or eFuse, so the root key lives in mask ROM and device secrets and the rollback counter in a 1 kbit ReRAM macro.'},
     heroSpecs: ['Security', 'Memory', 'Interfaces'],
-    highlights: [['309 ms', 'Signed firmware checked from reset', 'Security'], ['128 KB', 'Error-corrected memory', 'Memory'], ['100 MHz', 'Design target, lockstep DGridRiscV pair', 'Process']],
+    highlights: [['309 ms', 'Signed firmware checked from reset', 'Security'], ['128 KB', 'Error-corrected memory', 'Memory'], ['100 MHz', 'Design target; lockstep core 55–62 MHz post-route', 'Process']],
     headline: 'A secure microcontroller that checks its own firmware before it runs it.',
     lede: 'SKU-10, the DG32-Max, pairs two DGridRiscV processors in lockstep with encryption instructions, a 4 KB instruction cache and 128 KB of error-corrected memory. Its boot ROM verifies the firmware’s digital signature before running it, so one die does the work of an imported secure MCU and the separate secure element a board adds for signed boot.',
     physics: [
