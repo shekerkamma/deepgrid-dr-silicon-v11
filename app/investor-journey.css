@@ -61,3 +61,24 @@
 .ij-route-guide>.ij-route-parts-h{margin-top:1rem}
 .ij-route-guide .ij-route-parts a{color:var(--t-fg)}
 .ij-route-guide .ij-route-parts .mono{color:var(--t-accent)}
+
+/* One left axis on the home page (2026-11-10). The layout, evidence and funding bands and the discussion card are
+   built for .page-wrap, which supplies the side gutter on inner pages. Home has no wrapper, so they ran edge to edge
+   (headings at x=0, ledger figures cut off at the right). They take the 5% gutter of the other home bands, as bands
+   divided by a hairline; the related list below joins the same axis. */
+.v11-home>:is(.dg-layout-evidence,.ij-evidence,.ij-funding){margin:0;padding:clamp(3rem,6vw,5rem) 5%;border-block:0;border-top:1px solid var(--dgs-rule)}
+.v11-home>.ij-discussion{margin:clamp(2rem,4vw,3rem) 5%}
+.v11-home+.page-wrap{max-width:none;padding-inline:5%}
+@media(max-width:760px){.v11-home>:is(.dg-layout-evidence,.ij-evidence,.ij-funding){padding-inline:6%}.v11-home>.ij-discussion{margin-inline:6%}.v11-home+.page-wrap{padding-inline:6%}}
+/* The route guide sits on the page axis (.page-wrap: 8% inside 1600px, 5% from 1150px down), not 18px left of it. */
+.ij-route-guide{width:84%;max-width:84rem}
+@media(max-width:1150px){.ij-route-guide{width:90%}}
+/* Finder rows were 11.5 to 13px, the smallest running text on the home page. Reading steps: 15px job, 14px process, 13px maturity. */
+.v11-finder .v11-product-job{font-size:.9375rem;line-height:1.55}
+.v11-finder .v11-product-process{font-size:.875rem}
+.v11-finder .v11-product-process small{font-size:.8125rem}
+/* Application strip: 14px labels, and a 44px touch row on phones (measured 28px). */
+.v11-home .v11-application-strip>span,.v11-home .v11-application-strip a{font-size:.875rem}
+@media(max-width:760px){.v11-home .v11-application-strip{align-items:stretch}.v6-home.v11-home .v11-application-strip a:not(.v6-primary){min-height:2.75rem}}
+/* Phone hero: the band already carries the gutter, so the copy and caption do not add a second one (h1 sat at 41px, the page axis is 23px). */
+@media(max-width:760px){.v6-home.v11-home .v11-hero{padding-inline:6%}.v6-home.v11-home .v11-hero .v11-hero-copy,.v6-home.v11-home .v11-hero .v11-visual figcaption{padding-inline:0}}
