@@ -1,0 +1,43 @@
+youtube_id,title,cluster,format,uploaded,views_2026_11_11,views_per_30_days
+t2EvO403h0k,D-Drive 360° movement,D-Drive & D-Base,short,2026-05-19,1233,210.2
+io4zmbFq1MM,D-Base Alpha v1,D-Drive & D-Base,short,2025-12-07,941,83.3
+pmIK4nGp5xg,Autonomous steering control,D-Drive & D-Base,video,2026-03-17,205,25.7
+hZWILGZ-mnY,Drivetrain test: forward,D-Drive & D-Base,short,2025-12-26,180,16.9
+Rnl7k74dVaE,Drivetrain test: backwards,D-Drive & D-Base,short,2025-12-26,76,7.1
+-iY2KLMsZqw,D-Drive follow-me,D-Drive & D-Base,video,2026-05-19,57,9.7
+mRvephRowgc,D-Drive after SLAM,D-Drive & D-Base,video,2026-08-06,56,17.3
+knNspgTt7rM,D-Drive BEV,D-Drive & D-Base,video,2026-03-17,41,5.1
+fvz-Uhi8vhU,"D-Drive 360° turn, test 1",D-Drive & D-Base,video,2026-04-20,34,5.0
+gun5fvXOnGc,"Apexgrid in the lawn, saluting",Apexgrid humanoid,short,2025-12-23,1570,145.8
+SX-Nvnv5Dhg,"Apexgrid salute, first time fast",Apexgrid humanoid,short,2026-06-29,481,106.9
+fI0cZ8k1fWs,"Apexgrid in the lawn, saluting (1)",Apexgrid humanoid,short,2026-01-13,138,13.7
+KFQ4EHIeZnk,Apexgrid joint calibration,Apexgrid humanoid,short,2026-01-13,73,7.3
+75G6kkpDopw,Humanoid arms up and down,Apexgrid humanoid,short,2026-06-29,72,16.0
+gevSbk7C50M,Salute by Apexgrid,Apexgrid humanoid,short,2025-12-17,70,6.4
+eCAw60kV01Q,Apexgrid in the lawn,Apexgrid humanoid,short,2026-06-29,50,11.1
+i_5wXj0lHmM,Apexgrid yoga,Apexgrid humanoid,video,2025-12-27,47,4.4
+b4VFlC5GDzY,Anatomy of our chip: 13 tape-out words,Silicon & layout,video,2026-09-13,185,94.1
+FD2xhoQYwKA,"Softmax engine, 3D layout",Silicon & layout,video,2026-06-01,172,31.7
+Bw34e4sx144,"DG32-LITE die tour, narrated",Silicon & layout,video,2026-09-10,67,32.4
+8Y6m7UTAZXY,"DG32-LITE die tour, silent",Silicon & layout,video,2026-09-08,53,24.8
+bJOUUJhwa9w,"DG32-LITE lockstep, laid out",Silicon & layout,video,2026-09-08,32,15.0
+VYNbuuYrXSg,Wrapalign: the power that never reached the wrapper,Silicon & layout,video,2026-09-14,29,15.0
+HBLdDD5Vm9k,SAR guard ring latch-up,Silicon & layout,video,2026-09-21,29,17.1
+4ZVohoOoesE,DG32-LITE GDSII view,Silicon & layout,video,2026-09-08,18,8.4
+JnnzI768PZ8,"Smart mirror, thermal through glare",D-Mirror,video,2026-03-18,452,57.0
+gGoUd4a-DLw,D-Mirror demo,D-Mirror,video,2026-03-18,52,6.6
+Bx9gC9iW99k,D-Mirror alerts,D-Mirror,video,2026-03-17,31,3.9
+fAoHp7WnTuY,Retrofit ADAS alerts,ADAS road tests & datasets,short,2025-03-06,318,15.5
+aSZdrH3EerY,End-to-end in CARLA,ADAS road tests & datasets,video,2026-03-18,160,20.2
+qBHUWiiw4Po,"Live ADAS demo, Hitech City (19 min)",ADAS road tests & datasets,video,2026-03-23,108,13.9
+vjA720O8RcE,End-to-end on nuScenes,ADAS road tests & datasets,video,2026-03-18,75,9.5
+Kn9Q4THjG6c,DGRID-ADAS lane + collision,ADAS road tests & datasets,video,2026-03-17,72,9.0
+UaNaELUh1JM,End-to-end on Waymo,ADAS road tests & datasets,video,2026-03-18,66,8.3
+x7pi4APnNik,Indian driving: ADAS test 3,ADAS road tests & datasets,video,2026-02-24,61,7.0
+qG8XNHRXZWk,Western vs Indian roads,ADAS road tests & datasets,short,2024-12-27,56,2.5
+5YDEm77Tndc,Indian driving: model output,ADAS road tests & datasets,video,2026-01-20,50,5.1
+svS1tD3uY_g,ADAS L1 in action,ADAS road tests & datasets,short,2025-02-06,45,2.1
+0rEnXT__B7M,Indian road test: scenario 2,ADAS road tests & datasets,video,2026-02-20,24,2.7
+AOaSVtRbvRk,Founder with T-Hub,Company,video,2025-03-24,72,3.6
+-0YJvIQHIA8,deepgridsemi.com tour,Company,video,2025-03-24,47,2.4
+CKDsqkh1eZA,PCB engine: autoroute,Engineering tools,video,2026-09-03,27,11.7

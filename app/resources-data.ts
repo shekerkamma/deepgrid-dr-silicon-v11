@@ -4,7 +4,7 @@ import { url } from './routes';
 // descriptions are used wherever it lists a video; channel videos it does not list are kept as new information
 // under their own groups, titled from the channel. Documents the reference names but that do not exist as files
 // are shown "on request", never as links; the downloadable ones are the site’s own PDFs.
-export const CHANNEL = 'https://www.youtube.com/@DeepgridSemi/videos'; // = channel UCNhzSUQYxiL7lGdzxMRwNvA (all 28 ids match)
+export const CHANNEL = 'https://www.youtube.com/@DeepgridSemi/videos'; // = channel UCNhzSUQYxiL7lGdzxMRwNvA (all 42 uploads listed here, checked 2026-11-11)
 
 /** What a video shows running, so no demo reads as DeepGrid silicon. No DeepGrid part has been fabricated yet,
  *  so anything filmed on real hardware ran on something else. */
@@ -47,7 +47,8 @@ export const V = {
   apexCal: { id: 'KFQ4EHIeZnk', title: 'Apexgrid yoga: calibration of joints', short: true , runs: 'robot' },
   apexSalute: { id: 'gevSbk7C50M', title: 'Salute by Apexgrid', short: true , runs: 'robot' },
   apexFast: { id: 'SX-Nvnv5Dhg', title: 'Apexgrid saluting, first time fast', short: true , runs: 'robot' },
-  apexLawn: { id: 'fI0cZ8k1fWs', title: 'Apexgrid in the lawn, moving and saluting', short: true , runs: 'robot' },
+  apexLawnFirst: { id: 'gun5fvXOnGc', title: 'Apexgrid in the lawn, moving and saluting', short: true , runs: 'robot' },
+  apexLawn: { id: 'fI0cZ8k1fWs', title: 'Apexgrid in the lawn, moving and saluting (second take)', short: true , runs: 'robot' },
   apexLawn2: { id: 'eCAw60kV01Q', title: 'Apexgrid in the lawn', short: true , runs: 'robot' },
   apexArms: { id: '75G6kkpDopw', title: 'Humanoid moving hands up and down', short: true , runs: 'robot' },
   dieVoice: { id: 'Bw34e4sx144', title: 'DG32-LITE, looking at the die: 3.9 × 3.9 millimetres', text: 'A narrated tour of the DG32-LITE die.', secs: 162 , runs: 'layout' },
@@ -93,7 +94,7 @@ export const videoGroups: VideoGroup[] = [
   { title: 'Engineering tools', lede: 'The in-house tools behind the boards.', from: YT, videos: [V.pcb] },
 ];
 export const shortGroups: VideoGroup[] = [
-  { title: 'Apexgrid humanoid', from: YT, videos: [V.apexCal, V.apexSalute, V.apexFast, V.apexLawn, V.apexLawn2, V.apexArms] },
+  { title: 'Apexgrid humanoid', from: YT, videos: [V.apexLawnFirst, V.apexCal, V.apexSalute, V.apexFast, V.apexLawn, V.apexLawn2, V.apexArms] },
   { title: 'D-Drive and D-Base', from: YT, videos: [V.dd360s, V.ddFwd, V.ddBack, V.dbase] },
   { title: 'ADAS on the road', from: YT, videos: [V.retrofit, V.l1, V.western] },
 ];
