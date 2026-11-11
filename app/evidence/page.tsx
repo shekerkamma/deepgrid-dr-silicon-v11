@@ -150,12 +150,12 @@ export default function Page() {
               <h2 id="ev-withheld-h">Three unsupported performance claims are excluded from product evaluation.</h2>
               <p>
                 The source documents carry figures this site leaves out. Each was checked and found
-                wrong in a way that matters, so it is printed here with the reason rather than quietly
-                dropped.
+                wrong in a way that matters, so it is named here with the reason rather than quietly
+                dropped. The figures themselves are not repeated.
               </p>
               <ul className="st-tiers">
                 {withheld.map(w => (
-                  <li key={w.claim}><strong>{w.claim}</strong><span>{w.why}</span></li>
+                  <li key={w.label}><strong>{w.label}</strong><span>{w.summary}</span></li>
                 ))}
               </ul>
             </div>
@@ -223,7 +223,7 @@ export default function Page() {
                         <td>{p.status ?? 'Not stated on the sheet.'}</td>
                         <td className="st-cite">
                           <a className="st-link" href={url(citeDoc(p.evidenceDoc).pdf)} target="_blank" rel="noreferrer">
-                            {p.evidenceDoc === 'doc5' ? 'Whitepaper v3, §3' : `SKU Blueprint, p. ${p.blueprintPage}`}
+                            {p.evidenceDoc === 'doc5' ? 'Whitepaper v3 (Sep 2026, superseded in part by the Oct 2026 Blueprint), §3' : `SKU Blueprint, p. ${p.blueprintPage}`}
                           </a>
                         </td>
                       </tr>

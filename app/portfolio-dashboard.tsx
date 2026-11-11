@@ -105,7 +105,7 @@ function LinesPanel({v: {d, planned, planTotal, byFy31, near, farMax, spec}, sku
       {full && <div className="table-scroll"><table className="pd-table sk-table">
         <caption className="sr-only">Chips, readiness and plan, ₹ Cr</caption>
         <thead><tr><th scope="col">Chip</th><th scope="col">Process</th><th scope="col">Readiness</th><th scope="col">Dec 2026 shuttle</th><th scope="col">Plan line</th><th scope="col">FY31 ramp</th><th scope="col">Market, ₹{NB}Cr</th><th scope="col">Market verdict</th></tr></thead>
-        <tbody>{d.skus.map(s => <tr key={s.sku}><th scope="row">{short(s)}</th><td>{s.process}{s.clockMhz ? `, ${s.clockMhz}${NB}MHz` : ''}</td><td>{s.readiness || '–'}</td><td>{s.planCr == null ? '–' : s.shuttle ? 'Yes' : 'No'}{s.mpw ? ` (${s.mpw})` : ''}</td>
+        <tbody>{d.skus.map(s => <tr key={s.sku}><th scope="row">{short(s)}</th><td>{s.process}{s.clockMhz ? `, ${s.clockMhz}${NB}MHz target` : ''}{s.sku === 'SKU-4' || s.sku === 'SKU-10' ? ` (DG32-LITE lockstep core: 55–62${NB}MHz post-route)` : ''}</td><td>{s.readiness || '–'}</td><td>{s.planCr == null ? '–' : s.shuttle ? 'Yes' : 'No'}{s.mpw ? ` (${s.mpw})` : ''}</td>
           <td>{s.planCr ?? '–'}</td><td>{s.fy31Cr ?? '–'}</td><td>{s.marketLowCr != null ? `${s.marketLowCr.toLocaleString('en-IN')}–${s.marketHighCr!.toLocaleString('en-IN')}` : '–'}</td><td>{s.verdict ? s.verdict.charAt(0) + s.verdict.slice(1).toLowerCase() : '–'}</td></tr>)}</tbody>
       </table></div>}
       <Source files={['skus.csv']} note={`Plan lines sum to ${cr(planTotal)} (checked at build). ${spec.length ? `${spec.map(short).join(', ')} is still at specification; ` : ''}D100 is Track B, on 28${NB}nm, with no plan line yet. Clock is the product target, not a measurement.`}/>
