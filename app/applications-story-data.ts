@@ -49,7 +49,7 @@ export const clips: Record<string, Clip> = {
     captions: '/media/dg32-2dom-architecture.vtt',
     poster: '/decks/dg32-2dom/slide-01.webp', start: 0, duration: 29.73, slide: 1,
     shows: 'Condition monitoring on the motor-control chip.',
-    saying: 'DG32-2DOM is the attention variant of Deepgrid Semi’s DG32-LITE motor-control chip. It keeps the dual-core lockstep controller and adds an INT8 attention engine on its own clock, so a drive can watch its own motor for faults. The design is complete and in physical trials. Every figure here is a post-route, simulated or analytic value, and each one is labelled.',
+    saying: 'DG32-2DOM is the attention variant of DeepGrid Semi’s DG32-LITE motor-control chip. It keeps the dual-core lockstep controller and adds an INT8 attention engine on its own clock, so a drive can watch its own motor for faults. The design is complete and in physical trials. Every figure here is a post-route, simulated or analytic value, and each one is labelled.',
   },
   'bearing': {
     deck: 'DG32-2DOM architecture',

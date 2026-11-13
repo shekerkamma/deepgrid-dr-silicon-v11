@@ -14,7 +14,7 @@ function Brand() {
   return (
     <>
       {/* The company's own wordmark, as on deepgridsemi.com. */}
-      <img className="brand-wordmark" src={url('/brand/deepgrid-semi-wordmark.png')} alt="Deepgrid Semi" width={480} height={96}/>
+      <img className="brand-wordmark" src={url('/brand/deepgrid-semi-wordmark.png')} alt="DeepGrid Semi" width={480} height={96}/>
     </>
   );
 }
