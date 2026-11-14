@@ -123,7 +123,7 @@
 .pp-chip-sub { background: linear-gradient(135deg, var(--t-surface-2), var(--t-surface)); border: 1px solid var(--line); transform: translateZ(0); }
 .pp-chip-sub i { position: absolute; inset: 8%; background-image: radial-gradient(circle, color-mix(in srgb, var(--copper) 55%, transparent) 1.6px, transparent 2.2px); background-size: 9% 9%; opacity: .7; }
 .pp-chip-die { inset: 14%; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 5%; padding: 7%; background: linear-gradient(135deg, var(--t-surface-2), var(--t-surface)); border: 1px solid color-mix(in srgb, var(--copper) 50%, var(--line)); transform: translateZ(70px); }
-.pp-chip-die span { display: grid; place-items: center; padding: 4%; border: 1px solid color-mix(in srgb, var(--copper) 35%, transparent); border-radius: 3px; background: color-mix(in srgb, var(--copper) 7%, transparent); font: 600 clamp(8px, .8vw, 12px)/1.15 var(--font-mono); letter-spacing: .02em; text-transform: uppercase; color: var(--ink-2); text-align: center; overflow: hidden; }
+.pp-chip-die span { display: grid; place-items: center; padding: 4%; border: 1px solid color-mix(in srgb, var(--copper) 35%, transparent); border-radius: 3px; background: color-mix(in srgb, var(--copper) 7%, transparent); font: 600 clamp(8px, .8vw, 12px)/1.15 var(--font-mono); letter-spacing: .02em; text-transform: uppercase; color: var(--ink-2); text-align: center; overflow: hidden; overflow-wrap: anywhere; }
 .pp-chip-lid { inset: 22%; display: grid; place-items: center; background: linear-gradient(135deg, color-mix(in srgb, var(--copper) 26%, var(--t-surface)), color-mix(in srgb, var(--copper) 10%, var(--t-surface))); border: 1px solid color-mix(in srgb, var(--copper) 70%, transparent); transform: translateZ(150px); opacity: .9; }
 .pp-chip-lid b { font: 600 clamp(12px, 1.3vw, 20px) var(--font-mono); letter-spacing: .12em; color: var(--ink); }
 @media (prefers-reduced-motion: no-preference) {
@@ -271,6 +271,10 @@
   .pp-hero { grid-template-columns: minmax(0, 1fr); grid-template-areas: "copy" "object" "specs"; }
   .pp-hero-specs, .pp-arch, .pp-features, .pp-chips, .pp-evidence-panel .pp-evidence, .pp-highlights, .pp-integration { grid-template-columns: minmax(0, 1fr); }
   .pp-features li.is-lead { grid-row: auto; }
+  /* At phone width the die is ~150px wide: the 8px floor clipped SUPERVISION and spilled INPUT CONDITIONING
+     past its tile. 7px with no tracking fits the longest block names; desktop keeps its size, and a word that
+     still cannot fit breaks inside its tile (overflow-wrap above) rather than being cut off. */
+  .pp-chip-die span { font-size: 7px; letter-spacing: 0; }
 }
 
 /* Two-die parts: the dies sit side by side on the substrate, each named, each with its own blocks. */
