@@ -64,7 +64,7 @@ export default function Library({pkgId,slide,onChange,go}:{pkgId:string;slide:nu
 
   </div>
 
-  <section className="dr-lib-sources"><p className="dr-lib-kicker">Engineering references</p><ul>{pkg.sources.map(s=><li key={s}>{s}</li>)}</ul><p className="disclaimer">Investor-level content from Deepgrid Semi’s September 2026 design documents: no register maps, memory map or board-design rules. Pre-silicon: figures are design values, process nominals or analytic estimates, labelled on each slide.</p></section>
+  <section className="dr-lib-sources"><p className="dr-lib-kicker">Engineering references</p><ul>{pkg.sources.map(s=><li key={s}>{s}</li>)}</ul><p className="disclaimer">Investor-level content from DeepGrid Semi’s September 2026 design documents: no register maps, memory map or board-design rules. Pre-silicon: figures are design values, process nominals or analytic estimates, labelled on each slide.</p></section>
 
   {go && (
     <div className="dr-links dr-sec-gap">
