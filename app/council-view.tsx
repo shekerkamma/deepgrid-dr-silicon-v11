@@ -17,7 +17,9 @@ export default function GroundedAnswerView({query}: GroundedAnswerViewProps) {
   const [sourcesOpen,setSourcesOpen]=useState(false);
   // the semantic stage of the dashboard-panel match, from the same embedding the answer uses
   const [panelSem,setPanelSem]=useState<{q:string;sem:PanelSemantic|null}>({q:'',sem:null});
-  useEffect(()=>{setReady(true);void getSemantic();},[]);
+  // The 26 MB embedding model now loads on the first focus of the search box (ask.tsx) or the first
+  // submitted query (below), not on page open: opening /ask/ downloaded it for every visitor.
+  useEffect(()=>{setReady(true);},[]);
   useEffect(()=>{
     setSourcesOpen(false);
     if(!query)return;
