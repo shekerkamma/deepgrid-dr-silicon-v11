@@ -85,7 +85,8 @@ function derive(d: PortfolioData) {
     fastest: d.approvals.reduce((x, y) => (y.high < x.high ? y : x))};
 }
 type V = ReturnType<typeof derive>;
-const short = (s: Sku) => `${s.sku} ${s.name}`;
+// the D100 row's name already carries its code ("D100 Drone SoC"), so print the code only once
+const short = (s: Sku) => s.name.startsWith(s.sku + ' ') ? s.name : `${s.sku} ${s.name}`;
 const specRows: [string, string][] = [['Core', 'core'], ['Clock', 'clock'], ['SRAM', 'sram'], ['Boot ROM', 'boot_rom'], ['ADC', 'adc'], ['Supply', 'supply'], ['Package', 'package'], ['Process', 'process'], ['Status', 'status']];
 /** The chips a question names, in plan-line order; all of them when it names none, or none that have a plan line. */
 const only = (rows: Sku[], skus?: string[]) => { const pick = skus?.length ? rows.filter(s => skus.includes(s.sku)) : []; return pick.length ? pick : rows; };

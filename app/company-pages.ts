@@ -59,7 +59,7 @@ export const companyPages: CompanyPage[] = [
       { kind: 'stats', from: REF + '/about/story', items: [['2020', 'Founded'], ['28', 'Team Members'], ['4', 'Product Lines']] },
       { kind: 'split', title: 'Founded in Hyderabad in 2020 to bring edge AI into vehicles, robots and infrastructure', from: REF + '/about/story',
         paras: [
-          'Deepgrid Semi is a pioneering semiconductor company specializing in AI acceleration solutions for edge computing. Founded by a team of industry veterans with decades of combined experience in chip design, AI, and autonomous systems, we are at the forefront of the AI revolution.',
+          'DeepGrid Semi is a pioneering semiconductor company specializing in AI acceleration solutions for edge computing. Founded by a team of industry veterans with decades of combined experience in chip design, AI, and autonomous systems, we are at the forefront of the AI revolution.',
           'Our headquarters in Hyderabad, India, serves as a hub of innovation where world-class engineers and researchers collaborate to push the boundaries of what’s possible in AI hardware acceleration.',
           'We focus on delivering specialized System-on-Chip (SoC) solutions that bring datacenter-class AI performance to edge devices, enabling real-time intelligence in autonomous vehicles, robotics, industrial automation, and smart infrastructure.',
         ],
@@ -211,7 +211,7 @@ export const companyPages: CompanyPage[] = [
   {
     id: 'contact', menu: 'contact', path: 'contact', label: 'Contact',
     kicker: 'We\'re here to help', title: 'Get in Touch',
-    lede: 'Let\'s discuss how Deepgrid Semi can power your AI innovation',
+    lede: 'Let\'s discuss how DeepGrid Semi can power your AI innovation',
     sections: [{ kind: 'contact', from: REF + '/contact' }],
   },
 ];

@@ -75,7 +75,10 @@ export function Scene3D({
       const w = el.clientWidth, h = el.clientHeight;
       labels.forEach((l, i) => {
         v.copy(l.at); pivot.localToWorld(v); v.project(cam);
-        spans[i].style.transform = `translate(${((v.x + 1) / 2) * w}px, ${((1 - v.y) / 2) * h}px) translate(-50%, -50%)`;
+        // keep the whole label inside the stage: on narrow screens an edge label would spill past the card
+        const hw = spans[i].offsetWidth / 2, hh = spans[i].offsetHeight / 2;
+        const x = Math.min(Math.max(((v.x + 1) / 2) * w, hw), w - hw), y = Math.min(Math.max(((1 - v.y) / 2) * h, hh), h - hh);
+        spans[i].style.transform = `translate(${x}px, ${y}px) translate(-50%, -50%)`;
         spans[i].style.opacity = v.z < 1 ? '1' : '0';
       });
     };

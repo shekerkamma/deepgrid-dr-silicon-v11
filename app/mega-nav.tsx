@@ -148,7 +148,7 @@ export function MegaNav({ route, onNavigate, label = 'Primary navigation', compa
     <nav className="mega-nav" aria-label={label} ref={root}>
       {!compact && <a href={url('/')} className={'mega-home' + (route === 'home' ? ' active' : '')} aria-current={route === 'home' ? 'page' : undefined} onClick={onNavigate}>
         <img src={url('/brand/deepgrid-d-64.png')} alt="" aria-hidden="true" width={20} height={20} />
-        Deepgrid Semi
+        DeepGrid Semi
       </a>}
       {menus.map((m) => {
         const isOpen = open === m.id;

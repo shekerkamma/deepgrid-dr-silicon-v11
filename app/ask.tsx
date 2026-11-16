@@ -18,6 +18,7 @@ import {
 } from './data/deepgrid-knowledge';
 import {groundedDocuments, GroundedDoc} from './documents-data';
 import {readHref} from './doc-links';
+import {getSemantic} from './data/semantic';
 
 const byId = (id: string): GroundedDoc => groundedDocuments.find(d => d.id === id)!;
 
@@ -314,6 +315,7 @@ export default function AskDeepGrid({go}: {go: (hash: string) => void}) {
               onChange={e => {setSubmittedQuery(''); handleQuerySelect(e.target.value);}}
               placeholder="Ask a question about DeepGrid…"
               aria-label="Search DeepGrid knowledge"
+              onFocus={() => void getSemantic()}
             />
             {query && (
               <button type="button" className="dr-ask-clear" onClick={() => handleQuerySelect('')} aria-label="Clear query">
