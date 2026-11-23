@@ -29,7 +29,7 @@ export const parts: Part[] = [
       'One chip carries the MCU, the motor-control peripherals and a hardware safety monitor. A second identical core checks the first on every committed store, so a datapath fault becomes a FAULT pin, not a wrong PWM edge.',
     specs: [
       ['CPU', '2 × RV32IM, 32-bit, in hardware lockstep'],
-      ['Clock', 'One 50 MHz domain; core measured at ~55–62 MHz post-route'],
+      ['Clock', 'One 50 MHz domain; core closes timing at ~55–62 MHz post-route (simulated)'],
       ['Memory', '64 KB boot ROM · 32 KB SRAM · external QSPI flash'],
       ['Motor', '3-phase PWM with dead-time and hardware brake · 4 × DShot'],
       ['Sensing', 'Encoder A/B/Z + 3 Hall · 8-bit differential SAR ADC, ~200 kSa/s'],

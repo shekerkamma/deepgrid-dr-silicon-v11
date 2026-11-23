@@ -345,11 +345,11 @@ function ReconPanel({v: {d, company, rev, recon}}: {v: V}) {
       <p className="pd-lede">{d.reconcileLede}</p>
       <div className="table-scroll"><table className="pd-table">
         <caption className="sr-only">Revenue plans compared, ₹ Cr</caption>
-        <thead><tr><th scope="col">Year</th><th scope="col">Portfolio strategy page (silicon plan)</th><th scope="col">This model, total</th><th scope="col">This model, {d.reconcileSegment}</th></tr></thead>
+        <thead><tr><th scope="col">Year</th><th scope="col">Whitepaper v3 silicon plan (Sep 2026), plan target</th><th scope="col">This model, total</th><th scope="col">This model, {d.reconcileSegment}</th></tr></thead>
         <tbody>{company.map(c => { const i = d.periods.findIndex(p => fy(p) === c.fy);
           return <tr key={c.fy}><th scope="row">{c.fy}</th><td>{c.plan.toLocaleString('en-IN')}</td><td>{i >= 0 ? num(rev[i]) : '–'}</td><td>{i >= 0 && recon ? num(recon.values[i]) : '–'}</td></tr>; })}</tbody>
       </table></div>
-      <p className="pd-source">Portfolio strategy figures: the mature-node whitepaper, as published on <a className="pd-link" href={url('/company')}>the Portfolio strategy page</a>. Model figures: pl.csv and revenue-by-segment.csv.</p>
+      <p className="pd-source">Portfolio strategy figures: master whitepaper v3 (5 Sep 2026), as published on <a className="pd-link" href={url('/company')}>the Portfolio strategy page</a>; plan targets, superseded in part by the SKU Blueprint (Oct 2026), whose ramp table gives ₹608 Cr in FY31 (<a className="pd-link" href={url('/portfolio')}>SKU portfolio</a>). Model figures: financial model corrected v3 (Sep 2026), pl.csv and revenue-by-segment.csv; plan targets.</p>
     </section>
   );
 }

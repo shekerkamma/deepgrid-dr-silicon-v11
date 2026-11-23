@@ -174,17 +174,23 @@ export const claims: Record<string, Claim> = {
 
 /** Claims the sources carry that this site deliberately does not repeat, and why. Kept in code so
  *  the reason travels with the decision instead of living in a commit message. */
-export const withheld: {claim: string; why: string}[] = [
+export const withheld: {claim: string; label: string; summary: string; why: string}[] = [
   {
     claim: '₹1.01 Cr contracted, Indian Army MCEME, attached to Chip 4',
+    label: 'An Indian Army order figure in the whitepaper',
+    summary: 'Verification found it misdescribed: it is not an award to DeepGrid Semi. There are no purchase orders or letters of intent today.',
     why: 'Verification found it materially misdescribed: ₹23.01L delivered, ₹78.39L is L1 (lowest bidder, not an award), and it sits in Deepgrid Datacentre Pvt Ltd rather than Deepgrid Semi, with MCEME-owned IP.',
   },
   {
     claim: '39.3 TOPS measured on FPGA',
+    label: 'An FPGA throughput figure',
+    summary: 'A derivation, not a measurement. The Artix-7 board tops out near 1.8 TOPS (estimate).',
     why: 'A derivation, not a measurement. The Artix-7 board ceilings near 1.8 TOPS.',
   },
   {
     claim: '12.9× cheaper than Mobileye',
+    label: 'A cost multiple against a camera-ADAS supplier',
+    summary: 'A category error: it set their selling price against our die cost. Loaded with NRE at plan volumes the advantage is about 2.3× (estimate).',
     why: 'Category error: their ASP against our die cost. Loaded with NRE at plan volumes the advantage is about 2.3×.',
   },
 ];
