@@ -106,7 +106,7 @@ function LinesPanel({v: {d, planned, planTotal, byFy31, near, farMax, spec}, sku
       {full && <div className="table-scroll"><table className="pd-table sk-table">
         <caption className="sr-only">Chips, readiness and plan, ₹ Cr</caption>
         <thead><tr><th scope="col">Chip</th><th scope="col">Process</th><th scope="col">Readiness</th><th scope="col">Dec 2026 shuttle</th><th scope="col">Plan line</th><th scope="col">FY31 ramp</th><th scope="col">Market, ₹{NB}Cr</th><th scope="col">Market verdict</th></tr></thead>
-        <tbody>{d.skus.map(s => <tr key={s.sku}><th scope="row">{short(s)}</th><td>{s.process}{s.clockMhz ? `, ${s.clockMhz}${NB}MHz target` : ''}{s.sku === 'SKU-4' || s.sku === 'SKU-10' ? ` (DG32-LITE lockstep core: 55–62${NB}MHz post-route)` : ''}</td><td>{s.readiness || '–'}</td><td>{s.planCr == null ? '–' : s.shuttle ? 'Yes' : 'No'}{s.mpw ? ` (${s.mpw})` : ''}</td>
+        <tbody>{d.skus.map(s => <tr key={s.sku}><th scope="row">{short(s)}</th><td>{s.process}{s.clockMhz ? `, ${s.clockMhz}${NB}MHz target` : ''}{s.sku === 'SKU-4' || s.sku === 'SKU-10' ? ` (DG32-LITE lockstep core: 55–62${NB}MHz post-route, simulated)` : ''}</td><td>{s.readiness || '–'}</td><td>{s.planCr == null ? '–' : s.shuttle ? 'Yes' : 'No'}{s.mpw ? ` (${s.mpw})` : ''}</td>
           <td>{s.planCr ?? '–'}</td><td>{s.fy31Cr ?? '–'}</td><td>{s.marketLowCr != null ? `${s.marketLowCr.toLocaleString('en-IN')}–${s.marketHighCr!.toLocaleString('en-IN')}` : '–'}</td><td>{s.verdict ? s.verdict.charAt(0) + s.verdict.slice(1).toLowerCase() : '–'}</td></tr>)}</tbody>
       </table></div>}
       <Source files={['skus.csv']} note={`Plan lines sum to ${cr(planTotal)} (checked at build). ${spec.length ? `${spec.map(short).join(', ')} is still at specification; ` : ''}D100 is Track B, on 28${NB}nm, with no plan line yet. Clock is the product target, not a measurement.`}/>
@@ -199,7 +199,7 @@ function SpecsPanel({v: {d}}: {v: V}) {
         <thead><tr><th scope="col">Specification</th>{d.specs.map(s => <th scope="col" key={s.part}>{s.part}{s.sku ? ` (${s.sku})` : ''}</th>)}</tr></thead>
         <tbody>{specRows.map(([lab, k]) => <tr key={k}><th scope="row">{lab}</th>{d.specs.map(s => <td key={s.part} className="sk-wrap">{s[k]}</td>)}</tr>)}</tbody>
       </table></div>
-      <Source files={['dg32-specs.csv']} note={d.specs.filter(s => s.note).map(s => `${s.part}: ${s.note}.`).join(' ') + ' Preliminary datasheets; 50 MHz is the CPU-domain design target, set by the lockstep core’s measured 55–62 MHz post-route.'}/>
+      <Source files={['dg32-specs.csv']} note={d.specs.filter(s => s.note).map(s => `${s.part}: ${s.note}.`).join(' ') + ' Preliminary datasheets; 50 MHz is the CPU-domain design target, set by the lockstep core’s 55–62 MHz post-route timing (simulated, not a silicon measurement).'}/>
     </section>
   );
 }
@@ -221,7 +221,7 @@ function DocsPanel({v: {d}}: {v: V}) {
 function ConflictsPanel({v: {d}}: {v: V}) {
   return (
     <section className="pd-panel" aria-labelledby="sk-conf-h">
-      <h3 id="sk-conf-h">Unresolved product and investment assumptions: {d.conflicts.filter(c => /^open/i.test(c.status)).length} open, {d.conflicts.filter(c => /^fixed/i.test(c.status)).length} fixed, {d.conflicts.filter(c => /^decided/i.test(c.status)).length} decided by the owner.</h3>
+      <h3 id="sk-conf-h">Unresolved product and investment assumptions: {d.conflicts.filter(c => /^open/i.test(c.status)).length} open, {d.conflicts.filter(c => /^fixed/i.test(c.status)).length} fixed, {d.conflicts.filter(c => /^decided/i.test(c.status)).length} decided by the owner, {d.conflicts.filter(c => /^info/i.test(c.status)).length} for information.</h3>
       <div className="table-scroll"><table className="pd-table sk-table">
         <caption className="sr-only">Product and funding assumption reconciliation</caption>
         <thead><tr><th scope="col">Topic</th><th scope="col">One source says</th><th scope="col">Another says</th><th scope="col">Status</th></tr></thead>
