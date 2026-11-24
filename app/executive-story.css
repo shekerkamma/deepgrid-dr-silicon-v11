@@ -15,9 +15,9 @@
 .executive-answer .answer-essay { background:none; border:0; padding:24px 0; max-width:70ch; }
 .executive-answer .answer-essay > h2 { font-size:24px; line-height:1.35; margin-bottom:20px; }
 .executive-answer .answer-essay > p { font-size:18px; line-height:1.75; margin:0 0 20px; }
-.executive-answer .answer-essay > .dr-answer-lead { font-size:20px; line-height:1.65; font-weight:400; }
+.executive-answer .answer-essay .dr-answer-lead { font-size:20px; line-height:1.65; font-weight:400; margin:0 0 20px; } /* descendant, not child: A2UI wraps each answer component in a display:contents host element */
 .ask-library-tools { margin-bottom:20px; }
-@media(max-width:600px) { .executive-answer .answer-essay > p { font-size:16px; } .executive-answer .answer-essay > .dr-answer-lead { font-size:18px; } }
+@media(max-width:600px) { .executive-answer .answer-essay > p { font-size:16px; } .executive-answer .answer-essay .dr-answer-lead { font-size:18px; } }
 
 /* Connected composer, using the About page's band and the shared copper action. */
 .dr-ask-section .ask-band { margin:0 0 32px; padding:48px 0; }
