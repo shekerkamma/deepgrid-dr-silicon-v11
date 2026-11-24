@@ -19,6 +19,8 @@ assert(!(await page.getByRole('button',{name:'Submit',exact:true}).isEnabled()))
 await page.getByRole('button',{name:'The D100 funding decision',exact:true}).click();
 await page.locator('[data-model="gemini-3.8-flash"]').waitFor({timeout:20000});
 assert.equal(requests,1);assert.equal(await page.locator('.answer-essay h2').innerText(),await input.inputValue());
+// The answer is drawn as an A2UI surface from the closed catalog in app/a2ui-answer-catalog.tsx: one host element per component.
+for(const [tag,n] of [['a2ui-react-answerstack',1],['a2ui-react-answerlead',1],['a2ui-react-answersection',1],['a2ui-react-answersources',1]])assert.equal(await page.locator('.answer-essay '+tag).count(),n,tag);
 assert.equal(await page.locator('.answer-essay .executive-sources').getAttribute('open'),null);
 await page.locator('.executive-ref').first().click();await page.locator('.answer-essay .executive-sources[open]').waitFor();
 for(const link of await page.locator('.answer-essay .executive-sources a').all()){const href=await link.evaluate(a=>a.href);assert(href.startsWith(base));assert.equal((await page.request.get(href)).status(),200);}
